@@ -1,5 +1,5 @@
 ---
-name: PETTALK refactor issue template
+name: refactor issue template
 about: 'about need to refactor '
 title: " [Refactor] "
 labels: Refactor

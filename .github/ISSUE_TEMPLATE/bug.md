@@ -1,5 +1,5 @@
 ---
-name: PETTALK bug issue template
+name: bug issue template
 about: 'about need to fix bug'
 title: "🐛 [Bug] "
 labels: Bug

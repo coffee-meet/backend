@@ -1,5 +1,5 @@
 ---
-name: PETTALK Feature request template
+name: feature request template
 about: feature
 title: "🚀 [Feature] "
 labels: Feature

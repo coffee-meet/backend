@@ -1,5 +1,5 @@
 ---
-name: PETTALK Style issue template
+name: style issue template
 about: 'make Style Component'
 title: "💄 [Style] "
 labels: Style
