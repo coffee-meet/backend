@@ -15,7 +15,7 @@ public record KakaoMemberResponse(
 
   public OAuthInfoResponse toOAuthInfoResponse() {
     return OAuthInfoResponse.of(
-        kakaoAccount.profile.name,
+        kakaoAccount.name,
         kakaoAccount.profile.profileImageUrl,
         new Birth(kakaoAccount.birthyear, kakaoAccount.birthday),
         new Email(kakaoAccount.email),
@@ -27,6 +27,7 @@ public record KakaoMemberResponse(
   @JsonNaming(SnakeCaseStrategy.class)
   private record KakaoAccount(
       Profile profile,
+      String name,
       String email,
       String birthyear,
       String birthday
@@ -36,7 +37,6 @@ public record KakaoMemberResponse(
 
   @JsonNaming(SnakeCaseStrategy.class)
   private record Profile(
-      String name,
       String profileImageUrl
   ) {
 
