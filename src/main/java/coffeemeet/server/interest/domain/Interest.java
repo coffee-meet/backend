@@ -35,8 +35,8 @@ public class Interest extends BaseEntity {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  public Interest(String keyword, User user) {
-    this.keyword = Keyword.valueOf(keyword);
+  public Interest(Keyword keyword, User user) {
+    this.keyword = keyword;
     this.user = user;
   }
 

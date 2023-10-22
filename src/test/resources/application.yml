@@ -12,6 +12,17 @@ spring:
       hibernate:
         format_sql: true
 
+jwt:
+  secret-key: yo0ToXEwMlNd32XqxRGKx8hsHWIk6P0u2/xlpny1vFw
+  access-token-expire-time: 3600000
+  refresh-token-expire-time: 1209600000
+
+oauth:
+  kakao:
+    client-id: 8cb00376d47f416927cadfded0f9dab3
+    redirect-url: http://localhost:8080/oauth/redirected/kakao
+    client-secret: 223lkwe934efj2349ewufwe23owf09p1
+
 logging:
   level:
     org:

@@ -19,6 +19,17 @@ spring:
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
 
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expire-time: ${ACCESS_TOKEN_EXPIRE_TIME}
+  refresh-token-expire-time: ${REFRESH_TOKEN_EXPIRE_TIME}
+
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-url: ${KAKAO_REDIRECT_URL}
+    client-secret: ${KAKAO_SECRET}
+
 logging:
   level:
     org:
