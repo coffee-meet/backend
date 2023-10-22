@@ -51,12 +51,10 @@ public class User {
 
   public User(
       OAuthInfo oAuthInfo,
-      Profile profile,
-      Certification certification
+      Profile profile
   ) {
     this.oAuthInfo = oAuthInfo;
     this.profile = profile;
-    this.certification = certification;
   }
 
 }
