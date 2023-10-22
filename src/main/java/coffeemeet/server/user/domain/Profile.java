@@ -31,29 +31,23 @@ public class Profile {
   @Column(nullable = false)
   private String birth;
 
-  @Column(nullable = false)
-  private String department;
-
   @Builder
   private Profile(
       String name,
       String nickname,
       Email email,
       String profileImageUrl,
-      String birth,
-      String department
+      String birth
   ) {
     validateName(name);
     validateNickname(nickname);
     validateProfileImage(profileImageUrl);
     validateBirth(birth);
-    validateDepartment(department);
     this.name = name;
     this.nickname = nickname;
     this.email = email;
     this.profileImageUrl = profileImageUrl;
     this.birth = birth;
-    this.department = department;
   }
 
   private void validateName(String name) {
@@ -77,12 +71,6 @@ public class Profile {
   private void validateBirth(String birth) {
     if (!StringUtils.hasText(birth)) {
       throw new IllegalArgumentException("올바르지 않은 생년월일입니다.");
-    }
-  }
-
-  private void validateDepartment(String department) {
-    if (!StringUtils.hasText(department)) {
-      throw new IllegalArgumentException("올바르지 않은 부서 이름입니다.");
     }
   }
 
