@@ -28,8 +28,9 @@ public class Profile {
   @Column(nullable = false)
   private String profileImageUrl;
 
+  @Embedded
   @Column(nullable = false)
-  private String birth;
+  private Birth birth;
 
   @Builder
   private Profile(
@@ -37,12 +38,11 @@ public class Profile {
       String nickname,
       Email email,
       String profileImageUrl,
-      String birth
+      Birth birth
   ) {
     validateName(name);
     validateNickname(nickname);
     validateProfileImage(profileImageUrl);
-    validateBirth(birth);
     this.name = name;
     this.nickname = nickname;
     this.email = email;
@@ -65,12 +65,6 @@ public class Profile {
   private void validateProfileImage(String profileImageUrl) {
     if (!StringUtils.hasText(profileImageUrl)) {
       throw new IllegalArgumentException("올바르지 않은 프로필 사진 url입니다.");
-    }
-  }
-
-  private void validateBirth(String birth) {
-    if (!StringUtils.hasText(birth)) {
-      throw new IllegalArgumentException("올바르지 않은 생년월일입니다.");
     }
   }
 
