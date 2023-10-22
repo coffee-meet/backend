@@ -1,6 +1,6 @@
 package coffeemeet.server.auth.domain.client;
 
-import coffeemeet.server.auth.domain.dto.OAuthInfoResponse;
+import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Map;
 import java.util.Optional;

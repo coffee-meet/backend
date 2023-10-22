@@ -1,11 +1,11 @@
 package coffeemeet.server.auth.service;
 
-import coffeemeet.server.auth.utils.AuthTokens;
-import coffeemeet.server.auth.utils.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.authcode.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.auth.domain.client.OAuthMemberClientComposite;
-import coffeemeet.server.auth.domain.dto.OAuthInfoResponse;
-import coffeemeet.server.auth.domain.dto.SignupRequest;
+import coffeemeet.server.auth.dto.OAuthInfoResponse;
+import coffeemeet.server.auth.dto.SignupRequest;
+import coffeemeet.server.auth.utils.AuthTokens;
+import coffeemeet.server.auth.utils.AuthTokensGenerator;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;

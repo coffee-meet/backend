@@ -1,8 +1,8 @@
 package coffeemeet.server.auth.controller;
 
-import coffeemeet.server.auth.utils.AuthTokens;
-import coffeemeet.server.auth.domain.dto.SignupRequest;
+import coffeemeet.server.auth.dto.SignupRequest;
 import coffeemeet.server.auth.service.AuthService;
+import coffeemeet.server.auth.utils.AuthTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

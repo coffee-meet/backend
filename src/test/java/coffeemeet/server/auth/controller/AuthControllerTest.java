@@ -1,17 +1,7 @@
 package coffeemeet.server.auth.controller;
 
-import coffeemeet.server.auth.common.config.ControllerTestConfig;
-import coffeemeet.server.auth.service.AuthService;
-import coffeemeet.server.user.domain.OAuthProvider;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -24,6 +14,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import coffeemeet.server.auth.service.AuthService;
+import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.user.domain.OAuthProvider;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+
 @WebMvcTest(AuthController.class)
 class AuthControllerTest extends ControllerTestConfig {
 
@@ -35,7 +34,7 @@ class AuthControllerTest extends ControllerTestConfig {
   void redirectAuthCodeRequestUrlTest() throws Exception {
     String expectedRedirectUrl = "https://example.com";
 
-    when(authService.getAuthCodeRequestUrl(eq(OAuthProvider.KAKAO))).thenReturn(
+    when(authService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).thenReturn(
         expectedRedirectUrl);
 
     mockMvc.perform(get("/oauth2/auth/{oAuthProvider}", OAuthProvider.KAKAO)
