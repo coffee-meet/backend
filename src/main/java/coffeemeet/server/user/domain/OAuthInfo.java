@@ -19,6 +19,7 @@ public class OAuthInfo {
 
   public OAuthInfo(OAuthProvider oauthProvider, String oauthProviderId) {
     validateOAuthProviderId(oauthProviderId);
+    this.oauthProvider = oauthProvider;
     this.oauthProviderId = oauthProviderId;
   }
 

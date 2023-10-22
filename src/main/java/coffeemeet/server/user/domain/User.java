@@ -28,7 +28,7 @@ public class User {
 
   @Embedded
   @Column(nullable = false)
-  private OAuthInfo oAuthInfo;
+  private OAuthInfo oauthInfo;
 
   @Embedded
   @Column(nullable = false)
@@ -50,10 +50,10 @@ public class User {
   private boolean isDeleted;
 
   public User(
-      OAuthInfo oAuthInfo,
+      OAuthInfo oauthInfo,
       Profile profile
   ) {
-    this.oAuthInfo = oAuthInfo;
+    this.oauthInfo = oauthInfo;
     this.profile = profile;
   }
 
