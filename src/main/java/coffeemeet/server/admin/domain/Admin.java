@@ -1,5 +1,6 @@
 package coffeemeet.server.admin.domain;
 
+import coffeemeet.server.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "admins")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin {
+public class Admin extends BaseEntity {
 
   @Id
   @Column(nullable = false)
@@ -20,4 +21,5 @@ public class Admin {
 
   @Column(nullable = false)
   private String password;
+
 }
