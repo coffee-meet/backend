@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CertificationService {
 
-  public static final String VERIFICATION_CODE_NOT_FOUND = "인증번호 기간이 만료되었거나 해당 유저가 인증 번호를 요청한 기록이 없습니다.";
-  public static final String WRONG_VERIFICATION_CODE = "잘못된 인증번호입니다.";
+  public static final String VERIFICATION_CODE_NOT_FOUND = "인증코드 기간이 만료되었거나 해당 유저가 인증 번호를 요청한 기록이 없습니다.";
+  public static final String WRONG_VERIFICATION_CODE = "잘못된 인증코드입니다.";
   private static final RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
 
   private final S3MediaService s3MediaService;

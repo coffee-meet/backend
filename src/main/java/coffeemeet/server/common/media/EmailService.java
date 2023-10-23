@@ -26,7 +26,7 @@ public class EmailService {
     String subject = "[coffee-meet] 커피밋 사용을 위해 이메일 인증을 완료해주세요";
     mailMessage.setSubject(subject);
 
-    String text = String.format("인증번호: %s", verificationCode);
+    String text = String.format("인증코드: %s", verificationCode);
     mailMessage.setText(text);
 
     javaMailSender.send(mailMessage);
