@@ -2,6 +2,8 @@ package coffeemeet.server.common.media;
 
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,10 @@ public class S3MediaService {
 
   public String getUrl(String key) {
     return amazonS3.getUrl(bucketName, key).toExternalForm();
+  }
+
+  public String generateBusinessCardKey() {
+    return String.format("BusinessCard-%s-%s", LocalDateTime.now(), UUID.randomUUID());
   }
 
 }
