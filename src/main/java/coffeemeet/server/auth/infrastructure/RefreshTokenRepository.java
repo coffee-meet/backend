@@ -1,4 +1,4 @@
-package coffeemeet.server.auth;
+package coffeemeet.server.auth.infrastructure;
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
