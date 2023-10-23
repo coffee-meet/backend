@@ -45,6 +45,7 @@ dependencies {
     /* Spring */
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     /* JWT */
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -99,12 +100,12 @@ tasks.withType(GenerateSwaggerUI) {
     doFirst {
         def swaggerUIFile = file("${openapi3.outputDirectory}/openapi3.yaml")
 
-        def securitySchemesContent = "  securitySchemes:\n" +    \
-                                        "    APIKey:\n" +    \
-                                        "      type: apiKey\n" +    \
-                                        "      name: Authorization\n" +    \
-                                        "      in: header\n" +   \
-                                        "security:\n" +
+        def securitySchemesContent = "  securitySchemes:\n" +     \
+                                         "    APIKey:\n" +     \
+                                         "      type: apiKey\n" +     \
+                                         "      name: Authorization\n" +     \
+                                         "      in: header\n" +    \
+                                         "security:\n" +
                 "  - APIKey: []  # Apply the security scheme here"
 
         swaggerUIFile.append securitySchemesContent
