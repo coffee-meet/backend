@@ -2,21 +2,22 @@ package coffeemeet.server.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Birth {
 
   private static final int BIRTH_LENGTH = 4;
 
-  @Column(nullable = false, length = 4)
+  @Column(nullable = false, length = BIRTH_LENGTH)
   String year;
 
-  @Column(nullable = false, length = 4)
+  @Column(nullable = false, length = BIRTH_LENGTH)
   String day;
 
   public Birth(String year, String day) {
