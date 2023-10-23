@@ -27,8 +27,7 @@ public class UserService {
 
   @Transactional
   public void updateBusinessCardUrl(Long userId, String businessCardUrl) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+    User user = getUserById(userId);
     user.updateBusinessCardUrl(businessCardUrl);
   }
 
@@ -47,6 +46,7 @@ public class UserService {
   }
 
   public MyProfileResponse findMyProfile(Long userId) {
+    User user = getUserById(userId);
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
@@ -54,6 +54,16 @@ public class UserService {
     return MyProfileResponse.of(user, interests);
   }
 
+  @Transactional
+  public void updateCompanyEmail(Long userId, CompanyEmail companyEmail) {
+    User user = getUserById(userId);
+    user.updateCompanyEmail(companyEmail);
+  }
+
+  private User getUserById(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
+  }
   @Transactional
   public void updateProfileImage(Long userId, String profileImageUrl) {
     User user = userRepository.findById(userId)
