@@ -57,4 +57,8 @@ public class User {
     this.profile = profile;
   }
 
+  public void updateBusinessCardUrl(String newBusinessCardUrl) {
+    certification.updateBusinessCardUrl(newBusinessCardUrl);
+  }
+
 }
