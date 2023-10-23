@@ -37,3 +37,15 @@ logging:
         orm:
           jdbc:
             bind: trace
+cloud:
+  aws:
+    s3:
+      bucket: ${CLOUD_AWS_S3_BUCKET_NAME}
+    credentials:
+      access-key: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}
+      secret-key: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}
+    region:
+      static: ${CLOUD_AWS_REGION_STATIC}
+      auto: false
+    stack:
+      auto: false

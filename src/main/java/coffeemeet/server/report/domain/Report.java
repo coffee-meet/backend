@@ -1,5 +1,6 @@
 package coffeemeet.server.report.domain;
 
+import coffeemeet.server.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @Table(name = "reports")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Report {
+public class Report extends BaseEntity {
 
   private static final int TITLE_MAX_LENGTH = 20;
   private static final int REASON_MAX_LENGTH = 200;

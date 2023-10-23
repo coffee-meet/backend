@@ -3,15 +3,16 @@ package coffeemeet.server.user.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReportInfo {
 
-  private static final int REPORT_COUNT_MIN_LENGTH = 0;
+  private static final int REPORT_MIN_COUNT = 0;
 
   @Column(nullable = false)
   private int reportedCount;
@@ -27,13 +28,13 @@ public class ReportInfo {
   }
 
   private void validateReportedCount(int reportedCount) {
-    if (reportedCount < 0) {
+    if (reportedCount < REPORT_MIN_COUNT) {
       throw new IllegalArgumentException("올바르지 않은 신고횟수입니다.");
     }
   }
 
   private void validateSanctionPeriod(LocalDateTime sanctionPeriod) {
-    if (sanctionPeriod != null) {
+    if (sanctionPeriod == null) {
       throw new IllegalArgumentException("올바르지 않은 제재 기간입니다.");
     }
   }

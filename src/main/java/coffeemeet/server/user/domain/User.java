@@ -1,6 +1,7 @@
 package coffeemeet.server.user.domain;
 
 import coffeemeet.server.chatting_room.domain.ChattingRoom;
+import coffeemeet.server.common.entity.AdvancedBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "users")
 @Where(clause = "is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends AdvancedBaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +56,10 @@ public class User {
   ) {
     this.oauthInfo = oauthInfo;
     this.profile = profile;
+  }
+
+  public void updateBusinessCardUrl(String newBusinessCardUrl) {
+    certification.updateBusinessCardUrl(newBusinessCardUrl);
   }
 
 }
