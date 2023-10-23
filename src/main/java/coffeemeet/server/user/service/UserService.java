@@ -3,6 +3,7 @@ package coffeemeet.server.user.service;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
+import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.interest.service.InterestService;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileResponse;
@@ -15,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
+
+  public static final String EXISTED_COMPANY_EMAIL_ERROR = "이미 사용 중인 회사이메일입니다.";
 
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
@@ -26,6 +30,12 @@ public class UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
     user.updateBusinessCardUrl(businessCardUrl);
+  }
+
+  public void validateDuplicatedCompanyEmail(CompanyEmail companyEmail) {
+    if (userRepository.existsByCertification_CompanyEmail(companyEmail)) {
+      throw new IllegalArgumentException(EXISTED_COMPANY_EMAIL_ERROR);
+    }
   }
 
   public UserProfileResponse findUserProfile(String nickname) {
