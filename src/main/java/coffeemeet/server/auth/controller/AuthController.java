@@ -5,8 +5,8 @@ import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.auth.utils.AuthTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.io.IOException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,21 +34,14 @@ public class AuthController {
   }
 
   @PostMapping("/sign-up")
-  public ResponseEntity<AuthTokens> signup(@RequestBody SignupRequest request) {
+  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupRequest request) {
     return ResponseEntity.ok(authService.signup(request));
   }
 
   @GetMapping("/login/{oAuthProvider}")
-  public ResponseEntity<?> login(@PathVariable OAuthProvider oAuthProvider,
-      @RequestParam String authCode, HttpServletResponse response) throws IOException {
-    Optional<AuthTokens> authTokens = authService.login(oAuthProvider, authCode);
-    if (authTokens.isPresent()) {
-      return ResponseEntity.ok(authTokens.get());
-    }
-
-    String signupUrl = "/oauth2/auth/sign-up";
-    response.sendRedirect(signupUrl);
-    return new ResponseEntity<>(HttpStatus.FOUND);
+  public ResponseEntity<AuthTokens> login(@PathVariable OAuthProvider oAuthProvider,
+      @RequestParam String authCode) {
+    return ResponseEntity.ok(authService.login(oAuthProvider, authCode));
   }
 
 }
