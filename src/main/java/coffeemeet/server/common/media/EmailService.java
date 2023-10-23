@@ -1,7 +1,6 @@
 package coffeemeet.server.common.media;
 
 import coffeemeet.server.user.domain.CompanyEmail;
-import java.util.random.RandomGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-  private static final RandomGenerator randomGenerator = RandomGenerator.getDefault();
   private final JavaMailSender javaMailSender;
   private final String sender;
 
@@ -32,10 +30,6 @@ public class EmailService {
     mailMessage.setText(text);
 
     javaMailSender.send(mailMessage);
-  }
-
-  public String generateVerificationCode() {
-    return String.format("%06d", randomGenerator.nextInt(1000000));
   }
 
 }
