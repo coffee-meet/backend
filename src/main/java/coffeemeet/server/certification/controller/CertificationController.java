@@ -41,13 +41,13 @@ public class CertificationController {
 
   @PostMapping("users/company-mail")
   @ResponseStatus(OK)
-  public void verifyMail(
+  public void sendVerificationMail(
       @Login
       AuthInfo authInfo,
       @RequestBody @Valid
       EmailDto emailDto
   ) {
-    certificationService.verifyMail(authInfo.userId(), emailDto.companyEmail());
+    certificationService.sendVerificationMail(authInfo.userId(), emailDto.companyEmail());
   }
 
 }
