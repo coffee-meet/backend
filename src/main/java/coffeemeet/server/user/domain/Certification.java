@@ -1,20 +1,22 @@
 package coffeemeet.server.user.domain;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
 public class Certification {
+
+  private static final String DEFAULT_EMAIL = "default@default.com";
+  private static final String DEFAULT = "default";
 
   @Embedded
   @Column(nullable = false)
-  private CompanyEmail companyEmail;
+  @AttributeOverride(name = "email", column = @Column(name = "company_email"))
+  private Email companyEmail;
 
   @Column(nullable = false)
   private String businessCardUrl;
@@ -25,24 +27,15 @@ public class Certification {
   @Column(nullable = false)
   private String department;
 
-  public Certification(CompanyEmail companyEmail, String businessCardUrl, String department) {
-    validateBusinessCardUrl(businessCardUrl);
-    validateDepartment(department);
-    this.companyEmail = companyEmail;
-    this.businessCardUrl = businessCardUrl;
-    this.department = department;
+  public Certification() {
+    this.companyEmail = new Email(DEFAULT_EMAIL);
+    this.businessCardUrl = DEFAULT;
+    this.department = DEFAULT;
+    isCertificated = false;
   }
 
-  private void validateBusinessCardUrl(String businessCardUrl) {
-    if (!StringUtils.hasText(businessCardUrl)) {
-      throw new IllegalArgumentException("올바르지 않은 명함 url입니다.");
-    }
-  }
-
-  private void validateDepartment(String department) {
-    if (!StringUtils.hasText(department)) {
-      throw new IllegalArgumentException("올바르지 않은 부서 이름입니다.");
-    }
+  public void updateBusinessCardUrl(String newBusinessCardUrl) {
+    this.businessCardUrl = newBusinessCardUrl;
   }
 
   public void certificate() {
