@@ -2,9 +2,12 @@ package coffeemeet.server.common.config;
 
 import coffeemeet.server.auth.utils.JwtTokenProvider;
 import coffeemeet.server.auth.utils.converter.OAuthProviderConverter;
+import coffeemeet.server.common.UserArgumentResolver;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -16,6 +19,11 @@ public class AuthWebConfig implements WebMvcConfigurer {
   @Override
   public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(new OAuthProviderConverter());
+  }
+
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    resolvers.add(new UserArgumentResolver(jwtTokenProvider));
   }
 
 }
