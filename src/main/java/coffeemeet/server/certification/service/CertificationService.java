@@ -49,7 +49,6 @@ public class CertificationService {
   }
 
   public void verifyEmail(Long userId, String verificationCode) {
-    System.out.println(userId);
     VerificationVo verificationVo = verificationVoRepository.findById(userId)
         .orElseThrow(
             () -> new IllegalArgumentException(VERIFICATION_CODE_NOT_FOUND));
