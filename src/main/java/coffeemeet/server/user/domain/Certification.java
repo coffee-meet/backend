@@ -1,6 +1,5 @@
 package coffeemeet.server.user.domain;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -15,8 +14,7 @@ public class Certification {
 
   @Embedded
   @Column(nullable = false)
-  @AttributeOverride(name = "email", column = @Column(name = "company_email"))
-  private Email companyEmail;
+  private CompanyEmail companyEmail;
 
   @Column(nullable = false)
   private String businessCardUrl;
@@ -28,7 +26,7 @@ public class Certification {
   private String department;
 
   public Certification() {
-    this.companyEmail = new Email(DEFAULT_EMAIL);
+    this.companyEmail = new CompanyEmail(DEFAULT_EMAIL);
     this.businessCardUrl = DEFAULT;
     this.department = DEFAULT;
     isCertificated = false;
