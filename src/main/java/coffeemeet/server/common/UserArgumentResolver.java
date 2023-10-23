@@ -1,7 +1,7 @@
 package coffeemeet.server.common;
 
-import coffeemeet.server.auth.RefreshTokenRepository;
 import coffeemeet.server.auth.domain.RefreshToken;
+import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.auth.utils.JwtTokenProvider;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.user.dto.AuthInfo;
@@ -18,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
-  public static final String USER_AUTHENTICATION_FAILED_MESSAGE = "사용자(%s)의 갱신 토큰이 존재하지 않습니다.";
+  public static final String USER_AUTHENTICATION_FAILED_MESSAGE = "사용자(%s)의 재인증(로그인)이 필요합니다.";
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
 
   private final JwtTokenProvider jwtTokenProvider;
