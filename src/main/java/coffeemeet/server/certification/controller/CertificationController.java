@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import coffeemeet.server.certification.dto.EmailDto;
+import coffeemeet.server.certification.dto.VerificationCodeDto;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
@@ -39,7 +40,7 @@ public class CertificationController {
         FileUtils.convertMultipartFileToFile(businessCard));
   }
 
-  @PostMapping("users/company-mail")
+  @PostMapping("/users/company-mail")
   @ResponseStatus(OK)
   public void sendVerificationMail(
       @Login
@@ -48,6 +49,16 @@ public class CertificationController {
       EmailDto emailDto
   ) {
     certificationService.sendVerificationMail(authInfo.userId(), emailDto.companyEmail());
+  }
+
+  @PostMapping("/users/company-mail/verification")
+  public void verifyEmail(
+      @Login
+      AuthInfo authInfo,
+      @RequestBody @Valid
+      VerificationCodeDto verificationCodeDto
+  ) {
+    certificationService.verifyEmail(authInfo.userId(), verificationCodeDto.verificationCode());
   }
 
 }
