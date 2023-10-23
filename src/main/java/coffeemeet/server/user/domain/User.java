@@ -36,11 +36,10 @@ public class User extends AdvancedBaseEntity {
   private Profile profile;
 
   @ManyToOne
-  @JoinColumn(name = "chatting_room_id", nullable = false)
+  @JoinColumn(name = "chatting_room_id")
   private ChattingRoom chattingRoom;
 
   @Embedded
-  @Column(nullable = false)
   private Certification certification;
 
   @Embedded
@@ -56,6 +55,8 @@ public class User extends AdvancedBaseEntity {
   ) {
     this.oauthInfo = oauthInfo;
     this.profile = profile;
+    this.certification = new Certification();
+    this.reportInfo = new ReportInfo();
   }
 
   public void updateBusinessCardUrl(String newBusinessCardUrl) {
