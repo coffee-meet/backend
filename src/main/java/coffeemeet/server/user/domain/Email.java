@@ -2,12 +2,13 @@ package coffeemeet.server.user.domain;
 
 import coffeemeet.server.common.util.Patterns;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
   private String email;
