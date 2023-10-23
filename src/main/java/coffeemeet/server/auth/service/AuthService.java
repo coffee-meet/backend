@@ -16,6 +16,7 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,13 @@ public class AuthService {
     generateInterests(request, newUser);
 
     return authTokensGenerator.generate(newUser.getId());
+  }
+
+  public Optional<AuthTokens> login(OAuthProvider oAuthProvider, String authCode) {
+    OAuthInfoResponse response = oauthMemberClientComposite.fetch(oAuthProvider, authCode);
+    Optional<User> foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
+        response.oAuthProvider(), response.oAuthProviderId());
+    return foundUser.map(user -> authTokensGenerator.generate(user.getId()));
   }
 
   private void checkDuplicateUser(OAuthInfoResponse response) {
