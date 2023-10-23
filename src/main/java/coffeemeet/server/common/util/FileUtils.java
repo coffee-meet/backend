@@ -13,14 +13,6 @@ public final class FileUtils {
   private static final String MULTIPART_FILE_TRANSFER_ERROR = "MULTIPART FILE을 FILE로 변환 중 오류가 발생했습니다.";
   private static final String FILE_DELETE_ERROR = "FILE 삭제 중 오류가 발생했습니다.";
 
-  public static class FileIOException extends RuntimeException {
-
-    public FileIOException(String message, Throwable e) {
-      super(message, e);
-    }
-
-  }
-
   public static File convertMultipartFileToFile(MultipartFile multipartFile) {
     try {
       File file = File.createTempFile("temp", multipartFile.getOriginalFilename());
@@ -37,6 +29,14 @@ public final class FileUtils {
     } catch (IOException e) {
       throw new FileIOException(FILE_DELETE_ERROR, e);
     }
+  }
+
+  public static class FileIOException extends RuntimeException {
+
+    public FileIOException(String message, Throwable e) {
+      super(message, e);
+    }
+
   }
 
 }

@@ -3,6 +3,7 @@ package coffeemeet.server.common.config;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import coffeemeet.server.auth.RefreshTokenRepository;
 import coffeemeet.server.auth.utils.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ public abstract class ControllerTestConfig {
 
   @MockBean
   protected JwtTokenProvider jwtTokenProvider;
+
+  @MockBean
+  protected RefreshTokenRepository refreshTokenRepository;
 
   @BeforeEach
   void setUp(WebApplicationContext ctx, RestDocumentationContextProvider restDocumentation) {
