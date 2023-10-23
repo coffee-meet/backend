@@ -12,7 +12,7 @@ public record UserProfileResponse(
     List<Keyword> interests
 ) {
 
-  public static UserProfileResponse from(User user, List<Interest> interests) {
+  public static UserProfileResponse of(User user, List<Interest> interests) {
     List<Keyword> keywords = interests.stream()
         .map(Interest::getKeyword)
         .toList();

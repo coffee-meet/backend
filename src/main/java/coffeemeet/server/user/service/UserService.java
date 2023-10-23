@@ -30,7 +30,7 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     List<Interest> interests = interestRepository.findAllByUserId(user.getId());
-    return UserProfileResponse.from(user, interests);
+    return UserProfileResponse.of(user, interests);
   }
 
   public MyProfileResponse findMyProfile(Long userId) {
@@ -38,7 +38,7 @@ public class UserService {
         .orElseThrow(IllegalArgumentException::new);
 
     List<Interest> interests = interestRepository.findAllByUserId(userId);
-    return MyProfileResponse.from(user, interests);
+    return MyProfileResponse.of(user, interests);
   }
 
 }
