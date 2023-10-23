@@ -65,9 +65,12 @@ dependencies {
 
 	/* Docs & UI */
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+	testImplementation 'com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
+
+	/* Cloud */
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {
