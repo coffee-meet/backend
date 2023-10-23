@@ -24,7 +24,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
   private final JwtTokenProvider jwtTokenProvider;
   private final RefreshTokenRepository refreshTokenRepository;
 
-
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return parameter.getParameterType().equals(AuthInfo.class) && parameter.hasParameterAnnotation(
