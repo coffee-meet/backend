@@ -3,7 +3,9 @@ package coffeemeet.server.auth.controller;
 import coffeemeet.server.auth.dto.SignupRequest;
 import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.auth.utils.AuthTokens;
+import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.user.domain.OAuthProvider;
+import coffeemeet.server.user.dto.AuthInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -42,6 +44,11 @@ public class AuthController {
   public ResponseEntity<AuthTokens> login(@PathVariable OAuthProvider oAuthProvider,
       @RequestParam String authCode) {
     return ResponseEntity.ok(authService.login(oAuthProvider, authCode));
+  }
+
+  @PostMapping("/renew-token")
+  public ResponseEntity<AuthTokens> renew(@Login AuthInfo authInfo) {
+    return ResponseEntity.ok(authService.renew(authInfo.userId(), authInfo.refreshToken()));
   }
 
 }
