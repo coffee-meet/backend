@@ -9,12 +9,15 @@ import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.user.service.UserService;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CertificationService {
+
+  private static final RandomGenerator randomGenerator = RandomGenerator.getDefault();
 
   private final S3MediaService s3MediaService;
   private final UserService userService;
@@ -29,11 +32,18 @@ public class CertificationService {
     FileUtils.delete(file);
   }
 
-  public void verifyMail(Long userId, String companyEmail) {
-    String verificationCode = emailService.generateVerificationCode();
-    emailService.sendVerificationMail(new CompanyEmail(companyEmail), verificationCode);
+  public void sendVerificationMail(Long userId, String email) {
+    CompanyEmail companyEmail = new CompanyEmail(email);
+    userService.validateDuplicatedCompanyEmail(companyEmail);
+
+    String verificationCode = generateVerificationCode();
+    emailService.sendVerificationMail(companyEmail, verificationCode);
     verificationCodeRepository.save(
         new VerificationCode(userId, verificationCode, LocalDateTime.now()));
+  }
+
+  private String generateVerificationCode() {
+    return String.format("%06d", randomGenerator.nextInt(1000000));
   }
 
 }
