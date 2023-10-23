@@ -1,6 +1,6 @@
 package coffeemeet.server.common.config;
 
-import coffeemeet.server.auth.RefreshTokenRepository;
+import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.auth.utils.JwtTokenProvider;
 import coffeemeet.server.auth.utils.converter.OAuthProviderConverter;
 import coffeemeet.server.common.UserArgumentResolver;
