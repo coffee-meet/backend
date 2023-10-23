@@ -36,6 +36,10 @@ public class Certification {
     this.businessCardUrl = newBusinessCardUrl;
   }
 
+  public void updateCompanyEmail(CompanyEmail newCompanyEmail) {
+    this.companyEmail = newCompanyEmail;
+  }
+
   public void certificate() {
     isCertificated = true;
   }
