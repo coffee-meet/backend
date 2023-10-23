@@ -47,7 +47,7 @@ public class AuthTokensGenerator {
     );
   }
 
-  public AuthTokens refreshJwtToken(Long userId, String refreshToken) {
+  public AuthTokens reissueAccessToken(Long userId, String refreshToken) {
     long now = (new Date()).getTime();
     Date accessTokenExpiredAt = new Date(now + accessTokenExpireTime);
 
