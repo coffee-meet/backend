@@ -2,27 +2,18 @@ package coffeemeet.server.auth.dto;
 
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthProvider;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record SignupRequest(
+    @NotBlank
     String nickname,
+    @NotNull
     List<Keyword> keywords,
+    @NotBlank
     String authCode,
     OAuthProvider oAuthProvider
 ) {
-
-  public static SignupRequest of(
-      String nickname,
-      List<Keyword> keywords,
-      String authCode,
-      OAuthProvider oAuthProvider
-  ) {
-    return new SignupRequest(
-        nickname,
-        keywords,
-        authCode,
-        oAuthProvider
-    );
-  }
 
 }

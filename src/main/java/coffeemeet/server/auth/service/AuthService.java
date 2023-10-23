@@ -16,7 +16,6 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
   private static final String ALREADY_REGISTERED_MESSAGE = "이미 가입된 사용자입니다.";
+  private static final String USER_NOT_REGISTERED_MESSAGE = "해당 아이디(%s)와 로그인 타입(%s)의 유저는 회원가입되지 않았습니다.";
 
   private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
   private final OAuthMemberClientComposite oauthMemberClientComposite;
@@ -63,11 +63,14 @@ public class AuthService {
     return authTokensGenerator.generate(newUser.getId());
   }
 
-  public Optional<AuthTokens> login(OAuthProvider oAuthProvider, String authCode) {
+  public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
     OAuthInfoResponse response = oauthMemberClientComposite.fetch(oAuthProvider, authCode);
-    Optional<User> foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
-        response.oAuthProvider(), response.oAuthProviderId());
-    return foundUser.map(user -> authTokensGenerator.generate(user.getId()));
+    User foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
+            response.oAuthProvider(), response.oAuthProviderId())
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format(USER_NOT_REGISTERED_MESSAGE, response.oAuthProviderId(),
+                response.oAuthProvider())));
+    return authTokensGenerator.generate(foundUser.getId());
   }
 
   private void checkDuplicateUser(OAuthInfoResponse response) {
