@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record UpdateProfileRequest(@NotBlank String nickname,
+                                   @NotBlank String email,
+                                   @NotBlank String name,
                                    @NotNull @Size(min = 1, max = 3) List<Keyword> interests) {
 
 }

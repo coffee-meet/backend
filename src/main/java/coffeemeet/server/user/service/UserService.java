@@ -64,9 +64,14 @@ public class UserService {
   }
 
   @Transactional
-  public void updateProfileInfo(Long userId, String nickname, List<Keyword> interests) {
+  public void updateProfileInfo(Long userId, String nickname, String email, String name,
+      List<Keyword> interests) {
     User user = getUserById(userId);
+
     user.updateNickname(nickname);
+    user.updateEmail(email);
+    user.updateName(name);
+
     interestService.updateInterests(userId, interests);
   }
 

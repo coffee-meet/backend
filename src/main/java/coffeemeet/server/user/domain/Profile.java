@@ -79,4 +79,13 @@ public class Profile {
     this.profileImageUrl = newProfileImageUrl;
   }
 
+  public void updateEmail(String newEmail) {
+    this.email = new Email(newEmail);
+  }
+
+  public void updateName(String newName) {
+    validateName(newName);
+    this.name = newName;
+  }
+
 }
