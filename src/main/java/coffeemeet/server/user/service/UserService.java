@@ -3,8 +3,8 @@ package coffeemeet.server.user.service;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
-import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.interest.service.InterestService;
+import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileResponse;
 import coffeemeet.server.user.dto.UserProfileResponse;
@@ -47,9 +47,6 @@ public class UserService {
 
   public MyProfileResponse findMyProfile(Long userId) {
     User user = getUserById(userId);
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
-
     List<Interest> interests = interestRepository.findAllByUserId(userId);
     return MyProfileResponse.of(user, interests);
   }
@@ -60,24 +57,22 @@ public class UserService {
     user.updateCompanyEmail(companyEmail);
   }
 
-  private User getUserById(Long userId) {
-    return userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
-  }
   @Transactional
   public void updateProfileImage(Long userId, String profileImageUrl) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+    User user = getUserById(userId);
     user.updateProfileImageUrl(profileImageUrl);
   }
 
   @Transactional
   public void updateProfileInfo(Long userId, String nickname, List<Keyword> interests) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
-
-    user.getProfile().updateNickname(nickname);
+    User user = getUserById(userId);
+    user.updateNickname(nickname);
     interestService.updateInterests(userId, interests);
+  }
+
+  private User getUserById(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(IllegalArgumentException::new);
   }
 
 }
