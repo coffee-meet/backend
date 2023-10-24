@@ -63,4 +63,8 @@ public class User extends AdvancedBaseEntity {
     certification.updateBusinessCardUrl(newBusinessCardUrl);
   }
 
+  public void updateProfileImageUrl(String profileImageUrl) {
+    this.profile.updateProfileImageUrl(profileImageUrl);
+  }
+
 }
