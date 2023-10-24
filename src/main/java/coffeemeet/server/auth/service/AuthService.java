@@ -44,11 +44,12 @@ public class AuthService {
   public AuthTokens signup(SignupRequest request) {
     OAuthInfoResponse response = oauthMemberClientComposite.fetch(request.oAuthProvider(),
         request.authCode());
-    checkDuplicateUser(response);
+    checkDuplicatedUser(response);
     String profileImage = checkProfileImage(response.profileImage());
+    String nickname = checkDuplicatedNickname(request.nickname());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
+        Profile.builder().name(response.name()).nickname(nickname).email(response.email())
             .profileImageUrl(profileImage).birth(response.birth()).build());
 
     User newUser = userRepository.save(user);
@@ -80,7 +81,7 @@ public class AuthService {
     refreshTokenRepository.deleteById(userId);
   }
 
-  private void checkDuplicateUser(OAuthInfoResponse response) {
+  private void checkDuplicatedUser(OAuthInfoResponse response) {
     if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
         response.oAuthProvider(), response.oAuthProviderId())) {
       throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
@@ -92,6 +93,13 @@ public class AuthService {
       profileImage = "기본 이미지 URL";
     }
     return profileImage;
+  }
+
+  private String checkDuplicatedNickname(String nickname) {
+    if (userRepository.findUserByProfileNickname(nickname).isPresent()) {
+      throw new IllegalArgumentException("중복된 닉네임입니다.");
+    }
+    return nickname;
   }
 
   private void generateInterests(SignupRequest request, User newUser) {
