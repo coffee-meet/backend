@@ -57,18 +57,23 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.certification = new Certification();
     this.reportInfo = new ReportInfo();
+    this.isDeleted = false;
   }
 
   public void updateBusinessCardUrl(String newBusinessCardUrl) {
-    certification.updateBusinessCardUrl(newBusinessCardUrl);
+    this.certification.updateBusinessCardUrl(newBusinessCardUrl);
   }
 
   public void updateCompanyEmail(CompanyEmail newCompanyEmail) {
-    certification.updateCompanyEmail(newCompanyEmail);
+    this.certification.updateCompanyEmail(newCompanyEmail);
   }
 
-  public void updateProfileImageUrl(String profileImageUrl) {
-    this.profile.updateProfileImageUrl(profileImageUrl);
+  public void updateProfileImageUrl(String newProfileImageUrl) {
+    this.profile.updateProfileImageUrl(newProfileImageUrl);
+  }
+
+  public void updateNickname(String newNickname) {
+    this.profile.updateNickname(newNickname);
   }
 
 }
