@@ -51,4 +51,10 @@ public class AuthController {
     return ResponseEntity.ok(authService.renew(authInfo.userId(), authInfo.refreshToken()));
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(@Login @RequestBody AuthInfo authInfo) {
+    authService.logout(authInfo.userId());
+    return ResponseEntity.noContent().build();
+  }
+
 }
