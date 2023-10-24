@@ -38,14 +38,14 @@ public class UserController {
   public ResponseEntity<Void> updateProfileImage(@Login AuthInfo authInfo,
       @Valid @RequestBody UpdateProfileImageUrlRequest request) {
     userService.updateProfileImage(authInfo.userId(), request.profileImageUrl());
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
       @Valid @RequestBody UpdateProfileRequest request) {
     userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok().build();
   }
 
 }
