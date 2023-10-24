@@ -3,6 +3,7 @@ package coffeemeet.server.user.controller;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.user.dto.AuthInfo;
 import coffeemeet.server.user.dto.MyProfileResponse;
+import coffeemeet.server.user.dto.UpdateProfileImageUrlRequest;
 import coffeemeet.server.user.dto.UpdateProfileRequest;
 import coffeemeet.server.user.dto.UserProfileResponse;
 import coffeemeet.server.user.service.UserService;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,8 +36,8 @@ public class UserController {
 
   @PatchMapping("/me/profile-image")
   public ResponseEntity<Void> updateProfileImage(@Login AuthInfo authInfo,
-      @RequestParam String profileImageUrl) {
-    userService.updateProfileImage(authInfo.userId(), profileImageUrl);
+      @Valid @RequestBody UpdateProfileImageUrlRequest request) {
+    userService.updateProfileImage(authInfo.userId(), request.profileImageUrl());
     return ResponseEntity.noContent().build();
   }
 
