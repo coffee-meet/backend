@@ -4,6 +4,7 @@ import coffeemeet.server.auth.domain.authcode.AuthCodeRequestUrlProviderComposit
 import coffeemeet.server.auth.domain.client.OAuthMemberClientComposite;
 import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import coffeemeet.server.auth.dto.SignupRequest;
+import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.auth.utils.AuthTokens;
 import coffeemeet.server.auth.utils.AuthTokensGenerator;
 import coffeemeet.server.auth.utils.JwtTokenProvider;
@@ -34,6 +35,7 @@ public class AuthService {
   private final InterestRepository interestRepository;
   private final AuthTokensGenerator authTokensGenerator;
   private final JwtTokenProvider jwtTokenProvider;
+  private final RefreshTokenRepository refreshTokenRepository;
 
   public String getAuthCodeRequestUrl(OAuthProvider oAuthProvider) {
     return authCodeRequestUrlProviderComposite.provide(oAuthProvider);
@@ -72,6 +74,10 @@ public class AuthService {
     } else {
       return authTokensGenerator.reissueAccessToken(userId, refreshToken);
     }
+  }
+
+  public void logout(Long userId) {
+    refreshTokenRepository.deleteById(userId);
   }
 
   private void checkDuplicateUser(OAuthInfoResponse response) {
