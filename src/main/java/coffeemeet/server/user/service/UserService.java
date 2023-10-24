@@ -66,8 +66,16 @@ public class UserService {
   @Transactional
   public void updateProfileInfo(Long userId, String nickname, List<Keyword> interests) {
     User user = getUserById(userId);
+    checkDuplicatedNickname(nickname);
+
     user.updateNickname(nickname);
     interestService.updateInterests(userId, interests);
+  }
+
+  public void checkDuplicatedNickname(String nickname) {
+    if (userRepository.findUserByProfileNickname(nickname).isPresent()) {
+      throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+    }
   }
 
   private User getUserById(Long userId) {
