@@ -1,7 +1,9 @@
 package coffeemeet.server.user.service;
 
 import coffeemeet.server.interest.domain.Interest;
+import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
+import coffeemeet.server.interest.service.InterestService;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileResponse;
 import coffeemeet.server.user.dto.UserProfileResponse;
@@ -17,6 +19,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
+  private final InterestService interestService;
 
   @Transactional
   public void updateBusinessCardUrl(Long userId, String businessCardUrl) {
@@ -27,7 +30,7 @@ public class UserService {
 
   public UserProfileResponse findUserProfile(String nickname) {
     User user = userRepository.findUserByProfileNickname(nickname)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
     List<Interest> interests = interestRepository.findAllByUserId(user.getId());
     return UserProfileResponse.of(user, interests);
@@ -35,10 +38,30 @@ public class UserService {
 
   public MyProfileResponse findMyProfile(Long userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
     List<Interest> interests = interestRepository.findAllByUserId(userId);
     return MyProfileResponse.of(user, interests);
+  }
+
+  @Transactional
+  public void updateProfileImage(Long userId, String profileImageUrl) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+    user.updateProfileImageUrl(profileImageUrl);
+  }
+
+  @Transactional
+  public void updateProfileInfo(Long userId, String nickname, List<Keyword> interests) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+    if (nickname != null) {
+      user.getProfile().updateNickname(nickname);
+    }
+    if (interests != null && !interests.isEmpty()) {
+      interestService.updateInterests(userId, interests);
+    }
   }
 
 }
