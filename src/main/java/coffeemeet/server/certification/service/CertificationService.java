@@ -1,6 +1,6 @@
 package coffeemeet.server.certification.service;
 
-import coffeemeet.server.certification.domain.VerificationVo;
+import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.repository.VerificationVoRepository;
 import coffeemeet.server.common.media.EmailService;
 import coffeemeet.server.common.media.S3MediaService;
@@ -8,7 +8,6 @@ import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.user.service.UserService;
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class CertificationService {
     String verificationCode = generateVerificationCode();
     emailService.sendVerificationCode(companyEmail, verificationCode);
     verificationVoRepository.save(
-        new VerificationVo(userId, companyEmail, verificationCode, LocalDateTime.now()));
+        new EmailVerification(userId, companyEmail, verificationCode));
   }
 
   private String generateVerificationCode() {
@@ -49,15 +48,15 @@ public class CertificationService {
   }
 
   public void verifyEmail(Long userId, String verificationCode) {
-    VerificationVo verificationVo = verificationVoRepository.findById(userId)
+    EmailVerification emailVerification = verificationVoRepository.findById(userId)
         .orElseThrow(
             () -> new IllegalArgumentException(VERIFICATION_CODE_NOT_FOUND));
 
-    if (!verificationVo.getCode().equals(verificationCode)) {
+    if (!emailVerification.getCode().equals(verificationCode)) {
       throw new IllegalArgumentException(WRONG_VERIFICATION_CODE);
     }
 
-    userService.updateCompanyEmail(userId, verificationVo.getCompanyEmail());
+    userService.updateCompanyEmail(userId, emailVerification.getCompanyEmail());
   }
 
 }

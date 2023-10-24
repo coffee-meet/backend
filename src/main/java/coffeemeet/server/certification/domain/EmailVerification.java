@@ -7,8 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
-@RedisHash(value = "verification_vo", timeToLive = 360)
-public class VerificationVo {
+@RedisHash(value = "email_verification", timeToLive = 360)
+public class EmailVerification {
 
   @Id
   private Long userId;
@@ -16,11 +16,11 @@ public class VerificationVo {
   private String code;
   private LocalDateTime createdAt;
 
-  public VerificationVo(Long userId, CompanyEmail companyEmail, String code,
-      LocalDateTime createdAt) {
+  public EmailVerification(Long userId, CompanyEmail companyEmail, String code) {
     this.userId = userId;
     this.companyEmail = companyEmail;
     this.code = code;
-    this.createdAt = createdAt;
+    this.createdAt = LocalDateTime.now();
   }
+
 }
