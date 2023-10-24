@@ -18,7 +18,7 @@ public class EmailService {
     this.sender = sender;
   }
 
-  public void sendVerificationMail(CompanyEmail companyMail, String verificationCode) {
+  public void sendVerificationCode(CompanyEmail companyMail, String verificationCode) {
     SimpleMailMessage mailMessage = new SimpleMailMessage();
     mailMessage.setFrom(sender);
     mailMessage.setTo(companyMail.getCompanyEmail());

@@ -39,7 +39,7 @@ public class CertificationService {
     userService.validateDuplicatedCompanyEmail(companyEmail);
 
     String verificationCode = generateVerificationCode();
-    emailService.sendVerificationMail(companyEmail, verificationCode);
+    emailService.sendVerificationCode(companyEmail, verificationCode);
     verificationVoRepository.save(
         new VerificationVo(userId, companyEmail, verificationCode, LocalDateTime.now()));
   }
@@ -59,4 +59,5 @@ public class CertificationService {
 
     userService.updateCompanyEmail(userId, verificationVo.getCompanyEmail());
   }
+
 }
