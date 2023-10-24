@@ -33,7 +33,14 @@ public class Certification {
   }
 
   public void updateBusinessCardUrl(String newBusinessCardUrl) {
+    validateBusinessCardUrl(newBusinessCardUrl);
     this.businessCardUrl = newBusinessCardUrl;
+  }
+
+  private void validateBusinessCardUrl(String businessCardUrl) {
+    if (businessCardUrl == null) {
+      throw new IllegalArgumentException("잘못된 명함 URL입니다.");
+    }
   }
 
   public void updateCompanyEmail(CompanyEmail newCompanyEmail) {
