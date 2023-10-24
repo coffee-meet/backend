@@ -69,14 +69,14 @@ public class Profile {
     }
   }
 
-  public void updateNickname(String nickname) {
+  public void updateNickname(String newNickname) {
     validateNickname(nickname);
-    this.nickname = nickname;
+    this.nickname = newNickname;
   }
 
-  public void updateProfileImageUrl(String profileImageUrl) {
+  public void updateProfileImageUrl(String newProfileImageUrl) {
     validateProfileImage(profileImageUrl);
-    this.profileImageUrl = profileImageUrl;
+    this.profileImageUrl = newProfileImageUrl;
   }
 
 }
