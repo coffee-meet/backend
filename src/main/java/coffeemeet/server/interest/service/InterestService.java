@@ -14,20 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InterestService {
 
-  private static final int MAX_INTERESTS = 3;
-
   private final InterestRepository interestRepository;
   private final UserRepository userRepository;
 
   @Transactional
   public void updateInterests(Long userId, List<Keyword> interests) {
-    validateInterests(interests);
 
     for (Keyword interest : interests) {
-      if (!Keyword.isValidKeyword(interest.name())) {
+      try {
+        Keyword.valueOf(interest.name());
+      } catch (IllegalArgumentException e) {
         throw new IllegalArgumentException("유효한 관심사가 아닙니다.");
       }
     }
+
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
@@ -37,12 +37,6 @@ public class InterestService {
     for (Keyword keyword : interests) {
       Interest newInterest = new Interest(keyword, user);
       interestRepository.save(newInterest);
-    }
-  }
-
-  private void validateInterests(List<Keyword> interests) {
-    if (interests.isEmpty() || interests.size() > MAX_INTERESTS) {
-      throw new IllegalArgumentException("최소 1개, 최대 3개의 관심사를 선택하세요.");
     }
   }
 
