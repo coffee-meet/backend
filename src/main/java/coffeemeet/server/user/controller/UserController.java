@@ -8,6 +8,7 @@ import coffeemeet.server.user.dto.UpdateProfileRequest;
 import coffeemeet.server.user.dto.UserProfileResponse;
 import coffeemeet.server.user.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +43,8 @@ public class UserController {
   @PostMapping("/me/profile-image")
   public ResponseEntity<Void> updateProfileImage(
       @Login AuthInfo authInfo,
-      @NotNull
       @RequestPart("profileImage")
-      MultipartFile profileImage) {
+      @NotNull MultipartFile profileImage) {
     userService.updateProfileImage(
         authInfo.userId(),
         FileUtils.convertMultipartFileToFile(profileImage));
@@ -60,7 +60,7 @@ public class UserController {
   }
 
   @GetMapping("/duplicate")
-  public ResponseEntity<Void> checkDuplicatedNickname(@RequestParam String nickname) {
+  public ResponseEntity<Void> checkDuplicatedNickname(@RequestParam @NotBlank String nickname) {
     userService.checkDuplicatedNickname(nickname);
     return ResponseEntity.ok().build();
   }
