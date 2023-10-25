@@ -38,7 +38,6 @@ public class AuthService {
   private final InterestRepository interestRepository;
   private final AuthTokensGenerator authTokensGenerator;
   private final JwtTokenProvider jwtTokenProvider;
-  private final UserService userService;
   private final RefreshTokenRepository refreshTokenRepository;
 
   public String getAuthCodeRequestUrl(OAuthProvider oAuthProvider) {
@@ -90,13 +89,6 @@ public class AuthService {
   public void delete(Long userId) {
     userService.deleteUser(userId);
     refreshTokenRepository.deleteById(userId);
-  }
-
-  private void checkDuplicateUser(OAuthInfoResponse response) {
-    if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
-        response.oAuthProvider(), response.oAuthProviderId())) {
-      throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
-    }
   }
 
   private String checkProfileImage(String profileImage) {
