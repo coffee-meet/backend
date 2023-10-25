@@ -92,6 +92,12 @@ public class UserService {
     interestService.updateInterests(userId, interests);
   }
 
+  @Transactional
+  public void deleteUser(Long userId) {
+    interestRepository.deleteById(userId);
+    userRepository.deleteById(userId);
+  }
+
   public void checkDuplicatedNickname(String nickname) {
     if (userRepository.findUserByProfileNickname(nickname).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
