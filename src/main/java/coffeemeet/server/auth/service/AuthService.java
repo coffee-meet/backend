@@ -1,24 +1,10 @@
 package coffeemeet.server.auth.service;
 
-import coffeemeet.server.auth.domain.authcode.AuthCodeRequestUrlProviderComposite;
-import coffeemeet.server.auth.domain.client.OAuthMemberClientComposite;
-import coffeemeet.server.auth.dto.OAuthInfoResponse;
-import coffeemeet.server.auth.dto.SignupRequest;
-import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.auth.utils.AuthTokens;
-import coffeemeet.server.auth.utils.AuthTokensGenerator;
-import coffeemeet.server.auth.utils.JwtTokenProvider;
-import coffeemeet.server.interest.domain.Interest;
-import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.interest.repository.InterestRepository;
-import coffeemeet.server.user.domain.OAuthInfo;
-import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.domain.Profile;
-import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.repository.UserRepository;
+import coffeemeet.server.auth.domain.AuthTokens;
+import coffeemeet.server.auth.domain.AuthTokensGenerator;
+import coffeemeet.server.auth.domain.JwtTokenProvider;
+import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.user.service.UserService;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,50 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
   private static final String EXPIRED_REFRESH_TOKEN_MESSAGE = "리프레시 토큰이 만료되었습니다. 다시 로그인해 주세요.";
-  private static final String USER_NOT_REGISTERED_MESSAGE = "해당 아이디(%s)와 로그인 타입(%s)의 유저는 회원가입되지 않았습니다.";
-  private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
-  private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
-  private final OAuthMemberClientComposite oauthMemberClientComposite;
   private final UserService userService;
-  private final UserRepository userRepository;
-  private final InterestRepository interestRepository;
   private final AuthTokensGenerator authTokensGenerator;
   private final JwtTokenProvider jwtTokenProvider;
   private final RefreshTokenRepository refreshTokenRepository;
-
-  public String getAuthCodeRequestUrl(OAuthProvider oAuthProvider) {
-    return authCodeRequestUrlProviderComposite.provide(oAuthProvider);
-  }
-
-  @Transactional
-  public AuthTokens signup(SignupRequest request) {
-    OAuthInfoResponse response = oauthMemberClientComposite.fetch(request.oAuthProvider(),
-        request.authCode());
-
-    userService.checkDuplicatedUser(response);
-    userService.checkDuplicatedNickname(request.nickname());
-    String profileImage = checkProfileImage(response.profileImage());
-
-    User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
-            .profileImageUrl(profileImage).birth(response.birth()).build());
-
-    User newUser = userRepository.save(user);
-    saveInterests(request, newUser);
-
-    return authTokensGenerator.generate(newUser.getId());
-  }
-
-  public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthInfoResponse response = oauthMemberClientComposite.fetch(oAuthProvider, authCode);
-    User foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
-        response.oAuthProvider(), response.oAuthProviderId()).orElseThrow(
-        () -> new IllegalArgumentException(
-            String.format(USER_NOT_REGISTERED_MESSAGE, response.oAuthProviderId(),
-                response.oAuthProvider())));
-    return authTokensGenerator.generate(foundUser.getId());
-  }
 
   public AuthTokens renew(Long userId, String refreshToken) {
     if (jwtTokenProvider.isExpiredRefreshToken(refreshToken)) {
@@ -89,21 +36,6 @@ public class AuthService {
   public void delete(Long userId) {
     userService.deleteUser(userId);
     refreshTokenRepository.deleteById(userId);
-  }
-
-  private String checkProfileImage(String profileImage) {
-    if (profileImage == null) {
-      profileImage = DEFAULT_IMAGE_URL;
-    }
-    return profileImage;
-  }
-
-  private void saveInterests(SignupRequest request, User newUser) {
-    List<Interest> interests = new ArrayList<>();
-    for (Keyword value : request.keywords()) {
-      interests.add(new Interest(value, newUser));
-    }
-    interestRepository.saveAll(interests);
   }
 
 }

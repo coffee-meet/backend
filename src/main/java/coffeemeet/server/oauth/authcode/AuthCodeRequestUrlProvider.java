@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.domain.authcode;
+package coffeemeet.server.oauth.authcode;
 
 import coffeemeet.server.user.domain.OAuthProvider;
 

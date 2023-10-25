@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.utils;
+package coffeemeet.server.auth.domain;
 
 public record AuthTokens(
     String accessToken,

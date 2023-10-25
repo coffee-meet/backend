@@ -1,7 +1,6 @@
-package coffeemeet.server.auth.utils;
+package coffeemeet.server.auth.domain;
 
-import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
+import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

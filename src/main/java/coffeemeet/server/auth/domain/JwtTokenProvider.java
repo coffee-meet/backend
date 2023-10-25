@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.utils;
+package coffeemeet.server.auth.domain;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
