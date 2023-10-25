@@ -1,6 +1,6 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.dto;
+package coffeemeet.server.oauth.infrastructure.kakao.dto;
 
-import coffeemeet.server.auth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.dto.OAuthInfoResponse;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.OAuthProvider;

@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.dto;
+package coffeemeet.server.oauth.infrastructure.kakao.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

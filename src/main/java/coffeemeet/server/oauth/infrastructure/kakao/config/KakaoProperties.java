@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.config;
+package coffeemeet.server.oauth.infrastructure.kakao.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.config;
+package coffeemeet.server.oauth.infrastructure.kakao.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

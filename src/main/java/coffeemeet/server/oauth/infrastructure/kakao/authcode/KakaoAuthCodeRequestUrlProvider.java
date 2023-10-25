@@ -1,7 +1,7 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.authcode;
+package coffeemeet.server.oauth.infrastructure.kakao.authcode;
 
-import coffeemeet.server.auth.domain.authcode.AuthCodeRequestUrlProvider;
-import coffeemeet.server.auth.infrastructure.oauth.kakao.config.KakaoProperties;
+import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProvider;
+import coffeemeet.server.oauth.infrastructure.kakao.config.KakaoProperties;
 import coffeemeet.server.user.domain.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

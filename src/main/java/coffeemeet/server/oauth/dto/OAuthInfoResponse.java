@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.dto;
+package coffeemeet.server.oauth.dto;
 
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;

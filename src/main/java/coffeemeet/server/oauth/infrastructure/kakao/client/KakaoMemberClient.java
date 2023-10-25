@@ -1,9 +1,9 @@
-package coffeemeet.server.auth.infrastructure.oauth.kakao.client;
+package coffeemeet.server.oauth.infrastructure.kakao.client;
 
-import coffeemeet.server.auth.domain.client.OAuthMemberClient;
-import coffeemeet.server.auth.dto.OAuthInfoResponse;
-import coffeemeet.server.auth.infrastructure.oauth.kakao.dto.KakaoMemberResponse;
-import coffeemeet.server.auth.infrastructure.oauth.kakao.dto.KakaoTokens;
+import coffeemeet.server.oauth.client.OAuthMemberClient;
+import coffeemeet.server.oauth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberResponse;
+import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

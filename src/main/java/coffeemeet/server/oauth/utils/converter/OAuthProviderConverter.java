@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.utils.converter;
+package coffeemeet.server.oauth.utils.converter;
 
 import coffeemeet.server.user.domain.OAuthProvider;
 import jakarta.validation.constraints.NotNull;
