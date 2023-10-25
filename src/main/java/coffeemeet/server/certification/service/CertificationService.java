@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class CertificationService {
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
-  @Transactional
   public void registerCertification(long userId, String email, String departmentName,
       File businessCardImage) {
     String key = s3MediaService.generateKey(BUSINESS_CARD);
@@ -57,7 +55,6 @@ public class CertificationService {
     FileUtils.delete(businessCardUrl);
   }
 
-  @Transactional
   public void sendVerificationMail(Long userId, String email) {
     CompanyEmail companyEmail = new CompanyEmail(email);
     certificationQuery.checkDuplicatedCompanyEmail(companyEmail);
