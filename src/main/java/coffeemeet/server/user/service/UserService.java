@@ -1,5 +1,6 @@
 package coffeemeet.server.user.service;
 
+import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
 
 import coffeemeet.server.common.media.S3MediaService;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   public static final String EXISTED_COMPANY_EMAIL_ERROR = "이미 사용 중인 회사이메일입니다.";
+  private static final String ALREADY_REGISTERED_MESSAGE = "이미 가입된 사용자입니다.";
 
   private final S3MediaService s3MediaService;
   private final UserRepository userRepository;
@@ -93,6 +95,13 @@ public class UserService {
   public void checkDuplicatedNickname(String nickname) {
     if (userRepository.findUserByProfileNickname(nickname).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+    }
+  }
+
+  public void checkDuplicatedUser(OAuthInfoResponse response) {
+    if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
+        response.oAuthProvider(), response.oAuthProviderId())) {
+      throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
     }
   }
 

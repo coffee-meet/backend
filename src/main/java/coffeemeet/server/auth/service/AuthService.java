@@ -16,6 +16,7 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
+import coffeemeet.server.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,12 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
   private static final String EXPIRED_REFRESH_TOKEN_MESSAGE = "리프레시 토큰이 만료되었습니다. 다시 로그인해 주세요.";
-  private static final String ALREADY_REGISTERED_MESSAGE = "이미 가입된 사용자입니다.";
   private static final String USER_NOT_REGISTERED_MESSAGE = "해당 아이디(%s)와 로그인 타입(%s)의 유저는 회원가입되지 않았습니다.";
   private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
   private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
   private final OAuthMemberClientComposite oauthMemberClientComposite;
+  private final UserService userService;
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
   private final AuthTokensGenerator authTokensGenerator;
@@ -45,12 +46,13 @@ public class AuthService {
   public AuthTokens signup(SignupRequest request) {
     OAuthInfoResponse response = oauthMemberClientComposite.fetch(request.oAuthProvider(),
         request.authCode());
-    checkDuplicatedUser(response);
+
+    userService.checkDuplicatedUser(response);
+    userService.checkDuplicatedNickname(request.nickname());
     String profileImage = checkProfileImage(response.profileImage());
-    String nickname = checkDuplicatedNickname(request.nickname());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(nickname).email(response.email())
+        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
             .profileImageUrl(profileImage).birth(response.birth()).build());
 
     User newUser = userRepository.save(user);
@@ -79,13 +81,6 @@ public class AuthService {
 
   public void logout(Long userId) {
     refreshTokenRepository.deleteById(userId);
-  }
-
-  private void checkDuplicatedUser(OAuthInfoResponse response) {
-    if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
-        response.oAuthProvider(), response.oAuthProviderId())) {
-      throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
-    }
   }
 
   private String checkProfileImage(String profileImage) {
