@@ -15,26 +15,26 @@ public class Birth {
   private static final int BIRTH_LENGTH = 4;
 
   @Column(nullable = false, length = BIRTH_LENGTH)
-  String year;
+  String birthYear;
 
   @Column(nullable = false, length = BIRTH_LENGTH)
-  String day;
+  String birthDay;
 
-  public Birth(String year, String day) {
-    validateYear(year);
-    validateDay(day);
-    this.year = year;
-    this.day = day;
+  public Birth(String birthYear, String birthDay) {
+    validateYear(birthYear);
+    validateDay(birthDay);
+    this.birthYear = birthYear;
+    this.birthDay = birthDay;
   }
 
-  private void validateYear(String year) {
-    if (!StringUtils.hasText(year) || year.length() != BIRTH_LENGTH) {
+  private void validateYear(String birthYear) {
+    if (!StringUtils.hasText(birthYear) || birthYear.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 연도 형식입니다.");
     }
   }
 
-  private void validateDay(String day) {
-    if (!StringUtils.hasText(day) || day.length() != BIRTH_LENGTH) {
+  private void validateDay(String birthDay) {
+    if (!StringUtils.hasText(birthDay) || birthDay.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 날짜 형식입니다.");
     }
   }
