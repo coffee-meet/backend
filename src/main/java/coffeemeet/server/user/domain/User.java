@@ -76,10 +76,6 @@ public class User extends AdvancedBaseEntity {
     this.profile.updateNickname(newNickname);
   }
 
-  public void updateEmail(String newEmail) {
-    this.profile.updateEmail(newEmail);
-  }
-
   public void updateName(String newName) {
     this.profile.updateName(newName);
   }
