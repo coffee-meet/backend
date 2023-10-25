@@ -29,6 +29,7 @@ public class CertificationCommand {
     );
   }
 
+  @Transactional(readOnly = true)
   public void applyIfCertifiedUser(Long userId, Consumer<? super Certification> consumer) {
     certificationRepository.findByUserId(userId).ifPresent(consumer);
   }
