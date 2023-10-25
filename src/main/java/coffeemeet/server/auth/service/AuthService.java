@@ -53,8 +53,7 @@ public class AuthService {
             .profileImageUrl(profileImage).birth(response.birth()).build());
 
     User newUser = userRepository.save(user);
-
-    generateInterests(request, newUser);
+    saveInterests(request, newUser);
 
     return authTokensGenerator.generate(newUser.getId());
   }
@@ -95,14 +94,7 @@ public class AuthService {
     return profileImage;
   }
 
-  private String checkDuplicatedNickname(String nickname) {
-    if (userRepository.findUserByProfileNickname(nickname).isPresent()) {
-      throw new IllegalArgumentException("중복된 닉네임입니다.");
-    }
-    return nickname;
-  }
-
-  private void generateInterests(SignupRequest request, User newUser) {
+  private void saveInterests(SignupRequest request, User newUser) {
     List<Interest> interests = new ArrayList<>();
     for (Keyword value : request.keywords()) {
       interests.add(new Interest(value, newUser));
