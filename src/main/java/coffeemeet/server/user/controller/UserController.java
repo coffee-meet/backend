@@ -1,9 +1,12 @@
 package coffeemeet.server.user.controller;
 
+import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
+import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.dto.AuthInfo;
 import coffeemeet.server.user.dto.MyProfileResponse;
+import coffeemeet.server.user.dto.SignupRequest;
 import coffeemeet.server.user.dto.UpdateProfileRequest;
 import coffeemeet.server.user.dto.UserProfileResponse;
 import coffeemeet.server.user.service.UserService;
@@ -29,6 +32,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
   private final UserService userService;
+
+  @PostMapping("/sign-up")
+  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupRequest request) {
+    return ResponseEntity.ok(userService.signup(request));
+  }
+
+  @GetMapping("/login/{oAuthProvider}")
+  public ResponseEntity<AuthTokens> login(@PathVariable OAuthProvider oAuthProvider,
+      @RequestParam String authCode) {
+    return ResponseEntity.ok(userService.login(oAuthProvider, authCode));
+  }
 
   @GetMapping("/{nickname}")
   public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable String nickname) {
