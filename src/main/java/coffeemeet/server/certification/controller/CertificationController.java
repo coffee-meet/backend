@@ -39,18 +39,18 @@ public class CertificationController {
   @PostMapping("/users/company-mail")
   public ResponseEntity<Void> sendVerificationCodeByEmail(
       @Login AuthInfo authInfo,
-      @Valid @RequestBody EmailDto emailDto
+      @Valid @RequestBody EmailDto.Request request
   ) {
-    certificationService.sendVerificationMail(authInfo.userId(), emailDto.companyEmail());
+    certificationService.sendVerificationMail(authInfo.userId(), request.companyEmail());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/users/company-mail/verification")
   public ResponseEntity<Void> verifyEmail(
       @Login AuthInfo authInfo,
-      @Valid @RequestBody VerificationCodeDto verificationCodeDto
+      @Valid @RequestBody VerificationCodeDto.Request request
   ) {
-    certificationService.verifyEmail(authInfo.userId(), verificationCodeDto.verificationCode());
+    certificationService.verifyEmail(authInfo.userId(), request.verificationCode());
     return ResponseEntity.ok().build();
   }
 
