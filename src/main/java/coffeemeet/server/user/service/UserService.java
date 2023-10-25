@@ -1,5 +1,8 @@
 package coffeemeet.server.user.service;
 
+import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
+
+import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
@@ -9,6 +12,7 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileResponse;
 import coffeemeet.server.user.dto.UserProfileResponse;
 import coffeemeet.server.user.repository.UserRepository;
+import java.io.File;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ public class UserService {
 
   public static final String EXISTED_COMPANY_EMAIL_ERROR = "이미 사용 중인 회사이메일입니다.";
 
+  private final S3MediaService s3MediaService;
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
   private final InterestService interestService;
@@ -58,9 +63,18 @@ public class UserService {
   }
 
   @Transactional
-  public void updateProfileImage(Long userId, String profileImageUrl) {
+  public void updateProfileImage(Long userId, File file) {
     User user = getUserById(userId);
-    user.updateProfileImageUrl(profileImageUrl);
+    deleteCurrentProfileImage(user);
+    String key = s3MediaService.generateKey(PROFILE_IMAGE);
+    s3MediaService.upload(key, file);
+    user.updateProfileImageUrl(s3MediaService.getUrl(key));
+  }
+
+  private void deleteCurrentProfileImage(User user) {
+    String currentKey = s3MediaService.extractKey(user.getProfile().getProfileImageUrl(),
+        PROFILE_IMAGE);
+    s3MediaService.delete(currentKey);
   }
 
   @Transactional

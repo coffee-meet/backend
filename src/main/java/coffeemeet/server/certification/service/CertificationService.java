@@ -1,5 +1,7 @@
 package coffeemeet.server.certification.service;
 
+import static coffeemeet.server.common.media.S3MediaService.KeyType.BUSINESS_CARD;
+
 import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.repository.VerificationVoRepository;
 import coffeemeet.server.common.media.EmailService;
@@ -26,7 +28,7 @@ public class CertificationService {
   private final VerificationVoRepository verificationVoRepository;
 
   public void uploadBusinessCard(long userId, File file) {
-    String key = s3MediaService.generateBusinessCardKey();
+    String key = s3MediaService.generateKey(BUSINESS_CARD);
     s3MediaService.upload(key, file);
     userService.updateBusinessCardUrl(userId, s3MediaService.getUrl(key));
 

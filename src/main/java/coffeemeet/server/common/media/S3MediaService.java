@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +34,31 @@ public class S3MediaService {
     return amazonS3.getUrl(bucketName, key).toExternalForm();
   }
 
-  public String generateBusinessCardKey() {
-    return String.format("BusinessCard-%s-%s", LocalDateTime.now(), UUID.randomUUID());
+  public String generateKey(KeyType keyType) {
+    return String.format("%s-%s-%s", keyType.value, LocalDateTime.now(),
+        UUID.randomUUID());
+  }
+
+  public String extractKey(String s3Url, KeyType keyType) {
+    int startIndex = s3Url.indexOf(keyType.value);
+    if (startIndex == -1) {
+      throw new IllegalArgumentException("올바르지 않은 S3 URL입니다.");
+    }
+    return s3Url.substring(startIndex);
+  }
+
+  @Getter
+  public enum KeyType {
+    BUSINESS_CARD("BusinessCard"),
+    PROFILE_IMAGE("ProfileImage"),
+    ;
+
+    private String value;
+
+    KeyType(String value) {
+      this.value = value;
+    }
+
   }
 
 }
