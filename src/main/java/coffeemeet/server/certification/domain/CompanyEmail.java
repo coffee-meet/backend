@@ -1,20 +1,23 @@
-package coffeemeet.server.user.domain;
+package coffeemeet.server.certification.domain;
 
 import coffeemeet.server.common.util.Patterns;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompanyEmail {
 
-  private String companyEmail;
+  @Column(name = "company_email")
+  private String value;
 
-  public CompanyEmail(String companyEmail) {
-    validateCompanyEmail(companyEmail);
-    this.companyEmail = companyEmail;
+  public CompanyEmail(String value) {
+    validateCompanyEmail(value);
+    this.value = value;
   }
 
   private void validateCompanyEmail(String companyEmail) {
