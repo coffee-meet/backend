@@ -44,7 +44,8 @@ public class UserController {
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
       @Valid @RequestBody UpdateProfileRequest request) {
-    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
+    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.name(),
+        request.interests());
     return ResponseEntity.noContent().build();
   }
 
