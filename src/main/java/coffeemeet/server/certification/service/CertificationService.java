@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CertificationService {
 
-  private static final String VERIFICATION_CODE_NOT_FOUND = "인증코드 기간이 만료되었거나 해당 유저가 인증 번호를 요청한 기록이 없습니다.";
   private static final String WRONG_VERIFICATION_CODE = "잘못된 인증코드입니다.";
   private static final RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
 
@@ -34,7 +33,6 @@ public class CertificationService {
   private final CertificationQuery certificationQuery;
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
-
 
   @Transactional
   public void registerCertification(long userId, String email, String departmentName,
