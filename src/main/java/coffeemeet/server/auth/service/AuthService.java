@@ -28,6 +28,7 @@ public class AuthService {
   private static final String EXPIRED_REFRESH_TOKEN_MESSAGE = "리프레시 토큰이 만료되었습니다. 다시 로그인해 주세요.";
   private static final String ALREADY_REGISTERED_MESSAGE = "이미 가입된 사용자입니다.";
   private static final String USER_NOT_REGISTERED_MESSAGE = "해당 아이디(%s)와 로그인 타입(%s)의 유저는 회원가입되지 않았습니다.";
+  private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
   private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
   private final OAuthMemberClientComposite oauthMemberClientComposite;
@@ -89,7 +90,7 @@ public class AuthService {
 
   private String checkProfileImage(String profileImage) {
     if (profileImage == null) {
-      profileImage = "기본 이미지 URL";
+      profileImage = DEFAULT_IMAGE_URL;
     }
     return profileImage;
   }
