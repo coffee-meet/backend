@@ -50,7 +50,7 @@ public class CertificationController {
       @Login AuthInfo authInfo,
       @Valid @RequestBody VerificationCodeDto.Request request
   ) {
-    certificationService.verifyEmail(authInfo.userId(), request.verificationCode());
+    certificationService.compareCode(authInfo.userId(), request.verificationCode());
     return ResponseEntity.ok().build();
   }
 

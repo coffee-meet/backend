@@ -4,10 +4,10 @@ import static coffeemeet.server.common.media.S3MediaService.KeyType.BUSINESS_CAR
 
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
-import coffeemeet.server.certification.domain.EmailVerification;
-import coffeemeet.server.certification.repository.VerificationVoRepository;
 import coffeemeet.server.certification.service.cq.CertificationCommand;
 import coffeemeet.server.certification.service.cq.CertificationQuery;
+import coffeemeet.server.certification.service.cq.EmailVerificationCommand;
+import coffeemeet.server.certification.service.cq.EmailVerificationQuery;
 import coffeemeet.server.common.media.EmailService;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.common.util.FileUtils;
@@ -30,9 +30,11 @@ public class CertificationService {
   private final S3MediaService s3MediaService;
   private final EmailService emailService;
   private final UserService userService;
-  private final VerificationVoRepository verificationVoRepository;
-  private final CertificationQuery certificationQuery;
   private final CertificationCommand certificationCommand;
+  private final CertificationQuery certificationQuery;
+  private final EmailVerificationCommand emailVerificationCommand;
+  private final EmailVerificationQuery emailVerificationQuery;
+
 
   @Transactional
   public void registerCertification(long userId, String email, String departmentName,
@@ -64,14 +66,12 @@ public class CertificationService {
 
     String verificationCode = generateVerificationCode();
     emailService.sendVerificationCode(companyEmail, verificationCode);
-    verificationVoRepository.save(new EmailVerification(userId, companyEmail, verificationCode));
+    emailVerificationCommand.newEmailVerification(userId, companyEmail, verificationCode);
   }
 
-  @Transactional(readOnly = true)
-  public void verifyEmail(Long userId, String verificationCode) {
-    EmailVerification emailVerification = verificationVoRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException(VERIFICATION_CODE_NOT_FOUND));
-    if (!emailVerification.getCode().equals(verificationCode)) {
+  public void compareCode(Long userId, String verificationCode) {
+    String correctCode = emailVerificationQuery.getCodeById(userId);
+    if (!correctCode.equals(verificationCode)) {
       throw new IllegalArgumentException(WRONG_VERIFICATION_CODE);
     }
   }
