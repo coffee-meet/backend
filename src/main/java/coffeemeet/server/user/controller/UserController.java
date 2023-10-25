@@ -25,14 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/{nickname}")
-  public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable String nickname) {
-    return ResponseEntity.ok(userService.findUserProfile(nickname));
+  @GetMapping("/{userId}")
+  public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable long userId) {
+    return ResponseEntity.ok(userService.findUserProfile(userId));
   }
 
   @GetMapping("/me")
