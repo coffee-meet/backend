@@ -3,8 +3,8 @@ package coffeemeet.server.common.config;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.auth.utils.JwtTokenProvider;
+import coffeemeet.server.auth.domain.JwtTokenProvider;
+import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
