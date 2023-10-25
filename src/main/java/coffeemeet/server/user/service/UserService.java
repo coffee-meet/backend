@@ -88,6 +88,12 @@ public class UserService {
     interestService.updateInterests(userId, interests);
   }
 
+  @Transactional
+  public void deleteUser(Long userId) {
+    interestRepository.deleteById(userId);
+    userRepository.deleteById(userId);
+  }
+
   private User getUserById(Long userId) {
     return userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);

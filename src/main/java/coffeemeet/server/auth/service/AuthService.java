@@ -16,10 +16,12 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
+import coffeemeet.server.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +37,14 @@ public class AuthService {
   private final InterestRepository interestRepository;
   private final AuthTokensGenerator authTokensGenerator;
   private final JwtTokenProvider jwtTokenProvider;
+  private final UserService userService;
   private final RefreshTokenRepository refreshTokenRepository;
 
   public String getAuthCodeRequestUrl(OAuthProvider oAuthProvider) {
     return authCodeRequestUrlProviderComposite.provide(oAuthProvider);
   }
 
+  @Transactional
   public AuthTokens signup(SignupRequest request) {
     OAuthInfoResponse response = oauthMemberClientComposite.fetch(request.oAuthProvider(),
         request.authCode());
@@ -77,6 +81,12 @@ public class AuthService {
   }
 
   public void logout(Long userId) {
+    refreshTokenRepository.deleteById(userId);
+  }
+
+  @Transactional
+  public void delete(Long userId) {
+    userService.deleteUser(userId);
     refreshTokenRepository.deleteById(userId);
   }
 
