@@ -22,8 +22,8 @@ public class UserFixture {
 
   private static Birth birth() {
     return Instancio.of(Birth.class)
-        .generate(field(Birth::getYear), gen -> gen.ints().range(1000, 9999))
-        .generate(field(Birth::getDay), gen -> gen.ints().range(1000, 9999))
+        .generate(field(Birth::getBirthYear), gen -> gen.ints().range(1000, 9999))
+        .generate(field(Birth::getBirthDay), gen -> gen.ints().range(1000, 9999))
         .create();
   }
 
