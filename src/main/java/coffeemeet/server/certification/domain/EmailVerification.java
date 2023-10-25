@@ -1,6 +1,5 @@
 package coffeemeet.server.certification.domain;
 
-import coffeemeet.server.user.domain.CompanyEmail;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
