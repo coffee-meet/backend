@@ -1,5 +1,6 @@
 package coffeemeet.server.user.dto;
 
+import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.user.domain.User;
@@ -15,12 +16,11 @@ public record MyProfileResponse(
     String birthDay,
     int reportedCount,
     LocalDateTime sanctionPeriod,
-    String companyEmail,
-    String department,
+    Department department,
     List<Keyword> interests
 ) {
 
-  public static MyProfileResponse of(User user, List<Interest> interests) {
+  public static MyProfileResponse of(User user, List<Interest> interests, Department department) {
     List<Keyword> keywords = interests.stream()
         .map(Interest::getKeyword)
         .toList();
@@ -34,8 +34,7 @@ public record MyProfileResponse(
         user.getProfile().getBirth().getBirthDay(),
         user.getReportInfo().getReportedCount(),
         user.getReportInfo().getSanctionPeriod(),
-        user.getCertification().getCompanyEmail().getCompanyEmail(),
-        user.getCertification().getDepartment(),
+        department,
         keywords
     );
   }
