@@ -1,8 +1,8 @@
 package coffeemeet.server.user.service;
 
-import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
 
+import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
