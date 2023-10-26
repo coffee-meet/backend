@@ -1,9 +1,9 @@
 package coffeemeet.server.common.config;
 
-import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.auth.utils.JwtTokenProvider;
-import coffeemeet.server.auth.utils.converter.OAuthProviderConverter;
+import coffeemeet.server.auth.domain.JwtTokenProvider;
+import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.common.UserArgumentResolver;
+import coffeemeet.server.oauth.utils.converter.OAuthProviderConverter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

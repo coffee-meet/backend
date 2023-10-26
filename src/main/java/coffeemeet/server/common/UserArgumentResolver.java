@@ -1,8 +1,8 @@
 package coffeemeet.server.common;
 
+import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.auth.utils.JwtTokenProvider;
+import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.user.dto.AuthInfo;
 import jakarta.servlet.http.HttpServletRequest;
