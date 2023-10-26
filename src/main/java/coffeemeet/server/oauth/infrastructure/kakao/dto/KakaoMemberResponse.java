@@ -1,8 +1,6 @@
 package coffeemeet.server.oauth.infrastructure.kakao.dto;
 
-import coffeemeet.server.oauth.dto.OAuthInfoResponse;
-import coffeemeet.server.user.domain.Birth;
-import coffeemeet.server.user.domain.Email;
+import coffeemeet.server.oauth.dto.OAuthInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -13,12 +11,13 @@ public record KakaoMemberResponse(
     KakaoAccount kakaoAccount
 ) {
 
-  public OAuthInfoResponse toOAuthInfoResponse() {
-    return OAuthInfoResponse.of(
+  public OAuthInfoDto.Response toOAuthInfoResponse() {
+    return OAuthInfoDto.Response.of(
         kakaoAccount.name,
         kakaoAccount.profile.profileImageUrl,
-        new Birth(kakaoAccount.birthyear, kakaoAccount.birthday),
-        new Email(kakaoAccount.email),
+        kakaoAccount.birthyear,
+        kakaoAccount.birthday,
+        kakaoAccount.email,
         OAuthProvider.KAKAO,
         String.valueOf(id)
     );

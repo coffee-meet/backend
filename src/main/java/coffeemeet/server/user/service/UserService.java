@@ -11,8 +11,10 @@ import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
 import coffeemeet.server.interest.service.InterestService;
-import coffeemeet.server.oauth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.dto.OAuthInfoDto;
 import coffeemeet.server.oauth.service.OAuthService;
+import coffeemeet.server.user.domain.Birth;
+import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
@@ -92,7 +94,7 @@ public class UserService {
 
   @Transactional
   public AuthTokens signup(SignupRequest request) {
-    OAuthInfoResponse response = oAuthService.getOAuthInfo(request.oAuthProvider(),
+    OAuthInfoDto.Response response = oAuthService.getOAuthInfo(request.oAuthProvider(),
         request.authCode());
 
     checkDuplicatedUser(response);
@@ -100,8 +102,10 @@ public class UserService {
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
-            .profileImageUrl(profileImage).birth(response.birth()).build());
+        Profile.builder().name(response.name()).nickname(request.nickname())
+            .email(new Email(response.email()))
+            .profileImageUrl(profileImage)
+            .birth(new Birth(response.birthYear(), response.birthDay())).build());
 
     User newUser = userRepository.save(user);
     saveInterests(request, newUser);
@@ -109,7 +113,7 @@ public class UserService {
   }
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthInfoResponse response = oAuthService.getOAuthInfo(oAuthProvider, authCode);
+    OAuthInfoDto.Response response = oAuthService.getOAuthInfo(oAuthProvider, authCode);
     User foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
         response.oAuthProvider(), response.oAuthProviderId()).orElseThrow(
         () -> new IllegalArgumentException(
@@ -130,7 +134,7 @@ public class UserService {
     }
   }
 
-  public void checkDuplicatedUser(OAuthInfoResponse response) {
+  public void checkDuplicatedUser(OAuthInfoDto.Response response) {
     if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
         response.oAuthProvider(), response.oAuthProviderId())) {
       throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
