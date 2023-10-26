@@ -28,7 +28,7 @@ class CertificationRepositoryTest {
   }
 
   @Test
-  void findCertificationByUserIdTest() {
+  void findByUserIdTest() {
     // given
     Certification certification = certification(user);
     certificationRepository.save(certification);
