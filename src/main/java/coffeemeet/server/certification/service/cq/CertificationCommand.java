@@ -5,14 +5,13 @@ import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.repository.CertificationRepository;
 import coffeemeet.server.user.domain.User;
-import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @Transactional
 @RequiredArgsConstructor
-@Service
 public class CertificationCommand {
 
   private final CertificationRepository certificationRepository;
@@ -27,11 +26,6 @@ public class CertificationCommand {
             .user(user)
             .build()
     );
-  }
-
-  @Transactional(readOnly = true)
-  public void applyIfCertifiedUser(Long userId, Consumer<? super Certification> consumer) {
-    certificationRepository.findByUserId(userId).ifPresent(consumer);
   }
 
 }

@@ -46,7 +46,7 @@ public class CertificationService {
   }
 
   private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
-    certificationCommand.applyIfCertifiedUser(userId, certification -> {
+    certificationQuery.applyIfCertifiedUser(userId, certification -> {
       String oldKey = s3MediaService.extractKey(certification.getBusinessCardUrl(), BUSINESS_CARD);
       s3MediaService.delete(oldKey);
     });
