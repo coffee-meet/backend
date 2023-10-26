@@ -2,6 +2,7 @@ package coffeemeet.server.certification.domain;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -15,7 +16,8 @@ public class EmailVerification {
   private String code;
   private LocalDateTime createdAt;
 
-  public EmailVerification(Long userId, CompanyEmail companyEmail, String code) {
+  public EmailVerification(@NonNull Long userId, @NonNull CompanyEmail companyEmail,
+      @NonNull String code) {
     this.userId = userId;
     this.companyEmail = companyEmail;
     this.code = code;
