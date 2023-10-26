@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import coffeemeet.server.oauth.infrastructure.kakao.config.KakaoProperties;
 import coffeemeet.server.user.domain.OAuthProvider;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +21,7 @@ class KakaoAuthCodeRequestUrlProviderTest {
   @InjectMocks
   private KakaoAuthCodeRequestUrlProvider provider;
 
+  @DisplayName("카카오 프로바이더를 제공할 수 있다.")
   @Test
   void oAuthProviderTest() {
     // given
@@ -29,6 +31,7 @@ class KakaoAuthCodeRequestUrlProviderTest {
     assertThat(oAuthProvider).isEqualTo(OAuthProvider.KAKAO);
   }
 
+  @DisplayName("카카오의 redirect url 을 제공할 수 있다.")
   @Test
   void provideTest() {
     // given
