@@ -13,6 +13,8 @@ import coffeemeet.server.interest.repository.InterestRepository;
 import coffeemeet.server.interest.service.InterestService;
 import coffeemeet.server.oauth.dto.OAuthInfoResponse;
 import coffeemeet.server.oauth.service.OAuthService;
+import coffeemeet.server.user.domain.Birth;
+import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
@@ -100,8 +102,10 @@ public class UserService {
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
-            .profileImageUrl(profileImage).birth(response.birth()).build());
+        Profile.builder().name(response.name()).nickname(request.nickname())
+            .email(new Email(response.email()))
+            .profileImageUrl(profileImage)
+            .birth(new Birth(response.birthYear(), response.birthDay())).build());
 
     User newUser = userRepository.save(user);
     saveInterests(request, newUser);
