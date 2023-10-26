@@ -19,12 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/certification")
+@RequestMapping("/api/v1/certification")
 public class CertificationController {
 
   private final CertificationService certificationService;
 
-  @PostMapping("/users/business-card")
+  @PostMapping("/users/me/company-info")
   public ResponseEntity<Void> registerCompanyInfo(
       @Login AuthInfo authInfo,
       @RequestPart("companyEmail") @NotNull String companyEmail,
@@ -36,7 +36,7 @@ public class CertificationController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/users/company-mail")
+  @PostMapping("/users/me/company-mail")
   public ResponseEntity<Void> sendVerificationCodeByEmail(
       @Login AuthInfo authInfo,
       @Valid @RequestBody EmailDto.Request request
@@ -45,7 +45,7 @@ public class CertificationController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/users/company-mail/verification")
+  @PostMapping("/users/me/company-mail/verification")
   public ResponseEntity<Void> verifyEmail(
       @Login AuthInfo authInfo,
       @Valid @RequestBody VerificationCodeDto.Request request
