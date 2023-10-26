@@ -2,11 +2,10 @@ package coffeemeet.server.user.service;
 
 import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
 
-import coffeemeet.server.auth.dto.OAuthInfoResponse;
-import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
+import coffeemeet.server.certification.domain.Certification;
+import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
@@ -14,7 +13,6 @@ import coffeemeet.server.interest.repository.InterestRepository;
 import coffeemeet.server.interest.service.InterestService;
 import coffeemeet.server.oauth.dto.OAuthInfoResponse;
 import coffeemeet.server.oauth.service.OAuthService;
-import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
@@ -44,7 +42,6 @@ public class UserService {
   private final OAuthService oAuthService;
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
-  private final InterestService interestService;
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
 
@@ -141,10 +138,10 @@ public class UserService {
   }
 
   public User getUserById(Long userId) {
-       return userRepository.findById(userId)
+    return userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
   }
-  
+
   private String getProfileImageOrDefault(String profileImage) {
     if (profileImage == null) {
       profileImage = DEFAULT_IMAGE_URL;

@@ -37,7 +37,7 @@ public class UserController {
   public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable long userId) {
     return ResponseEntity.ok(userService.findUserProfile(userId));
   }
-  
+
   @PostMapping("/sign-up")
   public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupRequest request) {
     return ResponseEntity.ok(userService.signup(request));
