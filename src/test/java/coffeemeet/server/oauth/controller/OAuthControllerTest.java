@@ -1,8 +1,8 @@
-package coffeemeet.server.auth.controller;
+package coffeemeet.server.oauth.controller;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.oauth.controller.OAuthController;
 import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -30,20 +29,22 @@ class OAuthControllerTest extends ControllerTestConfig {
   @MockBean
   private OAuthService oAuthService;
 
-  @DisplayName("사용자가 로그인 버튼을 누르면 해당하는 서비스의 접근 권한 url로 리다이렉트한다.")
+  @DisplayName("sns 접근 권한 url로 redirect 할 수 있다.")
   @Test
   void redirectAuthCodeRequestUrlTest() throws Exception {
+    // given
     String expectedRedirectUrl = "https://example.com";
 
-    when(oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).thenReturn(
+    given(oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).willReturn(
         expectedRedirectUrl);
 
-    mockMvc.perform(get("/oauth2/{oAuthProvider}", OAuthProvider.KAKAO)
+    // when, then
+    mockMvc.perform(get("/api/v1/oauth2.0/{oAuthProvider}", OAuthProvider.KAKAO)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         )
-        .andDo(document("auth-redirect",
-                resourceDetails().tag("Auth").description("접근 권한 url 리다이렉트"),
+        .andDo(document("oauth-redirect",
+                resourceDetails().tag("인증").description("접근 권한 url 리다이렉트"),
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 pathParameters(

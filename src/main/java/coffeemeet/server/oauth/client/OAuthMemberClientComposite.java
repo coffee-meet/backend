@@ -1,6 +1,6 @@
 package coffeemeet.server.oauth.client;
 
-import coffeemeet.server.oauth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.dto.OAuthInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Map;
 import java.util.Optional;
@@ -21,11 +21,11 @@ public class OAuthMemberClientComposite {
     );
   }
 
-  public OAuthInfoResponse fetch(OAuthProvider oAuthProvider, String authCode) {
+  public OAuthInfoDto.Response fetch(OAuthProvider oAuthProvider, String authCode) {
     return getClient(oAuthProvider).fetch(authCode);
   }
 
-  public OAuthMemberClient getClient(OAuthProvider oAuthProvider) {
+  private OAuthMemberClient getClient(OAuthProvider oAuthProvider) {
     return Optional.ofNullable(mapping.get(oAuthProvider))
         .orElseThrow(() -> new IllegalArgumentException(
             String.format(INVALID_LOGIN_TYPE_MESSAGE, oAuthProvider))
