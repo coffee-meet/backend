@@ -25,7 +25,7 @@ public class OAuthMemberClientComposite {
     return getClient(oAuthProvider).fetch(authCode);
   }
 
-  public OAuthMemberClient getClient(OAuthProvider oAuthProvider) {
+  private OAuthMemberClient getClient(OAuthProvider oAuthProvider) {
     return Optional.ofNullable(mapping.get(oAuthProvider))
         .orElseThrow(() -> new IllegalArgumentException(
             String.format(INVALID_LOGIN_TYPE_MESSAGE, oAuthProvider))
