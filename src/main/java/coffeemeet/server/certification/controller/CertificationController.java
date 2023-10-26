@@ -25,38 +25,32 @@ public class CertificationController {
   private final CertificationService certificationService;
 
   @PostMapping("/users/business-card")
-  public ResponseEntity<Void> uploadBusinessCard(
-      @Login
-      AuthInfo authInfo,
-      @NotNull
-      @RequestPart("businessCard")
-      MultipartFile businessCard
+  public ResponseEntity<Void> registerCompanyInfo(
+      @Login AuthInfo authInfo,
+      @RequestPart("companyEmail") @NotNull String companyEmail,
+      @RequestPart("department") @NotNull String department,
+      @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.uploadBusinessCard(authInfo.userId(),
-        FileUtils.convertMultipartFileToFile(businessCard));
+    certificationService.registerCertification(authInfo.userId(), companyEmail, department,
+        FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/users/company-mail")
   public ResponseEntity<Void> sendVerificationCodeByEmail(
-      @Login
-      AuthInfo authInfo,
-      @Valid @RequestBody
-      EmailDto emailDto
+      @Login AuthInfo authInfo,
+      @Valid @RequestBody EmailDto.Request request
   ) {
-    certificationService.sendVerificationMail(authInfo.userId(), emailDto.companyEmail());
+    certificationService.sendVerificationMail(authInfo.userId(), request.companyEmail());
     return ResponseEntity.ok().build();
-
   }
 
   @PostMapping("/users/company-mail/verification")
   public ResponseEntity<Void> verifyEmail(
-      @Login
-      AuthInfo authInfo,
-      @Valid @RequestBody
-      VerificationCodeDto verificationCodeDto
+      @Login AuthInfo authInfo,
+      @Valid @RequestBody VerificationCodeDto.Request request
   ) {
-    certificationService.verifyEmail(authInfo.userId(), verificationCodeDto.verificationCode());
+    certificationService.compareCode(authInfo.userId(), request.verificationCode());
     return ResponseEntity.ok().build();
   }
 

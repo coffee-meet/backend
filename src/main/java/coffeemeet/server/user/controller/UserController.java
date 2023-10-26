@@ -28,10 +28,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
   private final UserService userService;
+
+  @GetMapping("/{userId}")
+  public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable long userId) {
+    return ResponseEntity.ok(userService.findUserProfile(userId));
+  }
 
   @PostMapping("/sign-up")
   public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupRequest request) {
@@ -42,11 +47,6 @@ public class UserController {
   public ResponseEntity<AuthTokens> login(@PathVariable OAuthProvider oAuthProvider,
       @RequestParam String authCode) {
     return ResponseEntity.ok(userService.login(oAuthProvider, authCode));
-  }
-
-  @GetMapping("/{nickname}")
-  public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable String nickname) {
-    return ResponseEntity.ok(userService.findUserProfile(nickname));
   }
 
   @GetMapping("/me")

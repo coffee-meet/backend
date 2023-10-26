@@ -40,9 +40,6 @@ public class User extends AdvancedBaseEntity {
   private ChattingRoom chattingRoom;
 
   @Embedded
-  private Certification certification;
-
-  @Embedded
   @Column(nullable = false)
   private ReportInfo reportInfo;
 
@@ -55,17 +52,8 @@ public class User extends AdvancedBaseEntity {
   ) {
     this.oauthInfo = oauthInfo;
     this.profile = profile;
-    this.certification = new Certification();
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
-  }
-
-  public void updateBusinessCardUrl(String newBusinessCardUrl) {
-    this.certification.updateBusinessCardUrl(newBusinessCardUrl);
-  }
-
-  public void updateCompanyEmail(CompanyEmail newCompanyEmail) {
-    this.certification.updateCompanyEmail(newCompanyEmail);
   }
 
   public void updateProfileImageUrl(String newProfileImageUrl) {

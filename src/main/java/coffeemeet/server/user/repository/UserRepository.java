@@ -1,6 +1,5 @@
 package coffeemeet.server.user.repository;
 
-import coffeemeet.server.user.domain.CompanyEmail;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import java.util.Optional;
@@ -17,7 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
       String authCode);
 
   Optional<User> findUserByProfileNickname(String nickname);
-
-  boolean existsByCertification_CompanyEmail(CompanyEmail companyEmail);
 
 }

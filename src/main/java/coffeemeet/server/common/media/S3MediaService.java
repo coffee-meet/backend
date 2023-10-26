@@ -53,7 +53,7 @@ public class S3MediaService {
     PROFILE_IMAGE("ProfileImage"),
     ;
 
-    private String value;
+    private final String value;
 
     KeyType(String value) {
       this.value = value;

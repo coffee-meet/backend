@@ -1,6 +1,6 @@
 package coffeemeet.server.common.media;
 
-import coffeemeet.server.user.domain.CompanyEmail;
+import coffeemeet.server.certification.domain.CompanyEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,7 +21,7 @@ public class EmailService {
   public void sendVerificationCode(CompanyEmail companyMail, String verificationCode) {
     SimpleMailMessage mailMessage = new SimpleMailMessage();
     mailMessage.setFrom(sender);
-    mailMessage.setTo(companyMail.getCompanyEmail());
+    mailMessage.setTo(companyMail.getValue());
 
     String subject = "[coffee-meet] 커피밋 사용을 위해 이메일 인증을 완료해주세요";
     mailMessage.setSubject(subject);
