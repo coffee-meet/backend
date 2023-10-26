@@ -7,6 +7,7 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ class AuthCodeRequestUrlProviderCompositeTest {
   @InjectMocks
   private AuthCodeRequestUrlProviderComposite composite;
 
+  @DisplayName("sns 의 redirect url 을 제공할 수 있다.")
   @Test
   void provideTest() {
     // given
