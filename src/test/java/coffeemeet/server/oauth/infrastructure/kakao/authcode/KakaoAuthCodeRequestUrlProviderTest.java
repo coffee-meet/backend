@@ -1,7 +1,7 @@
 package coffeemeet.server.oauth.infrastructure.kakao.authcode;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.oauth.infrastructure.kakao.config.KakaoProperties;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -24,10 +24,10 @@ class KakaoAuthCodeRequestUrlProviderTest {
   @DisplayName("카카오 프로바이더를 제공할 수 있다.")
   @Test
   void oAuthProviderTest() {
-    // given
+    // when
     OAuthProvider oAuthProvider = provider.oAuthProvider();
 
-    // when, then
+    // then
     assertThat(oAuthProvider).isEqualTo(OAuthProvider.KAKAO);
   }
 
@@ -37,12 +37,13 @@ class KakaoAuthCodeRequestUrlProviderTest {
     // given
     String resultUrl = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=testClientId&redirect_uri=https://testClientId/redirect";
 
+    given(kakaoProperties.getClientId()).willReturn("testClientId");
+    given(kakaoProperties.getRedirectUrl()).willReturn("https://testClientId/redirect");
+
     // when
-    when(kakaoProperties.getClientId()).thenReturn("testClientId");
-    when(kakaoProperties.getRedirectUrl()).thenReturn("https://testClientId/redirect");
+    String expectedUrl = provider.provide();
 
     // then
-    String expectedUrl = provider.provide();
     assertThat(resultUrl).isEqualTo(expectedUrl);
   }
 

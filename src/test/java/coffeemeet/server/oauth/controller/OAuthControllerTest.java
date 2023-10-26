@@ -2,7 +2,7 @@ package coffeemeet.server.oauth.controller;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -35,11 +35,10 @@ class OAuthControllerTest extends ControllerTestConfig {
     // given
     String expectedRedirectUrl = "https://example.com";
 
-    // when
-    when(oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).thenReturn(
+    given(oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).willReturn(
         expectedRedirectUrl);
 
-    // then
+    // when, then
     mockMvc.perform(get("/api/v1/oauth2.0/{oAuthProvider}", OAuthProvider.KAKAO)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)

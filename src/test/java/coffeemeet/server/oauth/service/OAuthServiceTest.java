@@ -1,7 +1,7 @@
 package coffeemeet.server.oauth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.OAuthInfoResponseFixture;
 import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
@@ -33,11 +33,12 @@ class OAuthServiceTest {
     // given
     String expectedUrl = "https://example.com";
 
+    given(authCodeRequestUrlProviderComposite.provide(OAuthProvider.KAKAO)).willReturn(expectedUrl);
+
     // when
-    when(authCodeRequestUrlProviderComposite.provide(OAuthProvider.KAKAO)).thenReturn(expectedUrl);
+    String result = oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO);
 
     // then
-    String result = oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO);
     assertThat(result).isEqualTo(expectedUrl);
   }
 
@@ -49,10 +50,9 @@ class OAuthServiceTest {
     String authCode = "authCode";
     OAuthInfoResponse oAuthInfoResponse = OAuthInfoResponseFixture.oAuthInfoResponse();
 
-    // when
-    when(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).thenReturn(oAuthInfoResponse);
+    given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
 
-    // then
+    // when, then
     assertThat(oAuthService.getOAuthInfo(oAuthProvider, authCode)).isEqualTo(oAuthInfoResponse);
   }
 

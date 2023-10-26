@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
@@ -42,18 +42,19 @@ class KakaoApiClientTest {
     String authCode = "authCode";
     KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();
 
-    // when
-    when(kakaoProperties.getClientId()).thenReturn("testClientId");
-    when(kakaoProperties.getRedirectUrl()).thenReturn("testRedirectUrl");
-    when(kakaoProperties.getClientSecret()).thenReturn("testClientSecret");
-    when(restTemplate.postForObject(
+    given(kakaoProperties.getClientId()).willReturn("testClientId");
+    given(kakaoProperties.getRedirectUrl()).willReturn("testRedirectUrl");
+    given(kakaoProperties.getClientSecret()).willReturn("testClientSecret");
+    given(restTemplate.postForObject(
         anyString(),
         any(HttpEntity.class),
         eq(KakaoTokens.class)))
-        .thenReturn(kakaoTokens);
+        .willReturn(kakaoTokens);
+
+    // when
+    KakaoTokens expectedTokens = kakaoApiClient.fetchToken(authCode);
 
     // then
-    KakaoTokens expectedTokens = kakaoApiClient.fetchToken(authCode);
     assertAll(
         () -> assertThat(expectedTokens).isNotNull(),
         () -> assertThat(expectedTokens.accessToken()).isEqualTo(kakaoTokens.accessToken()),
@@ -72,16 +73,17 @@ class KakaoApiClientTest {
     KakaoMemberResponse response = KakaoMemberResponseFixture.kakaoMemberResponse();
     ResponseEntity<KakaoMemberResponse> mockResponse = ResponseEntity.ok(response);
 
-    // when
-    when(restTemplate.exchange(
+    given(restTemplate.exchange(
         anyString(),
         any(HttpMethod.class),
         any(HttpEntity.class),
         eq(KakaoMemberResponse.class)))
-        .thenReturn(mockResponse);
+        .willReturn(mockResponse);
+
+    // when
+    KakaoMemberResponse result = kakaoApiClient.fetchMember("accessToken");
 
     // then
-    KakaoMemberResponse result = kakaoApiClient.fetchMember("accessToken");
     assertThat(result).isNotNull();
   }
 

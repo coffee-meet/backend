@@ -1,7 +1,7 @@
 package coffeemeet.server.oauth.authcode;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Collections;
@@ -33,15 +33,16 @@ class AuthCodeRequestUrlProviderCompositeTest {
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
     String resultUrl = "https://kakao.com/login/oauth/authorize?client_id=testClientId&redirect_uri=https://testClientId/redirect";
 
-    // when
-    when(provider.oAuthProvider()).thenReturn(OAuthProvider.KAKAO);
-    when(provider.provide()).thenReturn(resultUrl);
+    given(provider.oAuthProvider()).willReturn(OAuthProvider.KAKAO);
+    given(provider.provide()).willReturn(resultUrl);
 
-    // then
     providers = new HashSet<>(Collections.singletonList(provider));
     composite = new AuthCodeRequestUrlProviderComposite(providers);
 
+    // when
     String expectedUrl = composite.provide(oAuthProvider);
+
+    // then
     assertThat(resultUrl).isEqualTo(expectedUrl);
   }
 

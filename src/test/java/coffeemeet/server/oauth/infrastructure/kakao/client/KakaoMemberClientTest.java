@@ -2,7 +2,7 @@ package coffeemeet.server.oauth.infrastructure.kakao.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
@@ -28,7 +28,7 @@ class KakaoMemberClientTest {
   @DisplayName("카카오 프로바이더를 가져올 수 있다.")
   @Test
   void oAuthProvider() {
-    // given, when, then
+    // when, then
     assertThat(kakaoMemberClient.oAuthProvider()).isEqualTo(OAuthProvider.KAKAO);
   }
 
@@ -37,15 +37,13 @@ class KakaoMemberClientTest {
   void fetch() {
     // given
     String authCode = "authCode";
-
     KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();
     KakaoMemberResponse response = KakaoMemberResponseFixture.kakaoMemberResponse();
 
-    // when
-    when(kakaoApiClient.fetchToken(any())).thenReturn(kakaoTokens);
-    when(kakaoApiClient.fetchMember(any())).thenReturn(response);
+    given(kakaoApiClient.fetchToken(any())).willReturn(kakaoTokens);
+    given(kakaoApiClient.fetchMember(any())).willReturn(response);
 
-    // then
+    // when, then
     assertThat(kakaoMemberClient.fetch(authCode)).isNotNull();
   }
 
