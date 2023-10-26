@@ -1,12 +1,12 @@
 package coffeemeet.server.common.fixture.dto;
 
-import coffeemeet.server.oauth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.dto.OAuthInfoDto;
 import org.instancio.Instancio;
 
 public class OAuthInfoResponseFixture {
 
-  public static OAuthInfoResponse oAuthInfoResponse() {
-    return Instancio.of(OAuthInfoResponse.class)
+  public static OAuthInfoDto.Response oAuthInfoResponse() {
+    return Instancio.of(OAuthInfoDto.Response.class)
         .create();
   }
 
