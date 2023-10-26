@@ -14,8 +14,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.oauth.controller.OAuthController;
+import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,21 +24,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
-@WebMvcTest(AuthController.class)
-class AuthControllerTest extends ControllerTestConfig {
+@WebMvcTest(OAuthController.class)
+class OAuthControllerTest extends ControllerTestConfig {
 
   @MockBean
-  private AuthService authService;
+  private OAuthService oAuthService;
 
   @DisplayName("사용자가 로그인 버튼을 누르면 해당하는 서비스의 접근 권한 url로 리다이렉트한다.")
   @Test
   void redirectAuthCodeRequestUrlTest() throws Exception {
     String expectedRedirectUrl = "https://example.com";
 
-    when(authService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).thenReturn(
+    when(oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO)).thenReturn(
         expectedRedirectUrl);
 
-    mockMvc.perform(get("/oauth2/auth/{oAuthProvider}", OAuthProvider.KAKAO)
+    mockMvc.perform(get("/oauth2/{oAuthProvider}", OAuthProvider.KAKAO)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         )

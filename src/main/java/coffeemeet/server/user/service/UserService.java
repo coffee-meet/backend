@@ -5,16 +5,26 @@ import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAG
 import coffeemeet.server.auth.dto.OAuthInfoResponse;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.service.cq.CertificationQuery;
+import coffeemeet.server.auth.domain.AuthTokens;
+import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
 import coffeemeet.server.interest.service.InterestService;
+import coffeemeet.server.oauth.dto.OAuthInfoResponse;
+import coffeemeet.server.oauth.service.OAuthService;
+import coffeemeet.server.user.domain.CompanyEmail;
+import coffeemeet.server.user.domain.OAuthInfo;
+import coffeemeet.server.user.domain.OAuthProvider;
+import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileResponse;
+import coffeemeet.server.user.dto.SignupRequest;
 import coffeemeet.server.user.dto.UserProfileResponse;
 import coffeemeet.server.user.repository.UserRepository;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,12 +36,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private static final String ALREADY_REGISTERED_MESSAGE = "이미 가입된 사용자입니다.";
+  private static final String USER_NOT_REGISTERED_MESSAGE = "해당 아이디(%s)와 로그인 타입(%s)의 유저는 회원가입되지 않았습니다.";
+  private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
   private final S3MediaService s3MediaService;
+  private final InterestService interestService;
+  private final OAuthService oAuthService;
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
   private final InterestService interestService;
   private final CertificationQuery certificationQuery;
+  private final AuthTokensGenerator authTokensGenerator;
 
   public UserProfileResponse findUserProfile(long userId) {
     User user = userRepository.findById(userId)
@@ -79,6 +94,34 @@ public class UserService {
   }
 
   @Transactional
+  public AuthTokens signup(SignupRequest request) {
+    OAuthInfoResponse response = oAuthService.getOAuthInfo(request.oAuthProvider(),
+        request.authCode());
+
+    checkDuplicatedUser(response);
+    checkDuplicatedNickname(request.nickname());
+    String profileImage = getProfileImageOrDefault(response.profileImage());
+
+    User user = new User(new OAuthInfo(response.oAuthProvider(), response.oAuthProviderId()),
+        Profile.builder().name(response.name()).nickname(request.nickname()).email(response.email())
+            .profileImageUrl(profileImage).birth(response.birth()).build());
+
+    User newUser = userRepository.save(user);
+    saveInterests(request, newUser);
+    return authTokensGenerator.generate(newUser.getId());
+  }
+
+  public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
+    OAuthInfoResponse response = oAuthService.getOAuthInfo(oAuthProvider, authCode);
+    User foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
+        response.oAuthProvider(), response.oAuthProviderId()).orElseThrow(
+        () -> new IllegalArgumentException(
+            String.format(USER_NOT_REGISTERED_MESSAGE, response.oAuthProviderId(),
+                response.oAuthProvider())));
+    return authTokensGenerator.generate(foundUser.getId());
+  }
+
+  @Transactional
   public void deleteUser(Long userId) {
     interestRepository.deleteById(userId);
     userRepository.deleteById(userId);
@@ -98,8 +141,23 @@ public class UserService {
   }
 
   public User getUserById(Long userId) {
-    return userRepository.findById(userId)
+       return userRepository.findById(userId)
         .orElseThrow(IllegalArgumentException::new);
+  }
+  
+  private String getProfileImageOrDefault(String profileImage) {
+    if (profileImage == null) {
+      profileImage = DEFAULT_IMAGE_URL;
+    }
+    return profileImage;
+  }
+
+  private void saveInterests(SignupRequest request, User newUser) {
+    List<Interest> interests = new ArrayList<>();
+    for (Keyword value : request.keywords()) {
+      interests.add(new Interest(value, newUser));
+    }
+    interestRepository.saveAll(interests);
   }
 
 }
