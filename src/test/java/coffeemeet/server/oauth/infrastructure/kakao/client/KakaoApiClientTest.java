@@ -12,6 +12,7 @@ import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
 import coffeemeet.server.oauth.infrastructure.kakao.config.KakaoProperties;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberResponse;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,6 +35,7 @@ class KakaoApiClientTest {
   @InjectMocks
   private KakaoApiClient kakaoApiClient;
 
+  @DisplayName("카카오로부터 인증 토큰을 받을 수 있다.")
   @Test
   void fetchTokenTest() {
     // given
@@ -63,6 +65,7 @@ class KakaoApiClientTest {
     );
   }
 
+  @DisplayName("카카오로부터 사용자 정보를 가져올 수 있다.")
   @Test
   void fetchMemberTest() {
     // given
