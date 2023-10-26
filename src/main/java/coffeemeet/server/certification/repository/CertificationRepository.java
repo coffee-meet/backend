@@ -11,6 +11,4 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
 
   boolean existsByCompanyEmail(CompanyEmail companyEmail);
 
-  boolean existsByUserId(Long userId);
-
 }
