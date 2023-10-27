@@ -27,14 +27,14 @@ class KakaoMemberClientTest {
 
   @DisplayName("카카오 프로바이더를 가져올 수 있다.")
   @Test
-  void oAuthProvider() {
+  void oAuthProviderTest() {
     // when, then
     assertThat(kakaoMemberClient.oAuthProvider()).isEqualTo(OAuthProvider.KAKAO);
   }
 
   @DisplayName("카카오로부터 사용자 정보를 가져올 수 있다.")
   @Test
-  void fetch() {
+  void fetchTest() {
     // given
     String authCode = "authCode";
     KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();

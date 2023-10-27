@@ -1,7 +1,7 @@
 package coffeemeet.server.oauth.infrastructure.kakao.client;
 
 import coffeemeet.server.oauth.client.OAuthMemberClient;
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberResponse;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -20,7 +20,7 @@ public class KakaoMemberClient implements OAuthMemberClient {
   }
 
   @Override
-  public OAuthInfoDto.Response fetch(String authCode) {
+  public OAuthUserInfoDto.Response fetch(String authCode) {
     KakaoTokens tokenInfo = kakaoApiClient.fetchToken(authCode);
     KakaoMemberResponse response = kakaoApiClient.fetchMember(tokenInfo.accessToken());
 

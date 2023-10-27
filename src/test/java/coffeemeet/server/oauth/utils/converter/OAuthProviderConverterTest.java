@@ -13,7 +13,7 @@ class OAuthProviderConverterTest {
 
   @DisplayName("입력된 sns provider 이름을 항상 대문자로 변환 시킬 수 있다.")
   @Test
-  void convert() {
+  void convertTest() {
     // given
     String provider = "kakao";
 

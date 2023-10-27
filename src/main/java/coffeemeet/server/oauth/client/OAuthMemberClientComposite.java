@@ -1,6 +1,6 @@
 package coffeemeet.server.oauth.client;
 
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class OAuthMemberClientComposite {
     );
   }
 
-  public OAuthInfoDto.Response fetch(OAuthProvider oAuthProvider, String authCode) {
+  public OAuthUserInfoDto.Response fetch(OAuthProvider oAuthProvider, String authCode) {
     return getClient(oAuthProvider).fetch(authCode);
   }
 
