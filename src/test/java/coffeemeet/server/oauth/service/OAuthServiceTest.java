@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import coffeemeet.server.common.fixture.dto.OAuthInfoDtoFixture;
 import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.oauth.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class OAuthServiceTest {
     // given
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
     String authCode = "authCode";
-    OAuthInfoDto.Response oAuthInfoResponse = OAuthInfoDtoFixture.response();
+    OAuthUserInfoDto.Response oAuthInfoResponse = OAuthInfoDtoFixture.response();
 
     given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
 

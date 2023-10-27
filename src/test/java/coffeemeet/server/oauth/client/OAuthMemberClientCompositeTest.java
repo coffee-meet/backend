@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.OAuthInfoDtoFixture;
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ class OAuthMemberClientCompositeTest {
     // given
     String authCode = "authCode";
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
-    OAuthInfoDto.Response response = OAuthInfoDtoFixture.response();
+    OAuthUserInfoDto.Response response = OAuthInfoDtoFixture.response();
 
     given(client.oAuthProvider()).willReturn(OAuthProvider.KAKAO);
     given(client.fetch(authCode)).willReturn(response);
@@ -43,7 +43,7 @@ class OAuthMemberClientCompositeTest {
     composite = new OAuthMemberClientComposite(clients);
 
     // when
-    OAuthInfoDto.Response expectedResponse = composite.fetch(oAuthProvider, authCode);
+    OAuthUserInfoDto.Response expectedResponse = composite.fetch(oAuthProvider, authCode);
 
     // then
     assertThat(response).isEqualTo(expectedResponse);
