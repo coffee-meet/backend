@@ -5,6 +5,9 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resour
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -41,6 +44,7 @@ class AuthControllerTest extends ControllerTestConfig {
     // given
     AuthTokens authTokens = AuthTokensFixture.authTokens();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+
     given(authService.renew(anyLong(), any())).willReturn(authTokens);
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
 
@@ -49,11 +53,14 @@ class AuthControllerTest extends ControllerTestConfig {
             .header("Authorization", TOKEN)
             .contentType(MediaType.APPLICATION_JSON)
         )
-        .andDo(document("renew-token",
+        .andDo(document("auth-renew",
                 resourceDetails().tag("인증").description("토큰 갱신")
                     .responseSchema(Schema.schema("AuthTokens")),
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                ),
                 responseFields(
                     fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                     fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
@@ -65,8 +72,31 @@ class AuthControllerTest extends ControllerTestConfig {
         .andExpect(jsonPath("$.refreshToken").value(authTokens.refreshToken()));
   }
 
+  @DisplayName("사용자는 로그아웃 할 수 있다.")
   @Test
-  void logoutTest() {
+  void logoutTest() throws Exception {
+    // given
+    AuthTokens authTokens = AuthTokensFixture.authTokens();
+    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+
+    doNothing().when(authService).logout(anyLong());
+    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+
+    // when, then
+    mockMvc.perform(post("/api/v1/auth/logout")
+            .header("Authorization", TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andDo(document("auth-logout",
+                resourceDetails().tag("인증").description("로그아웃"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
+        )
+        .andExpect(status().isOk());
   }
 
   @Test
