@@ -3,10 +3,10 @@ package coffeemeet.server.oauth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.OAuthInfoResponseFixture;
+import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
 import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.oauth.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class OAuthServiceTest {
     // given
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
     String authCode = "authCode";
-    OAuthInfoDto.Response oAuthInfoResponse = OAuthInfoResponseFixture.oAuthInfoResponse();
+    OAuthUserInfoDto.Response oAuthInfoResponse = OAuthUserInfoDtoFixture.response();
 
     given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
 

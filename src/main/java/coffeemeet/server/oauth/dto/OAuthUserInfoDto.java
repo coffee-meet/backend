@@ -2,7 +2,7 @@ package coffeemeet.server.oauth.dto;
 
 import coffeemeet.server.user.domain.OAuthProvider;
 
-public sealed interface OAuthInfoDto permits OAuthInfoDto.Response {
+public sealed interface OAuthUserInfoDto permits OAuthUserInfoDto.Response {
 
   record Response(
       String name,
@@ -12,9 +12,9 @@ public sealed interface OAuthInfoDto permits OAuthInfoDto.Response {
       String email,
       OAuthProvider oAuthProvider,
       String oAuthProviderId
-  ) implements OAuthInfoDto {
+  ) implements OAuthUserInfoDto {
 
-    public static OAuthInfoDto.Response of(
+    public static OAuthUserInfoDto.Response of(
         String name,
         String profileImage,
         String birthYear,
@@ -23,7 +23,7 @@ public sealed interface OAuthInfoDto permits OAuthInfoDto.Response {
         OAuthProvider oAuthProvider,
         String oAuthProviderId
     ) {
-      return new OAuthInfoDto.Response(
+      return new OAuthUserInfoDto.Response(
           name,
           profileImage,
           birthYear,

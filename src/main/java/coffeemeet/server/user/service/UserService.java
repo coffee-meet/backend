@@ -11,7 +11,7 @@ import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.repository.InterestRepository;
 import coffeemeet.server.interest.service.InterestService;
-import coffeemeet.server.oauth.dto.OAuthInfoDto;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
@@ -94,7 +94,7 @@ public class UserService {
 
   @Transactional
   public AuthTokens signup(SignupRequest request) {
-    OAuthInfoDto.Response response = oAuthService.getOAuthInfo(request.oAuthProvider(),
+    OAuthUserInfoDto.Response response = oAuthService.getOAuthInfo(request.oAuthProvider(),
         request.authCode());
 
     checkDuplicatedUser(response);
@@ -113,7 +113,7 @@ public class UserService {
   }
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthInfoDto.Response response = oAuthService.getOAuthInfo(oAuthProvider, authCode);
+    OAuthUserInfoDto.Response response = oAuthService.getOAuthInfo(oAuthProvider, authCode);
     User foundUser = userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
         response.oAuthProvider(), response.oAuthProviderId()).orElseThrow(
         () -> new IllegalArgumentException(
@@ -134,7 +134,7 @@ public class UserService {
     }
   }
 
-  public void checkDuplicatedUser(OAuthInfoDto.Response response) {
+  public void checkDuplicatedUser(OAuthUserInfoDto.Response response) {
     if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
         response.oAuthProvider(), response.oAuthProviderId())) {
       throw new IllegalArgumentException(ALREADY_REGISTERED_MESSAGE);
