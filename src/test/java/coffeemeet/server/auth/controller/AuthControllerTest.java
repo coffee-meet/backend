@@ -76,7 +76,6 @@ class AuthControllerTest extends ControllerTestConfig {
   @Test
   void logoutTest() throws Exception {
     // given
-    AuthTokens authTokens = AuthTokensFixture.authTokens();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
     doNothing().when(authService).logout(anyLong());
@@ -99,8 +98,30 @@ class AuthControllerTest extends ControllerTestConfig {
         .andExpect(status().isOk());
   }
 
+  @DisplayName("사용자는 회원탈퇴 할 수 있다.")
   @Test
-  void deleteTest() {
+  void deleteTest() throws Exception {
+    // given
+    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+
+    doNothing().when(authService).delete(anyLong());
+    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+
+    // when, then
+    mockMvc.perform(post("/api/v1/auth/delete")
+            .header("Authorization", TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andDo(document("auth-delete",
+                resourceDetails().tag("인증").description("회원탈퇴"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
+        )
+        .andExpect(status().isOk());
   }
 
 }
