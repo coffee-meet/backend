@@ -6,7 +6,7 @@ import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
+import lombok.NonNull;
 
 @Getter
 @Embeddable
@@ -18,16 +18,9 @@ public class OAuthInfo {
 
   private String oauthProviderId;
 
-  public OAuthInfo(OAuthProvider oauthProvider, String oauthProviderId) {
-    validateOAuthProviderId(oauthProviderId);
+  public OAuthInfo(OAuthProvider oauthProvider, @NonNull String oauthProviderId) {
     this.oauthProvider = oauthProvider;
     this.oauthProviderId = oauthProviderId;
-  }
-
-  private void validateOAuthProviderId(String oauthProviderId) {
-    if (!StringUtils.hasText(oauthProviderId)) {
-      throw new IllegalArgumentException("올바르지 않은 로그인 아이디입니다.");
-    }
   }
 
 }
