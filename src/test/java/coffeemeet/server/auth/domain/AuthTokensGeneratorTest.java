@@ -1,6 +1,7 @@
 package coffeemeet.server.auth.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -43,10 +44,32 @@ class AuthTokensGeneratorTest {
     // given
     when(jwtTokenProvider.generate(anyString(), any(Date.class))).thenReturn(ACCESS_TOKEN,
         REFRESH_TOKEN);
+
+    // when
     AuthTokens authTokens = authTokensGenerator.generate((long) Math.random());
 
-    assertThat(authTokens.accessToken()).isEqualTo(BEARER_TYPE + ACCESS_TOKEN);
-    assertThat(authTokens.refreshToken()).isEqualTo(BEARER_TYPE + REFRESH_TOKEN);
+    // then
+    assertAll(
+        () -> assertThat(authTokens.accessToken()).isEqualTo(BEARER_TYPE + ACCESS_TOKEN),
+        () -> assertThat(authTokens.refreshToken()).isEqualTo(BEARER_TYPE + REFRESH_TOKEN)
+    );
+  }
+
+  @Test
+  void refreshJwtTokenTest() {
+    // given
+    when(jwtTokenProvider.generate(anyString(), any(Date.class))).thenReturn(ACCESS_TOKEN,
+        REFRESH_TOKEN);
+
+    // when
+    AuthTokens authTokens = authTokensGenerator.reissueAccessToken((long) Math.random(),
+        REFRESH_TOKEN);
+
+    // then
+    assertAll(
+        () -> assertThat(authTokens.accessToken()).isEqualTo(BEARER_TYPE + ACCESS_TOKEN),
+        () -> assertThat(authTokens.refreshToken()).isEqualTo(BEARER_TYPE + REFRESH_TOKEN)
+    );
   }
 
 }
