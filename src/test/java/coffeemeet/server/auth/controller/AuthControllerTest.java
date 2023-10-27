@@ -5,7 +5,7 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resour
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -77,8 +77,7 @@ class AuthControllerTest extends ControllerTestConfig {
   void logoutTest() throws Exception {
     // given
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
-
-    doNothing().when(authService).logout(anyLong());
+    willDoNothing().given(authService).logout(anyLong());
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
 
     // when, then
@@ -103,8 +102,7 @@ class AuthControllerTest extends ControllerTestConfig {
   void deleteTest() throws Exception {
     // given
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
-
-    doNothing().when(authService).delete(anyLong());
+    willDoNothing().given(authService).delete(anyLong());
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
 
     // when, then

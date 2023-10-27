@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import java.util.Date;
@@ -44,7 +44,7 @@ class AuthTokensGeneratorTest {
   @Test
   void generateTest() {
     // given
-    when(jwtTokenProvider.generate(anyString(), any(Date.class))).thenReturn(ACCESS_TOKEN,
+    given(jwtTokenProvider.generate(anyString(), any(Date.class))).willReturn(ACCESS_TOKEN,
         REFRESH_TOKEN);
 
     // when
@@ -61,7 +61,7 @@ class AuthTokensGeneratorTest {
   @Test
   void reissueAccessTokenTest() {
     // given
-    when(jwtTokenProvider.generate(anyString(), any(Date.class))).thenReturn(ACCESS_TOKEN,
+    given(jwtTokenProvider.generate(anyString(), any(Date.class))).willReturn(ACCESS_TOKEN,
         REFRESH_TOKEN);
 
     // when
