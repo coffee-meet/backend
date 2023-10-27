@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,7 @@ class AuthTokensGeneratorTest {
         refreshTokenExpireTime, refreshTokenRepository);
   }
 
+  @DisplayName("access token & refresh token 발급할 수 있다.")
   @Test
   void generateTest() {
     // given
@@ -55,8 +57,9 @@ class AuthTokensGeneratorTest {
     );
   }
 
+  @DisplayName("access token 을 갱신 할 수 있다.")
   @Test
-  void refreshJwtTokenTest() {
+  void reissueAccessTokenTest() {
     // given
     when(jwtTokenProvider.generate(anyString(), any(Date.class))).thenReturn(ACCESS_TOKEN,
         REFRESH_TOKEN);
