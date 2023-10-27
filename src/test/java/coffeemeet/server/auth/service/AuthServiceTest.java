@@ -41,7 +41,7 @@ class AuthServiceTest {
 
   @DisplayName("access token 을 갱신할 수 있다.")
   @Test
-  void renew() {
+  void renewTest() {
     // given
     AuthTokens authTokens = AuthTokensFixture.authTokens();
     AuthTokens newAuthTokens = AuthTokensFixture.authTokens(REFRESH_TOKEN);
@@ -62,7 +62,7 @@ class AuthServiceTest {
 
   @DisplayName("로그아웃 시킬 수 있다.")
   @Test
-  void logout() {
+  void logoutTest() {
     // given
     willDoNothing().given(refreshTokenRepository).deleteById(anyLong());
 
@@ -75,7 +75,7 @@ class AuthServiceTest {
 
   @DisplayName("회원 탈퇴 시킬 수 있다.")
   @Test
-  void delete() {
+  void deleteTest() {
     // given
     willDoNothing().given(refreshTokenRepository).deleteById(anyLong());
     willDoNothing().given(userService).deleteUser(anyLong());

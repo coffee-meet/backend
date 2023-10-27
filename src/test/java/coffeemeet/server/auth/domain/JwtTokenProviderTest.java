@@ -24,7 +24,7 @@ class JwtTokenProviderTest {
 
   @DisplayName("jwt 를 생성할 수 있다.")
   @Test
-  void generate() {
+  void generateTest() {
     // given
     Date date = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME);
 
@@ -37,7 +37,7 @@ class JwtTokenProviderTest {
 
   @DisplayName("jwt 로부터 userId 를 가져올 수 있다.")
   @Test
-  void extractUserId() {
+  void extractUserIdTest() {
     // given
     Date date = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME);
 
@@ -51,7 +51,7 @@ class JwtTokenProviderTest {
 
   @DisplayName("jwt(refresh token) 로부터 토큰이 만료되었는지 확인할 수 있다.")
   @Test
-  void isExpiredRefreshToken() {
+  void isExpiredRefreshTokenTest() {
     // given
     Date date = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME);
 
