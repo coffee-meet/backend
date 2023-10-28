@@ -26,11 +26,9 @@ import java.io.File;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
   private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
@@ -50,8 +48,8 @@ public class UserService {
     Response response = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
         request.authCode());
 
-    userCommand.checkDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
-    userCommand.checkDuplicatedNickname(request.nickname());
+    userQuery.hasDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
+    userQuery.hasDuplicatedNickname(request.nickname());
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
     User user = new User(new coffeemeet.server.user.domain.OAuthInfo(response.oAuthProvider(),
@@ -68,7 +66,7 @@ public class UserService {
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
     Response response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
-    User user = userCommand.getUserByOAuthInfo(oAuthProvider, response.oAuthProviderId());
+    User user = userQuery.getUserByOAuthInfo(oAuthProvider, response.oAuthProviderId());
     return authTokensGenerator.generate(user.getId());
   }
 
@@ -98,16 +96,15 @@ public class UserService {
   public void updateProfileInfo(Long userId, String nickname,
       List<Keyword> keywords) {
     User user = userQuery.getUserById(userId);
-    userQuery.checkDuplicatedNickname(nickname);
+    userQuery.hasDuplicatedNickname(nickname);
     user.updateNickname(nickname);
     interestCommand.updateInterests(userQuery.getUserById(userId), keywords);
   }
 
   public void checkDuplicatedNickname(String nickname) {
-    userCommand.checkDuplicatedNickname(nickname);
+    userQuery.hasDuplicatedNickname(nickname);
   }
 
-  @Transactional
   public void deleteUser(Long userId) {
     userCommand.deleteUser(userId);
   }
