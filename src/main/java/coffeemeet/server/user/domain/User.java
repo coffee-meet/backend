@@ -64,8 +64,4 @@ public class User extends AdvancedBaseEntity {
     this.profile.updateNickname(newNickname);
   }
 
-  public void updateName(String newName) {
-    this.profile.updateName(newName);
-  }
-
 }
