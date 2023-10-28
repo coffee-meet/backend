@@ -10,6 +10,7 @@ import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.service.cq.InterestCommand;
 import coffeemeet.server.interest.service.cq.InterestQuery;
+import coffeemeet.server.oauth.dto.OAuthUserInfoDto.Response;
 import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
@@ -17,7 +18,6 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.OAuthUserInfo;
 import coffeemeet.server.user.dto.SignupDto;
 import coffeemeet.server.user.dto.UserProfileDto;
 import coffeemeet.server.user.service.cq.UserCommand;
@@ -47,19 +47,19 @@ public class UserService {
   private final UserCommand userCommand;
 
   public AuthTokens signup(SignupDto.Request request) {
-    OAuthUserInfo oAuthUserInfo = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
+    Response response = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
         request.authCode());
 
-    userCommand.checkDuplicatedUser(oAuthUserInfo.oAuthProvider(), oAuthUserInfo.oAuthProviderId());
+    userCommand.checkDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
     userCommand.checkDuplicatedNickname(request.nickname());
-    String profileImage = getProfileImageOrDefault(oAuthUserInfo.profileImage());
+    String profileImage = getProfileImageOrDefault(response.profileImage());
 
-    User user = new User(new coffeemeet.server.user.domain.OAuthInfo(oAuthUserInfo.oAuthProvider(),
-        oAuthUserInfo.oAuthProviderId()),
-        Profile.builder().name(oAuthUserInfo.name()).nickname(request.nickname())
-            .email(new Email(oAuthUserInfo.email()))
+    User user = new User(new coffeemeet.server.user.domain.OAuthInfo(response.oAuthProvider(),
+        response.oAuthProviderId()),
+        Profile.builder().name(response.name()).nickname(request.nickname())
+            .email(new Email(response.email()))
             .profileImageUrl(profileImage)
-            .birth(new Birth(oAuthUserInfo.birthYear(), oAuthUserInfo.birthDay())).build());
+            .birth(new Birth(response.birthYear(), response.birthDay())).build());
 
     User newUser = userCommand.saveUser(user);
     interestCommand.saveInterests(request, newUser);
@@ -67,8 +67,8 @@ public class UserService {
   }
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthUserInfo oAuthUserInfo = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
-    User user = userCommand.getUserByOAuthInfo(oAuthProvider, oAuthUserInfo.oAuthProviderId());
+    Response response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
+    User user = userCommand.getUserByOAuthInfo(oAuthProvider, response.oAuthProviderId());
     return authTokensGenerator.generate(user.getId());
   }
 
