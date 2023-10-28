@@ -12,7 +12,7 @@ import coffeemeet.server.common.media.EmailService;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.service.cq.UserQuery;
 import java.io.File;
 import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class CertificationService {
 
   private final S3MediaService s3MediaService;
   private final EmailService emailService;
-  private final UserService userService;
+  private final UserQuery userQuery;
   private final CertificationCommand certificationCommand;
   private final CertificationQuery certificationQuery;
   private final EmailVerificationCommand emailVerificationCommand;
@@ -41,7 +41,7 @@ public class CertificationService {
     CompanyEmail companyEmail = new CompanyEmail(email);
     String businessCardUrl = s3MediaService.getUrl(key);
     Department department = Department.valueOf(departmentName);
-    User user = userService.getUserById(userId);
+    User user = userQuery.getUserById(userId);
     certificationCommand.newCertification(companyEmail, businessCardUrl, department, user);
   }
 
