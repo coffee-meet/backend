@@ -5,10 +5,10 @@ import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.dto.AuthInfo;
-import coffeemeet.server.user.dto.MyProfileResponse;
-import coffeemeet.server.user.dto.SignupRequest;
-import coffeemeet.server.user.dto.UpdateProfileRequest;
-import coffeemeet.server.user.dto.UserProfileResponse;
+import coffeemeet.server.user.dto.MyProfileDto;
+import coffeemeet.server.user.dto.SignupDto;
+import coffeemeet.server.user.dto.UpdateProfileDto;
+import coffeemeet.server.user.dto.UserProfileDto;
 import coffeemeet.server.user.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -33,13 +33,8 @@ public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/{userId}")
-  public ResponseEntity<UserProfileResponse> findUserProfile(@PathVariable long userId) {
-    return ResponseEntity.ok(userService.findUserProfile(userId));
-  }
-
   @PostMapping("/sign-up")
-  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupRequest request) {
+  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupDto.Request request) {
     return ResponseEntity.ok(userService.signup(request));
   }
 
@@ -49,8 +44,13 @@ public class UserController {
     return ResponseEntity.ok(userService.login(oAuthProvider, authCode));
   }
 
+  @GetMapping("/{userId}")
+  public ResponseEntity<UserProfileDto.Response> findUserProfile(@PathVariable long userId) {
+    return ResponseEntity.ok(userService.findUserProfile(userId));
+  }
+
   @GetMapping("/me")
-  public ResponseEntity<MyProfileResponse> findMyProfile(@Login AuthInfo authInfo) {
+  public ResponseEntity<MyProfileDto.Response> findMyProfile(@Login AuthInfo authInfo) {
     return ResponseEntity.ok(userService.findMyProfile(authInfo.userId()));
   }
 
@@ -67,9 +67,8 @@ public class UserController {
 
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
-      @Valid @RequestBody UpdateProfileRequest request) {
-    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.name(),
-        request.interests());
+      @Valid @RequestBody UpdateProfileDto.Request request) {
+    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
     return ResponseEntity.ok().build();
   }
 
