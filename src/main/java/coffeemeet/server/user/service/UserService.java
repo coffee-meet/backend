@@ -14,6 +14,7 @@ import coffeemeet.server.oauth.dto.OAuthUserInfoDto.Response;
 import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
+import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
@@ -52,14 +53,15 @@ public class UserService {
     userQuery.hasDuplicatedNickname(request.nickname());
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
-    User user = new User(new coffeemeet.server.user.domain.OAuthInfo(response.oAuthProvider(),
+    User user = new User(new OAuthInfo(response.oAuthProvider(),
         response.oAuthProviderId()),
         Profile.builder().name(response.name()).nickname(request.nickname())
             .email(new Email(response.email()))
             .profileImageUrl(profileImage)
             .birth(new Birth(response.birthYear(), response.birthDay())).build());
 
-    User newUser = userCommand.saveUser(user);
+    Long userId = userCommand.saveUser(user);
+    User newUser = userQuery.getUserById(userId);
     interestCommand.saveInterests(request, newUser);
     return authTokensGenerator.generate(newUser.getId());
   }
@@ -81,12 +83,13 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return MyProfileDto.Response.of(user, keywords, certification.getDepartment());
+    return MyProfileDto.Response.of(user, certification.getDepartment(), keywords);
   }
 
   public void updateProfileImage(Long userId, File file) {
     User user = userQuery.getUserById(userId);
     deleteCurrentProfileImage(user.getProfile().getProfileImageUrl());
+
     String key = s3MediaService.generateKey(PROFILE_IMAGE);
     s3MediaService.upload(key, file);
     user.updateProfileImageUrl(s3MediaService.getUrl(key));

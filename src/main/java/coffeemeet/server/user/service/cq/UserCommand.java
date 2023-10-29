@@ -15,8 +15,8 @@ public class UserCommand {
   private final UserRepository userRepository;
   private final InterestRepository interestRepository;
 
-  public User saveUser(User user) {
-    return userRepository.save(user);
+  public Long saveUser(User user) {
+    return userRepository.save(user).getId();
   }
 
   public void updateUser(User user) {
