@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.annotations.Where;
 
 @Entity
@@ -47,8 +48,8 @@ public class User extends AdvancedBaseEntity {
   private boolean isDeleted;
 
   public User(
-      OAuthInfo oauthInfo,
-      Profile profile
+      @NonNull OAuthInfo oauthInfo,
+      @NonNull Profile profile
   ) {
     this.oauthInfo = oauthInfo;
     this.profile = profile;

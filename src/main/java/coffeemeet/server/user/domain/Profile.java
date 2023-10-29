@@ -3,7 +3,6 @@ package coffeemeet.server.user.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,10 +35,15 @@ public class Profile {
 
   @Builder
   private Profile(
-      @NonNull String name,
-      @NotNull String nickname,
+      @NonNull
+      String name,
+      @NonNull
+      String nickname,
+      @NonNull
       Email email,
-      @NonNull String profileImageUrl,
+      @NonNull
+      String profileImageUrl,
+      @NonNull
       Birth birth
   ) {
     validateNickname(nickname);

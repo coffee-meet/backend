@@ -18,7 +18,7 @@ public class OAuthInfo {
 
   private String oauthProviderId;
 
-  public OAuthInfo(OAuthProvider oauthProvider, @NonNull String oauthProviderId) {
+  public OAuthInfo(@NonNull OAuthProvider oauthProvider, @NonNull String oauthProviderId) {
     this.oauthProvider = oauthProvider;
     this.oauthProviderId = oauthProviderId;
   }
