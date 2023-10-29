@@ -53,7 +53,7 @@ class OAuthServiceTest {
     given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
 
     // when, then
-    assertThat(oAuthService.getOAuthInfo(oAuthProvider, authCode)).isEqualTo(oAuthInfoResponse);
+    assertThat(oAuthService.getOAuthUserInfo(oAuthProvider, authCode)).isEqualTo(oAuthInfoResponse);
   }
 
 }
