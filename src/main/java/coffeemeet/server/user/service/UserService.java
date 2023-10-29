@@ -7,6 +7,7 @@ import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.common.media.S3MediaService;
+import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.service.cq.InterestCommand;
 import coffeemeet.server.interest.service.cq.InterestQuery;
@@ -62,7 +63,8 @@ public class UserService {
 
     Long userId = userCommand.saveUser(user);
     User newUser = userQuery.getUserById(userId);
-    interestCommand.saveInterests(request, newUser);
+
+    interestCommand.saveAll(request.keywords(), newUser);
     return authTokensGenerator.generate(newUser.getId());
   }
 
@@ -83,7 +85,7 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return MyProfileDto.Response.of(user, certification.getDepartment(), keywords);
+    return MyProfileDto.Response.of(user, keywords, certification.getDepartment());
   }
 
   public void updateProfileImage(Long userId, File file) {
@@ -101,7 +103,7 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     userQuery.hasDuplicatedNickname(nickname);
     user.updateNickname(nickname);
-    interestCommand.updateInterests(userQuery.getUserById(userId), keywords);
+    updateInterests(user, keywords);
   }
 
   public void checkDuplicatedNickname(String nickname) {
@@ -123,6 +125,12 @@ public class UserService {
     String currentKey = s3MediaService.extractKey(profileImageUrl,
         PROFILE_IMAGE);
     s3MediaService.delete(currentKey);
+  }
+
+  private void updateInterests(User user, List<Keyword> keywords) {
+    List<Interest> currentInterests = interestCommand.findAllByUserId(user.getId());
+    interestCommand.deleteAll(currentInterests);
+    interestCommand.saveAll(keywords, user);
   }
 
 }
