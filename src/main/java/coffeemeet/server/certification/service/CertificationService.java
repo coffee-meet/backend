@@ -46,7 +46,7 @@ public class CertificationService {
   }
 
   private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
-    certificationQuery.applyIfCertifiedUser(userId, certification -> {
+    certificationCommand.applyIfCertifiedUser(userId, certification -> {
       String oldKey = s3MediaService.extractKey(certification.getBusinessCardUrl(), BUSINESS_CARD);
       s3MediaService.delete(oldKey);
     });
@@ -57,7 +57,7 @@ public class CertificationService {
 
   public void sendVerificationMail(Long userId, String email) {
     CompanyEmail companyEmail = new CompanyEmail(email);
-    certificationQuery.checkDuplicatedCompanyEmail(companyEmail);
+    certificationCommand.hasDuplicatedCompanyEmail(companyEmail);
 
     String verificationCode = generateVerificationCode();
     emailService.sendVerificationCode(companyEmail, verificationCode);
