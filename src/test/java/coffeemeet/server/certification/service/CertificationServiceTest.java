@@ -24,6 +24,7 @@ import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.service.cq.UserQuery;
 import java.io.File;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,8 @@ class CertificationServiceTest {
   private EmailService emailService;
   @Mock
   private UserService userService;
+  @Mock
+  private UserQuery userQuery;
   @Mock
   private CertificationCommand certificationCommand;
   @Mock
@@ -67,7 +70,7 @@ class CertificationServiceTest {
     fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
     given(s3MediaService.generateKey(any())).willReturn("someKey");
     given(s3MediaService.getUrl(any())).willReturn(businessCardUrl);
-    given(userService.getUserById(userId)).willReturn(user);
+    given(userQuery.getUserById(userId)).willReturn(user);
 
     // when
     certificationService.registerCertification(userId, email, departmentName, file);
