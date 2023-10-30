@@ -27,6 +27,12 @@ public class InterestCommand {
     interestRepository.saveAll(interests);
   }
 
+  public void updateInterests(User user, List<Keyword> keywords) {
+    List<Interest> currentInterests = findAllByUserId(user.getId());
+    deleteAll(currentInterests);
+    saveAll(keywords, user);
+  }
+
   public void deleteAll(List<Interest> interests) {
     interestRepository.deleteAllInBatch(interests);
   }

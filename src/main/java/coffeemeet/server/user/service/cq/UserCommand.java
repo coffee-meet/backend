@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCommand {
 
   private final UserRepository userRepository;
+  private final UserQuery userQuery;
   private final InterestRepository interestRepository;
 
   public Long saveUser(User user) {
@@ -26,6 +27,12 @@ public class UserCommand {
   public void deleteUser(Long userId) {
     interestRepository.deleteById(userId);
     userRepository.deleteById(userId);
+  }
+
+  public void updateUserInfo(Long userId, String nickname) {
+    User user = userQuery.getUserById(userId);
+    userQuery.hasDuplicatedNickname(nickname);
+    user.updateNickname(nickname);
   }
 
 }

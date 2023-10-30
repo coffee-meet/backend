@@ -7,7 +7,6 @@ import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.common.media.S3MediaService;
-import coffeemeet.server.interest.domain.Interest;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.service.cq.InterestCommand;
 import coffeemeet.server.interest.service.cq.InterestQuery;
@@ -28,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -98,12 +98,12 @@ public class UserService {
     userCommand.updateUser(user);
   }
 
+  @Transactional
   public void updateProfileInfo(Long userId, String nickname,
       List<Keyword> keywords) {
+    userCommand.updateUserInfo(userId, nickname);
     User user = userQuery.getUserById(userId);
-    userQuery.hasDuplicatedNickname(nickname);
-    user.updateNickname(nickname);
-    updateInterests(user, keywords);
+    interestCommand.updateInterests(user, keywords);
   }
 
   public void checkDuplicatedNickname(String nickname) {
@@ -125,12 +125,6 @@ public class UserService {
     String currentKey = s3MediaService.extractKey(profileImageUrl,
         PROFILE_IMAGE);
     s3MediaService.delete(currentKey);
-  }
-
-  private void updateInterests(User user, List<Keyword> keywords) {
-    List<Interest> currentInterests = interestCommand.findAllByUserId(user.getId());
-    interestCommand.deleteAll(currentInterests);
-    interestCommand.saveAll(keywords, user);
   }
 
 }
