@@ -12,9 +12,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
       String oauthProviderId);
 
   Optional<User> getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
-      OAuthProvider oAuthProvider,
-      String authCode);
+      OAuthProvider oauthProvider,
+      String oauthProviderId);
 
-  Optional<User> findUserByProfileNickname(String nickname);
+  boolean existsUserByProfile_Nickname(String nickname);
 
 }

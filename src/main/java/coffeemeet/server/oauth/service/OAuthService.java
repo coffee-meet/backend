@@ -18,7 +18,7 @@ public class OAuthService {
     return authCodeRequestUrlProviderComposite.provide(oAuthProvider);
   }
 
-  public OAuthUserInfoDto.Response getOAuthInfo(OAuthProvider oAuthProvider, String authCode) {
+  public OAuthUserInfoDto.Response getOAuthUserInfo(OAuthProvider oAuthProvider, String authCode) {
     return oauthMemberClientComposite.fetch(oAuthProvider,
         authCode);
   }

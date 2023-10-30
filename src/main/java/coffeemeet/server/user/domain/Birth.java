@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
+import lombok.NonNull;
 
 @Getter
 @Embeddable
@@ -20,7 +20,7 @@ public class Birth {
   @Column(nullable = false, length = BIRTH_LENGTH)
   String birthDay;
 
-  public Birth(String birthYear, String birthDay) {
+  public Birth(@NonNull String birthYear, @NonNull String birthDay) {
     validateYear(birthYear);
     validateDay(birthDay);
     this.birthYear = birthYear;
@@ -28,13 +28,13 @@ public class Birth {
   }
 
   private void validateYear(String birthYear) {
-    if (!StringUtils.hasText(birthYear) || birthYear.length() != BIRTH_LENGTH) {
+    if (birthYear.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 연도 형식입니다.");
     }
   }
 
   private void validateDay(String birthDay) {
-    if (!StringUtils.hasText(birthDay) || birthDay.length() != BIRTH_LENGTH) {
+    if (birthDay.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 날짜 형식입니다.");
     }
   }

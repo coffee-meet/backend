@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Embeddable
@@ -13,7 +14,7 @@ public class Email {
 
   private String email;
 
-  public Email(String email) {
+  public Email(@NonNull String email) {
     validateEmail(email);
     this.email = email;
   }
