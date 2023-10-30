@@ -1,4 +1,4 @@
-package coffeemeet.server.common.execption.exception;
+package coffeemeet.server.common.execption;
 
 public interface ErrorCode {
 

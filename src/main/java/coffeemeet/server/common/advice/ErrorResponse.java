@@ -1,9 +1,9 @@
-package coffeemeet.server.common.advice.advice;
+package coffeemeet.server.common.advice;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-import coffeemeet.server.common.execption.exception.ErrorCode;
-import coffeemeet.server.common.execption.exception.GlobalErrorCode;
+import coffeemeet.server.common.execption.ErrorCode;
+import coffeemeet.server.common.execption.GlobalErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.List;

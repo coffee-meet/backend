@@ -1,10 +1,10 @@
-package coffeemeet.server.common.advice.advice;
+package coffeemeet.server.common.advice;
 
-import coffeemeet.server.common.execption.exception.DataLengthExceededException;
-import coffeemeet.server.common.execption.exception.GlobalErrorCode;
-import coffeemeet.server.common.execption.exception.InvalidAuthException;
-import coffeemeet.server.common.execption.exception.MissMatchException;
-import coffeemeet.server.common.execption.exception.NotFoundException;
+import coffeemeet.server.common.execption.DataLengthExceededException;
+import coffeemeet.server.common.execption.GlobalErrorCode;
+import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.common.execption.MissMatchException;
+import coffeemeet.server.common.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
