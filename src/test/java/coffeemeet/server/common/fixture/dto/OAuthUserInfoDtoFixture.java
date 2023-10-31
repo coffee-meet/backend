@@ -11,7 +11,7 @@ public class OAuthUserInfoDtoFixture {
     return Instancio.of(OAuthUserInfoDto.Response.class)
         .generate(field("birthYear"), gen -> gen.ints().range(1000, 9999).asString())
         .generate(field("birthDay"), gen -> gen.ints().range(1000, 9999).asString())
-        .set(field("email"),"test123@gmail.com")
+        .set(field("email"), "test123@gmail.com")
         .create();
   }
 

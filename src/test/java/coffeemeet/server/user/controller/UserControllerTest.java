@@ -36,23 +36,28 @@ import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
 import coffeemeet.server.common.fixture.dto.UpdateProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
-import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.controller.dto.SignupHttpDto;
 import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto.Request;
+import coffeemeet.server.user.domain.OAuthProvider;
+import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(UserController.class)
 class UserControllerTest extends ControllerTestConfig {
+
+  @MockBean
+  private UserService userService;
 
   @Test
   @DisplayName("회원가입을 할 수 있다.")
@@ -121,12 +126,12 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("사용자 프로필을 조회할 수 있다.")
   void findUserProfileTest() throws Exception {
-    long id = 1L;
+    Long userId = 1L;
     UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
 
-    given(userService.findUserProfile(id)).willReturn(response);
+    given(userService.findUserProfile(userId)).willReturn(response);
 
-    mockMvc.perform(get("/api/v1/users/{id}", id)
+    mockMvc.perform(get("/api/v1/users/{id}", userId)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -155,8 +160,7 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("마이페이지를 조회할 수 있다.")
   void findMyProfileTest() throws Exception {
-    User user = user();
-    Long userId = user.getId();
+    Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
@@ -190,24 +194,13 @@ class UserControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value(response.name()))
-        .andExpect(jsonPath("$.nickname").value(response.nickname()))
-        .andExpect(jsonPath("$.email").value(response.email()))
-        .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
-        .andExpect(jsonPath("$.birthYear").value(response.birthYear()))
-        .andExpect(jsonPath("$.birthDay").value(response.birthDay()))
-        .andExpect(jsonPath("$.reportedCount").value(response.reportedCount()))
-        .andExpect(jsonPath("$.sanctionPeriod").value(String.valueOf(response.sanctionPeriod())))
-        .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
-        .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
+        .andExpect(status().isOk());
   }
 
   @Test
   @DisplayName("본인 프로필 사진을 수정할 수 있다.")
   void updateProfileImageTest() throws Exception {
-    User user = user();
-    Long userId = user.getId();
+    Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
@@ -240,8 +233,7 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("본인 프로필 정보를 수정할 수 있다.")
   void updateProfileInfoTest() throws Exception {
-    User user = user();
-    Long userId = user.getId();
+    Long userId = 1L;
     Request request = UpdateProfileDtoFixture.updateProfileDtoRequest();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 

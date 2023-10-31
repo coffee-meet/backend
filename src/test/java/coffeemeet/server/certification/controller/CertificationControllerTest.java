@@ -7,8 +7,10 @@ import static coffeemeet.server.common.fixture.entity.CertificationFixture.email
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCodeDtoRequest;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
@@ -26,31 +28,30 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.oauth.service.OAuthService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 
+@WebMvcTest(CertificationController.class)
 class CertificationControllerTest extends ControllerTestConfig {
 
   @MockBean
-  protected AuthService authService;
-  @MockBean
-  protected OAuthService oAuthService; // TODO: 2023/10/30 authService, oAuthService Controller 테스트에서 전부 중복이라서 Config에 두는게 좋을 듯
-  @MockBean
   private CertificationService certificationService;
-  private RefreshToken refreshToken;
 
   @BeforeEach
   void setUp() {
+    Long userId = 1L;
     RefreshToken refreshToken = refreshToken();
     given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    willDoNothing().given(certificationService)
+        .registerCertification(anyLong(), any(), any(), any());
   }
 
   @Test
