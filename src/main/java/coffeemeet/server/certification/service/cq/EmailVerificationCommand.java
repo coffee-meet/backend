@@ -12,7 +12,7 @@ public class EmailVerificationCommand {
 
   private final EmailVerificationRepository emailVerificationRepository;
 
-  public void newEmailVerification(Long userId, CompanyEmail companyEmail,
+  public void createEmailVerification(Long userId, CompanyEmail companyEmail,
       String verificationCode) {
     emailVerificationRepository.save(new EmailVerification(userId, companyEmail, verificationCode));
   }

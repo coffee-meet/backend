@@ -42,7 +42,7 @@ public class CertificationService {
     String businessCardUrl = s3MediaService.getUrl(key);
     Department department = Department.valueOf(departmentName);
     User user = userQuery.getUserById(userId);
-    certificationCommand.newCertification(companyEmail, businessCardUrl, department, user);
+    certificationCommand.createCertification(companyEmail, businessCardUrl, department, user);
   }
 
   private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
@@ -61,7 +61,7 @@ public class CertificationService {
 
     String verificationCode = generateVerificationCode();
     emailService.sendVerificationCode(companyEmail, verificationCode);
-    emailVerificationCommand.newEmailVerification(userId, companyEmail, verificationCode);
+    emailVerificationCommand.createEmailVerification(userId, companyEmail, verificationCode);
   }
 
   public void compareCode(Long userId, String verificationCode) {
