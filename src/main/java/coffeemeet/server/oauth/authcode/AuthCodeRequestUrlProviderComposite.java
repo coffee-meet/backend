@@ -1,5 +1,7 @@
 package coffeemeet.server.oauth.authcode;
 
+import coffeemeet.server.auth.exception.AuthErrorCode;
+import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +31,8 @@ public class AuthCodeRequestUrlProviderComposite {
 
   private AuthCodeRequestUrlProvider getProvider(OAuthProvider oAuthProvider) {
     return Optional.ofNullable(mapping.get(oAuthProvider))
-        .orElseThrow(() -> new IllegalArgumentException(
+        .orElseThrow(() -> new InvalidAuthException(
+                AuthErrorCode.INVALID_LOGIN_TYPE,
                 String.format(INVALID_LOGIN_TYPE_MESSAGE, oAuthProvider)
             )
         );
