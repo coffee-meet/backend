@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CertificationErrorCode implements ErrorCode {
+  EXISTED_COMPANY_EMAIL("C000", "이메일이 중복됩니다."),
   INVALID_VERIFICATION_CODE("C004", "잘못된 인증코드입니다.");
 
   private final String errorCode;
