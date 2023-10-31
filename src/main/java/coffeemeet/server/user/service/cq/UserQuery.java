@@ -6,6 +6,7 @@ import static coffeemeet.server.user.exception.UserErrorCode.NOT_EXIST_USER;
 
 import coffeemeet.server.common.execption.DuplicatedDataException;
 import coffeemeet.server.common.execption.NotFoundException;
+import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
@@ -34,12 +35,12 @@ public class UserQuery {
   }
 
   public User getUserByOAuthInfo(OAuthProvider oAuthProvider, String oAuthProviderId) {
-    return userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
-        oAuthProvider, oAuthProviderId).orElseThrow(
-        () -> new NotFoundException(
-            NOT_EXIST_USER,
-            String.format(NOT_REGISTERED_USER_MESSAGE, oAuthProvider, oAuthProviderId))
-    );
+    return userRepository.findByOauthInfo(new OAuthInfo(oAuthProvider, oAuthProviderId))
+        .orElseThrow(
+            () -> new NotFoundException(
+                NOT_EXIST_USER,
+                String.format(NOT_REGISTERED_USER_MESSAGE, oAuthProvider, oAuthProviderId))
+        );
   }
 
   public void hasDuplicatedNickname(String nickname) {
@@ -52,8 +53,7 @@ public class UserQuery {
   }
 
   public void hasDuplicatedUser(OAuthProvider oAuthProvider, String oAuthProviderId) {
-    if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
-        oAuthProvider, oAuthProviderId)) {
+    if (userRepository.existsUserByOauthInfo(new OAuthInfo(oAuthProvider, oAuthProviderId))) {
       throw new DuplicatedDataException(
           ALREADY_EXIST_USER,
           String.format(ALREADY_EXIST_USER_MESSAGE, oAuthProvider, oAuthProviderId)
