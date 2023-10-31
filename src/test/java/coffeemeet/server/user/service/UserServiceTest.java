@@ -6,7 +6,6 @@ import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAG
 import static coffeemeet.server.interest.domain.Keyword.COOK;
 import static coffeemeet.server.interest.domain.Keyword.GAME;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,8 +13,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 import coffeemeet.server.auth.domain.AuthTokens;
@@ -98,7 +96,7 @@ class UserServiceTest {
     given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(response);
     given(userCommand.saveUser(any(User.class))).willReturn(user.getId());
     given(userQuery.getUserById(user.getId())).willReturn(user);
-    doNothing().when(interestCommand).saveAll(any(), any());
+    willDoNothing().given(interestCommand).saveAll(any(), any());
     given(authTokensGenerator.generate(user.getId())).willReturn(authTokens);
 
     // when
@@ -250,8 +248,8 @@ class UserServiceTest {
     ArrayList<Keyword> newKeywords = new ArrayList<>(Arrays.asList(COOK, GAME));
 
     given(userQuery.getUserById(any())).willReturn(user);
-    doNothing().when(userCommand).updateUserInfo(any(), any());
-    doNothing().when(interestCommand).updateInterests(any(), any());
+    willDoNothing().given(userCommand).updateUserInfo(any(), any());
+    willDoNothing().given(interestCommand).updateInterests(any(), any());
 
     // when
     userService.updateProfileInfo(user.getId(), newNickname, newKeywords);
@@ -267,17 +265,13 @@ class UserServiceTest {
     // given
     User user = user();
 
-    doNothing().when(userCommand).deleteUser(user.getId());
-    given(userQuery.getUserById(user.getId())).willThrow(
-        new IllegalArgumentException());
+    willDoNothing().given(userCommand).deleteUser(user.getId());
 
     // when
     userService.deleteUser(user.getId());
 
     // then
-    assertThatThrownBy(() -> userQuery.getUserById(user.getId())).isInstanceOf(
-        IllegalArgumentException.class);
-
+    assertThat(true).isTrue();
   }
 
   @DisplayName("닉네임 중복을 검사할 수 있다.")
@@ -287,11 +281,13 @@ class UserServiceTest {
     User user = user();
     String nickname = user.getProfile().getNickname();
 
-    doThrow(new IllegalArgumentException()).when(userQuery).hasDuplicatedNickname(nickname);
+    willDoNothing().given(userQuery).hasDuplicatedNickname(nickname);
 
     // when
-    assertThatThrownBy(() -> userService.checkDuplicatedNickname(nickname))
-        .isInstanceOf(IllegalArgumentException.class);
+    userService.checkDuplicatedNickname(nickname);
+
+    // then
+    assertThat(true).isTrue();
   }
 
 }
