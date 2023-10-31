@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.repository.EmailVerificationRepository;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ class EmailVerificationQueryTest {
   private EmailVerificationRepository emailVerificationRepository;
 
   @Test
+  @DisplayName("유저 아이디로 EmailVerification를 조회할 수 있다.")
   void getCodeByIdTest() {
     // given
     EmailVerification emailVerification = emailVerification();

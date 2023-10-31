@@ -8,6 +8,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +29,7 @@ class CertificationRepositoryTest {
   }
 
   @Test
+  @DisplayName("유저 아이디로 회사 인증 정보를 조회할 수 있다.")
   void findByUserIdTest() {
     // given
     Certification certification = certification(user);
@@ -38,6 +40,7 @@ class CertificationRepositoryTest {
   }
 
   @Test
+  @DisplayName("존재하는 회사 이메일인지 확인할 수 있다.")
   void existsByCompanyEmailTest() {
     // given
     Certification certification = certification(user);

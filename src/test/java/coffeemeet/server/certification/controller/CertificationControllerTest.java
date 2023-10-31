@@ -31,6 +31,7 @@ import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -54,6 +55,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   }
 
   @Test
+  @DisplayName("회사 인증 정보를 등록할 수 있다.")
   void registerCompanyInfoTest() throws Exception {
     // given
     String sBusinessCard = "businessCard";
@@ -94,6 +96,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   }
 
   @Test
+  @DisplayName("이메일을 통해 인증번호를 전송할 수 있다.")
   void sendVerificationCodeByEmailTest() throws Exception {
     // given
     String emailDtoRequest = objectMapper.writeValueAsString(emailDtoRequest());
@@ -119,6 +122,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   }
 
   @Test
+  @DisplayName("이메일을 검증을 할 수 있다.")
   void verifyEmailTest() throws Exception {
     String verificationCodeDtoRequest = objectMapper.writeValueAsString(
         verificationCodeDtoRequest());
