@@ -43,6 +43,7 @@ import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -167,13 +168,9 @@ class UserControllerTest extends ControllerTestConfig {
     // given
     Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
-
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     Response response = MyProfileDtoFixture.myProfileDtoResponse();
 
-    when(jwtTokenProvider.extractUserId(TOKEN)).thenReturn(userId);
-    when(userService.findMyProfile(anyLong())).thenReturn(response);
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(userService.findMyProfile(anyLong())).willReturn(response);
 
@@ -203,7 +200,19 @@ class UserControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name").value(response.name()))
+        .andExpect(jsonPath("$.nickname").value(response.nickname()))
+        .andExpect(jsonPath("$.email").value(response.email()))
+        .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
+        .andExpect(jsonPath("$.birthYear").value(response.birthYear()))
+        .andExpect(jsonPath("$.birthDay").value(response.birthDay()))
+        .andExpect(jsonPath("$.reportedCount").value(response.reportedCount()))
+        .andExpect(
+            jsonPath("$.sanctionPeriod").value(response.sanctionPeriod()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))))
+        .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
+        .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
   }
 
   @Test
