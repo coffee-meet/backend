@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
@@ -28,13 +29,13 @@ public class Birth {
   }
 
   private void validateYear(String birthYear) {
-    if (birthYear.length() != BIRTH_LENGTH) {
+    if (!StringUtils.hasText(birthYear) || birthYear.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 연도 형식입니다.");
     }
   }
 
   private void validateDay(String birthDay) {
-    if (birthDay.length() != BIRTH_LENGTH) {
+    if (!StringUtils.hasText(birthDay) || birthDay.length() != BIRTH_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 날짜 형식입니다.");
     }
   }

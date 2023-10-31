@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
@@ -35,18 +36,15 @@ public class Profile {
 
   @Builder
   private Profile(
-      @NonNull
-      String name,
-      @NonNull
-      String nickname,
-      @NonNull
-      Email email,
-      @NonNull
-      String profileImageUrl,
-      @NonNull
-      Birth birth
+      @NonNull String name,
+      @NonNull String nickname,
+      @NonNull Email email,
+      @NonNull String profileImageUrl,
+      @NonNull Birth birth
   ) {
     validateNickname(nickname);
+    validateName(name);
+    validateProfileImageUrl(profileImageUrl);
     this.name = name;
     this.nickname = nickname;
     this.email = email;
@@ -60,12 +58,25 @@ public class Profile {
   }
 
   public void updateProfileImageUrl(String newProfileImageUrl) {
+    validateProfileImageUrl(newProfileImageUrl);
     this.profileImageUrl = newProfileImageUrl;
   }
 
   private void validateNickname(String nickname) {
-    if (nickname.length() > NICKNAME_MAX_LENGTH) {
+    if (!StringUtils.hasText(nickname) || nickname.length() > NICKNAME_MAX_LENGTH) {
       throw new IllegalArgumentException("올바르지 않은 닉네임입니다.");
+    }
+  }
+
+  private void validateName(String name) {
+    if (!StringUtils.hasText(name)) {
+      throw new IllegalArgumentException("올바르지 않은 이름입니다.");
+    }
+  }
+
+  private void validateProfileImageUrl(String profileImageUrl) {
+    if (!StringUtils.hasText(profileImageUrl)) {
+      throw new IllegalArgumentException("올바르지 않은 프로필 이미지 url입니다.");
     }
   }
 
