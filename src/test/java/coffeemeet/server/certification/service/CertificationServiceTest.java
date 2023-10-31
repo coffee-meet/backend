@@ -25,6 +25,7 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.service.cq.UserQuery;
 import java.io.File;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,7 @@ class CertificationServiceTest {
   private EmailVerificationQuery emailVerificationQuery;
 
   @Test
+  @DisplayName("회사 정보를 등록할 수 있다.")
   void registerCertificationTest() {
     // given
     User user = user();
@@ -78,6 +80,7 @@ class CertificationServiceTest {
   }
 
   @Test
+  @DisplayName("회사 인증 메일을 전송할 수 있다.")
   void sendVerificationMailTest() {
     // given
     String email = email();
@@ -95,6 +98,7 @@ class CertificationServiceTest {
   }
 
   @Test
+  @DisplayName("인증 코드를 비교할 수 있다.")
   void compareCodeTest() {
     // given
     Long userId = Instancio.create(Long.class);
