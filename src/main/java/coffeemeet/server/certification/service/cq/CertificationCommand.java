@@ -22,7 +22,7 @@ public class CertificationCommand {
 
   private final CertificationRepository certificationRepository;
 
-  public void newCertification(CompanyEmail companyEmail, String businessCardUrl,
+  public void createCertification(CompanyEmail companyEmail, String businessCardUrl,
       Department department, User user) {
     certificationRepository.save(
         Certification.builder()
