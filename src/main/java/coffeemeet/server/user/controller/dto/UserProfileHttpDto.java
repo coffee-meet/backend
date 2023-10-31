@@ -2,7 +2,7 @@ package coffeemeet.server.user.controller.dto;
 
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserProfileDto;
 import java.util.List;
 
 public sealed interface UserProfileHttpDto permits UserProfileHttpDto.Response {

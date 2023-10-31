@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.service.dto;
 
 import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;

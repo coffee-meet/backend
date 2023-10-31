@@ -3,8 +3,8 @@ package coffeemeet.server.common.fixture.dto;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.MyProfileDto.Response;
+import coffeemeet.server.user.service.dto.MyProfileDto;
+import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import java.util.List;
 import org.instancio.Instancio;
 

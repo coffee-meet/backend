@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.service.dto;
 
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.interest.domain.Keyword;

@@ -2,7 +2,7 @@ package coffeemeet.server.user.controller.dto;
 
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.dto.MyProfileDto;
+import coffeemeet.server.user.service.dto.MyProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
