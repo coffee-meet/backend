@@ -16,14 +16,12 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.service.cq.CertificationCommand;
-import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.certification.service.cq.EmailVerificationCommand;
 import coffeemeet.server.certification.service.cq.EmailVerificationQuery;
 import coffeemeet.server.common.media.EmailService;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.cq.UserQuery;
 import java.io.File;
 import org.instancio.Instancio;
@@ -44,13 +42,9 @@ class CertificationServiceTest {
   @Mock
   private EmailService emailService;
   @Mock
-  private UserService userService;
-  @Mock
   private UserQuery userQuery;
   @Mock
   private CertificationCommand certificationCommand;
-  @Mock
-  private CertificationQuery certificationQuery;
   @Mock
   private EmailVerificationCommand emailVerificationCommand;
   @Mock

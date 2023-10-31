@@ -8,6 +8,7 @@ import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.oauth.client.OAuthMemberClientComposite;
 import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
+import coffeemeet.server.user.service.dto.OAuthUserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,11 +50,12 @@ class OAuthServiceTest {
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
     String authCode = "authCode";
     OAuthUserInfoDto.Response oAuthInfoResponse = OAuthUserInfoDtoFixture.response();
+    OAuthUserInfo userInfo = OAuthUserInfo.from(oAuthInfoResponse);
 
     given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
 
     // when, then
-    assertThat(oAuthService.getOAuthUserInfo(oAuthProvider, authCode)).isEqualTo(oAuthInfoResponse);
+    assertThat(oAuthService.getOAuthUserInfo(oAuthProvider, authCode)).isEqualTo(userInfo);
   }
 
 }

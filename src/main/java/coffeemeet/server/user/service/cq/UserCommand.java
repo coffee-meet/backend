@@ -29,8 +29,7 @@ public class UserCommand {
     userRepository.deleteById(userId);
   }
 
-  public void updateUserInfo(Long userId, String nickname) {
-    User user = userQuery.getUserById(userId);
+  public void updateUserInfo(User user, String nickname) {
     userQuery.hasDuplicatedNickname(nickname);
     user.updateNickname(nickname);
   }

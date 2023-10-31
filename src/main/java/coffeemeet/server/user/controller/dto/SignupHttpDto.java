@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.controller.dto;
 
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.NonNull;
 
-public sealed interface SignupDto permits SignupDto.Request {
+public sealed interface SignupHttpDto permits SignupHttpDto.Request {
 
   record Request(
       @NotBlank
@@ -18,7 +18,7 @@ public sealed interface SignupDto permits SignupDto.Request {
       String authCode,
       @NonNull
       OAuthProvider oAuthProvider
-  ) implements SignupDto {
+  ) implements SignupHttpDto {
 
   }
 

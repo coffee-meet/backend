@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.service.dto;
 
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.interest.domain.Keyword;
@@ -16,7 +16,6 @@ public sealed interface UserProfileDto permits UserProfileDto.Response {
 
     public static Response of(User user, Department department,
         List<Keyword> interests) {
-
       return new Response(
           user.getProfile().getNickname(),
           user.getProfile().getProfileImageUrl(),

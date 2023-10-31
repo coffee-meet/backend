@@ -2,8 +2,8 @@ package coffeemeet.server.oauth.service;
 
 import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.oauth.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
+import coffeemeet.server.user.service.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +18,9 @@ public class OAuthService {
     return authCodeRequestUrlProviderComposite.provide(oAuthProvider);
   }
 
-  public OAuthUserInfoDto.Response getOAuthUserInfo(OAuthProvider oAuthProvider, String authCode) {
-    return oauthMemberClientComposite.fetch(oAuthProvider,
-        authCode);
+  public OAuthUserInfo getOAuthUserInfo(OAuthProvider oAuthProvider, String authCode) {
+    return OAuthUserInfo.from(oauthMemberClientComposite.fetch(oAuthProvider,
+        authCode));
   }
 
 }

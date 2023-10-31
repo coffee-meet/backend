@@ -3,12 +3,14 @@ package coffeemeet.server.user.controller;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
+import coffeemeet.server.user.controller.dto.MyProfileHttpDto;
+import coffeemeet.server.user.controller.dto.UserProfileHttpDto;
 import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.dto.AuthInfo;
-import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupDto;
-import coffeemeet.server.user.dto.UpdateProfileDto;
-import coffeemeet.server.user.dto.UserProfileDto;
+import coffeemeet.server.user.controller.dto.AuthInfo;
+import coffeemeet.server.user.service.dto.MyProfileDto;
+import coffeemeet.server.user.controller.dto.SignupHttpDto;
+import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto;
+import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import coffeemeet.server.user.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -34,8 +36,10 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupDto.Request request) {
-    return ResponseEntity.ok(userService.signup(request));
+  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupHttpDto.Request request) {
+    return ResponseEntity.ok(
+        userService.signup(request.nickname(), request.keywords(), request.authCode(),
+            request.oAuthProvider()));
   }
 
   @GetMapping("/login/{oAuthProvider}")
@@ -45,13 +49,15 @@ public class UserController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserProfileDto.Response> findUserProfile(@PathVariable long userId) {
-    return ResponseEntity.ok(userService.findUserProfile(userId));
+  public ResponseEntity<UserProfileHttpDto.Response> findUserProfile(@PathVariable long userId) {
+    Response response = userService.findUserProfile(userId);
+    return ResponseEntity.ok(UserProfileHttpDto.Response.of(response));
   }
 
   @GetMapping("/me")
-  public ResponseEntity<MyProfileDto.Response> findMyProfile(@Login AuthInfo authInfo) {
-    return ResponseEntity.ok(userService.findMyProfile(authInfo.userId()));
+  public ResponseEntity<MyProfileHttpDto.Response> findMyProfile(@Login AuthInfo authInfo) {
+    MyProfileDto.Response response = userService.findMyProfile(authInfo.userId());
+    return ResponseEntity.ok(MyProfileHttpDto.Response.of(response));
   }
 
   @PostMapping("/me/profile-image")
@@ -67,7 +73,7 @@ public class UserController {
 
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
-      @Valid @RequestBody UpdateProfileDto.Request request) {
+      @Valid @RequestBody UpdateProfileHttpDto.Request request) {
     userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
     return ResponseEntity.ok().build();
   }

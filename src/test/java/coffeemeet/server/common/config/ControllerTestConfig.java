@@ -35,7 +35,7 @@ public abstract class ControllerTestConfig {
   protected RefreshTokenRepository refreshTokenRepository;
 
   @MockBean
-  protected UserService userService; // TODO: 2023/10/30 AuthService 때문에 얘가 있어야 되는데 이거 바꿔야 될 듯?
+  protected UserService userService;
 
   @BeforeEach
   void setUp(WebApplicationContext ctx, RestDocumentationContextProvider restDocumentation) {

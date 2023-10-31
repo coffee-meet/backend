@@ -10,7 +10,6 @@ import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.service.cq.InterestCommand;
 import coffeemeet.server.interest.service.cq.InterestQuery;
-import coffeemeet.server.oauth.dto.OAuthUserInfoDto.Response;
 import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
@@ -18,9 +17,9 @@ import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupDto;
-import coffeemeet.server.user.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.MyProfileDto;
+import coffeemeet.server.user.service.dto.OAuthUserInfo;
+import coffeemeet.server.user.service.dto.UserProfileDto;
 import coffeemeet.server.user.service.cq.UserCommand;
 import coffeemeet.server.user.service.cq.UserQuery;
 import java.io.File;
@@ -46,17 +45,18 @@ public class UserService {
   private final UserQuery userQuery;
   private final UserCommand userCommand;
 
-  public AuthTokens signup(SignupDto.Request request) {
-    Response response = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
-        request.authCode());
+  public AuthTokens signup(String nickname, List<Keyword> keywords, String authCode,
+      OAuthProvider oAuthProvider) {
+    OAuthUserInfo response = oAuthService.getOAuthUserInfo(oAuthProvider,
+        authCode);
 
     userQuery.hasDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
-    userQuery.hasDuplicatedNickname(request.nickname());
+    userQuery.hasDuplicatedNickname(nickname);
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(),
         response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname())
+        Profile.builder().name(response.name()).nickname(nickname)
             .email(new Email(response.email()))
             .profileImageUrl(profileImage)
             .birth(new Birth(response.birthYear(), response.birthDay())).build());
@@ -64,12 +64,12 @@ public class UserService {
     Long userId = userCommand.saveUser(user);
     User newUser = userQuery.getUserById(userId);
 
-    interestCommand.saveAll(request.keywords(), newUser);
+    interestCommand.saveAll(keywords, newUser);
     return authTokensGenerator.generate(newUser.getId());
   }
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    Response response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
+    OAuthUserInfo response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
     User user = userQuery.getUserByOAuthInfo(oAuthProvider, response.oAuthProviderId());
     return authTokensGenerator.generate(user.getId());
   }
@@ -101,9 +101,13 @@ public class UserService {
   @Transactional
   public void updateProfileInfo(Long userId, String nickname,
       List<Keyword> keywords) {
-    userCommand.updateUserInfo(userId, nickname);
     User user = userQuery.getUserById(userId);
-    interestCommand.updateInterests(user, keywords);
+    if (nickname != null) {
+      userCommand.updateUserInfo(user, nickname);
+    }
+    if (keywords != null && !keywords.isEmpty()) {
+      interestCommand.updateInterests(user, keywords);
+    }
   }
 
   public void checkDuplicatedNickname(String nickname) {
