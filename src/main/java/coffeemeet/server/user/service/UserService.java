@@ -101,9 +101,13 @@ public class UserService {
   @Transactional
   public void updateProfileInfo(Long userId, String nickname,
       List<Keyword> keywords) {
-    userCommand.updateUserInfo(userId, nickname);
     User user = userQuery.getUserById(userId);
-    interestCommand.updateInterests(user, keywords);
+    if (nickname != null) {
+      userCommand.updateUserInfo(user, nickname);
+    }
+    if (keywords != null && !keywords.isEmpty()) {
+      interestCommand.updateInterests(user, keywords);
+    }
   }
 
   public void checkDuplicatedNickname(String nickname) {

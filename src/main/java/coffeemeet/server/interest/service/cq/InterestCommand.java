@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InterestCommand {
 
   private final InterestRepository interestRepository;
-
-  public List<Interest> findAllByUserId(long userId) {
-    return interestRepository.findAllByUserId(userId);
-  }
+  private final InterestQuery interestQuery;
 
   public void saveAll(List<Keyword> keywords, User user) {
     List<Interest> interests = keywords.stream()
@@ -28,9 +25,15 @@ public class InterestCommand {
   }
 
   public void updateInterests(User user, List<Keyword> keywords) {
-    List<Interest> currentInterests = findAllByUserId(user.getId());
-    deleteAll(currentInterests);
-    saveAll(keywords, user);
+    List<Interest> currentInterests = interestQuery.findAllByUserId(user.getId());
+    List<Keyword> currentKeywords = currentInterests.stream()
+        .map(Interest::getKeyword)
+        .toList();
+
+    if (!currentKeywords.equals(keywords)) {
+      deleteAll(currentInterests);
+      saveAll(keywords, user);
+    }
   }
 
   public void deleteAll(List<Interest> interests) {
