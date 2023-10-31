@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -44,6 +43,7 @@ import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -61,11 +61,13 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("회원가입을 할 수 있다.")
   void signupTest() throws Exception {
+    // given
     SignupHttpDto.Request request = SignupDtoFixture.signupDto();
     AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
     given(userService.signup(any(), any(), any(), any())).willReturn(authTokens);
 
+    // when, then
     mockMvc.perform(post("/api/v1/users/sign-up")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
@@ -94,10 +96,12 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
+    // given
     AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
     given(userService.login(any(), any())).willReturn(authTokens);
 
+    // when, then
     mockMvc.perform(get("/api/v1/users/login/{oAuthProvider}", OAuthProvider.KAKAO)
             .contentType(MediaType.APPLICATION_JSON)
             .param("authCode", "authCode"))
@@ -125,11 +129,13 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("사용자 프로필을 조회할 수 있다.")
   void findUserProfileTest() throws Exception {
-    Long userId = 1L;
+    // given
+    long userId = 1L;
     UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
 
     given(userService.findUserProfile(userId)).willReturn(response);
 
+    // when, then
     mockMvc.perform(get("/api/v1/users/{id}", userId)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
@@ -159,15 +165,16 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("마이페이지를 조회할 수 있다.")
   void findMyProfileTest() throws Exception {
+    // given
     Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
-
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     Response response = MyProfileDtoFixture.myProfileDtoResponse();
 
-    when(jwtTokenProvider.extractUserId(TOKEN)).thenReturn(userId);
-    when(userService.findMyProfile(anyLong())).thenReturn(response);
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    given(userService.findMyProfile(anyLong())).willReturn(response);
 
+    // when, then
     mockMvc.perform(get("/api/v1/users/me")
             .header("Authorization", TOKEN)
             .contentType(MediaType.APPLICATION_JSON)
@@ -193,12 +200,25 @@ class UserControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name").value(response.name()))
+        .andExpect(jsonPath("$.nickname").value(response.nickname()))
+        .andExpect(jsonPath("$.email").value(response.email()))
+        .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
+        .andExpect(jsonPath("$.birthYear").value(response.birthYear()))
+        .andExpect(jsonPath("$.birthDay").value(response.birthDay()))
+        .andExpect(jsonPath("$.reportedCount").value(response.reportedCount()))
+        .andExpect(
+            jsonPath("$.sanctionPeriod").value(response.sanctionPeriod()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))))
+        .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
+        .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
   }
 
   @Test
   @DisplayName("본인 프로필 사진을 수정할 수 있다.")
   void updateProfileImageTest() throws Exception {
+    // given
     Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
@@ -210,6 +230,7 @@ class UserControllerTest extends ControllerTestConfig {
         "image/png",
         "testImage".getBytes());
 
+    // when, given
     mockMvc.perform((multipart("/api/v1/users/me/profile-image")
             .file("profileImage", file.getBytes())
             .header("Authorization", TOKEN)
@@ -232,6 +253,7 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("본인 프로필 정보를 수정할 수 있다.")
   void updateProfileInfoTest() throws Exception {
+    // given
     Long userId = 1L;
     Request request = UpdateProfileDtoFixture.updateProfileDtoRequest();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
@@ -241,6 +263,7 @@ class UserControllerTest extends ControllerTestConfig {
     willDoNothing().given(
         userService).updateProfileInfo(any(), any(), any());
 
+    // when, given
     mockMvc.perform(patch("/api/v1/users/me")
             .header("Authorization", TOKEN)
             .contentType(MediaType.APPLICATION_JSON)
@@ -265,12 +288,14 @@ class UserControllerTest extends ControllerTestConfig {
   @Test
   @DisplayName("닉네임 중복을 확인할 수 있다.")
   void checkNicknameDuplicationTest() throws Exception {
+    // given
     User user = user();
     String nickname = user.getProfile().getNickname();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
+    // when, given
     mockMvc.perform(get("/api/v1/users/duplicate")
             .param("nickname", nickname)
         )
