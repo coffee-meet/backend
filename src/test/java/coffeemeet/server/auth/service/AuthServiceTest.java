@@ -23,7 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
-  public static final String REFRESH_TOKEN = "Bearer aaaaaaaa.bbbbbbb.ccccccc";
+  private static final String REFRESH_TOKEN = "Bearer aaaaaaaa.bbbbbbb.ccccccc";
+
   @InjectMocks
   private AuthService authService;
 
