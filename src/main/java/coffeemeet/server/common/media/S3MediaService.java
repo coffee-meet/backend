@@ -1,8 +1,7 @@
 package coffeemeet.server.common.media;
 
-import static coffeemeet.server.common.execption.GlobalErrorCode.*;
+import static coffeemeet.server.common.execption.GlobalErrorCode.INVALID_S3_URL;
 
-import coffeemeet.server.common.execption.GlobalErrorCode;
 import coffeemeet.server.common.execption.InvalidInputException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;

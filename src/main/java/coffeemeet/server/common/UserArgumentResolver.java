@@ -1,10 +1,9 @@
 package coffeemeet.server.common;
 
-import static coffeemeet.server.auth.exception.AuthErrorCode.*;
+import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.exception.AuthErrorCode;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.execption.InvalidInputException;
