@@ -6,10 +6,10 @@ import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.controller.dto.MyProfileHttpDto;
 import coffeemeet.server.user.controller.dto.UserProfileHttpDto;
 import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.dto.AuthInfo;
+import coffeemeet.server.user.controller.dto.AuthInfo;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupDto;
-import coffeemeet.server.user.dto.UpdateProfileDto;
+import coffeemeet.server.user.dto.SignupHttpDto;
+import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto;
 import coffeemeet.server.user.dto.UserProfileDto.Response;
 import coffeemeet.server.user.service.UserService;
 import jakarta.validation.Valid;
@@ -36,7 +36,7 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupDto.Request request) {
+  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupHttpDto.Request request) {
     return ResponseEntity.ok(userService.signup(request));
   }
 
@@ -71,7 +71,7 @@ public class UserController {
 
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
-      @Valid @RequestBody UpdateProfileDto.Request request) {
+      @Valid @RequestBody UpdateProfileHttpDto.Request request) {
     userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
     return ResponseEntity.ok().build();
   }

@@ -3,15 +3,15 @@ package coffeemeet.server.common.fixture.dto;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.dto.SignupDto;
-import coffeemeet.server.user.dto.SignupDto.Request;
+import coffeemeet.server.user.dto.SignupHttpDto;
+import coffeemeet.server.user.dto.SignupHttpDto.Request;
 import java.util.List;
 import org.instancio.Instancio;
 
 public class SignupDtoFixture {
 
-  public static SignupDto.Request signupDto() {
-    return Instancio.of(SignupDto.Request.class)
+  public static SignupHttpDto.Request signupDto() {
+    return Instancio.of(SignupHttpDto.Request.class)
         .set(field(Request::keywords), keywords())
         .create();
   }

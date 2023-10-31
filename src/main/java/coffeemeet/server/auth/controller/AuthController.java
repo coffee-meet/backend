@@ -3,7 +3,7 @@ package coffeemeet.server.auth.controller;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.common.annotation.Login;
-import coffeemeet.server.user.dto.AuthInfo;
+import coffeemeet.server.user.controller.dto.AuthInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

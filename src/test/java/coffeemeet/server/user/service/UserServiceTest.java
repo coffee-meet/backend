@@ -37,7 +37,7 @@ import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupDto.Request;
+import coffeemeet.server.user.dto.SignupHttpDto.Request;
 import coffeemeet.server.user.dto.UserProfileDto.Response;
 import coffeemeet.server.user.service.cq.UserCommand;
 import coffeemeet.server.user.service.cq.UserQuery;

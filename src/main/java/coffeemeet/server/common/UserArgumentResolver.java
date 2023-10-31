@@ -4,7 +4,7 @@ import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.common.annotation.Login;
-import coffeemeet.server.user.dto.AuthInfo;
+import coffeemeet.server.user.controller.dto.AuthInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

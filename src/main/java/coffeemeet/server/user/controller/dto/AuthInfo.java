@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.controller.dto;
 
 public record AuthInfo(Long userId, String refreshToken) {
 

@@ -19,7 +19,7 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupDto;
+import coffeemeet.server.user.dto.SignupHttpDto;
 import coffeemeet.server.user.dto.UserProfileDto;
 import coffeemeet.server.user.service.cq.UserCommand;
 import coffeemeet.server.user.service.cq.UserQuery;
@@ -46,7 +46,7 @@ public class UserService {
   private final UserQuery userQuery;
   private final UserCommand userCommand;
 
-  public AuthTokens signup(SignupDto.Request request) {
+  public AuthTokens signup(SignupHttpDto.Request request) {
     Response response = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
         request.authCode());
 

@@ -5,7 +5,7 @@ import coffeemeet.server.certification.dto.VerificationCodeDto;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
-import coffeemeet.server.user.dto.AuthInfo;
+import coffeemeet.server.user.controller.dto.AuthInfo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
