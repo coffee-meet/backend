@@ -1,13 +1,14 @@
 package coffeemeet.server.certification.service;
 
+import static coffeemeet.server.certification.exception.CertificationErrorCode.INVALID_VERIFICATION_CODE;
 import static coffeemeet.server.common.media.S3MediaService.KeyType.BUSINESS_CARD;
 
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.service.cq.CertificationCommand;
-import coffeemeet.server.certification.service.cq.CertificationQuery;
 import coffeemeet.server.certification.service.cq.EmailVerificationCommand;
 import coffeemeet.server.certification.service.cq.EmailVerificationQuery;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.media.EmailService;
 import coffeemeet.server.common.media.S3MediaService;
 import coffeemeet.server.common.util.FileUtils;
@@ -22,14 +23,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CertificationService {
 
-  private static final String WRONG_VERIFICATION_CODE = "잘못된 인증코드입니다.";
+  private static final String WRONG_VERIFICATION_CODE_MESSAGE = "사용자(%s)가 잘못된 인증코드(%s)를 입력했습니다.";
   private static final RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
 
   private final S3MediaService s3MediaService;
   private final EmailService emailService;
   private final UserQuery userQuery;
   private final CertificationCommand certificationCommand;
-  private final CertificationQuery certificationQuery;
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
@@ -67,7 +67,8 @@ public class CertificationService {
   public void compareCode(Long userId, String verificationCode) {
     String correctCode = emailVerificationQuery.getCodeById(userId);
     if (!correctCode.equals(verificationCode)) {
-      throw new IllegalArgumentException(WRONG_VERIFICATION_CODE);
+      throw new InvalidInputException(INVALID_VERIFICATION_CODE,
+          String.format(WRONG_VERIFICATION_CODE_MESSAGE, userId, verificationCode));
     }
   }
 
