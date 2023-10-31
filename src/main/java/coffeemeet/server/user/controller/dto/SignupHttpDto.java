@@ -1,4 +1,4 @@
-package coffeemeet.server.user.dto;
+package coffeemeet.server.user.controller.dto;
 
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthProvider;

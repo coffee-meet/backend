@@ -8,7 +8,7 @@ import coffeemeet.server.user.controller.dto.UserProfileHttpDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.controller.dto.AuthInfo;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupHttpDto;
+import coffeemeet.server.user.controller.dto.SignupHttpDto;
 import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto;
 import coffeemeet.server.user.dto.UserProfileDto.Response;
 import coffeemeet.server.user.service.UserService;
@@ -37,7 +37,9 @@ public class UserController {
 
   @PostMapping("/sign-up")
   public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupHttpDto.Request request) {
-    return ResponseEntity.ok(userService.signup(request));
+    return ResponseEntity.ok(
+        userService.signup(request.nickname(), request.keywords(), request.authCode(),
+            request.oAuthProvider()));
   }
 
   @GetMapping("/login/{oAuthProvider}")

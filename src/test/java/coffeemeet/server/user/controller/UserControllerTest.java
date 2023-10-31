@@ -39,7 +39,7 @@ import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto.Response;
-import coffeemeet.server.user.dto.SignupHttpDto;
+import coffeemeet.server.user.controller.dto.SignupHttpDto;
 import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto.Request;
 import coffeemeet.server.user.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
@@ -60,7 +60,7 @@ class UserControllerTest extends ControllerTestConfig {
     SignupHttpDto.Request request = SignupDtoFixture.signupDto();
     AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
-    given(userService.signup(any())).willReturn(authTokens);
+    given(userService.signup(any(), any(), any(), any())).willReturn(authTokens);
 
     mockMvc.perform(post("/api/v1/users/sign-up")
             .contentType(MediaType.APPLICATION_JSON)

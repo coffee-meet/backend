@@ -39,7 +39,7 @@ import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupHttpDto.Request;
+import coffeemeet.server.user.controller.dto.SignupHttpDto.Request;
 import coffeemeet.server.user.dto.UserProfileDto.Response;
 import coffeemeet.server.user.service.cq.UserCommand;
 import coffeemeet.server.user.service.cq.UserQuery;
@@ -102,7 +102,8 @@ class UserServiceTest {
     given(authTokensGenerator.generate(user.getId())).willReturn(authTokens);
 
     // when
-    AuthTokens result = userService.signup(request);
+    AuthTokens result = userService.signup(request.nickname(), request.keywords(),
+        request.authCode(), request.oAuthProvider());
 
     // then
     assertThat(result.accessToken()).isEqualTo(authTokens.accessToken());

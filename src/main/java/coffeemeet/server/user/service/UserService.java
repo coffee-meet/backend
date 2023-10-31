@@ -19,7 +19,6 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.dto.MyProfileDto;
-import coffeemeet.server.user.dto.SignupHttpDto;
 import coffeemeet.server.user.dto.UserProfileDto;
 import coffeemeet.server.user.service.cq.UserCommand;
 import coffeemeet.server.user.service.cq.UserQuery;
@@ -46,17 +45,18 @@ public class UserService {
   private final UserQuery userQuery;
   private final UserCommand userCommand;
 
-  public AuthTokens signup(SignupHttpDto.Request request) {
-    Response response = oAuthService.getOAuthUserInfo(request.oAuthProvider(),
-        request.authCode());
+  public AuthTokens signup(String nickname, List<Keyword> keywords, String authCode,
+      OAuthProvider oAuthProvider) {
+    Response response = oAuthService.getOAuthUserInfo(oAuthProvider,
+        authCode);
 
     userQuery.hasDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
-    userQuery.hasDuplicatedNickname(request.nickname());
+    userQuery.hasDuplicatedNickname(nickname);
     String profileImage = getProfileImageOrDefault(response.profileImage());
 
     User user = new User(new OAuthInfo(response.oAuthProvider(),
         response.oAuthProviderId()),
-        Profile.builder().name(response.name()).nickname(request.nickname())
+        Profile.builder().name(response.name()).nickname(nickname)
             .email(new Email(response.email()))
             .profileImageUrl(profileImage)
             .birth(new Birth(response.birthYear(), response.birthDay())).build());
@@ -64,7 +64,7 @@ public class UserService {
     Long userId = userCommand.saveUser(user);
     User newUser = userQuery.getUserById(userId);
 
-    interestCommand.saveAll(request.keywords(), newUser);
+    interestCommand.saveAll(keywords, newUser);
     return authTokensGenerator.generate(newUser.getId());
   }
 

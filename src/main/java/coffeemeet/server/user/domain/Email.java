@@ -13,11 +13,11 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
-  private String value;
+  private String email;
 
   public Email(@NonNull String email) {
     validateEmail(email);
-    this.value = email;
+    this.email = email;
   }
 
   private void validateEmail(String email) {
