@@ -28,14 +28,8 @@ public class UserFixture {
   private static Profile profile() {
     return Instancio.of(Profile.class)
         .set(field(Profile::getBirth), birth())
-        .set(field(Profile::getEmail), email())
+        .set(field(Profile::getEmail), new Email("test123@gmail.com"))
         .generate(field(Profile::getNickname), gen -> gen.string().maxLength(20))
-        .create();
-  }
-
-  private static Email email() {
-    return Instancio.of(Email.class)
-        .generate(field(Email::getEmail), gen -> gen.net().email())
         .create();
   }
 
