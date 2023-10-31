@@ -1,7 +1,7 @@
 package coffeemeet.server.certification.controller;
 
-import coffeemeet.server.certification.dto.EmailDto;
-import coffeemeet.server.certification.dto.VerificationCodeDto;
+import coffeemeet.server.certification.controller.dto.EmailDto;
+import coffeemeet.server.certification.controller.dto.VerificationCodeDto;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;

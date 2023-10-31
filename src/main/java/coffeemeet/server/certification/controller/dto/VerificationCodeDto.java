@@ -1,4 +1,4 @@
-package coffeemeet.server.certification.dto;
+package coffeemeet.server.certification.controller.dto;
 
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

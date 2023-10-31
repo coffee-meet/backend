@@ -1,4 +1,4 @@
-package coffeemeet.server.certification.dto;
+package coffeemeet.server.certification.controller.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
