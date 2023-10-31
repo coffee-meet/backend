@@ -1,7 +1,10 @@
 package coffeemeet.server.chatting.message.domain;
 
+import static coffeemeet.server.chatting.message.exception.MessageErrorCode.INVALID_MESSAGE;
+
 import coffeemeet.server.chatting.room.domain.ChattingRoom;
 import coffeemeet.server.common.entity.BaseEntity;
+import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +17,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.util.StringUtils;
 
 @Entity
@@ -21,6 +25,8 @@ import org.springframework.util.StringUtils;
 @Table(name = "chatting_messages")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChattingMessage extends BaseEntity {
+
+  private static final String INVALID_CHATTING_MESSAGE = "입력된 (%s)는 올바르지 않은 메시지입니다.";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +39,7 @@ public class ChattingMessage extends BaseEntity {
   @JoinColumn(name = "chatting_room_id", nullable = false)
   private ChattingRoom chattingRoom;
 
-  public ChattingMessage(String message, ChattingRoom chattingRoom) {
+  public ChattingMessage(@NonNull String message, @NonNull ChattingRoom chattingRoom) {
     validateMessage(message);
     this.message = message;
     this.chattingRoom = chattingRoom;
@@ -41,7 +47,8 @@ public class ChattingMessage extends BaseEntity {
 
   private void validateMessage(String message) {
     if (!StringUtils.hasText(message)) {
-      throw new IllegalArgumentException("올바르지 않은 메시지입니다.");
+      throw new InvalidInputException(INVALID_MESSAGE,
+          String.format(INVALID_CHATTING_MESSAGE, message));
     }
   }
 

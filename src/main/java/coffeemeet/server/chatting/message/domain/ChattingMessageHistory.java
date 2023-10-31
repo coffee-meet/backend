@@ -25,7 +25,8 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChattingMessageHistory extends BaseEntity {
 
-  public static final String INVALID_CHATTING_MESSAGE = "입력된 (%s)는 올바르지 않은 메시지입니다.";
+  private static final String INVALID_CHATTING_MESSAGE = "입력된 (%s)는 올바르지 않은 메시지입니다.";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
