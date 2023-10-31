@@ -5,6 +5,7 @@ import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAIL
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.controller.dto.AuthInfo;
@@ -21,11 +22,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private static final String USER_AUTHENTICATION_FAILED_MESSAGE = "사용자(%s)의 재인증(로그인)이 필요합니다.";
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
 
   private final JwtTokenProvider jwtTokenProvider;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenQuery refreshTokenQuery;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -42,20 +42,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       String token = authHeader.substring(7);
       Long userId = jwtTokenProvider.extractUserId(token);
-      RefreshToken refreshToken = getRefreshToken(userId);
+      RefreshToken refreshToken = refreshTokenQuery.getRefreshToken(userId);
       return new AuthInfo(userId, refreshToken.getValue());
     }
     throw new InvalidInputException(
         AUTHENTICATION_FAILED,
         String.format(HEADER_AUTHENTICATION_FAILED_MESSAGE, authHeader)
     );
-  }
-
-  private RefreshToken getRefreshToken(Long userId) {
-    return refreshTokenRepository.findById(userId)
-        .orElseThrow(() -> new InvalidInputException(
-            AUTHENTICATION_FAILED,
-            String.format(USER_AUTHENTICATION_FAILED_MESSAGE, userId)));
   }
 
 }

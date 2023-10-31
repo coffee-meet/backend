@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,12 +33,12 @@ class AuthTokensGeneratorTest {
   private JwtTokenProvider jwtTokenProvider;
 
   @Mock
-  private RefreshTokenRepository refreshTokenRepository;
+  private RefreshTokenCommand refreshTokenCommand;
 
   @BeforeEach
   public void init() {
     authTokensGenerator = new AuthTokensGenerator(jwtTokenProvider, accessTokenExpireTime,
-        refreshTokenExpireTime, refreshTokenRepository);
+        refreshTokenExpireTime, refreshTokenCommand);
   }
 
   @DisplayName("access token & refresh token 발급할 수 있다.")

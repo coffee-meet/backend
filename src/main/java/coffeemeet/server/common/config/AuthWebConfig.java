@@ -2,6 +2,7 @@ package coffeemeet.server.common.config;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
 import coffeemeet.server.common.UserArgumentResolver;
 import coffeemeet.server.oauth.utils.converter.OAuthProviderConverter;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class AuthWebConfig implements WebMvcConfigurer {
 
   private final JwtTokenProvider jwtTokenProvider;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenQuery refreshTokenQuery;
 
   @Override
   public void addFormatters(FormatterRegistry registry) {
@@ -25,7 +26,7 @@ public class AuthWebConfig implements WebMvcConfigurer {
 
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-    resolvers.add(new UserArgumentResolver(jwtTokenProvider, refreshTokenRepository));
+    resolvers.add(new UserArgumentResolver(jwtTokenProvider, refreshTokenQuery));
   }
 
 }
