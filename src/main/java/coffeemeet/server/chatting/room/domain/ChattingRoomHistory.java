@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting_room.domain;
+package coffeemeet.server.chatting.room.domain;
 
 import coffeemeet.server.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -11,10 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "chatting_room_histories")
 @Getter
-@Table(name = "chatting_rooms")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChattingRoom extends BaseEntity {
+public class ChattingRoomHistory extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
