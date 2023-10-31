@@ -66,16 +66,20 @@ public class JwtTokenProvider {
           .getBody();
     } catch (ExpiredJwtException e) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED, EXPIRED_TOKEN_MESSAGE);
+          AUTHENTICATION_FAILED,
+          String.format(EXPIRED_TOKEN_MESSAGE, accessToken));
     } catch (UnsupportedJwtException e) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED, INVALID_FORMAT_TOKEN_MESSAGE);
+          AUTHENTICATION_FAILED,
+          String.format(INVALID_FORMAT_TOKEN_MESSAGE, accessToken));
     } catch (MalformedJwtException e) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED, INVALID_STRUCTURE_TOKEN_MESSAGE);
+          AUTHENTICATION_FAILED,
+          String.format(INVALID_STRUCTURE_TOKEN_MESSAGE, accessToken));
     } catch (SignatureException e) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED, FAILED_SIGNATURE_VERIFICATION_MESSAGE);
+          AUTHENTICATION_FAILED,
+          String.format(FAILED_SIGNATURE_VERIFICATION_MESSAGE, accessToken));
     }
   }
 
