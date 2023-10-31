@@ -1,7 +1,6 @@
 package coffeemeet.server.common.config;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
 import coffeemeet.server.common.UserArgumentResolver;
 import coffeemeet.server.oauth.utils.converter.OAuthProviderConverter;

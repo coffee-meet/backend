@@ -4,7 +4,6 @@ import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAIL
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.execption.InvalidInputException;
