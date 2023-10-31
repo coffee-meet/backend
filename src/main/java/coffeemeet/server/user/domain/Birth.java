@@ -1,5 +1,9 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_BIRTH_DAY;
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_BIRTH_YEAR;
+
+import coffeemeet.server.common.execption.DataLengthExceededException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -14,6 +18,8 @@ import org.springframework.util.StringUtils;
 public class Birth {
 
   private static final int BIRTH_LENGTH = 4;
+  private static final String INVALID_BIRTH_YEAR_MESSAGE = "올바르지 않은 출생년도(%s)입니다.";
+  private static final String INVALID_BIRTH_DAY_MESSAGE = "올바르지 않은 생년월일(%s)입니다.";
 
   @Column(nullable = false, length = BIRTH_LENGTH)
   String birthYear;
@@ -30,13 +36,13 @@ public class Birth {
 
   private void validateYear(String birthYear) {
     if (!StringUtils.hasText(birthYear) || birthYear.length() != BIRTH_LENGTH) {
-      throw new IllegalArgumentException("올바르지 않은 연도 형식입니다.");
+      throw new DataLengthExceededException(INVALID_BIRTH_YEAR, INVALID_BIRTH_YEAR_MESSAGE);
     }
   }
 
   private void validateDay(String birthDay) {
     if (!StringUtils.hasText(birthDay) || birthDay.length() != BIRTH_LENGTH) {
-      throw new IllegalArgumentException("올바르지 않은 날짜 형식입니다.");
+      throw new DataLengthExceededException(INVALID_BIRTH_DAY, INVALID_BIRTH_DAY_MESSAGE);
     }
   }
 

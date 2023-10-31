@@ -1,5 +1,8 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_EMAIL;
+
+import coffeemeet.server.common.execption.MissMatchException;
 import coffeemeet.server.common.util.Patterns;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -13,6 +16,8 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
+  private static final String INVALID_EMAIL_MESSAGE = "올바르지 않은 이메일입니다.";
+
   private String email;
 
   public Email(@NonNull String email) {
@@ -22,7 +27,7 @@ public class Email {
 
   private void validateEmail(String email) {
     if (!StringUtils.hasText(email) || !Patterns.EMAIL_PATTERN.matcher(email).matches()) {
-      throw new IllegalArgumentException("올바르지 않은 이메일입니다.");
+      throw new MissMatchException(INVALID_EMAIL, INVALID_EMAIL_MESSAGE);
     }
   }
 

@@ -1,5 +1,11 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_NAME;
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_NICKNAME;
+import static coffeemeet.server.user.exception.UserErrorCode.INVALID_PROFILE_IMAGE;
+
+import coffeemeet.server.common.execption.DataLengthExceededException;
+import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -16,6 +22,9 @@ import org.springframework.util.StringUtils;
 public class Profile {
 
   private static final int NICKNAME_MAX_LENGTH = 20;
+  private static final String INVALID_NICKNAME_MESSAGE = "올바르지 않은 닉네임(%s)입니다.";
+  private static final String INVALID_NAME_MESSAGE = "올바르지 않은 이름(%s)입니다.";
+  private static final String INVALID_PROFILE_IMAGE_URL_MESSAGE = "올바르지 않은 프로필 사진(%s)입니다.";
 
   @Column(nullable = false)
   private String name;
@@ -64,19 +73,19 @@ public class Profile {
 
   private void validateNickname(String nickname) {
     if (!StringUtils.hasText(nickname) || nickname.length() > NICKNAME_MAX_LENGTH) {
-      throw new IllegalArgumentException("올바르지 않은 닉네임입니다.");
+      throw new DataLengthExceededException(INVALID_NICKNAME, INVALID_NICKNAME_MESSAGE);
     }
   }
 
   private void validateName(String name) {
     if (!StringUtils.hasText(name)) {
-      throw new IllegalArgumentException("올바르지 않은 이름입니다.");
+      throw new InvalidInputException(INVALID_NAME, INVALID_NAME_MESSAGE);
     }
   }
 
   private void validateProfileImageUrl(String profileImageUrl) {
     if (!StringUtils.hasText(profileImageUrl)) {
-      throw new IllegalArgumentException("올바르지 않은 프로필 이미지 url입니다.");
+      throw new InvalidInputException(INVALID_PROFILE_IMAGE, INVALID_PROFILE_IMAGE_URL_MESSAGE);
     }
   }
 
