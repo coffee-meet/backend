@@ -25,14 +25,14 @@ class EmailVerificationCommandTest {
 
   @Test
   @DisplayName("새로운 EmailVerification 객체를 저장할 수 있다.")
-  void newEmailVerificationTest() {
+  void createEmailVerificationTest() {
     // given
     EmailVerification emailVerification = emailVerification();
     given(emailVerificationRepository.save(any(EmailVerification.class))).willReturn(
         emailVerification);
 
     // when
-    emailVerificationCommand.newEmailVerification(emailVerification.getUserId(),
+    emailVerificationCommand.createEmailVerification(emailVerification.getUserId(),
         emailVerification.getCompanyEmail(), emailVerification.getCode());
 
     // then
