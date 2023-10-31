@@ -73,19 +73,28 @@ public class Profile {
 
   private void validateNickname(String nickname) {
     if (!StringUtils.hasText(nickname) || nickname.length() > NICKNAME_MAX_LENGTH) {
-      throw new DataLengthExceededException(INVALID_NICKNAME, INVALID_NICKNAME_MESSAGE);
+      throw new DataLengthExceededException(
+          INVALID_NICKNAME,
+          String.format(INVALID_NICKNAME_MESSAGE, nickname)
+      );
     }
   }
 
   private void validateName(String name) {
     if (!StringUtils.hasText(name)) {
-      throw new InvalidInputException(INVALID_NAME, INVALID_NAME_MESSAGE);
+      throw new InvalidInputException(
+          INVALID_NAME,
+          String.format(INVALID_NAME_MESSAGE, name)
+      );
     }
   }
 
   private void validateProfileImageUrl(String profileImageUrl) {
     if (!StringUtils.hasText(profileImageUrl)) {
-      throw new InvalidInputException(INVALID_PROFILE_IMAGE, INVALID_PROFILE_IMAGE_URL_MESSAGE);
+      throw new InvalidInputException(
+          INVALID_PROFILE_IMAGE,
+          String.format(INVALID_PROFILE_IMAGE_URL_MESSAGE, profileImageUrl)
+      );
     }
   }
 

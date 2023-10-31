@@ -20,32 +20,44 @@ public class UserQuery {
 
   private static final String NOT_EXIST_USER_MESSAGE = "해당 아이디(%s)에 일치하는 사용자는 존재하지 않습니다.";
   private static final String NOT_REGISTERED_USER_MESSAGE = "해당 로그인 타입(%s)에 대한 아이디(%s)와 일치하는 사용자는 존재하지 않습니다.";
-  private static final String ALREADY_EXIST_USER_MESSAGE = "해당 사용자(%s)는 이미 가입된 사용자입니다.";
+  private static final String ALREADY_EXIST_USER_MESSAGE = "해당 로그인 타입(%s)에 대한 아이디(%s)에 해당하는 사용자가 이미 존재합니다.";
   private static final String ALREADY_EXIST_NICKNAME_MESSAGE = "해당 닉네임(%s)은 이미 존재하는 닉네임입니다.";
 
   private final UserRepository userRepository;
 
   public User getUserById(Long userId) {
     return userRepository.findById(userId)
-        .orElseThrow(() -> new NotFoundException(NOT_EXIST_USER, NOT_EXIST_USER_MESSAGE));
+        .orElseThrow(() -> new NotFoundException(
+            NOT_EXIST_USER,
+            String.format(NOT_EXIST_USER_MESSAGE, userId))
+        );
   }
 
   public User getUserByOAuthInfo(OAuthProvider oAuthProvider, String oAuthProviderId) {
     return userRepository.getUserByOauthInfoOauthProviderAndOauthInfoOauthProviderId(
         oAuthProvider, oAuthProviderId).orElseThrow(
-        () -> new NotFoundException(NOT_EXIST_USER, NOT_REGISTERED_USER_MESSAGE));
+        () -> new NotFoundException(
+            NOT_EXIST_USER,
+            String.format(NOT_REGISTERED_USER_MESSAGE, oAuthProvider, oAuthProviderId))
+    );
   }
 
   public void hasDuplicatedNickname(String nickname) {
     if (userRepository.existsUserByProfile_Nickname(nickname)) {
-      throw new DuplicatedDataException(ALREADY_EXIST_NICKNAME, ALREADY_EXIST_NICKNAME_MESSAGE);
+      throw new DuplicatedDataException(
+          ALREADY_EXIST_NICKNAME,
+          String.format(ALREADY_EXIST_NICKNAME_MESSAGE, nickname)
+      );
     }
   }
 
   public void hasDuplicatedUser(OAuthProvider oAuthProvider, String oAuthProviderId) {
     if (userRepository.existsUserByOauthInfo_oauthProviderAndOauthInfo_oauthProviderId(
         oAuthProvider, oAuthProviderId)) {
-      throw new DuplicatedDataException(ALREADY_EXIST_USER, ALREADY_EXIST_USER_MESSAGE);
+      throw new DuplicatedDataException(
+          ALREADY_EXIST_USER,
+          String.format(ALREADY_EXIST_USER_MESSAGE, oAuthProvider, oAuthProviderId)
+      );
     }
   }
 

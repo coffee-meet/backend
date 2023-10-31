@@ -27,7 +27,10 @@ public class Email {
 
   private void validateEmail(String email) {
     if (!StringUtils.hasText(email) || !Patterns.EMAIL_PATTERN.matcher(email).matches()) {
-      throw new MissMatchException(INVALID_EMAIL, INVALID_EMAIL_MESSAGE);
+      throw new MissMatchException(
+          INVALID_EMAIL,
+          String.format(INVALID_EMAIL_MESSAGE, email)
+      );
     }
   }
 

@@ -36,13 +36,19 @@ public class Birth {
 
   private void validateYear(String birthYear) {
     if (!StringUtils.hasText(birthYear) || birthYear.length() != BIRTH_LENGTH) {
-      throw new DataLengthExceededException(INVALID_BIRTH_YEAR, INVALID_BIRTH_YEAR_MESSAGE);
+      throw new DataLengthExceededException(
+          INVALID_BIRTH_YEAR,
+          String.format(INVALID_BIRTH_YEAR_MESSAGE, birthYear)
+      );
     }
   }
 
   private void validateDay(String birthDay) {
     if (!StringUtils.hasText(birthDay) || birthDay.length() != BIRTH_LENGTH) {
-      throw new DataLengthExceededException(INVALID_BIRTH_DAY, INVALID_BIRTH_DAY_MESSAGE);
+      throw new DataLengthExceededException(
+          INVALID_BIRTH_DAY,
+          String.format(INVALID_BIRTH_DAY_MESSAGE, birthDay)
+      );
     }
   }
 
