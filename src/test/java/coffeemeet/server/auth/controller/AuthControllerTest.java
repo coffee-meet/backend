@@ -24,7 +24,6 @@ import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import com.epages.restdocs.apispec.Schema;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,7 +45,7 @@ class AuthControllerTest extends ControllerTestConfig {
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
     given(authService.renew(anyLong(), any())).willReturn(authTokens);
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
     // when, then
     mockMvc.perform(post("/api/v1/auth/renew-token")
@@ -78,7 +77,7 @@ class AuthControllerTest extends ControllerTestConfig {
     // given
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
     willDoNothing().given(authService).logout(anyLong());
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
     // when, then
     mockMvc.perform(post("/api/v1/auth/logout")
@@ -103,7 +102,7 @@ class AuthControllerTest extends ControllerTestConfig {
     // given
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
     willDoNothing().given(authService).delete(anyLong());
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
     // when, then
     mockMvc.perform(post("/api/v1/auth/delete")

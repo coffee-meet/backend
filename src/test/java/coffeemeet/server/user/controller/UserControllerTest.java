@@ -44,7 +44,6 @@ import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -163,7 +162,7 @@ class UserControllerTest extends ControllerTestConfig {
     Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     Response response = MyProfileDtoFixture.myProfileDtoResponse();
 
     when(jwtTokenProvider.extractUserId(TOKEN)).thenReturn(userId);
@@ -203,7 +202,7 @@ class UserControllerTest extends ControllerTestConfig {
     Long userId = 1L;
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
 
     MockMultipartFile file = new MockMultipartFile("image",
@@ -237,7 +236,7 @@ class UserControllerTest extends ControllerTestConfig {
     Request request = UpdateProfileDtoFixture.updateProfileDtoRequest();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     willDoNothing().given(
         userService).updateProfileInfo(any(), any(), any());
@@ -270,7 +269,7 @@ class UserControllerTest extends ControllerTestConfig {
     String nickname = user.getProfile().getNickname();
     RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
     mockMvc.perform(get("/api/v1/users/duplicate")
             .param("nickname", nickname)

@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -48,7 +47,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   void setUp() {
     Long userId = 1L;
     RefreshToken refreshToken = refreshToken();
-    given(refreshTokenRepository.findById(anyLong())).willReturn(Optional.ofNullable(refreshToken));
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     willDoNothing().given(certificationService)
         .registerCertification(anyLong(), any(), any(), any());
