@@ -1,5 +1,8 @@
 package coffeemeet.server.oauth.client;
 
+import static coffeemeet.server.auth.exception.AuthErrorCode.INVALID_LOGIN_TYPE;
+
+import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Map;
@@ -27,7 +30,8 @@ public class OAuthMemberClientComposite {
 
   private OAuthMemberClient getClient(OAuthProvider oAuthProvider) {
     return Optional.ofNullable(mapping.get(oAuthProvider))
-        .orElseThrow(() -> new IllegalArgumentException(
+        .orElseThrow(() -> new InvalidAuthException(
+            INVALID_LOGIN_TYPE,
             String.format(INVALID_LOGIN_TYPE_MESSAGE, oAuthProvider))
         );
   }

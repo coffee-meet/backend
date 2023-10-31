@@ -1,9 +1,12 @@
 package coffeemeet.server.certification.service.cq;
 
+import static coffeemeet.server.certification.exception.CertificationErrorCode.EXISTED_COMPANY_EMAIL;
+
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.repository.CertificationRepository;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CertificationCommand {
 
-  private static final String EXISTED_COMPANY_EMAIL = "이미 사용 중인 회사 이메일입니다.";
+  private static final String EXISTED_COMPANY_EMAIL_MESSAGE = "이미 사용 중인 회사 이메일(%s) 입니다.";
 
   private final CertificationRepository certificationRepository;
 
@@ -33,7 +36,8 @@ public class CertificationCommand {
 
   public void hasDuplicatedCompanyEmail(CompanyEmail companyEmail) {
     if (certificationRepository.existsByCompanyEmail(companyEmail)) {
-      throw new IllegalArgumentException(EXISTED_COMPANY_EMAIL);
+      throw new InvalidInputException(EXISTED_COMPANY_EMAIL,
+          String.format(EXISTED_COMPANY_EMAIL_MESSAGE, companyEmail.getValue()));
     }
   }
 

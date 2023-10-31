@@ -15,6 +15,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.repository.CertificationRepository;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -61,8 +62,7 @@ class CertificationCommandTest {
     // when, then
     assertThatThrownBy(
         () -> certificationCommand.hasDuplicatedCompanyEmail(companyEmail)).isInstanceOf(
-            IllegalArgumentException.class)
-        .hasMessage("이미 사용 중인 회사 이메일입니다."); // todo 에러메세지 public으로 두는게 어떨까요?
+        InvalidInputException.class);
   }
 
   @Test
