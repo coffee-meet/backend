@@ -74,7 +74,7 @@ class CertificationServiceTest {
     // then
     then(s3MediaService).should().generateKey(any());
     then(s3MediaService).should().upload(any(), any(File.class));
-    then(certificationCommand).should().newCertification(any(), any(), any(), any());
+    then(certificationCommand).should().createCertification(any(), any(), any(), any());
 
     fileUtils.close();
   }
@@ -94,7 +94,7 @@ class CertificationServiceTest {
     then(certificationCommand).should(only()).hasDuplicatedCompanyEmail(any());
     then(emailService).should(only()).sendVerificationCode(any(), anyString());
     then(emailVerificationCommand).should(only())
-        .newEmailVerification(anyLong(), any(), anyString());
+        .createEmailVerification(anyLong(), any(), anyString());
   }
 
   @Test

@@ -38,7 +38,7 @@ class CertificationCommandTest {
 
   @Test
   @DisplayName("새로운 Certification 객체를 저장할 수 있다.")
-  void newCertificationTest() {
+  void createCertificationTest() {
     // given
     CompanyEmail companyEmail = companyEmail();
     String businessCardUrl = businessCardUrl();
@@ -46,7 +46,7 @@ class CertificationCommandTest {
     User user = user();
 
     // when
-    certificationCommand.newCertification(companyEmail, businessCardUrl, department, user);
+    certificationCommand.createCertification(companyEmail, businessCardUrl, department, user);
 
     // then
     then(certificationRepository).should(only()).save(any(Certification.class));
