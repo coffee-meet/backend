@@ -1,9 +1,12 @@
 package coffeemeet.server.common;
 
+import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
+
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.repository.RefreshTokenRepository;
 import coffeemeet.server.common.annotation.Login;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.dto.AuthInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
-  public static final String USER_AUTHENTICATION_FAILED_MESSAGE = "사용자(%s)의 재인증(로그인)이 필요합니다.";
+  private static final String USER_AUTHENTICATION_FAILED_MESSAGE = "사용자(%s)의 재인증(로그인)이 필요합니다.";
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
 
   private final JwtTokenProvider jwtTokenProvider;
@@ -42,15 +45,17 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
       RefreshToken refreshToken = getRefreshToken(userId);
       return new AuthInfo(userId, refreshToken.getValue());
     }
-    throw new IllegalArgumentException(
+    throw new InvalidInputException(
+        AUTHENTICATION_FAILED,
         String.format(HEADER_AUTHENTICATION_FAILED_MESSAGE, authHeader)
     );
   }
 
   private RefreshToken getRefreshToken(Long userId) {
     return refreshTokenRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException(String.format(
-            USER_AUTHENTICATION_FAILED_MESSAGE, userId)));
+        .orElseThrow(() -> new InvalidInputException(
+            AUTHENTICATION_FAILED,
+            String.format(USER_AUTHENTICATION_FAILED_MESSAGE, userId)));
   }
 
 }

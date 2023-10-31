@@ -1,6 +1,6 @@
 package coffeemeet.server.user_chatting_history.domain;
 
-import coffeemeet.server.chatting_room_history.domain.ChattingRoomHistory;
+import coffeemeet.server.chatting.room.domain.ChattingRoomHistory;
 import coffeemeet.server.common.entity.BaseEntity;
 import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Entity;

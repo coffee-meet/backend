@@ -1,5 +1,8 @@
 package coffeemeet.server.auth.domain;
 
+import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
+
+import coffeemeet.server.common.execption.InvalidAuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +11,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-  private static final String EXPIRED_TOKEN_MESSAGE = "토큰이 만료되었습니다.";
-  private static final String INVALID_FORMAT_TOKEN_MESSAGE = "토큰의 형식이 적절하지 않습니다.";
-  private static final String INVALID_STRUCTURE_TOKEN_MESSAGE = "토큰이 올바르게 구성되지 않았거나, 적절하지 않게 수정되었습니다.";
+  private static final String EXPIRED_TOKEN_MESSAGE = "토큰(%s)이 만료되었습니다.";
+  private static final String INVALID_FORMAT_TOKEN_MESSAGE = "토큰(%s)의 형식이 적절하지 않습니다.";
+  private static final String INVALID_STRUCTURE_TOKEN_MESSAGE = "토큰(%s)이 올바르게 구성되지 않았거나, 적절하지 않게 수정되었습니다.";
+  private static final String FAILED_SIGNATURE_VERIFICATION_MESSAGE = "토큰(%s)의 서명 검증에 실패하였습니다.";
+
   private final Key key;
 
   public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey) {
@@ -59,11 +65,21 @@ public class JwtTokenProvider {
           .parseClaimsJws(accessToken)
           .getBody();
     } catch (ExpiredJwtException e) {
-      throw new IllegalArgumentException(EXPIRED_TOKEN_MESSAGE);
+      throw new InvalidAuthException(
+          AUTHENTICATION_FAILED,
+          String.format(EXPIRED_TOKEN_MESSAGE, accessToken));
     } catch (UnsupportedJwtException e) {
-      throw new IllegalArgumentException(INVALID_FORMAT_TOKEN_MESSAGE);
+      throw new InvalidAuthException(
+          AUTHENTICATION_FAILED,
+          String.format(INVALID_FORMAT_TOKEN_MESSAGE, accessToken));
     } catch (MalformedJwtException e) {
-      throw new IllegalArgumentException(INVALID_STRUCTURE_TOKEN_MESSAGE);
+      throw new InvalidAuthException(
+          AUTHENTICATION_FAILED,
+          String.format(INVALID_STRUCTURE_TOKEN_MESSAGE, accessToken));
+    } catch (SignatureException e) {
+      throw new InvalidAuthException(
+          AUTHENTICATION_FAILED,
+          String.format(FAILED_SIGNATURE_VERIFICATION_MESSAGE, accessToken));
     }
   }
 
