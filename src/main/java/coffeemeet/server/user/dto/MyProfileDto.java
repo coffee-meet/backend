@@ -22,7 +22,6 @@ public sealed interface MyProfileDto permits MyProfileDto.Response {
   ) implements MyProfileDto {
 
     public static Response of(User user, List<Keyword> interests, Department department) {
-
       return new Response(
           user.getProfile().getName(),
           user.getProfile().getNickname(),

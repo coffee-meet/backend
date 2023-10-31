@@ -16,7 +16,6 @@ public sealed interface UserProfileDto permits UserProfileDto.Response {
 
     public static Response of(User user, Department department,
         List<Keyword> interests) {
-
       return new Response(
           user.getProfile().getNickname(),
           user.getProfile().getProfileImageUrl(),
