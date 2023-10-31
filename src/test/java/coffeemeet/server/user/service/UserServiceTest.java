@@ -10,11 +10,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
@@ -166,7 +168,7 @@ class UserServiceTest {
         .user(user)
         .companyEmail(new CompanyEmail("company123@gmail.com"))
         .businessCardUrl("businessCard")
-            .build();
+        .build();
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());
@@ -247,12 +249,15 @@ class UserServiceTest {
     ArrayList<Keyword> newKeywords = new ArrayList<>(Arrays.asList(COOK, GAME));
 
     given(userQuery.getUserById(any())).willReturn(user);
+    doNothing().when(userCommand).updateUserInfo(any(), any());
+    doNothing().when(interestCommand).updateInterests(any(), any());
 
     // when
     userService.updateProfileInfo(user.getId(), newNickname, newKeywords);
 
     // then
-    assertThat(user.getProfile().getNickname()).isEqualTo(newNickname);
+    verify(userCommand).updateUserInfo(any(User.class), anyString());
+    verify(interestCommand).updateInterests(any(User.class), anyList());
   }
 
   @DisplayName("탈퇴할 수 있다.")
