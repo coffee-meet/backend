@@ -92,9 +92,10 @@ class UserServiceTest {
     Request request = SignupDtoFixture.signupDto();
     AuthTokens authTokens = AuthTokensFixture.authTokens();
     OAuthUserInfoDto.Response response = OAuthUserInfoDtoFixture.response();
+    OAuthUserInfo userInfo = OAuthUserInfo.from(response);
     User user = user();
 
-    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(response);
+    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(userInfo);
     given(userCommand.saveUser(any(User.class))).willReturn(user.getId());
     given(userQuery.getUserById(user.getId())).willReturn(user);
     willDoNothing().given(interestCommand).saveAll(any(), any());
@@ -118,8 +119,9 @@ class UserServiceTest {
     AuthTokens authTokens = AuthTokensFixture.authTokens();
 
     OAuthUserInfoDto.Response response = OAuthUserInfoDtoFixture.response();
+    OAuthUserInfo userInfo = OAuthUserInfo.from(response);
 
-    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(response);
+    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(userInfo);
     given(userQuery.getUserByOAuthInfo(any(), any())).willReturn(user);
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 

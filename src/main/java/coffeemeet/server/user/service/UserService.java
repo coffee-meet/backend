@@ -47,7 +47,7 @@ public class UserService {
 
   public AuthTokens signup(String nickname, List<Keyword> keywords, String authCode,
       OAuthProvider oAuthProvider) {
-    Response response = oAuthService.getOAuthUserInfo(oAuthProvider,
+    OAuthUserInfo response = oAuthService.getOAuthUserInfo(oAuthProvider,
         authCode);
 
     userQuery.hasDuplicatedUser(response.oAuthProvider(), response.oAuthProviderId());
@@ -69,7 +69,7 @@ public class UserService {
   }
 
   public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
-    Response response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
+    OAuthUserInfo response = oAuthService.getOAuthUserInfo(oAuthProvider, authCode);
     User user = userQuery.getUserByOAuthInfo(oAuthProvider, response.oAuthProviderId());
     return authTokensGenerator.generate(user.getId());
   }
