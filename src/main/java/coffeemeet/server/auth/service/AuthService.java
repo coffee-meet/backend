@@ -5,7 +5,7 @@ import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAIL
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class AuthService {
   private final UserService userService;
   private final AuthTokensGenerator authTokensGenerator;
   private final JwtTokenProvider jwtTokenProvider;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenCommand refreshTokenCommand;
 
   public AuthTokens renew(Long userId, String refreshToken) {
     if (jwtTokenProvider.isExpiredRefreshToken(refreshToken)) {
@@ -34,13 +34,13 @@ public class AuthService {
   }
 
   public void logout(Long userId) {
-    refreshTokenRepository.deleteById(userId);
+    refreshTokenCommand.deleteRefreshToken(userId);
   }
 
   @Transactional
   public void delete(Long userId) {
     userService.deleteUser(userId);
-    refreshTokenRepository.deleteById(userId);
+    refreshTokenCommand.deleteRefreshToken(userId);
   }
 
 }

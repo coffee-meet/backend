@@ -1,6 +1,6 @@
 package coffeemeet.server.auth.domain;
 
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,16 +13,16 @@ public class AuthTokensGenerator {
   private final JwtTokenProvider jwtTokenProvider;
   private final Long accessTokenExpireTime;
   private final Long refreshTokenExpireTime;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenCommand refreshTokenCommand;
 
   public AuthTokensGenerator(JwtTokenProvider jwtTokenProvider,
       @Value("${jwt.access-token-expire-time}") Long accessTokenExpireTime,
       @Value("${jwt.refresh-token-expire-time}") Long refreshTokenExpireTime,
-      RefreshTokenRepository refreshTokenRepository) {
+      RefreshTokenCommand refreshTokenCommand) {
     this.jwtTokenProvider = jwtTokenProvider;
     this.accessTokenExpireTime = accessTokenExpireTime;
     this.refreshTokenExpireTime = refreshTokenExpireTime;
-    this.refreshTokenRepository = refreshTokenRepository;
+    this.refreshTokenCommand = refreshTokenCommand;
   }
 
   public AuthTokens generate(Long userId) {
@@ -38,7 +38,7 @@ public class AuthTokensGenerator {
         .userId(userId)
         .value(refreshToken)
         .build();
-    refreshTokenRepository.save(refreshTokenEntity);
+    refreshTokenCommand.createRefreshToken(refreshTokenEntity);
 
     return AuthTokens.of(
         BEARER_TYPE + accessToken,

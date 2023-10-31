@@ -10,7 +10,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ class AuthServiceTest {
   private JwtTokenProvider jwtTokenProvider;
 
   @Mock
-  private RefreshTokenRepository refreshTokenRepository;
+  private RefreshTokenCommand refreshTokenCommand;
 
   @DisplayName("access token 을 갱신할 수 있다.")
   @Test
@@ -65,7 +65,7 @@ class AuthServiceTest {
   @Test
   void logoutTest() {
     // given
-    willDoNothing().given(refreshTokenRepository).deleteById(anyLong());
+    willDoNothing().given(refreshTokenCommand).deleteRefreshToken(anyLong());
 
     // when
     authService.logout((long) Math.random());
@@ -78,7 +78,7 @@ class AuthServiceTest {
   @Test
   void deleteTest() {
     // given
-    willDoNothing().given(refreshTokenRepository).deleteById(anyLong());
+    willDoNothing().given(refreshTokenCommand).deleteRefreshToken(anyLong());
     willDoNothing().given(userService).deleteUser(anyLong());
 
     // when
