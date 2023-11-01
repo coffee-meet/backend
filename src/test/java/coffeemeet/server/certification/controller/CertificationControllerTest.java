@@ -96,7 +96,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   }
 
   @Test
-  @DisplayName("이메일을 통해 인증번호를 전송할 수 있다.")
+  @DisplayName("이메일을 통해 인증코드를 전송할 수 있다.")
   void sendVerificationCodeByEmailTest() throws Exception {
     // given
     String emailDtoRequest = objectMapper.writeValueAsString(emailDtoRequest());
