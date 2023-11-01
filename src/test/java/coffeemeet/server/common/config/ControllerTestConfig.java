@@ -8,6 +8,7 @@ import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -21,7 +22,8 @@ public abstract class ControllerTestConfig {
 
   protected static final String TOKEN = "Bearer header.payload.signature";
 
-  protected ObjectMapper objectMapper = new ObjectMapper();
+  @Autowired
+  protected ObjectMapper objectMapper;
 
   protected MockMvc mockMvc;
 
