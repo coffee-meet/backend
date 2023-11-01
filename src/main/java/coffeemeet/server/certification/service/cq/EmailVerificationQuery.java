@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailVerificationQuery {
 
-  private static final String VERIFICATION_CODE_NOT_FOUND_MESSAGE = "인증코드 기간이 만료되었거나 해당 유저(%s)가 인증 번호를 요청한 기록이 없습니다.";
+  private static final String VERIFICATION_CODE_NOT_FOUND_MESSAGE = "인증코드 기간이 만료되었거나 해당 유저(%s)가 인증코드를 요청한 기록이 없습니다.";
 
   private final EmailVerificationRepository emailVerificationRepository;
 
