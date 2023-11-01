@@ -1,0 +1,54 @@
+name: coffee-meet CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    permissions:
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: 현재 작업중인 Repository 가져온다.
+        uses: actions/checkout@v3
+
+      - name:  CI 프로세스를 최적화 하기 위해 Gradle 정보를 캐싱한다.
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: JDK 17 설치한다.
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle 명령 실행을 위한 권한을 부여한다.
+        run: chmod +x gradlew
+
+      - name: Gradle test를 수행한다.
+        run: ./gradlew test
+
+      - name: 테스트 결과를 PR 코멘트 등록한다.
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시 해당 코드 라인에 Check 등록한다.
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
