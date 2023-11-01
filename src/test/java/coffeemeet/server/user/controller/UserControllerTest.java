@@ -43,7 +43,6 @@ import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
-import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -208,9 +207,7 @@ class UserControllerTest extends ControllerTestConfig {
         .andExpect(jsonPath("$.birthYear").value(response.birthYear()))
         .andExpect(jsonPath("$.birthDay").value(response.birthDay()))
         .andExpect(jsonPath("$.reportedCount").value(response.reportedCount()))
-        .andExpect(
-            jsonPath("$.sanctionPeriod").value(response.sanctionPeriod()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"))))
+        .andExpect(jsonPath("$.sanctionPeriod").value(String.valueOf(response.sanctionPeriod())))
         .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
         .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
   }

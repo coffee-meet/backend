@@ -2,12 +2,12 @@ package coffeemeet.server.common.fixture.entity;
 
 import static org.instancio.Select.field;
 
+import coffeemeet.server.certification.controller.dto.EmailDto;
+import coffeemeet.server.certification.controller.dto.VerificationCodeDto;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.domain.EmailVerification;
-import coffeemeet.server.certification.controller.dto.EmailDto;
-import coffeemeet.server.certification.controller.dto.VerificationCodeDto;
 import coffeemeet.server.user.domain.User;
 import org.instancio.Instancio;
 import org.instancio.internal.generator.domain.internet.EmailGenerator;
