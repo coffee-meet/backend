@@ -1,12 +1,12 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.media.KeyType.PROFILE_IMAGE;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.service.cq.CertificationQuery;
-import coffeemeet.server.common.media.S3MediaService;
+import coffeemeet.server.common.media.MediaManager;
 import coffeemeet.server.interest.domain.Keyword;
 import coffeemeet.server.interest.service.cq.InterestCommand;
 import coffeemeet.server.interest.service.cq.InterestQuery;
@@ -34,7 +34,7 @@ public class UserService {
 
   private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
-  private final S3MediaService s3MediaService;
+  private final MediaManager mediaManager;
   private final OAuthService oAuthService;
 
   private final CertificationQuery certificationQuery;
@@ -92,9 +92,9 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     deleteCurrentProfileImage(user.getProfile().getProfileImageUrl());
 
-    String key = s3MediaService.generateKey(PROFILE_IMAGE);
-    s3MediaService.upload(key, file);
-    user.updateProfileImageUrl(s3MediaService.getUrl(key));
+    String key = mediaManager.generateKey(PROFILE_IMAGE);
+    mediaManager.upload(key, file);
+    user.updateProfileImageUrl(mediaManager.getUrl(key));
     userCommand.updateUser(user);
   }
 
@@ -126,9 +126,9 @@ public class UserService {
   }
 
   private void deleteCurrentProfileImage(String profileImageUrl) {
-    String currentKey = s3MediaService.extractKey(profileImageUrl,
+    String currentKey = mediaManager.extractKey(profileImageUrl,
         PROFILE_IMAGE);
-    s3MediaService.delete(currentKey);
+    mediaManager.delete(currentKey);
   }
 
 }

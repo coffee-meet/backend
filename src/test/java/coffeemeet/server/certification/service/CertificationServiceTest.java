@@ -18,8 +18,8 @@ import static org.mockito.Mockito.only;
 import coffeemeet.server.certification.service.cq.CertificationCommand;
 import coffeemeet.server.certification.service.cq.EmailVerificationCommand;
 import coffeemeet.server.certification.service.cq.EmailVerificationQuery;
-import coffeemeet.server.common.media.EmailService;
-import coffeemeet.server.common.media.S3MediaService;
+import coffeemeet.server.common.media.EmailSender;
+import coffeemeet.server.common.media.MediaManager;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.service.cq.UserQuery;
@@ -39,9 +39,9 @@ class CertificationServiceTest {
   @InjectMocks
   private CertificationService certificationService;
   @Mock
-  private S3MediaService s3MediaService;
+  private MediaManager mediaManager;
   @Mock
-  private EmailService emailService;
+  private EmailSender emailSender;
   @Mock
   private UserQuery userQuery;
   @Mock
@@ -64,16 +64,16 @@ class CertificationServiceTest {
 
     MockedStatic<FileUtils> fileUtils = mockStatic(FileUtils.class);
     fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
-    given(s3MediaService.generateKey(any())).willReturn("someKey");
-    given(s3MediaService.getUrl(any())).willReturn(businessCardUrl);
+    given(mediaManager.generateKey(any())).willReturn("someKey");
+    given(mediaManager.getUrl(any())).willReturn(businessCardUrl);
     given(userQuery.getUserById(userId)).willReturn(user);
 
     // when
     certificationService.registerCertification(userId, email, departmentName, file);
 
     // then
-    then(s3MediaService).should().generateKey(any());
-    then(s3MediaService).should().upload(any(), any(File.class));
+    then(mediaManager).should().generateKey(any());
+    then(mediaManager).should().upload(any(), any(File.class));
     then(certificationCommand).should().createCertification(any(), any(), any(), any());
 
     fileUtils.close();
@@ -92,7 +92,7 @@ class CertificationServiceTest {
 
     // then
     then(certificationCommand).should(only()).hasDuplicatedCompanyEmail(any());
-    then(emailService).should(only()).sendVerificationCode(any(), anyString());
+    then(emailSender).should(only()).sendVerificationCode(any(), anyString());
     then(emailVerificationCommand).should(only())
         .createEmailVerification(anyLong(), any(), anyString());
   }
