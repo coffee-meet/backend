@@ -4,7 +4,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
+import coffeemeet.server.auth.implement.RefreshTokenQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;

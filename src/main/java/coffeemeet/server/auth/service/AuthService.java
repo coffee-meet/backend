@@ -5,7 +5,7 @@ import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAIL
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
+import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package coffeemeet.server.user.domain;
 
-import coffeemeet.server.chatting.room.domain.ChattingRoom;
+import coffeemeet.server.chatting.message.domain.ChattingRoom;
 import coffeemeet.server.common.entity.AdvancedBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

@@ -7,7 +7,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.domain.EmailVerification;
-import coffeemeet.server.certification.repository.EmailVerificationRepository;
+import coffeemeet.server.certification.implement.EmailVerificationCommand;
+import coffeemeet.server.certification.infrastructure.EmailVerificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

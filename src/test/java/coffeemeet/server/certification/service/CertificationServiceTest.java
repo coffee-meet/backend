@@ -15,14 +15,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.only;
 
-import coffeemeet.server.certification.service.cq.CertificationCommand;
-import coffeemeet.server.certification.service.cq.EmailVerificationCommand;
-import coffeemeet.server.certification.service.cq.EmailVerificationQuery;
+import coffeemeet.server.certification.implement.CertificationCommand;
+import coffeemeet.server.certification.implement.EmailVerificationCommand;
+import coffeemeet.server.certification.implement.EmailVerificationQuery;
 import coffeemeet.server.common.media.EmailSender;
 import coffeemeet.server.common.media.MediaManager;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.service.cq.UserQuery;
+import coffeemeet.server.user.implement.UserQuery;
 import java.io.File;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
@@ -38,16 +38,22 @@ class CertificationServiceTest {
 
   @InjectMocks
   private CertificationService certificationService;
+
   @Mock
   private MediaManager mediaManager;
+
   @Mock
   private EmailSender emailSender;
+
   @Mock
   private UserQuery userQuery;
+
   @Mock
   private CertificationCommand certificationCommand;
+
   @Mock
   private EmailVerificationCommand emailVerificationCommand;
+
   @Mock
   private EmailVerificationQuery emailVerificationQuery;
 

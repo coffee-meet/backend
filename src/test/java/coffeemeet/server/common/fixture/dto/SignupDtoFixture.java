@@ -2,9 +2,9 @@ package coffeemeet.server.common.fixture.dto;
 
 import static org.instancio.Select.field;
 
-import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.controller.dto.SignupHttpDto;
-import coffeemeet.server.user.controller.dto.SignupHttpDto.Request;
+import coffeemeet.server.user.domain.Keyword;
+import coffeemeet.server.user.presentation.dto.SignupHttpDto;
+import coffeemeet.server.user.presentation.dto.SignupHttpDto.Request;
 import java.util.List;
 import org.instancio.Instancio;
 

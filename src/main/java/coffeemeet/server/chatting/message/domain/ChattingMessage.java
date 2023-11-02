@@ -1,8 +1,7 @@
 package coffeemeet.server.chatting.message.domain;
 
-import static coffeemeet.server.chatting.message.exception.MessageErrorCode.INVALID_MESSAGE;
+import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MESSAGE;
 
-import coffeemeet.server.chatting.room.domain.ChattingRoom;
 import coffeemeet.server.common.entity.BaseEntity;
 import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;

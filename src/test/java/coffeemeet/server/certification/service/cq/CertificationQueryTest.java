@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.repository.CertificationRepository;
+import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.user.domain.User;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
