@@ -1,4 +1,4 @@
-package coffeemeet.server.common.advice;
+package coffeemeet.server.common.presentation.advice;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 

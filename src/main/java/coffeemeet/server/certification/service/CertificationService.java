@@ -1,7 +1,7 @@
 package coffeemeet.server.certification.service;
 
 import static coffeemeet.server.certification.exception.CertificationErrorCode.INVALID_VERIFICATION_CODE;
-import static coffeemeet.server.common.media.KeyType.BUSINESS_CARD;
+import static coffeemeet.server.common.implement.KeyType.BUSINESS_CARD;
 
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
@@ -9,8 +9,8 @@ import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
 import coffeemeet.server.common.execption.InvalidInputException;
-import coffeemeet.server.common.media.EmailSender;
-import coffeemeet.server.common.media.MediaManager;
+import coffeemeet.server.common.implement.EmailSender;
+import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;

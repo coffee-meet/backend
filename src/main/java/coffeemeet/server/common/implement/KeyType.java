@@ -1,4 +1,4 @@
-package coffeemeet.server.common.media;
+package coffeemeet.server.common.implement;
 
 import lombok.Getter;
 

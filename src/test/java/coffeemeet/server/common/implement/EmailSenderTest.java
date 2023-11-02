@@ -1,4 +1,4 @@
-package coffeemeet.server.common.media;
+package coffeemeet.server.common.implement;
 
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.domain.CompanyEmail;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class EmailSenderTest {
     SimpleMailMessage sentMailMessage = simpleMailMessage.getValue();
     assertAll(
         () -> assertThat(sentMailMessage.getFrom()).isEqualTo(sender),
-        () -> assertThat(sentMailMessage.getTo()[0]).isEqualTo(companyEmail.getValue()),
+        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(companyEmail.getValue()),
         () -> assertThat(sentMailMessage.getText()).contains(verificationCode)
     );
   }

@@ -1,4 +1,4 @@
-package coffeemeet.server.common.annotation;
+package coffeemeet.server.common.presentation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

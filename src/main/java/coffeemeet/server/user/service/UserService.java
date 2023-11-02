@@ -1,12 +1,12 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.media.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.implement.KeyType.PROFILE_IMAGE;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.media.MediaManager;
+import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
 import coffeemeet.server.user.domain.Birth;

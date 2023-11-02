@@ -2,7 +2,7 @@ package coffeemeet.server.user.service;
 
 import static coffeemeet.server.certification.domain.Department.IT;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.media.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.implement.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.user.domain.Keyword.COOK;
 import static coffeemeet.server.user.domain.Keyword.GAME;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
@@ -26,7 +26,7 @@ import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
 import coffeemeet.server.common.fixture.entity.CertificationFixture;
-import coffeemeet.server.common.media.MediaManager;
+import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
 import coffeemeet.server.user.domain.Birth;

@@ -1,4 +1,4 @@
-package coffeemeet.server.common.media;
+package coffeemeet.server.common.implement;
 
 import coffeemeet.server.certification.domain.CompanyEmail;
 import org.springframework.beans.factory.annotation.Value;

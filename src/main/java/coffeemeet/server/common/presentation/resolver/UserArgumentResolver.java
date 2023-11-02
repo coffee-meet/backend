@@ -1,11 +1,11 @@
-package coffeemeet.server.common.resolver;
+package coffeemeet.server.common.presentation.resolver;
 
 import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.implement.RefreshTokenQuery;
-import coffeemeet.server.common.annotation.Login;
+import coffeemeet.server.common.presentation.annotation.Login;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.presentation.dto.AuthInfo;
 import jakarta.servlet.http.HttpServletRequest;

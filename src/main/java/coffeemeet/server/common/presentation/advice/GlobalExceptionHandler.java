@@ -1,4 +1,4 @@
-package coffeemeet.server.common.advice;
+package coffeemeet.server.common.presentation.advice;
 
 import coffeemeet.server.common.execption.DataLengthExceededException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
