@@ -3,7 +3,7 @@ package coffeemeet.server.certification.presentation;
 import coffeemeet.server.certification.presentation.dto.EmailDto;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeDto;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.common.presentation.annotation.Login;
+import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.presentation.dto.AuthInfo;
 import jakarta.validation.Valid;
