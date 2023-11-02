@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.room.domain;
+package coffeemeet.server.chatting.history.domain;
 
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MESSAGE;
 

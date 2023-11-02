@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.message.domain;
+package coffeemeet.server.chatting.current.domain;
 
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MESSAGE;
 

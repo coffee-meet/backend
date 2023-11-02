@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.room.domain;
+package coffeemeet.server.chatting.history.domain;
 
 import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.user.domain.User;
