@@ -24,7 +24,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.partWith
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.AuthTokens;
@@ -88,8 +88,8 @@ class UserControllerTest extends ControllerTestConfig {
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accessToken").value("accessToken"))
-        .andExpect(jsonPath("$.refreshToken").value("refreshToken"));
+        .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
+
   }
 
   @Test
@@ -121,8 +121,7 @@ class UserControllerTest extends ControllerTestConfig {
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accessToken").value("accessToken"))
-        .andExpect(jsonPath("$.refreshToken").value("refreshToken"));
+        .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
   }
 
   @Test
@@ -155,10 +154,7 @@ class UserControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.nickname").value(response.nickname()))
-        .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
-        .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
-        .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
   }
 
   @Test
@@ -199,17 +195,7 @@ class UserControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name").value(response.name()))
-        .andExpect(jsonPath("$.nickname").value(response.nickname()))
-        .andExpect(jsonPath("$.email").value(response.email()))
-        .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
-        .andExpect(jsonPath("$.birthYear").value(response.birthYear()))
-        .andExpect(jsonPath("$.birthDay").value(response.birthDay()))
-        .andExpect(jsonPath("$.reportedCount").value(response.reportedCount()))
-        .andExpect(jsonPath("$.sanctionPeriod").value(String.valueOf(response.sanctionPeriod())))
-        .andExpect(jsonPath("$.department").value(String.valueOf(response.department())))
-        .andExpect(jsonPath("$.interests[0]").value(response.interests().get(0).name()));
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
   }
 
   @Test

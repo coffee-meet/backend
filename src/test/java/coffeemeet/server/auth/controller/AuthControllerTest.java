@@ -14,7 +14,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.AuthTokens;
@@ -67,8 +67,7 @@ class AuthControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.accessToken").value(authTokens.accessToken()))
-        .andExpect(jsonPath("$.refreshToken").value(authTokens.refreshToken()));
+        .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
   }
 
   @DisplayName("사용자는 로그아웃 할 수 있다.")
