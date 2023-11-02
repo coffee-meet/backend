@@ -1,4 +1,4 @@
-package coffeemeet.server.common.implement;
+package coffeemeet.server.common.domain;
 
 import lombok.Getter;
 

@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.common.domain.KeyType;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
 import java.net.URL;

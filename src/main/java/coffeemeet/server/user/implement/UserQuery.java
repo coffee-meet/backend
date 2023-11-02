@@ -11,10 +11,10 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserQuery {

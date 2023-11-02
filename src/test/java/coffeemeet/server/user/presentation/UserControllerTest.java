@@ -37,8 +37,8 @@ import coffeemeet.server.common.fixture.dto.UpdateProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.presentation.dto.SignupHttpDto;
-import coffeemeet.server.user.presentation.dto.UpdateProfileHttpDto.Request;
+import coffeemeet.server.user.presentation.dto.SignupHTTP;
+import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP.Request;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
@@ -61,7 +61,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("회원가입을 할 수 있다.")
   void signupTest() throws Exception {
     // given
-    SignupHttpDto.Request request = SignupDtoFixture.signupDto();
+    SignupHTTP.Request request = SignupDtoFixture.signupDto();
     AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
     given(userService.signup(any(), any(), any(), any())).willReturn(authTokens);

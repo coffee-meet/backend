@@ -3,10 +3,10 @@ package coffeemeet.server.auth.implement;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @Transactional
 @RequiredArgsConstructor
 public class RefreshTokenCommand {

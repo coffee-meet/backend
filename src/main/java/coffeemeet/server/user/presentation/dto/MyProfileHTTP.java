@@ -6,7 +6,7 @@ import coffeemeet.server.user.service.dto.MyProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public sealed interface MyProfileHttpDto permits MyProfileHttpDto.Response {
+public sealed interface MyProfileHTTP permits MyProfileHTTP.Response {
 
   record Response(
       String name,
@@ -19,7 +19,7 @@ public sealed interface MyProfileHttpDto permits MyProfileHttpDto.Response {
       LocalDateTime sanctionPeriod,
       Department department,
       List<Keyword> interests
-  ) implements MyProfileHttpDto {
+  ) implements MyProfileHTTP {
 
     public static Response of(MyProfileDto.Response response) {
       return new Response(

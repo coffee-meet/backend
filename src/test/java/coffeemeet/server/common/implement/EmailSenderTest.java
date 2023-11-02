@@ -56,7 +56,8 @@ class EmailSenderTest {
     SimpleMailMessage sentMailMessage = simpleMailMessage.getValue();
     assertAll(
         () -> assertThat(sentMailMessage.getFrom()).isEqualTo(sender),
-        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(companyEmail.getValue()),
+        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(
+            companyEmail.getValue()),
         () -> assertThat(sentMailMessage.getText()).contains(verificationCode)
     );
   }

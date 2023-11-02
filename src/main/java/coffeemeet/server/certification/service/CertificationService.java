@@ -1,7 +1,7 @@
 package coffeemeet.server.certification.service;
 
 import static coffeemeet.server.certification.exception.CertificationErrorCode.INVALID_VERIFICATION_CODE;
-import static coffeemeet.server.common.implement.KeyType.BUSINESS_CARD;
+import static coffeemeet.server.common.domain.KeyType.BUSINESS_CARD;
 
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;

@@ -1,4 +1,4 @@
-package coffeemeet.server.oauth.implement.provider.kakao.authcode;
+package coffeemeet.server.oauth.implement.provider.kakao;
 
 import coffeemeet.server.oauth.config.kakao.KakaoProperties;
 import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProvider;

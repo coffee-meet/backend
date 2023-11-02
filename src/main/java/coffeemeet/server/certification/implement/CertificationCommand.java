@@ -10,10 +10,10 @@ import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @Transactional
 @RequiredArgsConstructor
 public class CertificationCommand {

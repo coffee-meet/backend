@@ -6,9 +6,9 @@ import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.infrastructure.EmailVerificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class EmailVerificationQuery {
 

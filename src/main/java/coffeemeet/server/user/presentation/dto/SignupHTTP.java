@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.NonNull;
 
-public sealed interface SignupHttpDto permits SignupHttpDto.Request {
+public sealed interface SignupHTTP permits SignupHTTP.Request {
 
   record Request(
       @NotBlank
@@ -18,7 +18,7 @@ public sealed interface SignupHttpDto permits SignupHttpDto.Request {
       String authCode,
       @NonNull
       OAuthProvider oAuthProvider
-  ) implements SignupHttpDto {
+  ) implements SignupHTTP {
 
   }
 

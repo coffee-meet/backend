@@ -1,8 +1,8 @@
 package coffeemeet.server.user.service;
 
 import static coffeemeet.server.certification.domain.Department.IT;
+import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.implement.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.user.domain.Keyword.COOK;
 import static coffeemeet.server.user.domain.Keyword.GAME;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
@@ -39,7 +39,7 @@ import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
-import coffeemeet.server.user.presentation.dto.SignupHttpDto.Request;
+import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;

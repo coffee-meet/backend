@@ -4,9 +4,9 @@ import coffeemeet.server.certification.domain.CompanyEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class EmailSender {
 
   private final JavaMailSender javaMailSender;

@@ -4,9 +4,9 @@ import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.infrastructure.EmailVerificationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class EmailVerificationCommand {
 

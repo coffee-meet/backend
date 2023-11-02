@@ -1,5 +1,6 @@
 package coffeemeet.server.common.implement;
 
+import coffeemeet.server.common.domain.KeyType;
 import java.io.File;
 
 public interface MediaManager {

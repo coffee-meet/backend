@@ -1,6 +1,6 @@
 package coffeemeet.server.chatting.room.domain;
 
-import coffeemeet.server.common.entity.BaseEntity;
+import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,4 +1,4 @@
-package coffeemeet.server.common.entity;
+package coffeemeet.server.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

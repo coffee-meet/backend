@@ -1,6 +1,6 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.implement.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;

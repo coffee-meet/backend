@@ -2,15 +2,16 @@ package coffeemeet.server.common.implement;
 
 import static coffeemeet.server.common.execption.GlobalErrorCode.INVALID_S3_URL;
 
+import coffeemeet.server.common.domain.KeyType;
 import coffeemeet.server.common.execption.InvalidInputException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class S3MediaManager implements MediaManager {
 
   private static final String INVALID_S3_URL_MESSAGE = "올바르지 않은 S3 URL(%s)입니다.";

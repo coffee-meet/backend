@@ -6,10 +6,10 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CertificationQuery {
