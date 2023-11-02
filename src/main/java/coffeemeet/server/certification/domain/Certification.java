@@ -1,6 +1,6 @@
 package coffeemeet.server.certification.domain;
 
-import coffeemeet.server.common.entity.AdvancedBaseEntity;
+import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

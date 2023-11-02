@@ -1,6 +1,6 @@
 package coffeemeet.server.report.domain;
 
-import coffeemeet.server.common.entity.BaseEntity;
+import coffeemeet.server.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

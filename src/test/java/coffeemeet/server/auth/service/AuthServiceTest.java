@@ -1,6 +1,7 @@
 package coffeemeet.server.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyLong;
@@ -10,9 +11,10 @@ import static org.mockito.BDDMockito.willDoNothing;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.service.cq.RefreshTokenCommand;
+import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.user.service.UserService;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,27 +67,25 @@ class AuthServiceTest {
   @Test
   void logoutTest() {
     // given
+    Long userId = Instancio.create(Long.class);
     willDoNothing().given(refreshTokenCommand).deleteRefreshToken(anyLong());
 
-    // when
-    authService.logout((long) Math.random());
-
-    // then
-    assertThat(true).isTrue();
+    // when, then
+    assertThatCode(() -> authService.logout(userId))
+        .doesNotThrowAnyException();
   }
 
   @DisplayName("회원 탈퇴 시킬 수 있다.")
   @Test
   void deleteTest() {
     // given
+    Long userId = Instancio.create(Long.class);
     willDoNothing().given(refreshTokenCommand).deleteRefreshToken(anyLong());
     willDoNothing().given(userService).deleteUser(anyLong());
 
-    // when
-    authService.delete((long) Math.random());
-
-    // then
-    assertThat(true).isTrue();
+    // when, then
+    assertThatCode(() -> authService.delete(userId))
+        .doesNotThrowAnyException();
   }
 
 }

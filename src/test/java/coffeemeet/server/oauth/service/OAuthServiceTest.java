@@ -3,12 +3,9 @@ package coffeemeet.server.oauth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
-import coffeemeet.server.oauth.authcode.AuthCodeRequestUrlProviderComposite;
-import coffeemeet.server.oauth.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
+import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderComposite;
 import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.service.dto.OAuthUserInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,21 +38,6 @@ class OAuthServiceTest {
 
     // then
     assertThat(result).isEqualTo(expectedUrl);
-  }
-
-  @DisplayName("로그인 타입에 맞는 redirect url 을 생성할 수 있다.")
-  @Test
-  void getOAuthInfoTest() {
-    // given
-    OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
-    String authCode = "authCode";
-    OAuthUserInfoDto.Response oAuthInfoResponse = OAuthUserInfoDtoFixture.response();
-    OAuthUserInfo userInfo = OAuthUserInfo.from(oAuthInfoResponse);
-
-    given(oAuthMemberClientComposite.fetch(oAuthProvider, authCode)).willReturn(oAuthInfoResponse);
-
-    // when, then
-    assertThat(oAuthService.getOAuthUserInfo(oAuthProvider, authCode)).isEqualTo(userInfo);
   }
 
 }

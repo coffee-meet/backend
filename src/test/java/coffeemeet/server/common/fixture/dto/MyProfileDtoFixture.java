@@ -2,7 +2,7 @@ package coffeemeet.server.common.fixture.dto;
 
 import static org.instancio.Select.field;
 
-import coffeemeet.server.interest.domain.Keyword;
+import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import java.time.LocalDateTime;

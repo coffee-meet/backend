@@ -6,7 +6,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.implement.RefreshTokenCommand;
+import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

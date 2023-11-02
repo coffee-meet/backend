@@ -1,8 +1,8 @@
 package coffeemeet.server.common.config;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
-import coffeemeet.server.auth.service.cq.RefreshTokenQuery;
-import coffeemeet.server.common.UserArgumentResolver;
+import coffeemeet.server.auth.implement.RefreshTokenQuery;
+import coffeemeet.server.common.presentation.resolver.UserArgumentResolver;
 import coffeemeet.server.oauth.utils.converter.OAuthProviderConverter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

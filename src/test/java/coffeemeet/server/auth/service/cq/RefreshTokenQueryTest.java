@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.repository.RefreshTokenRepository;
+import coffeemeet.server.auth.implement.RefreshTokenQuery;
+import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

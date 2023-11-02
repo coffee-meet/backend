@@ -2,12 +2,12 @@ package coffeemeet.server.common.fixture.entity;
 
 import static org.instancio.Select.field;
 
-import coffeemeet.server.certification.controller.dto.EmailDto;
-import coffeemeet.server.certification.controller.dto.VerificationCodeDto;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.domain.EmailVerification;
+import coffeemeet.server.certification.presentation.dto.EmailHTTP;
+import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
 import coffeemeet.server.user.domain.User;
 import org.instancio.Instancio;
 import org.instancio.internal.generator.domain.internet.EmailGenerator;
@@ -66,14 +66,14 @@ public class CertificationFixture {
     return Instancio.create(Department.class);
   }
 
-  public static EmailDto.Request emailDtoRequest() {
-    return Instancio.of(EmailDto.Request.class)
-        .generate(field(EmailDto.Request::companyEmail), gen -> gen.net().email()).create();
+  public static EmailHTTP.Request emailDtoRequest() {
+    return Instancio.of(EmailHTTP.Request.class)
+        .generate(field(EmailHTTP.Request::companyEmail), gen -> gen.net().email()).create();
   }
 
-  public static VerificationCodeDto.Request verificationCodeDtoRequest() {
-    return Instancio.of(VerificationCodeDto.Request.class)
-        .set(field(VerificationCodeDto.Request::verificationCode),
+  public static VerificationCodeHTTP.Request verificationCodeDtoRequest() {
+    return Instancio.of(VerificationCodeHTTP.Request.class)
+        .set(field(VerificationCodeHTTP.Request::verificationCode),
             String.format("%06d", new IntegerGenerator().range(0, 999999).get())).create();
   }
 
