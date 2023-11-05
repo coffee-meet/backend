@@ -33,8 +33,8 @@ public class CertificationService {
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
-  public void registerCertification(long userId, String email, String departmentName,
-      File businessCardImage) {
+  public void registerCertification(long userId, String companyName, String email,
+      String departmentName, File businessCardImage) {
     String key = mediaManager.generateKey(BUSINESS_CARD);
     uploadBusinessCard(userId, key, businessCardImage);
 
@@ -42,7 +42,7 @@ public class CertificationService {
     String businessCardUrl = mediaManager.getUrl(key);
     Department department = Department.valueOf(departmentName);
     User user = userQuery.getUserById(userId);
-    certificationCommand.createCertification(companyEmail, businessCardUrl, department, user);
+    certificationCommand.createCertification(user, companyName, companyEmail, department, businessCardUrl);
   }
 
   private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
