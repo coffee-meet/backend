@@ -32,7 +32,8 @@ public class CertificationController {
       @RequestPart("department") @NotNull String department,
       @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.registerCertification(authInfo.userId(), companyName, companyEmail, department,
+    certificationService.registerCertification(authInfo.userId(), companyName, companyEmail,
+        department,
         FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();
   }
