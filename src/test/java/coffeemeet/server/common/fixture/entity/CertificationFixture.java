@@ -50,6 +50,10 @@ public class CertificationFixture {
         .generate(field(CompanyEmail::getValue), gen -> gen.net().email()).create();
   }
 
+  public static String companyName() {
+    return Instancio.create(String.class);
+  }
+
   public static String verificationCode() {
     return String.format("%06d", new IntegerGenerator().range(0, 999999).get());
   }
