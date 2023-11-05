@@ -32,7 +32,7 @@ public class Certification extends AdvancedBaseEntity {
   private User user;
 
   @Column(nullable = false)
-  String companyName;
+  private String companyName;
 
   @Embedded
   @Column(nullable = false)
