@@ -42,7 +42,8 @@ public class CertificationService {
     String businessCardUrl = mediaManager.getUrl(key);
     Department department = Department.valueOf(departmentName);
     User user = userQuery.getUserById(userId);
-    certificationCommand.createCertification(user, companyName, companyEmail, department, businessCardUrl);
+    certificationCommand.createCertification(user, companyName, companyEmail, department,
+        businessCardUrl);
   }
 
   private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
