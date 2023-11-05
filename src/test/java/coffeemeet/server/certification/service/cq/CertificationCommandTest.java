@@ -3,6 +3,7 @@ package coffeemeet.server.certification.service.cq;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,13 +42,15 @@ class CertificationCommandTest {
   @DisplayName("새로운 Certification 객체를 저장할 수 있다.")
   void createCertificationTest() {
     // given
+    String companyName = companyName();
     CompanyEmail companyEmail = companyEmail();
     String businessCardUrl = businessCardUrl();
     Department department = department();
     User user = user();
 
     // when
-    certificationCommand.createCertification(companyEmail, businessCardUrl, department, user);
+    certificationCommand.createCertification(user, companyName, companyEmail, department,
+        businessCardUrl);
 
     // then
     then(certificationRepository).should(only()).save(any(Certification.class));

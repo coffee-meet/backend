@@ -1,7 +1,7 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.certification.domain.Department.IT;
 import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static coffeemeet.server.user.domain.Keyword.COOK;
 import static coffeemeet.server.user.domain.Keyword.GAME;
@@ -20,12 +20,10 @@ import static org.mockito.Mockito.verify;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
-import coffeemeet.server.common.fixture.entity.CertificationFixture;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -136,7 +134,7 @@ class UserServiceTest {
   void findUserProfileTest() {
     // given
     User user = user();
-    Certification certification = CertificationFixture.certification();
+    Certification certification = certification();
     List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
     Response response = Response.of(user, certification.getDepartment(), keywords);
 
@@ -162,13 +160,9 @@ class UserServiceTest {
     // given
     User user = user();
     List<Keyword> keywords = new ArrayList<>(List.of(COOK));
-    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords, IT);
-    Certification certification = Certification.builder()
-        .department(response.department())
-        .user(user)
-        .companyEmail(new CompanyEmail("company123@gmail.com"))
-        .businessCardUrl("businessCard")
-        .build();
+    Certification certification = certification(user);
+    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
+        certification.getDepartment());
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());
