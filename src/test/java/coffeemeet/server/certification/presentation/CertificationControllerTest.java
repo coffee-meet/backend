@@ -1,6 +1,7 @@
 package coffeemeet.server.certification.presentation;
 
 import static coffeemeet.server.common.fixture.dto.RefreshTokenFixture.refreshToken;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.emailDtoRequest;
@@ -51,29 +52,32 @@ class CertificationControllerTest extends ControllerTestConfig {
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     willDoNothing().given(certificationService)
-        .registerCertification(anyLong(), any(), any(), any());
+        .registerCertification(anyLong(), any(), any(), any(), any());
   }
 
   @Test
   @DisplayName("회사 인증 정보를 등록할 수 있다.")
   void registerCompanyInfoTest() throws Exception {
     // given
+    String sCompanyName = "companyName";
     String sBusinessCard = "businessCard";
     String sCompanyEmail = "companyEmail";
     String sDepartment = "department";
+
     MockMultipartFile businessCardImage = new MockMultipartFile(
         sBusinessCard,
         "business_card.jpg",
         "image/jpeg",
         sBusinessCard.getBytes()
     );
-
+    MockPart companyName = new MockPart(sCompanyName, companyName().getBytes());
     MockPart companyEmail = new MockPart(sCompanyEmail, email().getBytes());
     MockPart department = new MockPart(sDepartment, department().name().getBytes());
 
     // when, then
     mockMvc.perform(multipart("/api/v1/certification/users/me/company-info")
             .file("businessCard", businessCardImage.getBytes())
+            .part(companyName)
             .part(companyEmail)
             .part(department)
             .header(AUTHORIZATION, TOKEN)
@@ -88,6 +92,7 @@ class CertificationControllerTest extends ControllerTestConfig {
                 headerWithName(AUTHORIZATION).description("토큰")
             ),
             requestParts(
+                partWithName(sCompanyName).description("회사명"),
                 partWithName(sBusinessCard).description("회사 명함 이미지"),
                 partWithName(sCompanyEmail).description("회사 이메일"),
                 partWithName(sDepartment).description("회사 부서명")

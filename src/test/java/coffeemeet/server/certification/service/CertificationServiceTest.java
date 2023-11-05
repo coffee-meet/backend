@@ -1,6 +1,7 @@
 package coffeemeet.server.certification.service;
 
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
@@ -63,6 +64,7 @@ class CertificationServiceTest {
     // given
     User user = user();
     Long userId = user.getId();
+    String companyName = companyName();
     String email = email();
     String departmentName = department().name();
     File file = mock();
@@ -75,12 +77,12 @@ class CertificationServiceTest {
     given(userQuery.getUserById(userId)).willReturn(user);
 
     // when
-    certificationService.registerCertification(userId, email, departmentName, file);
+    certificationService.registerCertification(userId, companyName, email, departmentName, file);
 
     // then
     then(mediaManager).should().generateKey(any());
     then(mediaManager).should().upload(any(), any(File.class));
-    then(certificationCommand).should().createCertification(any(), any(), any(), any());
+    then(certificationCommand).should().createCertification(any(), any(), any(), any(), any());
 
     fileUtils.close();
   }
