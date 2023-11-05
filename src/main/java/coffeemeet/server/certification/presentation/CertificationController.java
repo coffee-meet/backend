@@ -27,11 +27,12 @@ public class CertificationController {
   @PostMapping("/users/me/company-info")
   public ResponseEntity<Void> registerCompanyInfo(
       @Login AuthInfo authInfo,
+      @RequestPart("companyName") @NotNull String companyName,
       @RequestPart("companyEmail") @NotNull String companyEmail,
       @RequestPart("department") @NotNull String department,
       @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.registerCertification(authInfo.userId(), companyEmail, department,
+    certificationService.registerCertification(authInfo.userId(), companyName, companyEmail, department,
         FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();
   }
