@@ -61,3 +61,6 @@ cloud:
       auto: false
     stack:
       auto: false
+  firebase:
+    key-path:
+      ${CLOUD_FIREBASE_KEY_PATH}
