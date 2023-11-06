@@ -131,4 +131,8 @@ public class UserService {
     mediaManager.delete(currentKey);
   }
 
+  public void registerOrUpdateNotificationToken(Long useId, String token) {
+    userCommand.registerOrUpdateNotificationToken(useId, token);
+  }
+
 }
