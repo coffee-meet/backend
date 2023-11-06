@@ -41,4 +41,9 @@ public class UserCommand {
     user.updateNotificationInfo(new NotificationInfo(token, LocalDateTime.now()));
   }
 
+  public void unsubscribeNotification(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.updateNotificationInfo(new NotificationInfo(false));
+  }
+
 }

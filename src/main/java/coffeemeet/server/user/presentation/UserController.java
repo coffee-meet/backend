@@ -95,4 +95,12 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
+  @PutMapping("/notification/unsubscription")
+  public ResponseEntity<Void> unsubscribeNotification(
+      @Login AuthInfo authInfo
+  ) {
+    userService.unsubscribeNotification(authInfo.userId());
+    return ResponseEntity.ok().build();
+  }
+
 }

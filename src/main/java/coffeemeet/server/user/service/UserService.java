@@ -135,4 +135,8 @@ public class UserService {
     userCommand.registerOrUpdateNotificationToken(useId, token);
   }
 
+  public void unsubscribeNotification(Long userId) {
+    userCommand.unsubscribeNotification(userId);
+  }
+
 }
