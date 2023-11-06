@@ -71,7 +71,8 @@ dependencies {
     swaggerUI 'org.webjars:swagger-ui:4.11.1'
 
     /* Cloud */
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.581'
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
 
     /* WebSocket */
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
