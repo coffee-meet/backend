@@ -3,7 +3,7 @@ package coffeemeet.server.user.presentation;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
-import coffeemeet.server.common.presentation.NotificationTokenHTTP;
+import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.presentation.dto.MyProfileHTTP;
