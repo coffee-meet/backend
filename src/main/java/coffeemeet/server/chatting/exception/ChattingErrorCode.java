@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ChattingErrorCode implements ErrorCode {
   INVALID_MESSAGE("CM000", "유효하지 않은 메세지 형식입니다."),
-  ;
+  CHATTING_ROOM_NOT_FOUND("CR004", "채팅방을 찾을 수 없습니다.");
 
   private final String errorCode;
   private final String message;
