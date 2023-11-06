@@ -1,6 +1,7 @@
 package coffeemeet.server.common.presentation.interceptor;
 
 import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
+import static coffeemeet.server.common.execption.GlobalErrorCode.STOMP_ACCESSOR_NOT_FOUND;
 
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.implement.RefreshTokenQuery;
@@ -16,7 +17,7 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 @RequiredArgsConstructor
 public class StompInterceptor implements ChannelInterceptor {
 
-  private static final String HEADER_NOT_FOUND_MESSAGE = "헤더를 찾을 수 없습니다.";
+  private static final String STOMP_ACCESSOR_NOT_FOUND_MESSAGE = "stomp header accessor를 찾을 수 없습니다.";
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
 
   private final JwtTokenProvider jwtTokenProvider;
@@ -28,8 +29,8 @@ public class StompInterceptor implements ChannelInterceptor {
         StompHeaderAccessor.class);
     if (headerAccessor == null) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED,
-          String.format(HEADER_NOT_FOUND_MESSAGE)
+          STOMP_ACCESSOR_NOT_FOUND,
+          STOMP_ACCESSOR_NOT_FOUND_MESSAGE
       );
     }
 
