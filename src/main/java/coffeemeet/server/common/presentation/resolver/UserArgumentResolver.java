@@ -7,7 +7,7 @@ import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.implement.RefreshTokenQuery;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
-import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.common.execption.InvalidAuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -44,7 +44,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
       RefreshToken refreshToken = refreshTokenQuery.getRefreshToken(userId);
       return new AuthInfo(userId, refreshToken.getValue());
     }
-    throw new InvalidInputException(
+    throw new InvalidAuthException(
         AUTHENTICATION_FAILED,
         String.format(HEADER_AUTHENTICATION_FAILED_MESSAGE, authHeader)
     );

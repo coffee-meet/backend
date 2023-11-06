@@ -4,6 +4,7 @@ import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MES
 
 import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,10 +39,16 @@ public class ChattingMessage extends BaseEntity {
   @JoinColumn(name = "chatting_room_id", nullable = false)
   private ChattingRoom chattingRoom;
 
-  public ChattingMessage(@NonNull String message, @NonNull ChattingRoom chattingRoom) {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  public ChattingMessage(@NonNull String message, @NonNull ChattingRoom chattingRoom,
+      @NonNull User user) {
     validateMessage(message);
     this.message = message;
     this.chattingRoom = chattingRoom;
+    this.user = user;
   }
 
   private void validateMessage(String message) {
