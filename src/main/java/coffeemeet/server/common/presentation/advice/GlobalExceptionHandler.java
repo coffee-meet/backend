@@ -3,6 +3,7 @@ package coffeemeet.server.common.presentation.advice;
 import coffeemeet.server.common.execption.DataLengthExceededException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.MissMatchException;
 import coffeemeet.server.common.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,13 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleException(InvalidAuthException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        .body(ErrorResponse.of(exception.getErrorCode()));
+  }
+
+  @ExceptionHandler(InvalidInputException.class)
+  public ResponseEntity<ErrorResponse> handleException(InvalidInputException exception) {
+    log.info(exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(exception.getErrorCode()));
   }
 
