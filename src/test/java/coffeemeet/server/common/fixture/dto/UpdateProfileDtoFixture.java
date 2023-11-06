@@ -2,16 +2,16 @@ package coffeemeet.server.common.fixture.dto;
 
 import static org.instancio.Select.field;
 
-import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.user.controller.dto.UpdateProfileHttpDto;
+import coffeemeet.server.user.domain.Keyword;
+import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import java.util.List;
 import org.instancio.Instancio;
 
 public class UpdateProfileDtoFixture {
 
-  public static UpdateProfileHttpDto.Request updateProfileDtoRequest() {
-    return Instancio.of(UpdateProfileHttpDto.Request.class)
-        .set(field(UpdateProfileHttpDto.Request::interests), keywords())
+  public static UpdateProfileHTTP.Request updateProfileDtoRequest() {
+    return Instancio.of(UpdateProfileHTTP.Request.class)
+        .set(field(UpdateProfileHTTP.Request::interests), keywords())
         .create();
   }
 

@@ -1,6 +1,6 @@
 package coffeemeet.server.certification.domain;
 
-import coffeemeet.server.common.entity.AdvancedBaseEntity;
+import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -31,6 +31,9 @@ public class Certification extends AdvancedBaseEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private User user;
 
+  @Column(nullable = false)
+  private String companyName;
+
   @Embedded
   @Column(nullable = false)
   private CompanyEmail companyEmail;
@@ -46,8 +49,9 @@ public class Certification extends AdvancedBaseEntity {
 
   @Builder
   private Certification(
-      @NonNull CompanyEmail companyEmail, @NonNull String businessCardUrl,
-      @NonNull Department department, @NonNull User user) {
+      @NonNull String companyName, @NonNull CompanyEmail companyEmail,
+      @NonNull String businessCardUrl, @NonNull Department department, @NonNull User user) {
+    this.companyName = companyName;
     this.companyEmail = companyEmail;
     this.businessCardUrl = businessCardUrl;
     this.department = department;

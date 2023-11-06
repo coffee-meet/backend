@@ -5,7 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.certification.domain.EmailVerification;
-import coffeemeet.server.certification.repository.EmailVerificationRepository;
+import coffeemeet.server.certification.implement.EmailVerificationQuery;
+import coffeemeet.server.certification.infrastructure.EmailVerificationRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

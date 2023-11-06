@@ -3,7 +3,8 @@ package coffeemeet.server.oauth.infrastructure.kakao.authcode;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.oauth.infrastructure.kakao.config.KakaoProperties;
+import coffeemeet.server.oauth.config.kakao.KakaoProperties;
+import coffeemeet.server.oauth.implement.provider.kakao.KakaoAuthCodeRequestUrlProvider;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

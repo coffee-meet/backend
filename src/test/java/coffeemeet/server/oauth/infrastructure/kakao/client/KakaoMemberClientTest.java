@@ -6,7 +6,9 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
-import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberResponse;
+import coffeemeet.server.oauth.implement.client.kakao.KakaoMemberClient;
+import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
+import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +25,7 @@ class KakaoMemberClientTest {
   KakaoMemberClient kakaoMemberClient;
 
   @Mock
-  KakaoApiClient kakaoApiClient;
+  KakaoClient kakaoClient;
 
   @DisplayName("카카오 프로바이더를 가져올 수 있다.")
   @Test
@@ -38,10 +40,10 @@ class KakaoMemberClientTest {
     // given
     String authCode = "authCode";
     KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();
-    KakaoMemberResponse response = KakaoMemberResponseFixture.kakaoMemberResponse();
+    KakaoMemberDetail response = KakaoMemberResponseFixture.kakaoMemberResponse();
 
-    given(kakaoApiClient.fetchToken(any())).willReturn(kakaoTokens);
-    given(kakaoApiClient.fetchMember(any())).willReturn(response);
+    given(kakaoClient.fetchToken(any())).willReturn(kakaoTokens);
+    given(kakaoClient.fetchMember(any())).willReturn(response);
 
     // when, then
     assertThat(kakaoMemberClient.fetch(authCode)).isNotNull();

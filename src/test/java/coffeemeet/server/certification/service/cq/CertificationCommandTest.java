@@ -3,6 +3,7 @@ package coffeemeet.server.certification.service.cq;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,7 +15,8 @@ import static org.mockito.Mockito.only;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
-import coffeemeet.server.certification.repository.CertificationRepository;
+import coffeemeet.server.certification.implement.CertificationCommand;
+import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;
 import java.util.Optional;
@@ -40,13 +42,15 @@ class CertificationCommandTest {
   @DisplayName("새로운 Certification 객체를 저장할 수 있다.")
   void createCertificationTest() {
     // given
+    String companyName = companyName();
     CompanyEmail companyEmail = companyEmail();
     String businessCardUrl = businessCardUrl();
     Department department = department();
     User user = user();
 
     // when
-    certificationCommand.createCertification(companyEmail, businessCardUrl, department, user);
+    certificationCommand.createCertification(user, companyName, companyEmail, department,
+        businessCardUrl);
 
     // then
     then(certificationRepository).should(only()).save(any(Certification.class));

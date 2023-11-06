@@ -1,11 +1,12 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.certification.domain.Department.IT;
+import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.media.S3MediaService.KeyType.PROFILE_IMAGE;
-import static coffeemeet.server.interest.domain.Keyword.COOK;
-import static coffeemeet.server.interest.domain.Keyword.GAME;
+import static coffeemeet.server.user.domain.Keyword.COOK;
+import static coffeemeet.server.user.domain.Keyword.GAME;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,28 +20,25 @@ import static org.mockito.Mockito.verify;
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.domain.CompanyEmail;
-import coffeemeet.server.certification.service.cq.CertificationQuery;
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
-import coffeemeet.server.common.fixture.entity.CertificationFixture;
-import coffeemeet.server.common.media.S3MediaService;
-import coffeemeet.server.interest.domain.Keyword;
-import coffeemeet.server.interest.service.cq.InterestCommand;
-import coffeemeet.server.interest.service.cq.InterestQuery;
-import coffeemeet.server.oauth.dto.OAuthUserInfoDto;
-import coffeemeet.server.oauth.service.OAuthService;
-import coffeemeet.server.user.controller.dto.SignupHttpDto.Request;
+import coffeemeet.server.common.implement.MediaManager;
+import coffeemeet.server.oauth.domain.OAuthMemberDetail;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
 import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
+import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.service.cq.UserCommand;
-import coffeemeet.server.user.service.cq.UserQuery;
+import coffeemeet.server.user.implement.InterestCommand;
+import coffeemeet.server.user.implement.InterestQuery;
+import coffeemeet.server.user.implement.UserCommand;
+import coffeemeet.server.user.implement.UserQuery;
+import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
 import coffeemeet.server.user.service.dto.MyProfileDto;
-import coffeemeet.server.user.service.dto.OAuthUserInfo;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;
 import java.io.IOException;
@@ -62,10 +60,10 @@ class UserServiceTest {
   private UserService userService;
 
   @Mock
-  private S3MediaService s3MediaService;
+  private MediaManager mediaManager;
 
   @Mock
-  private OAuthService oAuthService;
+  private OAuthMemberClientComposite oAuthMemberClientComposite;
 
   @Mock
   private AuthTokensGenerator authTokensGenerator;
@@ -91,11 +89,10 @@ class UserServiceTest {
     // given
     Request request = SignupDtoFixture.signupDto();
     AuthTokens authTokens = AuthTokensFixture.authTokens();
-    OAuthUserInfoDto.Response response = OAuthUserInfoDtoFixture.response();
-    OAuthUserInfo userInfo = OAuthUserInfo.from(response);
+    OAuthMemberDetail response = OAuthUserInfoDtoFixture.response();
     User user = user();
 
-    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(userInfo);
+    given(oAuthMemberClientComposite.fetch(any(), any())).willReturn(response);
     given(userCommand.saveUser(any(User.class))).willReturn(user.getId());
     given(userQuery.getUserById(user.getId())).willReturn(user);
     willDoNothing().given(interestCommand).saveAll(any(), any());
@@ -118,10 +115,9 @@ class UserServiceTest {
     String authCode = "authCode";
     AuthTokens authTokens = AuthTokensFixture.authTokens();
 
-    OAuthUserInfoDto.Response response = OAuthUserInfoDtoFixture.response();
-    OAuthUserInfo userInfo = OAuthUserInfo.from(response);
+    OAuthMemberDetail response = OAuthUserInfoDtoFixture.response();
 
-    given(oAuthService.getOAuthUserInfo(any(), any())).willReturn(userInfo);
+    given(oAuthMemberClientComposite.fetch(any(), any())).willReturn(response);
     given(userQuery.getUserByOAuthInfo(any(), any())).willReturn(user);
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 
@@ -138,7 +134,7 @@ class UserServiceTest {
   void findUserProfileTest() {
     // given
     User user = user();
-    Certification certification = CertificationFixture.certification();
+    Certification certification = certification();
     List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
     Response response = Response.of(user, certification.getDepartment(), keywords);
 
@@ -164,13 +160,9 @@ class UserServiceTest {
     // given
     User user = user();
     List<Keyword> keywords = new ArrayList<>(List.of(COOK));
-    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords, IT);
-    Certification certification = Certification.builder()
-        .department(response.department())
-        .user(user)
-        .companyEmail(new CompanyEmail("company123@gmail.com"))
-        .businessCardUrl("businessCard")
-        .build();
+    Certification certification = certification(user);
+    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
+        certification.getDepartment());
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());
@@ -224,8 +216,8 @@ class UserServiceTest {
     File file = File.createTempFile("temp", "png");
 
     given(userQuery.getUserById(userId)).willReturn(user);
-    given(s3MediaService.generateKey(PROFILE_IMAGE)).willReturn("key");
-    given(s3MediaService.getUrl(anyString())).willReturn("newImageUrl");
+    given(mediaManager.generateKey(PROFILE_IMAGE)).willReturn("key");
+    given(mediaManager.getUrl(anyString())).willReturn("newImageUrl");
 
     // when
     userService.updateProfileImage(userId, file);
@@ -270,11 +262,9 @@ class UserServiceTest {
 
     willDoNothing().given(userCommand).deleteUser(user.getId());
 
-    // when
-    userService.deleteUser(user.getId());
-
-    // then
-    assertThat(true).isTrue();
+    // when, then
+    assertThatCode(() -> userService.deleteUser(user.getId()))
+        .doesNotThrowAnyException();
   }
 
   @DisplayName("닉네임 중복을 검사할 수 있다.")
@@ -286,11 +276,9 @@ class UserServiceTest {
 
     willDoNothing().given(userQuery).hasDuplicatedNickname(nickname);
 
-    // when
-    userService.checkDuplicatedNickname(nickname);
-
     // then
-    assertThat(true).isTrue();
+    assertThatCode(() -> userService.checkDuplicatedNickname(nickname))
+        .doesNotThrowAnyException();
   }
 
 }

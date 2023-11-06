@@ -72,6 +72,11 @@ dependencies {
 
     /* Cloud */
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    /* WebSocket */
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
 }
 
 tasks.named('test') {
@@ -87,7 +92,7 @@ swaggerSources {
 openapi3 {
     servers = [
             { url = "http://localhost:8080" },
-            { url = "http://13.125.194.230:8080" }
+            { url = "https://api.coffee-meet.site" }
     ]
     title = "API 문서"
     description = "RestDocsWithSwagger Docs"
