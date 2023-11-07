@@ -1,11 +1,14 @@
 package coffeemeet.server.chatting.current.presentation;
 
 import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
+import coffeemeet.server.chatting.current.presentation.dto.ChatStomp.Response;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChattingMessageController {
@@ -39,8 +43,9 @@ public class ChattingMessageController {
   public void message(@Valid ChatStomp.Request request, SimpMessageHeaderAccessor accessor) {
     Long userId = sessions.get(accessor.getSessionId());
     chattingMessageService.createChattingMessage(request.roomId(), request.content(), userId);
-    simpMessageSendingOperations.convertAndSend("/sub/chatting/room/" + request.roomId(),
-        request.content());
+    log.info("채팅 = {}", request.content());
+    simpMessageSendingOperations.convertAndSend("/sub/chatting/rooms/" + request.roomId(),
+        new Response("유명한", request.content(), LocalDateTime.now()));
   }
 
 }
