@@ -290,7 +290,7 @@ class UserServiceTest {
     willDoNothing().given(userCommand).registerOrUpdateNotificationToken(any(), any());
 
     // when
-    userService.registerOrUpdateNotificationToken(any(),any());
+    userService.registerOrUpdateNotificationToken(any(), any());
 
     // then
     then(userCommand).should(only()).registerOrUpdateNotificationToken(any(), any());

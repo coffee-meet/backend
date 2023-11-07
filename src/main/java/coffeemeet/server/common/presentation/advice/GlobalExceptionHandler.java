@@ -52,7 +52,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(InvalidNotificationTokenException.class)
-  public ResponseEntity<ErrorResponse> handleException(InvalidNotificationTokenException exception) {
+  public ResponseEntity<ErrorResponse> handleException(
+      InvalidNotificationTokenException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(exception.getErrorCode()));

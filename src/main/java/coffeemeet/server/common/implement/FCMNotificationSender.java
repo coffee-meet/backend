@@ -23,9 +23,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FCMNotificationSender {
 
-  private final FirebaseMessaging firebaseMessaging;
   private static final String INVALID_FCM_TOKEN_MESSAGE = "사용된 토큰(%s)이 유효하지 않습니다.";
   private static final String PUSH_NOTIFICATION_SEND_FAILURE_MESSAGE = "푸시 알림 전송에 실패했습니다. 토큰: %s";
+  private final FirebaseMessaging firebaseMessaging;
 
   public void sendNotificationByToken(NotificationInfo notificationInfo, String content) {
     if (!notificationInfo.isSubscribedToNotification()) {
