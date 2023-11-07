@@ -21,14 +21,19 @@ public class NotificationInfo {
   @Column(name = "created_firebase_notification_token_at")
   private LocalDateTime createdTokenAt;
 
-  public NotificationInfo(String token, LocalDateTime createdTokenAt) {
+  private NotificationInfo(String token, LocalDateTime createdTokenAt) {
     this.token = token;
     this.isSubscribedToNotification = true;
     this.createdTokenAt = createdTokenAt;
   }
 
-  public NotificationInfo(boolean isSubscribedToNotification) {
-    this.isSubscribedToNotification = isSubscribedToNotification;
+  public static NotificationInfo createApprovedNotificationInfo(String token,
+      LocalDateTime createdTokenAt) {
+    return new NotificationInfo(token, createdTokenAt);
+  }
+
+  public static NotificationInfo createRefusedNotificationInfo() {
+    return new NotificationInfo();
   }
 
 }

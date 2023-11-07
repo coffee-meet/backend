@@ -38,12 +38,13 @@ public class UserCommand {
 
   public void registerOrUpdateNotificationToken(Long userId, String token) {
     User user = userQuery.getUserById(userId);
-    user.updateNotificationInfo(new NotificationInfo(token, LocalDateTime.now()));
+    user.updateNotificationInfo(
+        NotificationInfo.createApprovedNotificationInfo(token, LocalDateTime.now()));
   }
 
   public void unsubscribeNotification(Long userId) {
     User user = userQuery.getUserById(userId);
-    user.updateNotificationInfo(new NotificationInfo(false));
+    user.updateNotificationInfo(NotificationInfo.createRefusedNotificationInfo());
   }
 
 }
