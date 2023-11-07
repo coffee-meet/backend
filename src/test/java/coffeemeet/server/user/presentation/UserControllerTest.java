@@ -181,13 +181,10 @@ class UserControllerTest extends ControllerTestConfig {
                     headerWithName("Authorization").description("토큰")
                 ),
                 responseFields(
-                    fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
                         .description("프로필 사진 url"),
-                    fieldWithPath("birthYear").type(JsonFieldType.STRING).description("생일년도"),
-                    fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일월일"),
                     fieldWithPath("reportedCount").type(JsonFieldType.NUMBER).description("신고 횟수"),
                     fieldWithPath("sanctionPeriod").type(JsonFieldType.STRING).description("제재 기간"),
                     fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
