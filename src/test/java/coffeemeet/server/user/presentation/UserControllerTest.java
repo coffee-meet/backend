@@ -1,8 +1,10 @@
 package coffeemeet.server.user.presentation;
 
+import static coffeemeet.server.common.fixture.entity.UserFixture.notificationTokenHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -13,6 +15,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -37,12 +40,14 @@ import coffeemeet.server.common.fixture.dto.UpdateProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP.Request;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -56,6 +61,12 @@ class UserControllerTest extends ControllerTestConfig {
 
   @MockBean
   private UserService userService;
+
+  @BeforeEach
+  void setUp() {
+    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
+  }
 
   @Test
   @DisplayName("회원가입을 할 수 있다.")
@@ -162,10 +173,8 @@ class UserControllerTest extends ControllerTestConfig {
   void findMyProfileTest() throws Exception {
     // given
     Long userId = 1L;
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
     Response response = MyProfileDtoFixture.myProfileDtoResponse();
 
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(userService.findMyProfile(anyLong())).willReturn(response);
 
@@ -203,9 +212,7 @@ class UserControllerTest extends ControllerTestConfig {
   void updateProfileImageTest() throws Exception {
     // given
     Long userId = 1L;
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
 
     MockMultipartFile file = new MockMultipartFile("image",
@@ -239,14 +246,12 @@ class UserControllerTest extends ControllerTestConfig {
     // given
     Long userId = 1L;
     Request request = UpdateProfileDtoFixture.updateProfileDtoRequest();
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     willDoNothing().given(
         userService).updateProfileInfo(any(), any(), any());
 
-    // when, given
+    // when, then
     mockMvc.perform(patch("/api/v1/users/me")
             .header("Authorization", TOKEN)
             .contentType(MediaType.APPLICATION_JSON)
@@ -274,11 +279,8 @@ class UserControllerTest extends ControllerTestConfig {
     // given
     User user = user();
     String nickname = user.getProfile().getNickname();
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
 
-    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
-
-    // when, given
+    // when, then
     mockMvc.perform(get("/api/v1/users/duplicate")
             .param("nickname", nickname)
         )
@@ -290,6 +292,45 @@ class UserControllerTest extends ControllerTestConfig {
         ))
         .andExpect(status().isOk()
         );
+  }
+
+  @Test
+  @DisplayName("FCM 토큰을 등록하거나 업데이트할 수 있다.")
+  void registerOrUpdateNotificationTokenTest() throws Exception {
+    // given
+    NotificationTokenHTTP.Request request = notificationTokenHTTPRequest();
+
+    // when, then
+    mockMvc.perform(put("/api/v1/users/notification/token")
+            .header(AUTHORIZATION, TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+        ).andDo(document("register-or-update-token",
+            resourceDetails().tag("사용자").description("토큰 등록 및 업데이트"),
+            requestHeaders(
+                headerWithName(AUTHORIZATION).description("토큰")
+            ),
+            requestFields(
+                fieldWithPath("token").type(JsonFieldType.STRING).description("토큰")
+            )
+        ))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("푸시 알림을 거부할 수 있다.")
+  void unsubscribeNotificationTest() throws Exception {
+    // given, when, then
+    mockMvc.perform(put("/api/v1/users/notification/unsubscription")
+            .header(AUTHORIZATION, TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(document("unsubscribe-notification",
+            resourceDetails().tag("사용자").description("알림 거부"),
+            requestHeaders(
+                headerWithName(AUTHORIZATION).description("토큰")
+            )
+        ))
+        .andExpect(status().isOk());
   }
 
 }

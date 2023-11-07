@@ -6,6 +6,7 @@ import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import org.instancio.Instancio;
 
 public class UserFixture {
@@ -31,6 +32,14 @@ public class UserFixture {
         .set(field(Profile::getEmail), new Email("test123@gmail.com"))
         .generate(field(Profile::getNickname), gen -> gen.string().maxLength(20))
         .create();
+  }
+
+  public static NotificationTokenHTTP.Request notificationTokenHTTPRequest() {
+    return Instancio.create(NotificationTokenHTTP.Request.class);
+  }
+
+  public static String token() {
+    return Instancio.create(String.class);
   }
 
 }
