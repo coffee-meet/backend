@@ -5,7 +5,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -13,14 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class FirebaseConfig {
 
-  private final String filename;
-
-  public FirebaseConfig(@Value("${cloud.firebase.key-path}") String filename) {
-    this.filename = filename;
-  }
-
   @Bean
   FirebaseApp firebaseApp() throws IOException {
+    String filename = "firebase-service-key.json";
     ClassPathResource resource = new ClassPathResource(filename);
 
     FirebaseOptions options = FirebaseOptions.builder()
