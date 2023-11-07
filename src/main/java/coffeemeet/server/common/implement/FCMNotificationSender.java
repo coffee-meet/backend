@@ -5,7 +5,7 @@ import static coffeemeet.server.common.execption.GlobalErrorCode.PUSH_NOTIFICATI
 import static com.google.firebase.messaging.MessagingErrorCode.INVALID_ARGUMENT;
 import static com.google.firebase.messaging.MessagingErrorCode.UNREGISTERED;
 
-import coffeemeet.server.common.execption.InvalidNotificationTokenException;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.NotificationFailException;
 import coffeemeet.server.user.domain.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -66,7 +66,7 @@ public class FCMNotificationSender {
     MessagingErrorCode messagingErrorCode = e.getMessagingErrorCode();
 
     if (messagingErrorCode == UNREGISTERED || messagingErrorCode == INVALID_ARGUMENT) {
-      throw new InvalidNotificationTokenException(INVALID_FCM_TOKEN,
+      throw new InvalidInputException(INVALID_FCM_TOKEN,
           String.format(INVALID_FCM_TOKEN_MESSAGE, token));
     }
     throw new NotificationFailException(PUSH_NOTIFICATION_SEND_FAILURE,

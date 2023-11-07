@@ -4,7 +4,6 @@ import coffeemeet.server.common.execption.DataLengthExceededException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.common.execption.InvalidInputException;
-import coffeemeet.server.common.execption.InvalidNotificationTokenException;
 import coffeemeet.server.common.execption.MissMatchException;
 import coffeemeet.server.common.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -46,14 +45,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(InvalidInputException.class)
   public ResponseEntity<ErrorResponse> handleException(InvalidInputException exception) {
-    log.info(exception.getMessage(), exception);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(ErrorResponse.of(exception.getErrorCode()));
-  }
-
-  @ExceptionHandler(InvalidNotificationTokenException.class)
-  public ResponseEntity<ErrorResponse> handleException(
-      InvalidNotificationTokenException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(exception.getErrorCode()));
