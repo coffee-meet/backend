@@ -9,7 +9,6 @@ import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
-import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -56,10 +55,8 @@ public class UserService {
 
     User user = new User(new OAuthInfo(memberDetail.oAuthProvider(),
         memberDetail.oAuthProviderId()),
-        Profile.builder().name(memberDetail.name()).nickname(nickname)
-            .email(new Email(memberDetail.email()))
-            .profileImageUrl(profileImage)
-            .birth(new Birth(memberDetail.birthYear(), memberDetail.birthDay())).build());
+        new Profile(nickname, new Email(memberDetail.email()), profileImage)
+    );
 
     Long userId = userCommand.saveUser(user);
     User newUser = userQuery.getUserById(userId);

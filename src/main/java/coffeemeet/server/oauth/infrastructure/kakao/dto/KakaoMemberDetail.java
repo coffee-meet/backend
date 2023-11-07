@@ -13,10 +13,7 @@ public record KakaoMemberDetail(
 
   public OAuthMemberDetail toOAuthMemberDetail() {
     return OAuthMemberDetail.of(
-        kakaoAccount.name,
         kakaoAccount.profile.profileImageUrl,
-        kakaoAccount.birthyear,
-        kakaoAccount.birthday,
         kakaoAccount.email,
         OAuthProvider.KAKAO,
         String.valueOf(id)
@@ -26,10 +23,7 @@ public record KakaoMemberDetail(
   @JsonNaming(SnakeCaseStrategy.class)
   private record KakaoAccount(
       Profile profile,
-      String name,
-      String email,
-      String birthyear,
-      String birthday
+      String email
   ) {
 
   }
