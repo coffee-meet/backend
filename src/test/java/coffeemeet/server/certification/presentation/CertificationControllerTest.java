@@ -51,8 +51,6 @@ class CertificationControllerTest extends ControllerTestConfig {
     RefreshToken refreshToken = refreshToken();
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
-    willDoNothing().given(certificationService)
-        .registerCertification(anyLong(), any(), any(), any(), any());
   }
 
   @Test
