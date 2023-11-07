@@ -23,6 +23,7 @@ public class NotificationInfo {
 
   public NotificationInfo(String token, LocalDateTime createdTokenAt) {
     this.token = token;
+    this.isSubscribedToNotification = true;
     this.createdTokenAt = createdTokenAt;
   }
 
