@@ -44,6 +44,9 @@ public class User extends AdvancedBaseEntity {
   @Column(nullable = false)
   private ReportInfo reportInfo;
 
+  @Embedded
+  private NotificationInfo notificationInfo;
+
   @Column(nullable = false)
   private boolean isDeleted;
 
@@ -57,12 +60,16 @@ public class User extends AdvancedBaseEntity {
     this.isDeleted = false;
   }
 
-  public void updateProfileImageUrl(String newProfileImageUrl) {
+  public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
     this.profile.updateProfileImageUrl(newProfileImageUrl);
   }
 
-  public void updateNickname(String newNickname) {
+  public void updateNickname(@NonNull String newNickname) {
     this.profile.updateNickname(newNickname);
+  }
+
+  public void updateNotificationInfo(@NonNull NotificationInfo newNotificationInfo) {
+    this.notificationInfo = newNotificationInfo;
   }
 
 }

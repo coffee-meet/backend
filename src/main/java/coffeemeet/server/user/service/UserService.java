@@ -118,4 +118,12 @@ public class UserService {
     mediaManager.delete(currentKey);
   }
 
+  public void registerOrUpdateNotificationToken(Long useId, String token) {
+    userCommand.registerOrUpdateNotificationToken(useId, token);
+  }
+
+  public void unsubscribeNotification(Long userId) {
+    userCommand.unsubscribeNotification(userId);
+  }
+
 }

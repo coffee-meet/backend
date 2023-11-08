@@ -1,8 +1,10 @@
 package coffeemeet.server.user.implement;
 
+import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import coffeemeet.server.user.infrastructure.UserRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,17 @@ public class UserCommand {
   public void updateUserInfo(User user, String nickname) {
     userQuery.hasDuplicatedNickname(nickname);
     user.updateNickname(nickname);
+  }
+
+  public void registerOrUpdateNotificationToken(Long userId, String token) {
+    User user = userQuery.getUserById(userId);
+    user.updateNotificationInfo(
+        NotificationInfo.createApprovedNotificationInfo(token, LocalDateTime.now()));
+  }
+
+  public void unsubscribeNotification(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.updateNotificationInfo(NotificationInfo.createRefusedNotificationInfo());
   }
 
 }

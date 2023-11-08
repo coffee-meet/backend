@@ -1,5 +1,6 @@
 package coffeemeet.server.common.config;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -25,12 +26,16 @@ public class AWSConfig {
   }
 
   @Bean
-  public AmazonS3 amazonS3Client() {
-    BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+  public AWSCredentials awsCredentials() {
+    return new BasicAWSCredentials(accessKey, secretKey);
+  }
+
+  @Bean
+  public AmazonS3 amazonS3Client(AWSCredentials awsCredentials) {
     return AmazonS3ClientBuilder
         .standard()
         .withRegion(region)
-        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
         .build();
   }
 
