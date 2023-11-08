@@ -9,8 +9,11 @@ jobs:
   test_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 현재 작업중인 Repository 가져온다.
+      - name: 현재 작업중인 Repository를 서브 모듈과 함께 가져온다.
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.ACTION_TOKEN }}
 
       - name: CD 프로세스를 최적화 하기 위해 Gradle 정보를 캐싱한다.
         uses: actions/cache@v3
