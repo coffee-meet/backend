@@ -31,6 +31,9 @@ jobs:
       - name: .env 파일에 깃 Secrets 로부터 값을 가져와 기록한다.
         run: echo "${{ secrets.ENV_PROPERTIES }}" > ./.env
 
+      - name: firebase-service-key.json 파일에 깃 Secrets 로부터 값을 가져와 기록한다.
+        run: echo "${{ secrets.FIREBASE_KEY }}" > ./src/main/resources/firebase-service-key.json
+
       - name: Gradle 명령 실행을 위한 권한을 부여한다.
         run: chmod +x gradlew
 
