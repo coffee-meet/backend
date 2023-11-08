@@ -8,6 +8,7 @@ import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -15,7 +16,7 @@ import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profile {
 
   private static final int NICKNAME_MAX_LENGTH = 20;
