@@ -19,7 +19,7 @@ public class UserFixture {
   }
 
   private static Profile profile() {
-    return Instancio.of(Profile.class).set(field(Profile::getBirth), birth())
+    return Instancio.of(Profile.class)
         .set(field(Profile::getEmail), new Email("test123@gmail.com"))
         .generate(field(Profile::getNickname), gen -> gen.string().maxLength(20)).create();
   }
