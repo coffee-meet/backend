@@ -15,7 +15,8 @@ public record KakaoMemberDetail(
   private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
 
   public OAuthMemberDetail toOAuthMemberDetail() {
-    String profileImageUrl = kakaoAccount.profile != null ? kakaoAccount.profile.profileImageUrl : null;
+    String profileImageUrl =
+        kakaoAccount.profile != null ? kakaoAccount.profile.profileImageUrl : null;
 
     return OAuthMemberDetail.of(
         getProfileImageOrDefault(profileImageUrl),
@@ -23,6 +24,13 @@ public record KakaoMemberDetail(
         OAuthProvider.KAKAO,
         String.valueOf(id)
     );
+  }
+
+  private String getProfileImageOrDefault(String profileImageUrl) {
+    if (profileImageUrl == null) {
+      profileImageUrl = DEFAULT_IMAGE_URL;
+    }
+    return profileImageUrl;
   }
 
   @JsonNaming(SnakeCaseStrategy.class)
@@ -39,13 +47,6 @@ public record KakaoMemberDetail(
       String profileImageUrl
   ) {
 
-  }
-
-  private String getProfileImageOrDefault(String profileImageUrl) {
-    if (profileImageUrl == null) {
-      profileImageUrl = DEFAULT_IMAGE_URL;
-    }
-    return profileImageUrl;
   }
 
 }
