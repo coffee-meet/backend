@@ -1,11 +1,17 @@
 package coffeemeet.server.chatting.current.service;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 
+import coffeemeet.server.chatting.current.domain.ChattingMessage;
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,21 +35,26 @@ class ChattingMessageServiceTest {
   @Mock
   private UserQuery userQuery;
 
-  @DisplayName("채팅 메세지를 만들 수 있다.")
+  @DisplayName("채팅 메세지를 만들고, 클라이언트에 채팅 응답을 반환할 수 있다.")
   @Test
-  void createChattingMessageTest() {
+  void chattingTest() {
     // given
-    Long roomId = 1L;
+    User user = UserFixture.user();
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     String content = "내용";
-    Long userId = 1L;
+    ChattingMessage chattingMessage = ChattingFixture.chattingMessage(content);
+
+    given(userQuery.getUserById(anyLong())).willReturn(user);
+    given(chattingRoomQuery.getChattingRoomById(anyLong())).willReturn(chattingRoom);
+    given(chattingMessageCommand.saveChattingMessage(content, chattingRoom, user)).willReturn(
+        chattingMessage);
 
     // when
-    chattingMessageService.createChattingMessage(roomId, content, userId);
+    Response response = chattingMessageService.chatting(chattingRoom.getId(), content,
+        user.getId());
 
     // then
-    then(userQuery).should(only()).getUserById(userId);
-    then(chattingRoomQuery).should(only()).getChattingRoomById(roomId);
-    then(chattingMessageCommand).should(only()).saveChattingMessage(any(), any(), any());
+    assertThat(response.content()).isEqualTo(content);
   }
 
 }
