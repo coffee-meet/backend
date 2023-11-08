@@ -1,10 +1,9 @@
 package coffeemeet.server.chatting.current.presentation;
 
 import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
-import coffeemeet.server.chatting.current.presentation.dto.ChatStomp.Response;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import jakarta.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,10 @@ public class ChattingMessageController {
   @MessageMapping("/chatting/messages")
   public void message(@Valid ChatStomp.Request request, SimpMessageHeaderAccessor accessor) {
     Long userId = sessions.get(accessor.getSessionId());
-    chattingMessageService.createChattingMessage(request.roomId(), request.content(), userId);
-    log.info("채팅 = {}", request.content());
+    ChattingDto.Response response = chattingMessageService.chatting(request.roomId(),
+        request.content(), userId);
     simpMessageSendingOperations.convertAndSend("/sub/chatting/rooms/" + request.roomId(),
-        new Response("유명한", request.content(), LocalDateTime.now()));
+        ChatStomp.Response.from(response));
   }
 
 }
