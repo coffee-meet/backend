@@ -1,3 +1,3 @@
-[submodule "secret"]
-	path = secret
+[submodule "src/main/resources/secret"]
+	path = src/main/resources/secret
 	url = https://github.com/coffee-meet/secret.git
