@@ -118,6 +118,14 @@ tasks.withType(GenerateSwaggerUI) {
     }
 }
 
+task copyPrivate(type: Copy) {
+    copy {
+        from './secret'
+        include "firebase-service-key.json"
+        into 'src/main/resources'
+    }
+}
+
 bootJar {
     dependsOn generateSwaggerUISample
     from("${generateSwaggerUISample.outputDir}") {
