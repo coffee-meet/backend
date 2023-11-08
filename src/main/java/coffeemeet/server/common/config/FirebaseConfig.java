@@ -14,8 +14,8 @@ public class FirebaseConfig {
 
   @Bean
   FirebaseApp firebaseApp() throws IOException {
-    String filename = "firebase-service-key.json";
-    ClassPathResource resource = new ClassPathResource(filename);
+    String path = "secret/firebase-service-key.json";
+    ClassPathResource resource = new ClassPathResource(path);
 
     FirebaseOptions options = FirebaseOptions.builder()
         .setCredentials(GoogleCredentials.fromStream(resource.getInputStream())).build();
