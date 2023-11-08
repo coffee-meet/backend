@@ -9,7 +9,6 @@ import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
-import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -32,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-  private static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
-
   private final MediaManager mediaManager;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
 
@@ -52,14 +49,11 @@ public class UserService {
 
     userQuery.hasDuplicatedUser(memberDetail.oAuthProvider(), memberDetail.oAuthProviderId());
     userQuery.hasDuplicatedNickname(nickname);
-    String profileImage = getProfileImageOrDefault(memberDetail.profileImage());
 
     User user = new User(new OAuthInfo(memberDetail.oAuthProvider(),
         memberDetail.oAuthProviderId()),
-        Profile.builder().name(memberDetail.name()).nickname(nickname)
-            .email(new Email(memberDetail.email()))
-            .profileImageUrl(profileImage)
-            .birth(new Birth(memberDetail.birthYear(), memberDetail.birthDay())).build());
+        new Profile(nickname, new Email(memberDetail.email()), memberDetail.profileImage())
+    );
 
     Long userId = userCommand.saveUser(user);
     User newUser = userQuery.getUserById(userId);
@@ -116,13 +110,6 @@ public class UserService {
 
   public void deleteUser(Long userId) {
     userCommand.deleteUser(userId);
-  }
-
-  private String getProfileImageOrDefault(String profileImage) {
-    if (profileImage == null) {
-      profileImage = DEFAULT_IMAGE_URL;
-    }
-    return profileImage;
   }
 
   private void deleteCurrentProfileImage(String profileImageUrl) {
