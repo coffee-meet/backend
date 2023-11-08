@@ -31,9 +31,6 @@ jobs:
       - name: .env 파일에 깃 Secrets 로부터 값을 가져와 기록한다.
         run: echo "${{ secrets.ENV_PROPERTIES }}" > ./.env
 
-      - name: firebase-service-key.json 파일에 깃 Secrets 로부터 값을 가져와 기록한다.
-        run: echo "${{ secrets.FIREBASE_KEY }}" > ./firebase-service-key.json
-
       - name: Gradle 명령 실행을 위한 권한을 부여한다.
         run: chmod +x gradlew
 
@@ -61,15 +58,6 @@ jobs:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.PRIVATE_KEY }}
           source: "./.env"
-          target: "/home/ubuntu"
-
-      - name: firebase key 파일을 Ec2 서버의 기본 경로에 전달한다.
-        uses: appleboy/scp-action@master
-        with:
-          username: ubuntu
-          host: ${{ secrets.HOST }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          source: "./firebase-service-key.json"
           target: "/home/ubuntu"
 
       - name: 기존의 Jar 이미지를 삭제하고, Docker Hub 를 통해 새 Jar 이미지를 실행한다.
