@@ -10,8 +10,8 @@ public class ChattingRoomService {
 
   private final ChattingRoomCommand chattingRoomCommand;
 
-  public void createChattingRoom() {
-    chattingRoomCommand.saveChattingRoom();
+  public Long createChattingRoom() {
+    return chattingRoomCommand.saveChattingRoom().getId();
   }
 
 }

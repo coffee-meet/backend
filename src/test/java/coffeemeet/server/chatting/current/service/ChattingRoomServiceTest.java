@@ -1,9 +1,11 @@
 package coffeemeet.server.chatting.current.service;
 
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
+import static org.mockito.BDDMockito.given;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
+import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +25,15 @@ class ChattingRoomServiceTest {
   @DisplayName("채팅방을 만들 수 있다.")
   @Test
   void createChattingRoomTest() {
-    // given, when
-    chattingRoomService.createChattingRoom();
+    // given
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+    given(chattingRoomCommand.saveChattingRoom()).willReturn(chattingRoom);
+
+    // when
+    Long roomId = chattingRoomService.createChattingRoom();
 
     // then
-    then(chattingRoomCommand).should(only()).saveChattingRoom();
+    Assertions.assertThat(roomId).isEqualTo(chattingRoom.getId());
   }
 
 }
