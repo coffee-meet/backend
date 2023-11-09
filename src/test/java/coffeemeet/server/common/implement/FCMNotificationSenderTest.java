@@ -36,7 +36,7 @@ class FCMNotificationSenderTest {
     given(firebaseMessaging.send(any())).willReturn(any());
 
     // when
-    fcmNotificationSender.sendNotificationByToken(notificationInfo, content);
+    fcmNotificationSender.sendNotification(notificationInfo, content);
 
     // then
     then(firebaseMessaging).should(only()).send(any());
@@ -51,7 +51,7 @@ class FCMNotificationSenderTest {
     given(firebaseMessaging.sendMulticast(any())).willReturn(any());
 
     // when
-    fcmNotificationSender.sendNotificationByTokens(notificationInfos, content);
+    fcmNotificationSender.sendMultiNotifications(notificationInfos, content);
 
     // then
     then(firebaseMessaging).should(only()).sendMulticast(any());
