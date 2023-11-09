@@ -1,8 +1,10 @@
 package coffeemeet.server.chatting.current.service;
 
+import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,12 @@ public class ChattingMessageService {
   private final ChattingRoomQuery chattingRoomQuery;
   private final UserQuery userQuery;
 
-  public void createChattingMessage(Long roomId, String content, Long userId) {
+  public ChattingDto.Response chatting(Long roomId, String content, Long userId) {
     User user = userQuery.getUserById(userId);
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
-    chattingMessageCommand.saveChattingMessage(content, chattingRoom, user);
+    ChattingMessage chattingMessage = chattingMessageCommand.saveChattingMessage(content,
+        chattingRoom, user);
+    return ChattingDto.Response.of(user, chattingMessage);
   }
 
 }

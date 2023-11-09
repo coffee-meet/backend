@@ -14,7 +14,9 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 import coffeemeet.server.auth.domain.AuthTokens;
@@ -27,7 +29,6 @@ import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
-import coffeemeet.server.user.domain.Birth;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -173,12 +174,9 @@ class UserServiceTest {
 
     // then
     assertAll(
-        () -> assertThat(result.name()).isEqualTo(response.name()),
         () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
         () -> assertThat(result.email()).isEqualTo(response.email()),
         () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
-        () -> assertThat(result.birthYear()).isEqualTo(response.birthYear()),
-        () -> assertThat(result.birthDay()).isEqualTo(response.birthDay()),
         () -> assertThat(result.department()).isEqualTo(response.department()),
         () -> assertThat(result.interests()).isEqualTo(response.interests())
     );
@@ -231,13 +229,8 @@ class UserServiceTest {
   @Test
   void updateProfileInfo() {
     // given
-    User user = new User(new OAuthInfo(KAKAO, "123"), Profile.builder()
-        .nickname("닉네임")
-        .name("이름")
-        .birth(new Birth("2001", "1018"))
-        .profileImageUrl("http://imageUrl")
-        .email(new Email("test123@gmail.com"))
-        .build());
+    User user = new User(new OAuthInfo(KAKAO, "123"),
+        new Profile("닉네임", new Email("test123@gmail.com"), "http://imageUrl"));
 
     String newNickname = "새닉네임";
     ArrayList<Keyword> newKeywords = new ArrayList<>(Arrays.asList(COOK, GAME));
@@ -279,6 +272,32 @@ class UserServiceTest {
     // then
     assertThatCode(() -> userService.checkDuplicatedNickname(nickname))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("푸시 알림 토큰을 등록 및 업데이트 할 수 있다.")
+  void registerOrUpdateNotificationTokenTest() {
+    // given
+    willDoNothing().given(userCommand).registerOrUpdateNotificationToken(any(), any());
+
+    // when
+    userService.registerOrUpdateNotificationToken(any(), any());
+
+    // then
+    then(userCommand).should(only()).registerOrUpdateNotificationToken(any(), any());
+  }
+
+  @Test
+  @DisplayName("푸시 알림을 거부할 수 있다.")
+  void unsubscribeNotificationTest() {
+    // given
+    willDoNothing().given(userCommand).unsubscribeNotification(any());
+
+    // when
+    userService.unsubscribeNotification(any());
+
+    // then
+    then(userCommand).should(only()).unsubscribeNotification(any());
   }
 
 }

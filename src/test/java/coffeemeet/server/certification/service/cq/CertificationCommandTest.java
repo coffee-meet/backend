@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CertificationCommandTest {
 
   @Mock
-  Consumer<Certification> consumer;
+  private Consumer<Certification> consumer;
   @InjectMocks
   private CertificationCommand certificationCommand;
   @Mock

@@ -13,8 +13,6 @@ public class MyProfileDtoFixture {
 
   public static MyProfileDto.Response myProfileDtoResponse() {
     return Instancio.of(MyProfileDto.Response.class)
-        .generate(field("birthYear"), gen -> gen.ints().range(1000, 9999).asString())
-        .generate(field("birthDay"), gen -> gen.ints().range(1000, 9999).asString())
         .set(field(Response::interests), keywords())
         .set(field("email"), "test123@gmail.com")
         .set(field("sanctionPeriod"), LocalDateTime.of(1999, 10, 13, 1, 1, 1, 1))

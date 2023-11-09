@@ -9,12 +9,9 @@ import java.util.List;
 public sealed interface MyProfileDto permits MyProfileDto.Response {
 
   record Response(
-      String name,
       String nickname,
       String email,
       String profileImageUrl,
-      String birthYear,
-      String birthDay,
       int reportedCount,
       LocalDateTime sanctionPeriod,
       Department department,
@@ -23,12 +20,9 @@ public sealed interface MyProfileDto permits MyProfileDto.Response {
 
     public static Response of(User user, List<Keyword> interests, Department department) {
       return new Response(
-          user.getProfile().getName(),
           user.getProfile().getNickname(),
           user.getProfile().getEmail().getEmail(),
           user.getProfile().getProfileImageUrl(),
-          user.getProfile().getBirth().getBirthYear(),
-          user.getProfile().getBirth().getBirthDay(),
           user.getReportInfo().getReportedCount(),
           user.getReportInfo().getSanctionPeriod(),
           department,

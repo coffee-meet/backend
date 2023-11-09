@@ -9,8 +9,6 @@ public class OAuthUserInfoDtoFixture {
 
   public static OAuthMemberDetail response() {
     return Instancio.of(OAuthMemberDetail.class)
-        .generate(field("birthYear"), gen -> gen.ints().range(1000, 9999).asString())
-        .generate(field("birthDay"), gen -> gen.ints().range(1000, 9999).asString())
         .set(field("email"), "test123@gmail.com")
         .create();
   }
