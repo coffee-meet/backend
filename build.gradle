@@ -78,6 +78,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:sockjs-client:1.5.1'
     implementation 'org.webjars:stomp-websocket:2.3.4'
+
+    /* Random String */
+    implementation group: 'com.github.javafaker', name: 'javafaker', version: '1.0.2'
 }
 
 tasks.named('test') {
