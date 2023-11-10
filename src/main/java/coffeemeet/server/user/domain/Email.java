@@ -4,6 +4,7 @@ import static coffeemeet.server.user.exception.UserErrorCode.INVALID_EMAIL;
 
 import coffeemeet.server.common.execption.MissMatchException;
 import coffeemeet.server.common.util.Patterns;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,11 +19,12 @@ public class Email {
 
   private static final String INVALID_EMAIL_MESSAGE = "올바르지 않은 이메일입니다.";
 
-  private String email;
+  @Column(nullable = false, name = "email")
+  private String value;
 
-  public Email(@NonNull String email) {
-    validateEmail(email);
-    this.email = email;
+  public Email(@NonNull String value) {
+    validateEmail(value);
+    this.value = value;
   }
 
   private void validateEmail(String email) {
