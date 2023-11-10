@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email {
 
-  private static final String INVALID_EMAIL_MESSAGE = "올바르지 않은 이메일입니다.";
+  private static final String INVALID_EMAIL_MESSAGE = "올바르지 않은 이메일(%s)입니다.";
 
   @Column(nullable = false, name = "email")
   private String value;
