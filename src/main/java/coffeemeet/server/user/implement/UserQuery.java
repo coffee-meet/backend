@@ -10,6 +10,7 @@ import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,10 @@ public class UserQuery {
             NOT_EXIST_USER,
             String.format(NOT_EXIST_USER_MESSAGE, userId))
         );
+  }
+
+  public Set<User> getUsersByIds(Set<Long> userIds) {
+    return userRepository.findByIdIn(userIds);
   }
 
   public User getUserByOAuthInfo(OAuthProvider oAuthProvider, String oAuthProviderId) {
