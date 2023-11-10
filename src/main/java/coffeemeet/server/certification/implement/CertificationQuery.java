@@ -24,4 +24,11 @@ public class CertificationQuery {
             String.format(CERTIFICATION_NOT_FOUND_MESSAGE, userId)));
   }
 
+  public String getCompanyNameByUserId(Long userId) {
+    return certificationRepository.findByUserId(userId)
+        .orElseThrow(() -> new InvalidInputException(CERTIFICATION_NOT_FOUND,
+            String.format(CERTIFICATION_NOT_FOUND_MESSAGE, userId))
+        ).getCompanyName();
+  }
+
 }
