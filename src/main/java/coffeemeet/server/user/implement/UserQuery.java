@@ -35,7 +35,7 @@ public class UserQuery {
         );
   }
 
-  public Set<User> getUsersByIds(Set<Long> userIds) {
+  public Set<User> getUsersByIdSet(Set<Long> userIds) {
     return userRepository.findByIdIn(userIds);
   }
 
