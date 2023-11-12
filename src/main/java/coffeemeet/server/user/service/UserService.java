@@ -4,6 +4,7 @@ import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
+import coffeemeet.server.auth.domain.LoginDetails;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.implement.MediaManager;
@@ -62,10 +63,15 @@ public class UserService {
     return authTokensGenerator.generate(newUser.getId());
   }
 
-  public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
+  public LoginDetails login(OAuthProvider oAuthProvider, String authCode) {
     OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
+
     User user = userQuery.getUserByOAuthInfo(oAuthProvider, memberDetail.oAuthProviderId());
-    return authTokensGenerator.generate(user.getId());
+    List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+    Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+
+    AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+    return createLoginDetails(user, interests, certification, authTokens);
   }
 
   public UserProfileDto.Response findUserProfile(long userId) {
@@ -112,11 +118,6 @@ public class UserService {
     userCommand.deleteUser(userId);
   }
 
-  private void deleteCurrentProfileImage(String profileImageUrl) {
-    String currentKey = mediaManager.extractKey(profileImageUrl,
-        PROFILE_IMAGE);
-    mediaManager.delete(currentKey);
-  }
 
   public void registerOrUpdateNotificationToken(Long useId, String token) {
     userCommand.registerOrUpdateNotificationToken(useId, token);
@@ -124,6 +125,24 @@ public class UserService {
 
   public void unsubscribeNotification(Long userId) {
     userCommand.unsubscribeNotification(userId);
+  }
+
+  private LoginDetails createLoginDetails(User user, List<Keyword> interests,
+      Certification certification, AuthTokens authTokens) {
+    return LoginDetails.of(
+        authTokens.accessToken(),
+        authTokens.refreshToken(),
+        user.getProfile().getNickname(),
+        user.getProfile().getProfileImageUrl(),
+        certification.getCompanyName(),
+        certification.getDepartment(),
+        interests);
+  }
+
+  private void deleteCurrentProfileImage(String profileImageUrl) {
+    String currentKey = mediaManager.extractKey(profileImageUrl,
+        PROFILE_IMAGE);
+    mediaManager.delete(currentKey);
   }
 
 }
