@@ -110,7 +110,6 @@ class UserControllerTest extends ControllerTestConfig {
   void loginTest() throws Exception {
     // given
     LoginDetails loginDetails = LoginDetailsFixture.loginDetails();
-//    AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
     given(userService.login(any(), any())).willReturn(loginDetails);
 
@@ -137,7 +136,7 @@ class UserControllerTest extends ControllerTestConfig {
                     .description("프로필 사진 url"),
                 fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사 이름"),
                 fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
-                fieldWithPath("keywords").type(JsonFieldType.ARRAY).description("관심사")
+                fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
             )
         ))
         .andExpect(status().isOk())

@@ -139,7 +139,7 @@ class UserServiceTest {
             user.getProfile().getProfileImageUrl()),
         () -> assertThat(result.companyName()).isEqualTo(certification.getCompanyName()),
         () -> assertThat(result.department()).isEqualTo(certification.getDepartment()),
-        () -> assertThat(result.keywords()).isEqualTo(keywords)
+        () -> assertThat(result.interests()).isEqualTo(keywords)
     );
   }
 
