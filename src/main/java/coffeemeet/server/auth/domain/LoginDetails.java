@@ -11,7 +11,7 @@ public record LoginDetails(
     String profileImageUrl,
     String companyName,
     Department department,
-    List<Keyword> keywords
+    List<Keyword> interests
 ) {
 
   public static LoginDetails of(
@@ -21,7 +21,7 @@ public record LoginDetails(
       String profileImageUrl,
       String companyName,
       Department department,
-      List<Keyword> keywords
+      List<Keyword> interests
   ) {
     return new LoginDetails(
         accessToken,
@@ -30,7 +30,7 @@ public record LoginDetails(
         profileImageUrl,
         companyName,
         department,
-        keywords
+        interests
     );
   }
 
