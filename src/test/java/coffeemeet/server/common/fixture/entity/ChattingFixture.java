@@ -5,6 +5,8 @@ import static org.instancio.Select.field;
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
+import coffeemeet.server.user.domain.User;
+import java.util.List;
 import org.instancio.Instancio;
 
 public class ChattingFixture {
@@ -20,6 +22,13 @@ public class ChattingFixture {
         .create();
   }
 
+  public static List<ChattingMessage> chattingMessages(ChattingRoom room, User user, int size) {
+    return Instancio.ofList(ChattingMessage.class).size(size)
+        .set(field(ChattingMessage::getChattingRoom), room)
+        .set(field(ChattingMessage::getUser), user)
+        .create();
+  }
+
   public static ChattingRoom chattingRoom() {
     return Instancio.of(ChattingRoom.class)
         .create();
@@ -29,5 +38,4 @@ public class ChattingFixture {
     return Instancio.of(ChatStomp.Request.class)
         .create();
   }
-
 }
