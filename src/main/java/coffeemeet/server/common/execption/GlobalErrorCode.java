@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum GlobalErrorCode implements ErrorCode {
 
   VALIDATION_ERROR("G000", "유효하지 않은 입력입니다."),
+  PARAMETER_INPUT_MISSING("G000", "입력 파라미터가 없습니다."),
   INVALID_FCM_TOKEN("G004", "유효하지 않은 FCM토큰입니다."),
   INVALID_S3_URL("G004", "유효하지 않은 s3 URL 입니다."),
   STOMP_ACCESSOR_NOT_FOUND("G005", "웹소켓 연결을 할 수 없습니다."),
