@@ -31,10 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.AuthTokens;
-import coffeemeet.server.auth.domain.LoginDetails;
+import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.LoginDetailsFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
@@ -46,6 +45,7 @@ import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP.Request;
 import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto.Response;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
@@ -109,9 +109,9 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    LoginDetails loginDetails = LoginDetailsFixture.loginDetails();
+    LoginDetailsDto.Response loginDetailsDto = LoginDetailsDtoFixture.loginDetailsDto();
 
-    given(userService.login(any(), any())).willReturn(loginDetails);
+    given(userService.login(any(), any())).willReturn(loginDetailsDto);
 
     // when, then
     mockMvc.perform(get("/api/v1/users/login/{oAuthProvider}", OAuthProvider.KAKAO)
@@ -119,7 +119,7 @@ class UserControllerTest extends ControllerTestConfig {
             .param("authCode", "authCode"))
         .andDo(document("user-login",
             resourceDetails().tag("사용자").description("로그인")
-                .responseSchema(Schema.schema("LoginDetails")),
+                .responseSchema(Schema.schema("LoginDetailsHttp")),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             pathParameters(
@@ -140,7 +140,7 @@ class UserControllerTest extends ControllerTestConfig {
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(loginDetails)));
+        .andExpect(content().string(objectMapper.writeValueAsString(loginDetailsDto)));
   }
 
   @Test
@@ -225,7 +225,7 @@ class UserControllerTest extends ControllerTestConfig {
         "image/png",
         "testImage".getBytes());
 
-    // when, given
+    // when, then
     mockMvc.perform((multipart("/api/v1/users/me/profile-image")
             .file("profileImage", file.getBytes())
             .header("Authorization", TOKEN)

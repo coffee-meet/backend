@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
-import coffeemeet.server.auth.domain.LoginDetails;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
@@ -40,6 +39,7 @@ import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;
@@ -128,7 +128,7 @@ class UserServiceTest {
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 
     // when
-    LoginDetails result = userService.login(KAKAO, authCode);
+    LoginDetailsDto.Response result = userService.login(KAKAO, authCode);
 
     // then
     assertAll(
