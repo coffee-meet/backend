@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
+import coffeemeet.server.auth.domain.LoginDetails;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
@@ -113,6 +114,8 @@ class UserServiceTest {
   void loginTest() {
     // given
     User user = user();
+    Certification certification = certification();
+    List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
     String authCode = "authCode";
     AuthTokens authTokens = AuthTokensFixture.authTokens();
 
@@ -120,14 +123,24 @@ class UserServiceTest {
 
     given(oAuthMemberClientComposite.fetch(any(), any())).willReturn(response);
     given(userQuery.getUserByOAuthInfo(any(), any())).willReturn(user);
+    given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(keywords);
+    given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 
     // when
-    AuthTokens result = userService.login(KAKAO, authCode);
+    LoginDetails result = userService.login(KAKAO, authCode);
 
     // then
-    assertThat(result.accessToken()).isEqualTo(authTokens.accessToken());
-    assertThat(result.refreshToken()).isEqualTo(authTokens.refreshToken());
+    assertAll(
+        () -> assertThat(result.accessToken()).isEqualTo(authTokens.accessToken()),
+        () -> assertThat(result.refreshToken()).isEqualTo(authTokens.refreshToken()),
+        () -> assertThat(result.nickname()).isEqualTo(user.getProfile().getNickname()),
+        () -> assertThat(result.profileImageUrl()).isEqualTo(
+            user.getProfile().getProfileImageUrl()),
+        () -> assertThat(result.companyName()).isEqualTo(certification.getCompanyName()),
+        () -> assertThat(result.department()).isEqualTo(certification.getDepartment()),
+        () -> assertThat(result.keywords()).isEqualTo(keywords)
+    );
   }
 
   @DisplayName("사용자의 프로필을 조회할 수 있다.")

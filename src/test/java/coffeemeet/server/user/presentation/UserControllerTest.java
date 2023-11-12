@@ -31,8 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.AuthTokens;
+import coffeemeet.server.auth.domain.LoginDetails;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.dto.LoginDetailsFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
@@ -107,9 +109,10 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
+    LoginDetails loginDetails = LoginDetailsFixture.loginDetails();
+//    AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
-    given(userService.login(any(), any())).willReturn(authTokens);
+    given(userService.login(any(), any())).willReturn(loginDetails);
 
     // when, then
     mockMvc.perform(get("/api/v1/users/login/{oAuthProvider}", OAuthProvider.KAKAO)
@@ -117,7 +120,7 @@ class UserControllerTest extends ControllerTestConfig {
             .param("authCode", "authCode"))
         .andDo(document("user-login",
             resourceDetails().tag("사용자").description("로그인")
-                .responseSchema(Schema.schema("AuthTokens")),
+                .responseSchema(Schema.schema("LoginDetails")),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             pathParameters(
@@ -128,11 +131,17 @@ class UserControllerTest extends ControllerTestConfig {
             ),
             responseFields(
                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
+                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                    .description("프로필 사진 url"),
+                fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사 이름"),
+                fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
+                fieldWithPath("keywords").type(JsonFieldType.ARRAY).description("관심사")
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
+        .andExpect(content().string(objectMapper.writeValueAsString(loginDetails)));
   }
 
   @Test
