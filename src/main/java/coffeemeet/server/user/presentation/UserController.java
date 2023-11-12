@@ -1,7 +1,7 @@
 package coffeemeet.server.user.presentation;
 
 import coffeemeet.server.auth.domain.AuthTokens;
-import coffeemeet.server.auth.domain.LoginDetails;
+import coffeemeet.server.user.presentation.dto.LoginDetailsHttp;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
@@ -12,8 +12,9 @@ import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
 import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
-import coffeemeet.server.user.service.dto.UserProfileDto.Response;
+import coffeemeet.server.user.service.dto.UserProfileDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -46,14 +47,15 @@ public class UserController {
   }
 
   @GetMapping("/login/{oAuthProvider}")
-  public ResponseEntity<LoginDetails> login(@PathVariable OAuthProvider oAuthProvider,
+  public ResponseEntity<LoginDetailsHttp.Response> login(@PathVariable OAuthProvider oAuthProvider,
       @RequestParam String authCode) {
-    return ResponseEntity.ok(userService.login(oAuthProvider, authCode));
+    LoginDetailsDto.Response response = userService.login(oAuthProvider, authCode);
+    return ResponseEntity.ok(LoginDetailsHttp.Response.of(response));
   }
 
   @GetMapping("/{userId}")
   public ResponseEntity<UserProfileHTTP.Response> findUserProfile(@PathVariable long userId) {
-    Response response = userService.findUserProfile(userId);
+    UserProfileDto.Response response = userService.findUserProfile(userId);
     return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
   }
 
