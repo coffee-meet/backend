@@ -43,7 +43,7 @@ class ChattingRoomServiceTest {
   void createChattingRoomTest() {
     // given
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    given(chattingRoomCommand.saveChattingRoom()).willReturn(chattingRoom);
+    given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
 
     // when
     Long roomId = chattingRoomService.createChattingRoom();
