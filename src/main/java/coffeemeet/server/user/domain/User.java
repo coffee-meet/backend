@@ -1,10 +1,14 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.domain.UserStatus.UNQUALIFIED;
+
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,6 +51,9 @@ public class User extends AdvancedBaseEntity {
   @Embedded
   private NotificationInfo notificationInfo;
 
+  @Enumerated(EnumType.STRING)
+  private UserStatus userStatus;
+
   @Column(nullable = false)
   private boolean isDeleted;
 
@@ -58,6 +65,7 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
+    this.userStatus = UNQUALIFIED;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
