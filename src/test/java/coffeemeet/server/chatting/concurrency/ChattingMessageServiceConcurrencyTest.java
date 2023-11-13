@@ -1,4 +1,4 @@
-package coffeemeet.server.concurrency;
+package coffeemeet.server.chatting.concurrency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
