@@ -26,7 +26,7 @@ class ChattingRoomCommandTest {
   @Test
   void saveChattingRoomTest() {
     // given, when
-    chattingRoomCommand.saveChattingRoom();
+    chattingRoomCommand.createChattingRoom();
 
     // then
     then(chattingRoomRepository).should(only()).save(any(ChattingRoom.class));

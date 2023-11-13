@@ -27,7 +27,7 @@ class ChattingRoomServiceTest {
     chattingRoomService.createChattingRoom();
 
     // then
-    then(chattingRoomCommand).should(only()).saveChattingRoom();
+    then(chattingRoomCommand).should(only()).createChattingRoom();
   }
 
 }

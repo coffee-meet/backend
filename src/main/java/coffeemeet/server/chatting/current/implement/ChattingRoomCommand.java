@@ -13,7 +13,7 @@ public class ChattingRoomCommand {
 
   private final ChattingRoomRepository chattingRoomRepository;
 
-  public ChattingRoom saveChattingRoom() {
+  public ChattingRoom createChattingRoom() {
     return chattingRoomRepository.save(new ChattingRoom());
   }
 
