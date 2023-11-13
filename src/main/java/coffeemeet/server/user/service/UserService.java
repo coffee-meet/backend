@@ -19,6 +19,7 @@ import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import java.io.File;
@@ -62,10 +63,15 @@ public class UserService {
     return authTokensGenerator.generate(newUser.getId());
   }
 
-  public AuthTokens login(OAuthProvider oAuthProvider, String authCode) {
+  public LoginDetailsDto.Response login(OAuthProvider oAuthProvider, String authCode) {
     OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
+
     User user = userQuery.getUserByOAuthInfo(oAuthProvider, memberDetail.oAuthProviderId());
-    return authTokensGenerator.generate(user.getId());
+    List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+    Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+
+    AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+    return LoginDetailsDto.Response.of(user, interests, certification, authTokens);
   }
 
   public UserProfileDto.Response findUserProfile(long userId) {
@@ -112,11 +118,6 @@ public class UserService {
     userCommand.deleteUser(userId);
   }
 
-  private void deleteCurrentProfileImage(String profileImageUrl) {
-    String currentKey = mediaManager.extractKey(profileImageUrl,
-        PROFILE_IMAGE);
-    mediaManager.delete(currentKey);
-  }
 
   public void registerOrUpdateNotificationToken(Long useId, String token) {
     userCommand.registerOrUpdateNotificationToken(useId, token);
@@ -124,6 +125,12 @@ public class UserService {
 
   public void unsubscribeNotification(Long userId) {
     userCommand.unsubscribeNotification(userId);
+  }
+
+  private void deleteCurrentProfileImage(String profileImageUrl) {
+    String currentKey = mediaManager.extractKey(profileImageUrl,
+        PROFILE_IMAGE);
+    mediaManager.delete(currentKey);
   }
 
 }
