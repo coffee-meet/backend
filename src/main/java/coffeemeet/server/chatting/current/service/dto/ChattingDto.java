@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public sealed interface ChattingDto permits ChattingDto.Response {
 
   record Response(
+      Long messageId,
       String nickname,
       String content,
       LocalDateTime createdAt
@@ -14,6 +15,7 @@ public sealed interface ChattingDto permits ChattingDto.Response {
 
     public static Response of(User user, ChattingMessage chattingMessage) {
       return new Response(
+          chattingMessage.getId(),
           user.getProfile().getNickname(),
           chattingMessage.getMessage(),
           chattingMessage.getCreatedAt()
