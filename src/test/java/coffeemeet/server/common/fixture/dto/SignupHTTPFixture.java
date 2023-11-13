@@ -8,9 +8,9 @@ import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
 import java.util.List;
 import org.instancio.Instancio;
 
-public class SignupDtoFixture {
+public class SignupHTTPFixture {
 
-  public static SignupHTTP.Request signupDto() {
+  public static SignupHTTP.Request signupHTTPRequest() {
     return Instancio.of(SignupHTTP.Request.class)
         .set(field(Request::keywords), keywords())
         .create();

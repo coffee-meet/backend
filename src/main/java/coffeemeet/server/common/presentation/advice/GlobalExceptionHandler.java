@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -92,6 +93,14 @@ public class GlobalExceptionHandler {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse.of(GlobalErrorCode.VALIDATION_ERROR));
+  }
+
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public ResponseEntity<ErrorResponse> handleException(
+      MissingServletRequestParameterException exception) {
+    log.info(exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(ErrorResponse.of(GlobalErrorCode.PARAMETER_INPUT_MISSING));
   }
 
 }

@@ -1,8 +1,10 @@
 spring:
+
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MYSQL
     username: sa
     password:
+
   jpa:
     show-sql: true
     hibernate:
@@ -12,6 +14,18 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: coffee-meet
+    port: 587
+    username: coffee-meet
+    password: coffee-meet
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 jwt:
   secret-key: yo0ToXEwMlNd32XqxRGKx8hsHWIk6P0u2/xlpny1vFw
   access-token-expire-time: 3600000
@@ -19,9 +33,9 @@ jwt:
 
 oauth:
   kakao:
-    client-id: 8cb00376d47f416927cadfded0f9dab3
-    redirect-url: http://localhost:8080/oauth/redirected/kakao
-    client-secret: 223lkwe934efj2349ewufwe23owf09p1
+    client-id: coffee-meet
+    redirect-url: coffee-meet
+    client-secret: coffee-meet
 
 logging:
   level:
@@ -30,3 +44,16 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+cloud:
+  aws:
+    s3:
+      bucket: coffee-meet
+    credentials:
+      access-key: coffee-meet
+      secret-key: coffee-meet
+    region:
+      static: coffee-meet
+      auto: false
+    stack:
+      auto: false

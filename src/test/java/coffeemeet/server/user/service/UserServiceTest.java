@@ -25,7 +25,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
-import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
+import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -38,7 +38,8 @@ import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
-import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
+import coffeemeet.server.user.presentation.dto.SignupHTTP;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;
@@ -88,7 +89,7 @@ class UserServiceTest {
   @Test
   void signupTest() {
     // given
-    Request request = SignupDtoFixture.signupDto();
+    SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
     AuthTokens authTokens = AuthTokensFixture.authTokens();
     OAuthMemberDetail response = OAuthUserInfoDtoFixture.response();
     User user = user();
@@ -113,6 +114,8 @@ class UserServiceTest {
   void loginTest() {
     // given
     User user = user();
+    Certification certification = certification();
+    List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
     String authCode = "authCode";
     AuthTokens authTokens = AuthTokensFixture.authTokens();
 
@@ -120,14 +123,24 @@ class UserServiceTest {
 
     given(oAuthMemberClientComposite.fetch(any(), any())).willReturn(response);
     given(userQuery.getUserByOAuthInfo(any(), any())).willReturn(user);
+    given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(keywords);
+    given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 
     // when
-    AuthTokens result = userService.login(KAKAO, authCode);
+    LoginDetailsDto.Response result = userService.login(KAKAO, authCode);
 
     // then
-    assertThat(result.accessToken()).isEqualTo(authTokens.accessToken());
-    assertThat(result.refreshToken()).isEqualTo(authTokens.refreshToken());
+    assertAll(
+        () -> assertThat(result.accessToken()).isEqualTo(authTokens.accessToken()),
+        () -> assertThat(result.refreshToken()).isEqualTo(authTokens.refreshToken()),
+        () -> assertThat(result.nickname()).isEqualTo(user.getProfile().getNickname()),
+        () -> assertThat(result.profileImageUrl()).isEqualTo(
+            user.getProfile().getProfileImageUrl()),
+        () -> assertThat(result.companyName()).isEqualTo(certification.getCompanyName()),
+        () -> assertThat(result.department()).isEqualTo(certification.getDepartment()),
+        () -> assertThat(result.interests()).isEqualTo(keywords)
+    );
   }
 
   @DisplayName("사용자의 프로필을 조회할 수 있다.")

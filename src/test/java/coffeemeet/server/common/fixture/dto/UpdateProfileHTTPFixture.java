@@ -7,9 +7,9 @@ import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import java.util.List;
 import org.instancio.Instancio;
 
-public class UpdateProfileDtoFixture {
+public class UpdateProfileHTTPFixture {
 
-  public static UpdateProfileHTTP.Request updateProfileDtoRequest() {
+  public static UpdateProfileHTTP.Request updateProfileHTTPRequest() {
     return Instancio.of(UpdateProfileHTTP.Request.class)
         .set(field(UpdateProfileHTTP.Request::interests), keywords())
         .create();
