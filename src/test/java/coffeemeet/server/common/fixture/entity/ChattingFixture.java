@@ -5,6 +5,9 @@ import static org.instancio.Select.field;
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
+import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
+import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
 import org.instancio.Instancio;
@@ -38,4 +41,16 @@ public class ChattingFixture {
     return Instancio.of(ChatStomp.Request.class)
         .create();
   }
+
+  public static List<ChattingDto.Response> chattingDtoResponse(int size) {
+    return Instancio.ofList(ChattingDto.Response.class).size(size)
+        .create();
+  }
+
+  public static ChatsHTTP.Response chatsHTTPResponse(List<Chat> chats) {
+    return Instancio.of(ChatsHTTP.Response.class)
+        .set(field(ChatsHTTP.Response::chats), chats)
+        .create();
+  }
+
 }
