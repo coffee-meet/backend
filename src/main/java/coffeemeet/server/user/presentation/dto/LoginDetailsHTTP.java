@@ -5,7 +5,7 @@ import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import java.util.List;
 
-public sealed interface LoginDetailsHttp permits LoginDetailsHttp.Response {
+public sealed interface LoginDetailsHTTP permits LoginDetailsHTTP.Response {
 
   record Response(
       String accessToken,
@@ -15,7 +15,7 @@ public sealed interface LoginDetailsHttp permits LoginDetailsHttp.Response {
       String companyName,
       Department department,
       List<Keyword> interests
-  ) implements LoginDetailsHttp {
+  ) implements LoginDetailsHTTP {
 
     public static Response of(LoginDetailsDto.Response response) {
       return new Response(

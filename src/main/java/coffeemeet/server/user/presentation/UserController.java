@@ -1,7 +1,7 @@
 package coffeemeet.server.user.presentation;
 
 import coffeemeet.server.auth.domain.AuthTokens;
-import coffeemeet.server.user.presentation.dto.LoginDetailsHttp;
+import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
@@ -47,10 +47,10 @@ public class UserController {
   }
 
   @GetMapping("/login/{oAuthProvider}")
-  public ResponseEntity<LoginDetailsHttp.Response> login(@PathVariable OAuthProvider oAuthProvider,
+  public ResponseEntity<LoginDetailsHTTP.Response> login(@PathVariable OAuthProvider oAuthProvider,
       @RequestParam String authCode) {
     LoginDetailsDto.Response response = userService.login(oAuthProvider, authCode);
-    return ResponseEntity.ok(LoginDetailsHttp.Response.of(response));
+    return ResponseEntity.ok(LoginDetailsHTTP.Response.of(response));
   }
 
   @GetMapping("/{userId}")
