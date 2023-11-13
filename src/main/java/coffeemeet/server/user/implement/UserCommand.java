@@ -1,10 +1,12 @@
 package coffeemeet.server.user.implement;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,11 @@ public class UserCommand {
   public void updateUserInfo(User user, String nickname) {
     userQuery.hasDuplicatedNickname(nickname);
     user.updateNickname(nickname);
+  }
+
+  public void assignUsersToChattingRoom(Set<Long> matchedUserIds, ChattingRoom chattingRoom) {
+    Set<User> users = userQuery.getUsersByIdSet(matchedUserIds);
+    users.forEach(user -> user.enterChattingRoom(chattingRoom));
   }
 
   public void registerOrUpdateNotificationToken(Long userId, String token) {

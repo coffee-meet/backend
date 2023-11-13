@@ -19,7 +19,7 @@ public class ChattingRoomService {
   private final ChattingMessageQuery chattingMessageQuery;
 
   public Long createChattingRoom() {
-    return chattingRoomCommand.saveChattingRoom().getId();
+    return chattingRoomCommand.createChattingRoom().getId();
   }
 
   public List<Response> searchMessages(Long roomId, Long firstMessageId, int pageSize) {

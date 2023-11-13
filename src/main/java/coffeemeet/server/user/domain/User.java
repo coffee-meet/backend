@@ -80,4 +80,8 @@ public class User extends AdvancedBaseEntity {
     this.notificationInfo = newNotificationInfo;
   }
 
+  public void enterChattingRoom(ChattingRoom chattingRoom) {
+    this.chattingRoom = chattingRoom;
+  }
+
 }
