@@ -11,4 +11,5 @@ public class RedisException extends CoffeeMeetException {
     super(message);
     this.errorCode = errorCode;
   }
+
 }
