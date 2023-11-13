@@ -34,19 +34,25 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.dto.LoginDetailsHTTPFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
+import coffeemeet.server.common.fixture.dto.MyProfileHTTPFixture;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
-import coffeemeet.server.common.fixture.dto.UpdateProfileDtoFixture;
+import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
+import coffeemeet.server.common.fixture.dto.UpdateProfileHTTPFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
+import coffeemeet.server.common.fixture.dto.UserProfileHTTPFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP;
+import coffeemeet.server.user.presentation.dto.MyProfileHTTP;
 import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.user.presentation.dto.SignupHTTP;
-import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP.Request;
+import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
+import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
-import coffeemeet.server.user.service.dto.MyProfileDto.Response;
+import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +80,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("회원가입을 할 수 있다.")
   void signupTest() throws Exception {
     // given
-    SignupHTTP.Request request = SignupDtoFixture.signupDto();
+    SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
     AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
     given(userService.signup(any(), any(), any(), any())).willReturn(authTokens);
@@ -85,7 +91,7 @@ class UserControllerTest extends ControllerTestConfig {
             .content(objectMapper.writeValueAsString(request)))
         .andDo(document("user-signup",
             resourceDetails().tag("사용자").description("회원가입")
-                .requestSchema(Schema.schema("SignupDto.Request"))
+                .requestSchema(Schema.schema("SignupHTTP.Request"))
                 .responseSchema(Schema.schema("AuthTokens")),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
@@ -102,16 +108,16 @@ class UserControllerTest extends ControllerTestConfig {
         ))
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
-
   }
 
   @Test
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    LoginDetailsDto.Response loginDetailsDto = LoginDetailsDtoFixture.loginDetailsDto();
+    LoginDetailsDto.Response response = LoginDetailsDtoFixture.loginDetailsDto();
+    LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(response);
 
-    given(userService.login(any(), any())).willReturn(loginDetailsDto);
+    given(userService.login(any(), any())).willReturn(response);
 
     // when, then
     mockMvc.perform(get("/api/v1/users/login/{oAuthProvider}", OAuthProvider.KAKAO)
@@ -119,7 +125,7 @@ class UserControllerTest extends ControllerTestConfig {
             .param("authCode", "authCode"))
         .andDo(document("user-login",
             resourceDetails().tag("사용자").description("로그인")
-                .responseSchema(Schema.schema("LoginDetailsHttp")),
+                .responseSchema(Schema.schema("LoginDetailsHTTP")),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             pathParameters(
@@ -140,7 +146,7 @@ class UserControllerTest extends ControllerTestConfig {
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(loginDetailsDto)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
   @Test
@@ -149,6 +155,7 @@ class UserControllerTest extends ControllerTestConfig {
     // given
     long userId = 1L;
     UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
+    UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(response);
 
     given(userService.findUserProfile(userId)).willReturn(response);
 
@@ -159,7 +166,7 @@ class UserControllerTest extends ControllerTestConfig {
         )
         .andDo(document("user-profile",
                 resourceDetails().tag("사용자").description("사용자 프로필 조회")
-                    .responseSchema(Schema.schema("UserProfileDto.Response")),
+                    .responseSchema(Schema.schema("UserProfileHTTP.Response")),
                 pathParameters(
                     parameterWithName("id").description("유저 아이디")
                 ),
@@ -173,7 +180,7 @@ class UserControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
   @Test
@@ -181,7 +188,8 @@ class UserControllerTest extends ControllerTestConfig {
   void findMyProfileTest() throws Exception {
     // given
     Long userId = 1L;
-    Response response = MyProfileDtoFixture.myProfileDtoResponse();
+    MyProfileDto.Response response = MyProfileDtoFixture.myProfileDtoResponse();
+    MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(userService.findMyProfile(anyLong())).willReturn(response);
@@ -209,7 +217,7 @@ class UserControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
   @Test
@@ -250,7 +258,7 @@ class UserControllerTest extends ControllerTestConfig {
   void updateProfileInfoTest() throws Exception {
     // given
     Long userId = 1L;
-    Request request = UpdateProfileDtoFixture.updateProfileDtoRequest();
+    UpdateProfileHTTP.Request request = UpdateProfileHTTPFixture.updateProfileHTTPRequest();
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     willDoNothing().given(
@@ -280,7 +288,7 @@ class UserControllerTest extends ControllerTestConfig {
 
   @Test
   @DisplayName("닉네임 중복을 확인할 수 있다.")
-  void checkNicknameDuplicationTest() throws Exception {
+  void checkNicknameDuplicateTest() throws Exception {
     // given
     User user = user();
     String nickname = user.getProfile().getNickname();

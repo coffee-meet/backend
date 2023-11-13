@@ -25,7 +25,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
-import coffeemeet.server.common.fixture.dto.SignupDtoFixture;
+import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -38,7 +38,7 @@ import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
-import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
+import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
@@ -89,7 +89,7 @@ class UserServiceTest {
   @Test
   void signupTest() {
     // given
-    Request request = SignupDtoFixture.signupDto();
+    SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
     AuthTokens authTokens = AuthTokensFixture.authTokens();
     OAuthMemberDetail response = OAuthUserInfoDtoFixture.response();
     User user = user();
