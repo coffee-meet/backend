@@ -17,6 +17,7 @@ public sealed interface ChatStomp permits ChatStomp.Request, ChatStomp.Response 
   }
 
   record Response(
+      Long messageId,
       String nickname,
       String content,
       LocalDateTime createdAt
@@ -24,6 +25,7 @@ public sealed interface ChatStomp permits ChatStomp.Request, ChatStomp.Response 
 
     public static ChatStomp.Response from(ChattingDto.Response response) {
       return new ChatStomp.Response(
+          response.messageId(),
           response.nickname(),
           response.content(),
           response.createdAt()
