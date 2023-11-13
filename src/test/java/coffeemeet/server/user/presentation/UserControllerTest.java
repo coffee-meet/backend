@@ -31,9 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.auth.domain.AuthTokens;
-import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
 import coffeemeet.server.common.fixture.dto.LoginDetailsHTTPFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileHTTPFixture;
@@ -115,7 +115,8 @@ class UserControllerTest extends ControllerTestConfig {
   void loginTest() throws Exception {
     // given
     LoginDetailsDto.Response response = LoginDetailsDtoFixture.loginDetailsDto();
-    LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(response);
+    LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(
+        response);
 
     given(userService.login(any(), any())).willReturn(response);
 
@@ -155,7 +156,8 @@ class UserControllerTest extends ControllerTestConfig {
     // given
     long userId = 1L;
     UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
-    UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(response);
+    UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
+        response);
 
     given(userService.findUserProfile(userId)).willReturn(response);
 
