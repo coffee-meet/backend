@@ -4,6 +4,7 @@ import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_EXIST_NICKN
 import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_EXIST_USER;
 import static coffeemeet.server.user.exception.UserErrorCode.NOT_EXIST_USER;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.execption.DuplicatedDataException;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.user.domain.NotificationInfo;
@@ -12,6 +13,7 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +74,10 @@ public class UserQuery {
           String.format(ALREADY_EXIST_USER_MESSAGE, oAuthProvider, oAuthProviderId)
       );
     }
+  }
+
+  public List<User> getUsersByRoom(ChattingRoom room) {
+    return userRepository.findAllByChattingRoom(room);
   }
 
 }
