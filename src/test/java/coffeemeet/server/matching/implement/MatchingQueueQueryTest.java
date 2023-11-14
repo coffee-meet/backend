@@ -30,7 +30,7 @@ class MatchingQueueQueryTest {
 
   @DisplayName("매칭큐의 사이즈를 조회할 수 있다.")
   @Test
-  void sizeByCompany() {
+  void sizeByCompanyTest() {
     // given
     Long size = 4L;
     String companyName = "회사명";
@@ -47,7 +47,7 @@ class MatchingQueueQueryTest {
 
   @DisplayName("지정 사이즈만큼 매칭큐의 사용자를 제거한다.")
   @Test
-  void dequeueMatchingGroupSize() {
+  void dequeueMatchingGroupSizeTest() {
     // given
     String companyName = "회사명";
     long matchingGroupSize = 4;

@@ -33,7 +33,7 @@ class MatchingControllerTest extends ControllerTestConfig {
 
   @Test
   @DisplayName("매칭을 시작할 수 있다.")
-  void start() throws Exception {
+  void startTest() throws Exception {
     // given
     long userId = 1;
     willDoNothing().given(matchingService).start(userId);
