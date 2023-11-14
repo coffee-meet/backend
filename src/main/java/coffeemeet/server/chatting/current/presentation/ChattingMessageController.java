@@ -4,8 +4,6 @@ import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import jakarta.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,26 +19,27 @@ public class ChattingMessageController {
 
   private final SimpMessageSendingOperations simpMessageSendingOperations;
   private final ChattingMessageService chattingMessageService;
-  private final Map<String, Long> sessions = new HashMap<>();
 
   @EventListener(SessionConnectEvent.class)
   public void onConnect(SessionConnectEvent event) {
     String sessionId = String.valueOf(event.getMessage().getHeaders().get("simpSessionId"));
     String userId = String.valueOf(event.getMessage().getHeaders().get("nativeHeaders"))
         .split("userId=\\[")[1].split("]")[0];
-    sessions.put(sessionId, Long.valueOf(userId));
+    chattingMessageService.storeSocketSession(sessionId, userId);
   }
 
   @EventListener(SessionDisconnectEvent.class)
   public void onDisconnect(SessionDisconnectEvent event) {
-    sessions.remove(event.getSessionId());
+    chattingMessageService.expireSocketSession(event.getSessionId());
   }
 
   @MessageMapping("/chatting/messages")
   public void message(@Valid ChatStomp.Request request, SimpMessageHeaderAccessor accessor) {
-    Long userId = sessions.get(accessor.getSessionId());
-    ChattingDto.Response response = chattingMessageService.chatting(request.roomId(),
-        request.content(), userId);
+    ChattingDto.Response response = chattingMessageService.chatting(
+        accessor.getSessionId(),
+        request.roomId(),
+        request.content()
+    );
     simpMessageSendingOperations.convertAndSend("/sub/chatting/rooms/" + request.roomId(),
         ChatStomp.Response.from(response));
   }
