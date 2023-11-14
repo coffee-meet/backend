@@ -20,6 +20,7 @@ public sealed interface ChatStomp permits ChatStomp.Request, ChatStomp.Response 
       Long messageId,
       String nickname,
       String content,
+      String imageUrl,
       LocalDateTime createdAt
   ) implements ChatStomp {
 
@@ -28,6 +29,7 @@ public sealed interface ChatStomp permits ChatStomp.Request, ChatStomp.Response 
           response.messageId(),
           response.nickname(),
           response.content(),
+          response.imageUrl(),
           response.createdAt()
       );
     }
