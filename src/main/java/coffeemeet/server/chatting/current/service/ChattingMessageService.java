@@ -8,11 +8,15 @@ import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.chatting.exception.ChattingErrorCode;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,28 +30,49 @@ public class ChattingMessageService {
   private final ChattingMessageCommand chattingMessageCommand;
   private final ChattingRoomQuery chattingRoomQuery;
   private final UserQuery userQuery;
-  private FCMNotificationSender fcmNotificationSender;
+  private final FCMNotificationSender fcmNotificationSender;
 
   public ChattingDto.Response chatting(String sessionId, Long roomId, String content) {
-    Long userId = Optional.of(sessions.get(sessionId))
-        .orElseThrow(() ->
-            new NotFoundException(
-                ChattingErrorCode.SOCKET_SESSION_NOT_FOUND,
-                SOCKET_SESSION_NOT_FOUND_MESSAGE
-            ));
-    // TODO: 11/13/23 dev pull 받고, 알람 이어서 작성
+    Long userId = getUserId(sessionId);
+    ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
+    List<User> users = userQuery.getUsersByRoom(room);
+    Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
+        users);
+    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
     User user = userQuery.getUserById(userId);
-    ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     ChattingMessage chattingMessage = chattingMessageCommand.saveChattingMessage(content,
-        chattingRoom, user);
+        room, user);
     return ChattingDto.Response.of(user, chattingMessage);
   }
 
+  private Set<NotificationInfo> getUnConnectedUserNotificationInfos(List<User> users) {
+    return users.stream()
+        .filter(user -> user.getUserStatus() == UserStatus.CHATTING_UNCONNECTED)
+        .map(User::getNotificationInfo)
+        .collect(Collectors.toSet());
+  }
+
+  private Long getUserId(String sessionId) {
+    Long userId = sessions.get(sessionId);
+    if (userId == null) {
+      throw new NotFoundException(
+          ChattingErrorCode.SOCKET_SESSION_NOT_FOUND,
+          SOCKET_SESSION_NOT_FOUND_MESSAGE
+      );
+    }
+    return userId;
+  }
+
   public void storeSocketSession(String sessionId, String userId) {
+    User user = userQuery.getUserById(Long.valueOf(userId));
+    user.enterChattingRoom();
     sessions.put(sessionId, Long.valueOf(userId));
   }
 
   public void expireSocketSession(String sessionId) {
+    Long userId = sessions.get(sessionId);
+    User user = userQuery.getUserById(userId);
+    user.exitChattingRoom();
     sessions.remove(sessionId);
   }
 
