@@ -38,7 +38,7 @@ public class ChattingMessageService {
     List<User> users = userQuery.getUsersByRoom(room);
     Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
         users);
-    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
+    //fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
     User user = userQuery.getUserById(userId);
     ChattingMessage chattingMessage = chattingMessageCommand.saveChattingMessage(content,
         room, user);

@@ -2,9 +2,7 @@ package coffeemeet.server.chatting.current.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
@@ -56,8 +54,8 @@ class ChattingMessageServiceTest {
 
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
     given(userQuery.getUserById(user.getId())).willReturn(user);
-    willDoNothing().given(fcmNotificationSender)
-        .sendMultiNotifications(anySet(), any());
+//    willDoNothing().given(fcmNotificationSender)
+//        .sendMultiNotifications(anySet(), any());
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(chattingMessageCommand.saveChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
