@@ -84,4 +84,12 @@ public class User extends AdvancedBaseEntity {
     this.chattingRoom = chattingRoom;
   }
 
+  public void enterChattingRoom() {
+    this.userStatus = UserStatus.CHATTING_CONNECTED;
+  }
+
+  public void exitChattingRoom() {
+    this.userStatus = UserStatus.CHATTING_UNCONNECTED;
+  }
+
 }

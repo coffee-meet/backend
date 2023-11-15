@@ -10,6 +10,7 @@ public sealed interface ChatsHTTP permits ChatsHTTP.Response {
       Long messageId,
       String nickname,
       String content,
+      String imageUrl,
       LocalDateTime createdAt
   ) {
 
@@ -17,6 +18,7 @@ public sealed interface ChatsHTTP permits ChatsHTTP.Response {
       return new Chat(response.messageId(),
           response.nickname(),
           response.content(),
+          response.imageUrl(),
           response.createdAt()
       );
     }

@@ -10,6 +10,7 @@ public sealed interface ChattingDto permits ChattingDto.Response {
       Long messageId,
       String nickname,
       String content,
+      String imageUrl,
       LocalDateTime createdAt
   ) implements ChattingDto {
 
@@ -18,6 +19,7 @@ public sealed interface ChattingDto permits ChattingDto.Response {
           chattingMessage.getId(),
           user.getProfile().getNickname(),
           chattingMessage.getMessage(),
+          user.getProfile().getProfileImageUrl(),
           chattingMessage.getCreatedAt()
       );
     }
