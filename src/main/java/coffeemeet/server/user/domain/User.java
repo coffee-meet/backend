@@ -1,7 +1,5 @@
 package coffeemeet.server.user.domain;
 
-import static coffeemeet.server.user.domain.UserStatus.UNQUALIFIED;
-
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import jakarta.persistence.Column;
@@ -65,7 +63,7 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
-    this.userStatus = UNQUALIFIED;
+    this.userStatus = UserStatus.IDLE;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
@@ -93,7 +91,7 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void setIdleState() {
-    this.userStatus = UserStatus.QUALIFIED;
+    this.userStatus = UserStatus.IDLE;
   }
 
 }

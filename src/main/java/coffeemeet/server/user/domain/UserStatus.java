@@ -1,8 +1,7 @@
 package coffeemeet.server.user.domain;
 
 public enum UserStatus {
-  UNQUALIFIED,
-  QUALIFIED,
+  IDLE,
   MATCHING,
   CHATTING_CONNECTED,
   CHATTING_UNCONNECTED,
