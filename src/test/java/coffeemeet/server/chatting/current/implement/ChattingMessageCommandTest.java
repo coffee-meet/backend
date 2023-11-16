@@ -28,14 +28,14 @@ class ChattingMessageCommandTest {
 
   @DisplayName("새로운 채팅 메세지를 저장할 수 있다.")
   @Test
-  void saveChattingMessageTest() {
+  void createChattingMessageTest() {
     // given
     String content = "content";
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     User user = UserFixture.user();
 
     // when
-    chattingMessageCommand.saveChattingMessage(content, chattingRoom, user);
+    chattingMessageCommand.createChattingMessage(content, chattingRoom, user);
 
     // then
     then(chattingMessageRepository).should(only()).save(any(ChattingMessage.class));

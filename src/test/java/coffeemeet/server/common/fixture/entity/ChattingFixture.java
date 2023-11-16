@@ -8,6 +8,7 @@ import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
 import org.instancio.Instancio;
@@ -50,6 +51,11 @@ public class ChattingFixture {
   public static ChatsHTTP.Response chatsHTTPResponse(List<Chat> chats) {
     return Instancio.of(ChatsHTTP.Response.class)
         .set(field(ChatsHTTP.Response::chats), chats)
+        .create();
+  }
+
+  public static List<ChattingMessageHistory> chattingMessageHistories(int size) {
+    return Instancio.ofList(ChattingMessageHistory.class).size(size)
         .create();
   }
 
