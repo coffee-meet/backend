@@ -92,4 +92,8 @@ public class User extends AdvancedBaseEntity {
     this.userStatus = UserStatus.CHATTING_UNCONNECTED;
   }
 
+  public void setIdleState() {
+    this.userStatus = UserStatus.QUALIFIED;
+  }
+
 }
