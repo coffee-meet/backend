@@ -33,6 +33,13 @@ public class ChattingMessageQueryRepository {
     return messages;
   }
 
+  public List<ChattingMessage> findAllChattingMessages(ChattingRoom chattingRoom) {
+    return jpaQueryFactory
+        .selectFrom(chattingMessage)
+        .where(chattingMessage.chattingRoom.eq(chattingRoom))
+        .fetch();
+  }
+
   private BooleanExpression ltChattingMessageId(Long chattingMessageId) {
     if (chattingMessageId == null || chattingMessageId == 0L) {
       return null;
