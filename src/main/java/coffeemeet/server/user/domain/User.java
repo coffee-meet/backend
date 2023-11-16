@@ -5,17 +5,21 @@ import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.Where;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Getter
@@ -47,6 +51,9 @@ public class User extends AdvancedBaseEntity {
   @Embedded
   private NotificationInfo notificationInfo;
 
+  @Enumerated(EnumType.STRING)
+  private UserStatus userStatus;
+
   @Column(nullable = false)
   private boolean isDeleted;
 
@@ -58,6 +65,7 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
+    this.userStatus = UserStatus.IDLE;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
@@ -70,6 +78,49 @@ public class User extends AdvancedBaseEntity {
 
   public void updateNotificationInfo(@NonNull NotificationInfo newNotificationInfo) {
     this.notificationInfo = newNotificationInfo;
+  }
+
+  public void enterChattingRoom(ChattingRoom chattingRoom) {
+    this.chattingRoom = chattingRoom;
+  }
+
+  public void enterChattingRoom() {
+    this.userStatus = UserStatus.CHATTING_CONNECTED;
+  }
+
+  public void exitChattingRoom() {
+    this.userStatus = UserStatus.CHATTING_UNCONNECTED;
+  }
+
+  public void setIdleState() {
+    this.userStatus = UserStatus.IDLE;
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    Class<?> oEffectiveClass = (o instanceof HibernateProxy)
+        ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+        : o.getClass();
+    Class<?> thisEffectiveClass = this instanceof HibernateProxy
+        ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass() : this.getClass();
+    if (thisEffectiveClass != oEffectiveClass) {
+      return false;
+    }
+    User user = (User) o;
+    return getId() != null && Objects.equals(getId(), user.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass().hashCode() : getClass().hashCode();
   }
 
 }

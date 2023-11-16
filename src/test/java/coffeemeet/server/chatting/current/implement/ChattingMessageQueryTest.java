@@ -7,9 +7,8 @@ import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.infrastructure.ChattingMessageQueryRepository;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.user.domain.User;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +33,7 @@ class ChattingMessageQueryTest {
     Long firstMessageId = 51L;
 
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    User user = UserFixture.user();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, user,
-        50);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(50);
     given(chattingMessageQueryRepository.findChattingMessages(chattingRoom, firstMessageId,
         pageSize)).willReturn(chattingMessages);
 
@@ -46,6 +43,24 @@ class ChattingMessageQueryTest {
 
     // then
     assertThat(messages).isEqualTo(chattingMessages);
+  }
+
+  @DisplayName("전체 채팅 메세지를 조회할 수 있다.")
+  @Test
+  void findAllMessagesTest() {
+    // given
+    int size = 10;
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(size);
+
+    // when
+    given(chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(
+        chattingRoom)).willReturn(
+        chattingMessages);
+
+    // then
+    List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
+    Assertions.assertThat(allMessages).isEqualTo(chattingMessages);
   }
 
 }

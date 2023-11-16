@@ -27,7 +27,7 @@ public class FCMNotificationSender {
   private static final String PUSH_NOTIFICATION_SEND_FAILURE_MESSAGE = "푸시 알림 전송에 실패했습니다. 토큰: %s";
   private final FirebaseMessaging firebaseMessaging;
 
-  public void sendNotificationByToken(NotificationInfo notificationInfo, String content) {
+  public void sendNotification(NotificationInfo notificationInfo, String content) {
     if (!notificationInfo.isSubscribedToNotification()) {
       return;
     }
@@ -44,7 +44,7 @@ public class FCMNotificationSender {
     }
   }
 
-  public void sendNotificationByTokens(Set<NotificationInfo> notificationInfos, String content) {
+  public void sendMultiNotifications(Set<NotificationInfo> notificationInfos, String content) {
     notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
 
     Set<String> tokens = notificationInfos.stream().map(
@@ -59,6 +59,26 @@ public class FCMNotificationSender {
       firebaseMessaging.sendMulticast(message);
     } catch (FirebaseMessagingException e) {
       handleFirebaseMessagingException(e, String.join(", ", tokens)); //
+    }
+  }
+
+  public void sendMultiNotificationsWithData(Set<NotificationInfo> notificationInfos,
+      String content, String key, String value) {
+    notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
+
+    Set<String> tokens = notificationInfos.stream().map(
+        NotificationInfo::getToken
+    ).collect(Collectors.toUnmodifiableSet());
+
+    Notification notification = createNotification(content);
+    MulticastMessage message = MulticastMessage.builder().addAllTokens(tokens)
+        .putData(key, value)
+        .setNotification(notification).build();
+
+    try {
+      firebaseMessaging.sendMulticast(message);
+    } catch (FirebaseMessagingException e) {
+      handleFirebaseMessagingException(e, String.join(", ", tokens));
     }
   }
 

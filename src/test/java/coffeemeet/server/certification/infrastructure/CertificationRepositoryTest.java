@@ -5,27 +5,35 @@ import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.certification.domain.Certification;
+import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@DataJpaTest
-class CertificationRepositoryTest {
+class CertificationRepositoryTest extends RepositoryTestConfig {
 
   @Autowired
   private CertificationRepository certificationRepository;
+
   @Autowired
   private UserRepository userRepository;
+
   private User user;
 
 
   @BeforeEach
   void setUp() {
     user = userRepository.save(user());
+  }
+
+  @AfterEach
+  void tearDown() {
+    certificationRepository.deleteAll();
+    userRepository.deleteAll();
   }
 
   @Test

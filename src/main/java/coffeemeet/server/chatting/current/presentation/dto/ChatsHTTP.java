@@ -7,16 +7,21 @@ import java.util.List;
 public sealed interface ChatsHTTP permits ChatsHTTP.Response {
 
   record Chat(
+      Long userId,
       Long messageId,
       String nickname,
       String content,
+      String profileImageUrl,
       LocalDateTime createdAt
   ) {
 
     public static Chat from(ChattingDto.Response response) {
-      return new Chat(response.messageId(),
+      return new Chat(
+          response.userId(),
+          response.messageId(),
           response.nickname(),
           response.content(),
+          response.profileImageUrl(),
           response.createdAt()
       );
     }

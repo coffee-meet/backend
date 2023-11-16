@@ -13,8 +13,12 @@ public class ChattingRoomCommand {
 
   private final ChattingRoomRepository chattingRoomRepository;
 
-  public ChattingRoom saveChattingRoom() {
+  public ChattingRoom createChattingRoom() {
     return chattingRoomRepository.save(new ChattingRoom());
+  }
+
+  public void removeChattingRoom(Long roomId) {
+    chattingRoomRepository.deleteById(roomId);
   }
 
 }

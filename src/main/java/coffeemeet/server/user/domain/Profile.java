@@ -27,7 +27,6 @@ public class Profile {
   private String nickname;
 
   @Embedded
-  @Column(nullable = false)
   private Email email;
 
   @Column(nullable = false)

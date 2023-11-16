@@ -4,12 +4,18 @@ import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_EXIST_NICKN
 import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_EXIST_USER;
 import static coffeemeet.server.user.exception.UserErrorCode.NOT_EXIST_USER;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.execption.DuplicatedDataException;
 import coffeemeet.server.common.execption.NotFoundException;
+import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +38,15 @@ public class UserQuery {
             NOT_EXIST_USER,
             String.format(NOT_EXIST_USER_MESSAGE, userId))
         );
+  }
+
+  public Set<User> getUsersByIdSet(Set<Long> userIds) {
+    return new HashSet<>(userRepository.findByIdIn(userIds));
+  }
+
+  public Set<NotificationInfo> getNotificationInfosByIdSet(Set<Long> userIds) {
+    return userRepository.findByIdIn(userIds).stream()
+        .map(User::getNotificationInfo).collect(Collectors.toSet());
   }
 
   public User getUserByOAuthInfo(OAuthProvider oAuthProvider, String oAuthProviderId) {
@@ -59,6 +74,10 @@ public class UserQuery {
           String.format(ALREADY_EXIST_USER_MESSAGE, oAuthProvider, oAuthProviderId)
       );
     }
+  }
+
+  public List<User> getUsersByRoom(ChattingRoom room) {
+    return userRepository.findAllByChattingRoom(room);
   }
 
 }
