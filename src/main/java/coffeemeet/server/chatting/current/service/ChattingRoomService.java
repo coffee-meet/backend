@@ -74,7 +74,7 @@ public class ChattingRoomService {
   }
 
   private void updateUserStatusToIdle(List<User> users) {
-    users.stream().forEach(User::setIdleState);
+    users.forEach(User::setIdleState);
   }
 
 }
