@@ -57,7 +57,7 @@ class ChattingMessageServiceTest {
 //    willDoNothing().given(fcmNotificationSender)
 //        .sendMultiNotifications(anySet(), any());
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
-    given(chattingMessageCommand.saveChattingMessage(content, chattingRoom, user)).willReturn(
+    given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 
     // when

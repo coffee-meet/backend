@@ -15,7 +15,8 @@ public class ChattingMessageCommand {
 
   private final ChattingMessageRepository chattingMessageRepository;
 
-  public ChattingMessage saveChattingMessage(String content, ChattingRoom chattingRoom, User user) {
+  public ChattingMessage createChattingMessage(String content, ChattingRoom chattingRoom,
+      User user) {
     return chattingMessageRepository.save(new ChattingMessage(content, chattingRoom, user));
   }
 

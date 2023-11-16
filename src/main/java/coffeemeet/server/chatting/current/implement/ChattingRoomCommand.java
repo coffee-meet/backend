@@ -17,4 +17,8 @@ public class ChattingRoomCommand {
     return chattingRoomRepository.save(new ChattingRoom());
   }
 
+  public void removeChattingRoom(Long roomId) {
+    chattingRoomRepository.deleteById(roomId);
+  }
+
 }
