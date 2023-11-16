@@ -29,7 +29,7 @@ class ReportQueryTest {
 
   @Test
   @DisplayName("신고 내역 중복 체크를 할 수 있다.")
-  void hasDuplicatedReport() {
+  void hasDuplicatedReportTest() {
     // given
     long reporterId = 1L;
     long chattingRoomId = 1L;
@@ -45,7 +45,7 @@ class ReportQueryTest {
 
   @Test
   @DisplayName("신고 아이디를 통해 신고를 조회할 수 있다.")
-  void getReportById() {
+  void getReportByIdTest() {
     // given
     Report report = report();
     reportRepository.save(report);
@@ -59,7 +59,7 @@ class ReportQueryTest {
 
   @Test
   @DisplayName("모든 신고 내역을 조회할 수 있다.")
-  void getAllReports() {
+  void getAllReportsTest() {
     // given
     List<Report> reports = new ArrayList<>(List.of(report(), report()));
 

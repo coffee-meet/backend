@@ -22,7 +22,7 @@ class ReportRepositoryTest extends RepositoryTestConfig {
 
   @Test
   @DisplayName("신고자 아이디, 채팅방 아이디, 신고 대상 아이디로 신고 내역 존재 여부를 알 수 있다.")
-  void existsByReporterIdAndChattingRoomIdAndTargetId() {
+  void existsByReporterIdAndChattingRoomIdAndTargetIdTest() {
     // given
     Report report = report();
     reportRepository.save(report);
