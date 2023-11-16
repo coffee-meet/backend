@@ -3,8 +3,10 @@ package coffeemeet.server.chatting.current.presentation;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -14,6 +16,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
@@ -81,6 +84,31 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(content().string(objectMapper.writeValueAsString(chatsHTTPResponse)));
+  }
+
+  @DisplayName("채팅방을 나갈 수 있다.")
+  @Test
+  void exitChattingRoomTest() throws Exception {
+    // given
+    Long userId = 1L;
+    Long roomId = 1L;
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    willDoNothing().given(chattingRoomService).deleteChattingRoom(roomId);
+
+    // when, then
+    mockMvc.perform(delete("/api/v1/chatting/rooms/{roomId}", roomId)
+            .header("Authorization", TOKEN)
+        )
+        .andDo(document("exit-chatting-room",
+                resourceDetails().tag("채팅방").description("채팅방 나가기"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
+        )
+        .andExpect(status().isOk());
   }
 
 }
