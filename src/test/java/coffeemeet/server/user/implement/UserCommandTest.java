@@ -5,11 +5,13 @@ import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.infrastructure.InterestRepository;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +32,9 @@ class UserCommandTest {
 
   @Mock
   private UserQuery userQuery;
+
+  @Mock
+  private InterestRepository interestRepository;
 
   @Test
   @DisplayName("유저를 저장할 수 있다.")
@@ -62,10 +67,13 @@ class UserCommandTest {
   @DisplayName("유저를 삭제할 수 있다.")
   void deleteUserTest() {
     // given
-    Long userId = 1L;
+    User user = user();
+    userRepository.save(user);
+
+    willDoNothing().given(interestRepository).deleteById(anyLong());
 
     // when, then
-    assertThatCode(() -> userCommand.deleteUser(userId)).doesNotThrowAnyException();
+    assertThatCode(() -> userCommand.deleteUser(user.getId())).doesNotThrowAnyException();
   }
 
   @Test
