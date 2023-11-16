@@ -37,7 +37,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
 
   @DisplayName("채팅방 내역을 조회할 수 있다.")
   @Test
-  void viewChatRoomMessagesTest() throws Exception {
+  void viewChattingRoomMessagesTest() throws Exception {
     // given
     Long userId = 1L;
     Long roomId = 1L;
@@ -69,7 +69,9 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
                 ),
                 responseFields(
                     fieldWithPath("chats[]").type(JsonFieldType.ARRAY).description("메세지 리스트"),
-                    fieldWithPath("chats[].imageUrl").type(JsonFieldType.STRING).description("메세지 번호"),
+                    fieldWithPath("chats[].userId").type(JsonFieldType.NUMBER).description("사용자 번호"),
+                    fieldWithPath("chats[].profileImageUrl").type(JsonFieldType.STRING)
+                        .description("프로필 이미지"),
                     fieldWithPath("chats[].messageId").type(JsonFieldType.NUMBER).description("메세지 번호"),
                     fieldWithPath("chats[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("chats[].content").type(JsonFieldType.STRING)
