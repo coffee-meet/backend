@@ -32,6 +32,7 @@ public class Report extends BaseEntity {
   private static final String INVALID_REPORTER_MESSAGE = "해당 신고자 아이디(%s)는 유효하지 않습니다.";
   private static final String INVALID_CHATTING_ROOM_MESSAGE = "해당 채팅방 아이디(%s)는 유효하지 않습니다.";
   private static final String INVALID_TARGET_USER_MESSAGE = "해당 신고 대상 아이디(%s)는 유효하지 않습니다.";
+  private static final String INVALID_REPORT_REASON_MESSAGE = "해당 신고 사유(%s)는 존재하지 않습니다.";
   private static final String INVALID_REASON_MESSAGE = "해당 신고 사유(%s)는 유효하지 않습니다.";
   private static final String INVALID_REASON_DETAIL_MESSAGE = "해당 신고 상세 사유(%s)는 유효하지 않습니다.";
 
@@ -110,10 +111,10 @@ public class Report extends BaseEntity {
   }
 
   private void validateReason(String reason) {
-    if (!StringUtils.hasText(reason) || reason.length() > REASON_MAX_LENGTH) {
+    if (!ReportReason.checkReason(reason)) {
       throw new InvalidInputException(
           INVALID_REASON,
-          String.format(INVALID_REASON_MESSAGE, reason)
+          String.format(INVALID_REPORT_REASON_MESSAGE, reason)
       );
     }
   }
