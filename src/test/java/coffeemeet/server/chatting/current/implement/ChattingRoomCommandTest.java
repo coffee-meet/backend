@@ -32,4 +32,17 @@ class ChattingRoomCommandTest {
     then(chattingRoomRepository).should(only()).save(any(ChattingRoom.class));
   }
 
+  @DisplayName("채팅방을 삭제할 수 있다.")
+  @Test
+  void removeChattingRoomTest() {
+    // given
+    Long roomId = 1L;
+
+    // when
+    chattingRoomCommand.removeChattingRoom(roomId);
+
+    // then
+    then(chattingRoomRepository).should(only()).deleteById(roomId);
+  }
+
 }
