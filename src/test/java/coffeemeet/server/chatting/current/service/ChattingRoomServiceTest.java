@@ -10,8 +10,6 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.user.domain.User;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -57,9 +55,8 @@ class ChattingRoomServiceTest {
   @CsvSource(value = {"51, 50"})
   void searchMessagesTest(Long firstMessageId, int pageSize) {
     // given
-    User user = UserFixture.user();
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, user,
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom,
         pageSize);
     Long chattingRoomId = chattingRoom.getId();
 
