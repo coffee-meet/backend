@@ -14,6 +14,7 @@ import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,26 @@ class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
         () -> assertThat(responses).hasSize(pageSize),
         () -> assertThat(responses.get(lastIndex).getId()).isEqualTo(firstMessageId - 1)
     );
+  }
+
+  @DisplayName("채팅방에 있는 메세지를 전체 조회할 수 있다.")
+  @Test
+  void findAllChattingMessagesByChattingRoomTest() {
+    // given
+    int fixtureSize = 110;
+
+    ChattingRoom room = chattingRoomRepository.save(ChattingFixture.chattingRoom());
+    User user = userRepository.save(UserFixture.user());
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(room, user,
+        fixtureSize);
+    chattingMessageRepository.saveAll(chattingMessages);
+
+    // when
+    List<ChattingMessage> messageList = chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(
+        room);
+
+    // then
+    assertThat(messageList).hasSize(fixtureSize);
   }
 
 }
