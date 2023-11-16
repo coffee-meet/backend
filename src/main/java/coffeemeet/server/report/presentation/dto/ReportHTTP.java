@@ -22,23 +22,23 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
   }
 
   record Response(
-      Long reporterId,
-      Long chattingRoomId,
-      Long targetId,
+      String reporterNickname,
+      String targetNickname,
       String reporterEmail,
       String reason,
       String reasonDetail,
+      int reportedCount,
       LocalDateTime createdAt
   ) implements ReportHTTP {
 
     public static ReportHTTP.Response of(ReportDto.Response response) {
       return new ReportHTTP.Response(
-          response.reporterId(),
-          response.chattingRoomId(),
-          response.targetId(),
+          response.reporterNickname(),
+          response.targetNickname(),
           response.reporterEmail(),
           response.reason(),
           response.reasonDetail(),
+          response.reportedCount(),
           response.createAt()
       );
     }
