@@ -5,6 +5,8 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resour
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +46,11 @@ class MatchingControllerTest extends ControllerTestConfig {
             .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(document("matching-start",
-            resourceDetails().tag("매칭").description("매칭 시작"))
+                resourceDetails().tag("매칭").description("매칭 시작"),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
         )
         .andExpect(status().isOk());
   }

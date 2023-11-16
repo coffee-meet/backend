@@ -83,8 +83,7 @@ class ChattingRoomServiceTest {
   void searchMessagesTest(Long firstMessageId, int pageSize) {
     // given
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom,
-        pageSize);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
     Long chattingRoomId = chattingRoom.getId();
 
     given(chattingRoomQuery.getChattingRoomById(chattingRoomId)).willReturn(chattingRoom);
@@ -109,7 +108,7 @@ class ChattingRoomServiceTest {
 
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, size);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(size);
 
     given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);

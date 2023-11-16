@@ -33,7 +33,7 @@ class ChattingMessageQueryTest {
     Long firstMessageId = 51L;
 
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, 50);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(50);
     given(chattingMessageQueryRepository.findChattingMessages(chattingRoom, firstMessageId,
         pageSize)).willReturn(chattingMessages);
 
@@ -51,7 +51,7 @@ class ChattingMessageQueryTest {
     // given
     int size = 10;
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, size);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(size);
 
     // when
     given(chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(

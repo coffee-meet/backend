@@ -16,11 +16,14 @@ public class UserFixture {
 
   public static User user() {
     return Instancio.of(User.class).set(field(User::getProfile), profile())
-        .ignore(field(User::isDeleted)).ignore(field(User::getChattingRoom)).create();
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::getChattingRoom))
+        .create();
   }
 
   public static List<User> users() {
     return Instancio.ofList(User.class).size(4)
+        .generate(field(User::getId), gen -> gen.longSeq().start(1L))
         .create();
   }
 

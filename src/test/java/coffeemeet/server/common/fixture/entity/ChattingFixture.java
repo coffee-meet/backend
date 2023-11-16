@@ -22,8 +22,9 @@ public class ChattingFixture {
         .create();
   }
 
-  public static List<ChattingMessage> chattingMessages(ChattingRoom room, int size) {
+  public static List<ChattingMessage> chattingMessages(int size) {
     return Instancio.ofList(ChattingMessage.class).size(size)
+        .generate(field(ChattingMessage::getId), gen -> gen.longSeq().start(1L))
         .create();
   }
 
@@ -31,6 +32,7 @@ public class ChattingFixture {
     return Instancio.ofList(ChattingMessage.class).size(size)
         .set(field(ChattingMessage::getChattingRoom), room)
         .set(field(ChattingMessage::getUser), user)
+        .generate(field(ChattingMessage::getId), gen -> gen.longSeq().start(1L))
         .create();
   }
 
@@ -52,6 +54,7 @@ public class ChattingFixture {
 
   public static List<ChattingMessageHistory> chattingMessageHistories(int size) {
     return Instancio.ofList(ChattingMessageHistory.class).size(size)
+        .generate(field(ChattingMessageHistory::getId), gen -> gen.longSeq().start(1L))
         .create();
   }
 
@@ -62,6 +65,7 @@ public class ChattingFixture {
 
   public static List<UserChattingHistory> userChattingHistories(int size) {
     return Instancio.ofList(UserChattingHistory.class).size(size)
+        .generate(field(UserChattingHistory::getId), gen -> gen.longSeq().start(1L))
         .create();
   }
 

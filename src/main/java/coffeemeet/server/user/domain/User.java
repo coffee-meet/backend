@@ -13,11 +13,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.Where;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Getter
@@ -92,6 +94,33 @@ public class User extends AdvancedBaseEntity {
 
   public void setIdleState() {
     this.userStatus = UserStatus.IDLE;
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    Class<?> oEffectiveClass = (o instanceof HibernateProxy)
+        ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+        : o.getClass();
+    Class<?> thisEffectiveClass = this instanceof HibernateProxy
+        ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass() : this.getClass();
+    if (thisEffectiveClass != oEffectiveClass) {
+      return false;
+    }
+    User user = (User) o;
+    return getId() != null && Objects.equals(getId(), user.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass().hashCode() : getClass().hashCode();
   }
 
 }
