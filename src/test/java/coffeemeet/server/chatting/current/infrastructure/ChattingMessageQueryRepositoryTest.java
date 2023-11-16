@@ -12,7 +12,7 @@ import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +33,7 @@ class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
   @Autowired
   private UserRepository userRepository;
 
-  @AfterEach
+  @BeforeEach
   void tearDown() {
     chattingMessageRepository.deleteAll();
     chattingRoomRepository.deleteAll();
