@@ -36,13 +36,17 @@ public class ChattingMessageService {
     Long userId = getUserId(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
-//    Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
-//        users);
-//    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
+    //sendChattingAlarm(content, users);
     User user = userQuery.getUserById(userId);
-    ChattingMessage chattingMessage = chattingMessageCommand.saveChattingMessage(content,
+    ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
     return ChattingDto.Response.of(user, chattingMessage);
+  }
+
+  private void sendChattingAlarm(String content, List<User> users) {
+    Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
+        users);
+    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
   }
 
   private Set<NotificationInfo> getUnConnectedUserNotificationInfos(List<User> users) {
