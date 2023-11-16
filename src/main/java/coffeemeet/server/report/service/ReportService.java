@@ -4,9 +4,11 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
+import coffeemeet.server.report.service.dto.AllReportDto;
 import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,18 @@ public class ReportService {
     User reporter = userQuery.getUserById(report.getReporterId());
     User targetUser = userQuery.getUserById(report.getTargetId());
     return ReportDto.Response.of(report, reporter, targetUser);
+  }
+
+  public List<AllReportDto.Response> findAllReports() {
+    List<Report> allReports = reportQuery.getAllReports();
+    return allReports.stream()
+        .map(this::mapToAllReportDto)
+        .toList();
+  }
+
+  private AllReportDto.Response mapToAllReportDto(Report report) {
+    User targetUser = userQuery.getUserById(report.getTargetId());
+    return AllReportDto.Response.of(targetUser);
   }
 
 }
