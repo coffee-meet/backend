@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long> {
 
+  boolean existsById(Long chattingRoomId);
 }
