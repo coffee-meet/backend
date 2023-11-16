@@ -42,6 +42,7 @@ public class Certification extends AdvancedBaseEntity {
   private String businessCardUrl;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private Department department;
 
   @Column(nullable = false)
@@ -57,6 +58,10 @@ public class Certification extends AdvancedBaseEntity {
     this.department = department;
     this.isCertificated = false;
     this.user = user;
+  }
+
+  public void qualify() {
+    isCertificated = true;
   }
 
 }
