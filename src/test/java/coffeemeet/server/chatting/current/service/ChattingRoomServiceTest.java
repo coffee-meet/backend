@@ -3,7 +3,6 @@ package coffeemeet.server.chatting.current.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
@@ -111,6 +110,7 @@ class ChattingRoomServiceTest {
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
     List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, size);
+
     given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(chattingMessageQuery.findAllMessages(chattingRoom)).willReturn(chattingMessages);
