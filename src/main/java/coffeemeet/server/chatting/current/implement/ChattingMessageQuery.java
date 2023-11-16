@@ -21,4 +21,7 @@ public class ChattingMessageQuery {
         pageSize);
   }
 
+  public List<ChattingMessage> findAllMessages(ChattingRoom chattingRoom) {
+    return chattingMessageQueryRepository.findAllChattingMessages(chattingRoom);
+  }
 }
