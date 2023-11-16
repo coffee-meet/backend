@@ -4,6 +4,7 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
+import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,13 @@ public class ReportService {
         .reasonDetail(reasonDetail)
         .build();
     reportCommand.save(report);
+  }
+
+  public ReportDto.Response findReport(Long reportId) {
+    Report report = reportQuery.getReportById(reportId);
+    User reporter = userQuery.getUserById(report.getReporterId());
+    User targetUser = userQuery.getUserById(report.getTargetId());
+    return ReportDto.Response.of(report, reporter, targetUser);
   }
 
 }
