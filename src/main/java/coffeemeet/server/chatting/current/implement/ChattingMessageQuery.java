@@ -24,4 +24,5 @@ public class ChattingMessageQuery {
   public List<ChattingMessage> findAllMessages(ChattingRoom chattingRoom) {
     return chattingMessageQueryRepository.findAllChattingMessages(chattingRoom);
   }
+
 }
