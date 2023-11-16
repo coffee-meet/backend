@@ -9,6 +9,7 @@ import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
+import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
 import org.instancio.Instancio;
@@ -56,6 +57,11 @@ public class ChattingFixture {
 
   public static ChattingRoomHistory chattingRoomHistory() {
     return Instancio.of(ChattingRoomHistory.class)
+        .create();
+  }
+
+  public static List<UserChattingHistory> userChattingHistories(int size) {
+    return Instancio.ofList(UserChattingHistory.class).size(size)
         .create();
   }
 
