@@ -6,6 +6,7 @@ import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,18 @@ public class ChattingRoomController {
   private final ChattingRoomService chattingRoomService;
 
   @GetMapping("/{roomId}")
-  public ResponseEntity<ChatsHTTP.Response> viewChatRoomMessages(
+  public ResponseEntity<ChatsHTTP.Response> viewChattingRoomMessages(
       @PathVariable Long roomId,
       @RequestParam(defaultValue = "0") Long firstMessageId,
       @RequestParam(defaultValue = "50") int pageSize) {
     List<Response> responses = chattingRoomService.searchMessages(roomId, firstMessageId, pageSize);
     return ResponseEntity.ok(ChatsHTTP.Response.from(responses));
+  }
+
+  @DeleteMapping("/{roomId}")
+  public ResponseEntity<Void> exitChattingRoom(@PathVariable Long roomId) {
+    chattingRoomService.deleteChattingRoom(roomId);
+    return ResponseEntity.ok().build();
   }
 
 }
