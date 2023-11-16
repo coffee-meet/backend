@@ -33,7 +33,7 @@ public class ChattingMessageQueryRepository {
     return messages;
   }
 
-  public List<ChattingMessage> findAllChattingMessages(ChattingRoom chattingRoom) {
+  public List<ChattingMessage> findAllChattingMessagesByChattingRoom(ChattingRoom chattingRoom) {
     return jpaQueryFactory
         .selectFrom(chattingMessage)
         .where(chattingMessage.chattingRoom.eq(chattingRoom))

@@ -54,7 +54,8 @@ class ChattingMessageQueryTest {
     List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(chattingRoom, size);
 
     // when
-    given(chattingMessageQueryRepository.findAllChattingMessages(chattingRoom)).willReturn(
+    given(chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(
+        chattingRoom)).willReturn(
         chattingMessages);
 
     // then
