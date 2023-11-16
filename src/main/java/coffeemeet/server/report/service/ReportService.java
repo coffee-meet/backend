@@ -51,6 +51,7 @@ public class ReportService {
   public List<AllReportDto.Response> findAllReports() {
     List<Report> allReports = reportQuery.getAllReports();
     return allReports.stream()
+        .filter(report -> !report.isProcessed())
         .map(this::mapToAllReportDto)
         .toList();
   }
