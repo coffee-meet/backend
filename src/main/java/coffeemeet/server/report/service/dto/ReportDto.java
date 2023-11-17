@@ -9,7 +9,7 @@ public sealed interface ReportDto permits ReportDto.Response {
   record Response(
       String reporterNickname,
       String targetNickname,
-      String reporterEmail,
+      String targetUserEmail,
       String reason,
       String reasonDetail,
       int reportedCount,
@@ -20,7 +20,7 @@ public sealed interface ReportDto permits ReportDto.Response {
       return new Response(
           reporter.getProfile().getNickname(),
           targetUser.getProfile().getNickname(),
-          report.getReporterEmail().getValue(),
+          targetUser.getProfile().getEmail().getValue(),
           report.getReason().name(),
           report.getReasonDetail(),
           targetUser.getReportInfo().getReportedCount(),

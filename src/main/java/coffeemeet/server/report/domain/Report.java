@@ -8,9 +8,7 @@ import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_TARGET_
 
 import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.common.execption.InvalidInputException;
-import coffeemeet.server.user.domain.Email;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -51,10 +49,6 @@ public class Report extends BaseEntity {
   @Column(nullable = false)
   private Long targetId;
 
-  @Embedded
-  @Column(nullable = false)
-  private Email reporterEmail;
-
   @Column(nullable = false)
   private ReportReason reason;
 
@@ -66,7 +60,6 @@ public class Report extends BaseEntity {
       @NonNull Long reporterId,
       @NonNull Long chattingRoomId,
       @NonNull Long targetId,
-      @NonNull Email reporterEmail,
       @NonNull String reason,
       @NonNull String reasonDetail
   ) {
@@ -78,7 +71,6 @@ public class Report extends BaseEntity {
     this.reporterId = reporterId;
     this.chattingRoomId = chattingRoomId;
     this.targetId = targetId;
-    this.reporterEmail = reporterEmail;
     this.reason = ReportReason.valueOf(reason);
     this.reasonDetail = reasonDetail;
   }
