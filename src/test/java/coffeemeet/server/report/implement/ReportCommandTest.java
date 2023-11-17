@@ -2,7 +2,8 @@ package coffeemeet.server.report.implement;
 
 import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.infrastructure.ReportRepository;
@@ -28,7 +29,7 @@ class ReportCommandTest {
     // given
     Report report = report();
 
-    willDoNothing().given(reportRepository).save(report);
+    given(reportRepository.save(any(Report.class))).willReturn(report);
 
     // when, then
     assertThatCode(() -> reportCommand.save(report)).doesNotThrowAnyException();
