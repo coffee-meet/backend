@@ -52,7 +52,7 @@ public class ReportQuery {
   }
 
   public List<Report> getAllReports() {
-    return reportRepository.findAllReportsByTargetIdAndChattingRoomId();
+    return reportRepository.findAllReportsGroupedByTargetIdAndChattingRoomId();
   }
 
 }
