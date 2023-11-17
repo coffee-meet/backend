@@ -9,6 +9,8 @@ import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,7 +50,7 @@ public class Report extends BaseEntity {
   @Column(nullable = false)
   private Long targetId;
 
-  @Column(nullable = false)
+  @Enumerated(value = EnumType.STRING)
   private ReportReason reason;
 
   @Column(nullable = false, length = REASON_MAX_LENGTH)
