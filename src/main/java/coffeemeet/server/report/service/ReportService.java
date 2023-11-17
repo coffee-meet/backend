@@ -6,6 +6,7 @@ import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.AllReportDto;
 import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ReportService {
     reportCommand.save(report);
   }
 
-  public ReportDto.Response findReport(Long reportId) {
+  public ReportDto.Response findReportById(Long reportId) {
     Report report = reportQuery.getReportById(reportId);
     User reporter = userQuery.getUserById(report.getReporterId());
     User targetUser = userQuery.getUserById(report.getTargetId());
@@ -51,14 +52,27 @@ public class ReportService {
   public List<AllReportDto.Response> findAllReports() {
     List<Report> allReports = reportQuery.getAllReports();
     return allReports.stream()
-        .filter(report -> !report.isProcessed())
         .map(this::mapToAllReportDto)
+        .toList();
+  }
+
+  public List<TargetReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,
+      long chattingRoomId) {
+    List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(targetId,
+        chattingRoomId);
+    return reports.stream()
+        .map(this::mapToReportDto)
         .toList();
   }
 
   private AllReportDto.Response mapToAllReportDto(Report report) {
     User targetUser = userQuery.getUserById(report.getTargetId());
     return AllReportDto.Response.of(targetUser);
+  }
+
+  private TargetReportDto.Response mapToReportDto(Report report) {
+    User reporter = userQuery.getUserById(report.getReporterId());
+    return TargetReportDto.Response.of(reporter.getProfile().getNickname(), report.getCreatedAt());
   }
 
 }

@@ -31,7 +31,7 @@ public class ReportQuery {
     }
   }
 
-  public Report getReportById(Long reportId) {
+  public Report getReportById(long reportId) {
     return reportRepository.findById(reportId)
         .orElseThrow(() -> new NotFoundException(
                 REPORT_NOT_FOUND,
@@ -40,8 +40,19 @@ public class ReportQuery {
         );
   }
 
+  public List<Report> getReportsByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
+    List<Report> reports = reportRepository.findByTargetIdAndChattingRoomId(targetId, chattingRoomId);
+    if (reports.isEmpty()) {
+      throw new NotFoundException(
+          REPORT_NOT_FOUND,
+          String.format(REPORT_NOT_FOUND_MESSAGE, targetId)
+      );
+    }
+    return reports;
+  }
+
   public List<Report> getAllReports() {
-    return reportRepository.findAll();
+    return reportRepository.findAllReportsByTargetIdAndChattingRoomId();
   }
 
 }
