@@ -21,7 +21,7 @@ public sealed interface ReportDto permits ReportDto.Response {
           reporter.getProfile().getNickname(),
           targetUser.getProfile().getNickname(),
           report.getReporterEmail().getValue(),
-          report.getReason(),
+          report.getReason().name(),
           report.getReasonDetail(),
           targetUser.getReportInfo().getReportedCount(),
           report.getCreatedAt()

@@ -56,13 +56,10 @@ public class Report extends BaseEntity {
   private Email reporterEmail;
 
   @Column(nullable = false)
-  private String reason;
+  private ReportReason reason;
 
   @Column(nullable = false, length = REASON_MAX_LENGTH)
   private String reasonDetail;
-
-  @Column(nullable = false)
-  private boolean isProcessed;
 
   @Builder
   private Report(
@@ -82,9 +79,8 @@ public class Report extends BaseEntity {
     this.chattingRoomId = chattingRoomId;
     this.targetId = targetId;
     this.reporterEmail = reporterEmail;
-    this.reason = reason;
+    this.reason = ReportReason.valueOf(reason);
     this.reasonDetail = reasonDetail;
-    this.isProcessed = false;
   }
 
   private void validateReporter(Long reporterId) {
