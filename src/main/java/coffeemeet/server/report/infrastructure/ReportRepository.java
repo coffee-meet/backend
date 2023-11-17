@@ -13,6 +13,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
   List<Report> findByTargetIdAndChattingRoomId(long targetId, long chattingRoomId);
 
   @Query("SELECT r FROM Report r WHERE r.createdAt IN (SELECT MAX(r2.createdAt) FROM Report r2 GROUP BY r2.targetId, r2.chattingRoomId)")
-  List<Report> findAllReportsByTargetIdAndChattingRoomId();
+  List<Report> findAllReportsGroupedByTargetIdAndChattingRoomId();
 
 }
