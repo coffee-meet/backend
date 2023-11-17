@@ -2,17 +2,11 @@ package coffeemeet.server.report.presentation;
 
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
-import coffeemeet.server.report.presentation.dto.AllReportHTTP;
 import coffeemeet.server.report.presentation.dto.ReportHTTP;
 import coffeemeet.server.report.service.ReportService;
-import coffeemeet.server.report.service.dto.AllReportDto;
-import coffeemeet.server.report.service.dto.ReportDto;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,21 +25,6 @@ public class ReportController {
     reportService.reportUser(authInfo.userId(), request.chattingRoomId(), request.targetId(),
         request.reason(), request.reasonDetail());
     return ResponseEntity.ok().build();
-  }
-
-  @GetMapping("/{reportId}")
-  public ResponseEntity<ReportHTTP.Response> findReport(@PathVariable Long reportId) {
-    ReportDto.Response report = reportService.findReport(reportId);
-    return ResponseEntity.ok(ReportHTTP.Response.of(report));
-  }
-
-  @GetMapping
-  public ResponseEntity<List<AllReportHTTP.Response>> findAllReports() {
-    List<AllReportDto.Response> reports = reportService.findAllReports();
-    List<AllReportHTTP.Response> response = reports.stream()
-        .map(AllReportHTTP.Response::of)
-        .toList();
-    return ResponseEntity.ok(response);
   }
 
 }
