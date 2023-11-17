@@ -29,13 +29,11 @@ public class ReportService {
     reportQuery.hasDuplicatedReport(userId, chattingRoomId, targetId);
 
     chattingRoomQuery.existsById(chattingRoomId);
-    User reporter = userQuery.getUserById(userId);
 
     Report report = Report.builder()
         .reporterId(userId)
         .chattingRoomId(chattingRoomId)
         .targetId(targetId)
-        .reporterEmail(reporter.getProfile().getEmail())
         .reason(reason)
         .reasonDetail(reasonDetail)
         .build();

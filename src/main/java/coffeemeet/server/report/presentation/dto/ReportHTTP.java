@@ -24,7 +24,7 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
   record Response(
       String reporterNickname,
       String targetNickname,
-      String reporterEmail,
+      String targetUserEmail,
       String reason,
       String reasonDetail,
       int reportedCount,
@@ -35,7 +35,7 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
       return new ReportHTTP.Response(
           response.reporterNickname(),
           response.targetNickname(),
-          response.reporterEmail(),
+          response.targetUserEmail(),
           response.reason(),
           response.reasonDetail(),
           response.reportedCount(),
