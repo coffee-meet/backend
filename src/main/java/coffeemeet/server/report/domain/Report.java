@@ -1,12 +1,9 @@
 package coffeemeet.server.report.domain;
 
-import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_CHATTING_ROOM;
 import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REASON_DETAIL;
-import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REPORTER;
-import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_TARGET_USER;
 
 import coffeemeet.server.common.domain.BaseEntity;
-import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.common.execption.DataLengthExceededException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,11 +25,6 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report extends BaseEntity {
 
-  private static final String INVALID_REPORTER_MESSAGE = "해당 신고자 아이디(%s)는 유효하지 않습니다.";
-  private static final String INVALID_CHATTING_ROOM_MESSAGE = "해당 채팅방 아이디(%s)는 유효하지 않습니다.";
-  private static final String INVALID_TARGET_USER_MESSAGE = "해당 신고 대상 아이디(%s)는 유효하지 않습니다.";
-  private static final String INVALID_REPORT_REASON_MESSAGE = "해당 신고 사유(%s)는 존재하지 않습니다.";
-  private static final String INVALID_REASON_MESSAGE = "해당 신고 사유(%s)는 유효하지 않습니다.";
   private static final String INVALID_REASON_DETAIL_MESSAGE = "해당 신고 상세 사유(%s)는 유효하지 않습니다.";
 
   private static final int REASON_MAX_LENGTH = 200;
@@ -64,9 +56,6 @@ public class Report extends BaseEntity {
       @NonNull String reason,
       @NonNull String reasonDetail
   ) {
-    validateReporter(reporterId);
-    validateChattingRoom(chattingRoomId);
-    validateTarget(targetId);
     validateReasonDetails(reasonDetail);
     this.reporterId = reporterId;
     this.chattingRoomId = chattingRoomId;
@@ -75,36 +64,9 @@ public class Report extends BaseEntity {
     this.reasonDetail = reasonDetail;
   }
 
-  private void validateReporter(Long reporterId) {
-    if (reporterId == null) {
-      throw new InvalidInputException(
-          INVALID_REPORTER,
-          INVALID_REPORTER_MESSAGE
-      );
-    }
-  }
-
-  private void validateChattingRoom(Long chattingRoomId) {
-    if (chattingRoomId == null) {
-      throw new InvalidInputException(
-          INVALID_CHATTING_ROOM,
-          INVALID_CHATTING_ROOM_MESSAGE
-      );
-    }
-  }
-
-  private void validateTarget(Long targetId) {
-    if (targetId == null) {
-      throw new InvalidInputException(
-          INVALID_TARGET_USER,
-          INVALID_TARGET_USER_MESSAGE
-      );
-    }
-  }
-
   private void validateReasonDetails(String reasonDetails) {
     if (!StringUtils.hasText(reasonDetails) || reasonDetails.length() > REASON_MAX_LENGTH) {
-      throw new InvalidInputException(
+      throw new DataLengthExceededException(
           INVALID_REASON_DETAIL,
           String.format(INVALID_REASON_DETAIL_MESSAGE, reasonDetails)
       );
