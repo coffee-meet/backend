@@ -3,6 +3,7 @@ package coffeemeet.server.report.implement;
 import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -58,15 +59,54 @@ class ReportQueryTest {
   }
 
   @Test
-  @DisplayName("모든 신고 내역을 조회할 수 있다.")
+  @DisplayName("동일한 신고 대상 아이디와 채팅방 아이디를 가진 신고 내역을 조회할 수 있다.")
+  void getReportsByTargetIdAndChattingRoomIdTest() {
+    // given
+    Report report = report();
+    Report report1 = report();
+    Report sameReport = report(report.getTargetId(), report.getChattingRoomId());
+
+    List<Report> reports = new ArrayList<>(List.of(report, report1, sameReport));
+    List<Report> expectedReports = new ArrayList<>(List.of(report, report1));
+    reportRepository.saveAll(reports);
+
+    Report getReport = reports.get(0);
+    Long targetId = getReport.getTargetId();
+    Long chattingRoomId = getReport.getChattingRoomId();
+
+    given(reportRepository.findByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
+        expectedReports);
+    // when
+    List<Report> foundReports = reportQuery.getReportsByTargetIdAndChattingRoomId(
+        targetId, chattingRoomId);
+
+    // then
+    assertThat(foundReports.size()).isEqualTo(expectedReports.size());
+  }
+
+  @Test
+  @DisplayName("모든 신고 내역 조회 시 신고 대상과 채팅방이 동일한 경우 하나의 신고 내역으로 조회된다.")
   void getAllReportsTest() {
     // given
-    List<Report> reports = new ArrayList<>(List.of(report(), report()));
+    Report report = report();
+    Report report1 = report();
+    Report sameReport = report(report.getTargetId(), report.getChattingRoomId());
 
-    given(reportRepository.findAll()).willReturn(reports);
+    List<Report> reports = new ArrayList<>(List.of(report, report1, sameReport));
+    List<Report> expectedReports = new ArrayList<>(List.of(report1, sameReport));
+    reportRepository.saveAll(reports);
 
-    // when, then
-    assertThat(reportQuery.getAllReports()).isEqualTo(reports);
+    given(reportRepository.findAllReportsGroupedByTargetIdAndChattingRoomId()).willReturn(
+        expectedReports);
+
+    // when
+    List<Report> allReports = reportQuery.getAllReports();
+
+    // then
+    assertAll(
+        () -> assertThat(allReports.size()).isEqualTo(expectedReports.size()),
+        () -> assertThat(allReports).isEqualTo(expectedReports)
+    );
   }
 
 }
