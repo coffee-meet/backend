@@ -1,5 +1,6 @@
 package coffeemeet.server.report.presentation.dto;
 
+import coffeemeet.server.report.domain.ReportReason;
 import coffeemeet.server.report.service.dto.ReportDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
       String reporterNickname,
       String targetNickname,
       String targetUserEmail,
-      String reason,
+      ReportReason reason,
       String reasonDetail,
       int reportedCount,
       LocalDateTime createdAt
