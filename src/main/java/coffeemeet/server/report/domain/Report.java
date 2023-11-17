@@ -1,7 +1,6 @@
 package coffeemeet.server.report.domain;
 
 import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_CHATTING_ROOM;
-import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REASON;
 import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REASON_DETAIL;
 import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REPORTER;
 import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_TARGET_USER;
@@ -66,12 +65,11 @@ public class Report extends BaseEntity {
     validateReporter(reporterId);
     validateChattingRoom(chattingRoomId);
     validateTarget(targetId);
-    validateReason(reason);
     validateReasonDetails(reasonDetail);
     this.reporterId = reporterId;
     this.chattingRoomId = chattingRoomId;
     this.targetId = targetId;
-    this.reason = ReportReason.valueOf(reason);
+    this.reason = ReportReason.getReason(reason);
     this.reasonDetail = reasonDetail;
   }
 
@@ -98,15 +96,6 @@ public class Report extends BaseEntity {
       throw new InvalidInputException(
           INVALID_TARGET_USER,
           INVALID_TARGET_USER_MESSAGE
-      );
-    }
-  }
-
-  private void validateReason(String reason) {
-    if (!ReportReason.checkReason(reason)) {
-      throw new InvalidInputException(
-          INVALID_REASON,
-          String.format(INVALID_REPORT_REASON_MESSAGE, reason)
       );
     }
   }
