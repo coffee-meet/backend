@@ -78,7 +78,7 @@ class AdminServiceTest {
   }
 
   @Test
-  @DisplayName("신고 패널티를 부과하고 알림을 보낼 수 있다.")
+  @DisplayName("매칭 중인 유저를 매칭 큐에서 제외하고 신고 패널티를 부과하고 알림을 보낼 수 있다.")
   void punishUserTest() {
     // given
     Long userId = 1L;
