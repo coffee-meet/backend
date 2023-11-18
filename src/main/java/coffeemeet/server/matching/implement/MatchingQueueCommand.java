@@ -18,7 +18,7 @@ public class MatchingQueueCommand {
     ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
     Boolean result = zSetOperations.add(companyName, userId, System.currentTimeMillis());
     if (result == null) {
-      throw new RedisException("Redis가 Pipeline 상태이거나 Transaction 상태입니다.", INTERNAL_SERVER_ERROR);
+      throw new RedisException(INTERNAL_SERVER_ERROR, "Redis가 Pipeline 상태이거나 Transaction 상태입니다.");
     }
   }
 
