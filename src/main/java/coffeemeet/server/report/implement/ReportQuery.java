@@ -20,13 +20,13 @@ public class ReportQuery {
 
   private final ReportRepository reportRepository;
 
-  public void hasDuplicatedReport(long userId, long chattingRoomId, long targetId) {
-    if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(userId, chattingRoomId,
+  public void hasDuplicatedReport(long reporterId, long chattingRoomId, long targetId) {
+    if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(reporterId, chattingRoomId,
         targetId)) {
       throw new DuplicatedDataException(
           ALREADY_EXIST_REPORT,
           String.format(ALREADY_REPORTED_MESSAGE,
-              userId, chattingRoomId, targetId)
+              reporterId, chattingRoomId, targetId)
       );
     }
   }
