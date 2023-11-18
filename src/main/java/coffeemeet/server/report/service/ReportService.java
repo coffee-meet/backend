@@ -24,14 +24,14 @@ public class ReportService {
   private final ChattingRoomQuery chattingRoomQuery;
 
   @Transactional
-  public void reportUser(long userId, long chattingRoomId, long targetId, String reason,
+  public void reportUser(long reporterId, long chattingRoomId, long targetId, String reason,
       String reasonDetail) {
-    reportQuery.hasDuplicatedReport(userId, chattingRoomId, targetId);
+    reportQuery.hasDuplicatedReport(reporterId, chattingRoomId, targetId);
 
     chattingRoomQuery.existsById(chattingRoomId);
 
     Report report = Report.builder()
-        .reporterId(userId)
+        .reporterId(reporterId)
         .chattingRoomId(chattingRoomId)
         .targetId(targetId)
         .reason(reason)
