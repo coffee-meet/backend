@@ -1,5 +1,7 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;
 import static coffeemeet.server.user.domain.UserStatus.REPORTED;
 
@@ -88,15 +90,15 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void enterChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_CONNECTED;
+    this.userStatus = CHATTING_CONNECTED;
   }
 
   public void exitChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_UNCONNECTED;
+    this.userStatus = CHATTING_UNCONNECTED;
   }
 
-  public void setIdleState() {
-    this.userStatus = UserStatus.IDLE;
+  public void setIdleStatus() {
+    this.userStatus = IDLE;
   }
 
   @Override
