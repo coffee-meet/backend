@@ -47,8 +47,8 @@ class ReportServiceTest {
   @Mock
   private ChattingRoomQuery chattingRoomQuery;
 
-  @Test
   @DisplayName("신고할 수 있다.")
+  @Test
   void reportUserTest() {
     // given
     Report report = report();
@@ -64,8 +64,8 @@ class ReportServiceTest {
             "부적절한 콘텐츠", "신고 상세 내용")).doesNotThrowAnyException();
   }
 
-  @Test
   @DisplayName("신고 아이디로 해당 신고 내역을 조회할 수 있다.")
+  @Test
   void findReportTest() {
     // given
     Report report = report();
@@ -88,31 +88,23 @@ class ReportServiceTest {
     );
   }
 
-  @Test
   @DisplayName("모든 신고 내역 조회 시 신고 대상과 채팅방이 동일한 경우 하나의 신고 내역으로 조회된다.")
+  @Test
   void findAllReportsTest() {
     // given
     User targetUser = user();
-    List<Report> reports = new ArrayList<>();
-    List<Report> noDuplicatedReports = new ArrayList<>();
     Report report = report();
     Report report1 = report();
-    Report sameReport = report(report.getTargetId(), report.getChattingRoomId());
+    List<Report> reports = new ArrayList<>(List.of(report, report1));
 
-    reports.add(report);
-    reports.add(report1);
-    reports.add(sameReport);
-    noDuplicatedReports.add(report);
-    noDuplicatedReports.add(report1);
-
-    given(reportQuery.getAllReports()).willReturn(noDuplicatedReports);
+    given(reportQuery.getAllReports()).willReturn(reports);
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
     List<AllReportDto.Response> response = reportService.findAllReports();
 
     // then
-    assertThat(response.size()).isEqualTo(noDuplicatedReports.size());
+    assertThat(response.size()).isEqualTo(reports.size());
   }
 
   @Test
@@ -120,14 +112,11 @@ class ReportServiceTest {
   void findReportByTargetIdAndChattingRoomIdTest() {
     // given
     User targetUser = user();
-    List<Report> reports = new ArrayList<>();
     Report report = report();
     Long targetId = report.getTargetId();
     Long chattingRoomId = report.getChattingRoomId();
     Report sameReport = report(targetId, chattingRoomId);
-
-    reports.add(report);
-    reports.add(sameReport);
+    List<Report> reports = new ArrayList<>(List.of(report, sameReport));
 
     given(reportQuery.getReportsByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
         reports);
@@ -138,7 +127,7 @@ class ReportServiceTest {
         targetId, chattingRoomId);
 
     // given
-    assertThat(response.size()).isEqualTo(2);
+    assertThat(response.size()).isEqualTo(reports.size());
   }
 
 }

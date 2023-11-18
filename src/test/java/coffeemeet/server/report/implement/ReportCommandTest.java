@@ -23,8 +23,8 @@ class ReportCommandTest {
   @Mock
   private ReportRepository reportRepository;
 
-  @Test
   @DisplayName("신고를 생성해 저장할 수 있다.")
+  @Test
   void saveTest() {
     // given
     Report report = report();
