@@ -2,6 +2,7 @@ package coffeemeet.server.admin.service;
 
 import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 
+import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.implement.FCMNotificationSender;
@@ -24,6 +25,11 @@ public class AdminService {
   private final ReportCommand reportCommand;
   private final MatchingQueueCommand matchingQueueCommand;
   private final CertificationQuery certificationQuery;
+  private final AdminQuery adminQuery;
+
+  public void login(String id, String password) {
+    adminQuery.checkIdAndPassword(id, password);
+  }
 
   public void approveCertification(Long userId) {
     certificationCommand.certificated(userId);
