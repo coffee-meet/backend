@@ -10,7 +10,7 @@ public sealed interface ReportDto permits ReportDto.Response {
   record Response(
       String reporterNickname,
       String targetNickname,
-      String targetUserEmail,
+      String targetEmail,
       ReportReason reason,
       String reasonDetail,
       int reportedCount,
