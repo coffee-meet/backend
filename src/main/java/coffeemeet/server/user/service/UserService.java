@@ -1,11 +1,13 @@
 package coffeemeet.server.user.service;
 
 import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.report.exception.ReportErrorCode.BLACKLIST_USER;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -31,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+  private static final String BLACKLIST_USER_MESSAGE = "해당 사용자(%s)는 영구정지된 사용자입니다.";
 
   private final MediaManager mediaManager;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
@@ -67,6 +71,7 @@ public class UserService {
     OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
 
     User user = userQuery.getUserByOAuthInfo(oAuthProvider, memberDetail.oAuthProviderId());
+    isBlacklist(user);
     List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
     Certification certification = certificationQuery.getCertificationByUserId(user.getId());
 
@@ -118,13 +123,21 @@ public class UserService {
     userCommand.deleteUser(userId);
   }
 
-
   public void registerOrUpdateNotificationToken(Long useId, String token) {
     userCommand.registerOrUpdateNotificationToken(useId, token);
   }
 
   public void unsubscribeNotification(Long userId) {
     userCommand.unsubscribeNotification(userId);
+  }
+
+  private void isBlacklist(User user) {
+    if (user.isBlacklisted()) {
+      throw new InvalidAuthException(
+          BLACKLIST_USER,
+          String.format(BLACKLIST_USER_MESSAGE, user.getProfile().getNickname())
+      );
+    }
   }
 
   private void deleteCurrentProfileImage(String profileImageUrl) {

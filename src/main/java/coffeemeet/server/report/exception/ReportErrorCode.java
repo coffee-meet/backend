@@ -13,6 +13,7 @@ public enum ReportErrorCode implements ErrorCode {
   INVALID_REPORTER("R000", "유효하지 않은 신고자입니다."),
   INVALID_CHATTING_ROOM("R000", "유효하지 않은 채팅방입니다."),
   INVALID_TARGET_USER("R000", "유효하지 않은 신고 대상입니다."),
+  BLACKLIST_USER("R001", "영구정지된 사용자입니다."),
   REPORT_NOT_FOUND("R004", "신고 내역을 찾을 수 없습니다."),
   ALREADY_EXIST_REPORT("R009", "중복된 신고입니다.");
 

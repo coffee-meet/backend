@@ -57,6 +57,9 @@ public class User extends AdvancedBaseEntity {
   @Column(nullable = false)
   private boolean isDeleted;
 
+  @Column(nullable = false)
+  private boolean isBlacklisted;
+
   public User(
       @NonNull OAuthInfo oauthInfo,
       @NonNull Profile profile
@@ -65,6 +68,7 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
+    this.isBlacklisted = false;
     this.userStatus = UserStatus.IDLE;
   }
 
@@ -94,6 +98,10 @@ public class User extends AdvancedBaseEntity {
 
   public void setIdleState() {
     this.userStatus = UserStatus.IDLE;
+  }
+
+  public void convertToBlacklist() {
+    this.isBlacklisted = true;
   }
 
   @Override
