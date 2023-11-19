@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,12 +49,13 @@ public class ChattingRoomService {
         .map(message -> ChattingDto.Response.of(message.getUser(), message)).toList();
   }
 
+  @Transactional
   public void deleteChattingRoom(Long roomId) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(chattingRoom);
     List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
-    backUpChattingRoom(allMessages, users);
-    chattingRoomCommand.removeChattingRoom(roomId);
+    backUpChattingRoom(allMessages, users, chattingRoom);
+    chattingRoomCommand.removeChattingRoom(chattingRoom);
     //sendChattingEndAlarm(users);
     updateUserStatusToIdle(users);
   }
@@ -64,11 +66,13 @@ public class ChattingRoomService {
     fcmNotificationSender.sendMultiNotifications(notificationInfos, CHATTING_END_MESSAGE);
   }
 
-  private void backUpChattingRoom(List<ChattingMessage> allMessages, List<User> users) {
-    ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory();
+  private void backUpChattingRoom(List<ChattingMessage> allMessages, List<User> users,
+      ChattingRoom chattingRoom) {
+    ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(
+        chattingRoom);
     chattingMessageHistoryCommand.createChattingMessageHistory(allMessages.stream().map(
         chattingMessage -> new ChattingMessageHistory(chattingMessage.getMessage(),
-            chattingRoomHistory)).toList());
+            chattingRoomHistory, chattingMessage.getCreatedAt())).toList());
     userChattingHistoryCommand.createUserChattingHistory(
         users.stream().map(user -> new UserChattingHistory(user, chattingRoomHistory)).toList());
   }
