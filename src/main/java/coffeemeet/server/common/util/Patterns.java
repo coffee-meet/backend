@@ -6,4 +6,6 @@ public class Patterns {
 
   public static final Pattern EMAIL_PATTERN = Pattern.compile(
       "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+
+  public static final Pattern REPORT_REASON_PATTERN = Pattern.compile(" ");
 }
