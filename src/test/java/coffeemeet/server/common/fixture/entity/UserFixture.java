@@ -4,6 +4,7 @@ import static java.time.LocalDateTime.now;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.user.domain.Email;
+import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
@@ -35,6 +36,11 @@ public class UserFixture {
 
   public static NotificationTokenHTTP.Request notificationTokenHTTPRequest() {
     return Instancio.create(NotificationTokenHTTP.Request.class);
+  }
+
+  public static List<Keyword> keywords() {
+    return Instancio.ofList(Keyword.class).size(3)
+        .create();
   }
 
   public static String token() {

@@ -3,8 +3,6 @@ package coffeemeet.server.user.service;
 import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.user.domain.Keyword.COOK;
-import static coffeemeet.server.user.domain.Keyword.GAME;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,6 +24,7 @@ import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
 import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
+import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -44,8 +43,6 @@ import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,7 +112,7 @@ class UserServiceTest {
     // given
     User user = user();
     Certification certification = certification();
-    List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
+    List<Keyword> keywords = UserFixture.keywords();
     String authCode = "authCode";
     AuthTokens authTokens = AuthTokensFixture.authTokens();
 
@@ -138,8 +135,7 @@ class UserServiceTest {
         () -> assertThat(result.profileImageUrl()).isEqualTo(
             user.getProfile().getProfileImageUrl()),
         () -> assertThat(result.companyName()).isEqualTo(certification.getCompanyName()),
-        () -> assertThat(result.department()).isEqualTo(certification.getDepartment()),
-        () -> assertThat(result.interests()).isEqualTo(keywords)
+        () -> assertThat(result.department()).isEqualTo(certification.getDepartment())
     );
   }
 
@@ -149,7 +145,7 @@ class UserServiceTest {
     // given
     User user = user();
     Certification certification = certification();
-    List<Keyword> keywords = new ArrayList<>(Arrays.asList(COOK, GAME));
+    List<Keyword> keywords = UserFixture.keywords();
     Response response = Response.of(user, certification.getDepartment(), keywords);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
@@ -163,8 +159,7 @@ class UserServiceTest {
     assertAll(
         () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
         () -> assertThat(result.department()).isEqualTo(response.department()),
-        () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
-        () -> assertThat(result.interests()).isEqualTo(response.interests())
+        () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl())
     );
   }
 
@@ -173,7 +168,7 @@ class UserServiceTest {
   void findMyProfileTest() {
     // given
     User user = user();
-    List<Keyword> keywords = new ArrayList<>(List.of(COOK));
+    List<Keyword> keywords = UserFixture.keywords();
     Certification certification = certification(user);
     MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
         certification.getDepartment());
@@ -190,8 +185,7 @@ class UserServiceTest {
         () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
         () -> assertThat(result.email()).isEqualTo(response.email()),
         () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
-        () -> assertThat(result.department()).isEqualTo(response.department()),
-        () -> assertThat(result.interests()).isEqualTo(response.interests())
+        () -> assertThat(result.department()).isEqualTo(response.department())
     );
   }
 
@@ -246,7 +240,7 @@ class UserServiceTest {
         new Profile("닉네임", new Email("test123@gmail.com"), "http://imageUrl"));
 
     String newNickname = "새닉네임";
-    ArrayList<Keyword> newKeywords = new ArrayList<>(Arrays.asList(COOK, GAME));
+    List<Keyword> newKeywords = UserFixture.keywords();
 
     given(userQuery.getUserById(any())).willReturn(user);
     willDoNothing().given(userCommand).updateUserInfo(any(), any());
