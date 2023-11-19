@@ -43,6 +43,7 @@ public class Report extends BaseEntity {
   private Long targetId;
 
   @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false)
   private ReportReason reason;
 
   @Column(nullable = false, length = REASON_MAX_LENGTH)
