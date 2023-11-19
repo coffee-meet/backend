@@ -37,6 +37,7 @@ public class ChattingMessageQueryRepository {
     return jpaQueryFactory
         .selectFrom(chattingMessage)
         .where(chattingMessage.chattingRoom.eq(chattingRoom))
+        .orderBy(chattingMessage.id.asc())
         .fetch();
   }
 
