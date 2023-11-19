@@ -5,6 +5,7 @@ import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MES
 import coffeemeet.server.common.execption.InvalidInputException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +37,7 @@ public class ChattingMessageHistory {
   @Column(nullable = false)
   private LocalDateTime createdAt;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chatting_room_history_id", nullable = false)
   private ChattingRoomHistory chattingRoomHistory;
 
