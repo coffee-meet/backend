@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class UserChattingHistory extends BaseEntity {
   @JoinColumn(name = "chatting_room_history_id", nullable = false)
   private ChattingRoomHistory chattingRoomHistory;
 
-  public UserChattingHistory(User user, ChattingRoomHistory chattingRoomHistory) {
+  public UserChattingHistory(@NonNull User user, @NonNull ChattingRoomHistory chattingRoomHistory) {
     this.user = user;
     this.chattingRoomHistory = chattingRoomHistory;
   }
