@@ -1,6 +1,10 @@
 package coffeemeet.server.report.service;
 
+import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_NOT_FOUND;
+
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
+import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
@@ -18,17 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReportService {
 
+  private static final String CHATTING_ROOM_NOT_FOUND_MESSAGE = "(%s)번 채팅방을 찾을 수 없습니다.";
+
   private final ReportCommand reportCommand;
   private final ReportQuery reportQuery;
   private final UserQuery userQuery;
   private final ChattingRoomQuery chattingRoomQuery;
+  private final UserChattingHistoryQuery userChattingHistoryQuery;
 
   @Transactional
   public void reportUser(long reporterId, long chattingRoomId, long targetId, String reason,
       String reasonDetail) {
     reportQuery.hasDuplicatedReport(reporterId, chattingRoomId, targetId);
 
-    chattingRoomQuery.existsById(chattingRoomId);
+    checkChattingRoomExists(reporterId, chattingRoomId);
 
     Report report = Report.builder()
         .reporterId(reporterId)
@@ -61,6 +68,24 @@ public class ReportService {
     return reports.stream()
         .map(this::mapToReportDto)
         .toList();
+  }
+
+  private void checkChattingRoomExists(long reporterId, long chattingRoomId) {
+    boolean isChattingRoomExists = false;
+    boolean isChattingHistoryExists = false;
+
+    try {
+      chattingRoomQuery.existsById(chattingRoomId);
+      isChattingRoomExists = true;
+    } catch (NotFoundException e) {
+      isChattingHistoryExists = userChattingHistoryQuery.existsByUserId(reporterId);
+    }
+
+    if (!isChattingRoomExists && !isChattingHistoryExists) {
+      throw new NotFoundException(
+          CHATTING_ROOM_NOT_FOUND,
+          String.format(CHATTING_ROOM_NOT_FOUND_MESSAGE, chattingRoomId));
+    }
   }
 
   private AllReportDto.Response mapToAllReportDto(Report report) {
