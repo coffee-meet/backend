@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReportQuery {
 
-  public static final String REPORT_NOT_FOUND_ERROR_MESSAGE = "해당 id(%s)에 매칭되는 신고가 없습니다.";
+  private static final String REPORT_NOT_FOUND_ERROR_MESSAGE = "해당 id(%s)에 매칭되는 신고가 없습니다.";
   private final ReportRepository reportRepository;
 
   public Report getReportById(Long reportId) {
