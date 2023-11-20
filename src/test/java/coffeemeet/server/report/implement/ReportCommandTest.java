@@ -32,7 +32,7 @@ class ReportCommandTest {
     given(reportRepository.save(any(Report.class))).willReturn(report);
 
     // when, then
-    assertThatCode(() -> reportCommand.create(report)).doesNotThrowAnyException();
+    assertThatCode(() -> reportCommand.createReport(report)).doesNotThrowAnyException();
   }
 
 }
