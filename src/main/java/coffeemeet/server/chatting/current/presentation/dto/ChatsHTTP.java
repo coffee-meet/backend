@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PRIVATE)
 public final class ChatsHTTP {
 
-  record Chat(
+  public record Chat(
       Long userId,
       Long messageId,
       String nickname,
