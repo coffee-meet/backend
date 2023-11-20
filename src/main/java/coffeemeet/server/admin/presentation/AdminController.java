@@ -2,6 +2,7 @@ package coffeemeet.server.admin.presentation;
 
 import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
 
+import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.CertificationApprovalHTTP;
 import coffeemeet.server.admin.presentation.dto.CertificationRejectionHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportApprovalHTTP;
@@ -10,6 +11,7 @@ import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,7 +33,7 @@ public class AdminController {
   @PostMapping("/login")
   public ResponseEntity<Void> login(
       HttpServletRequest httpServletRequest,
-      @RequestBody AdminLoginHTTP.Request request
+      @Valid @RequestBody AdminLoginHTTP.Request request
   ) {
     adminService.login(request.id(), request.password());
 
@@ -55,7 +57,7 @@ public class AdminController {
   @PatchMapping("/certification/approval")
   public ResponseEntity<Void> approveCertification(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-      @RequestBody CertificationApprovalHTTP.Request request) {
+      @Valid @RequestBody CertificationApprovalHTTP.Request request) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
@@ -66,7 +68,7 @@ public class AdminController {
   @PatchMapping("/certification/rejection")
   public ResponseEntity<Void> rejectCertification(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-      @RequestBody CertificationRejectionHTTP.Request request
+      @Valid @RequestBody CertificationRejectionHTTP.Request request
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
@@ -78,7 +80,7 @@ public class AdminController {
   @PatchMapping("/report/punishment")
   public ResponseEntity<Void> assignReportPenalty(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-      @RequestBody ReportApprovalHTTP.Request request
+      @Valid @RequestBody ReportApprovalHTTP.Request request
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
@@ -90,7 +92,7 @@ public class AdminController {
   @PatchMapping("/report/rejection")
   public ResponseEntity<Void> dismissReport(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-      @RequestBody ReportRejectionHTTP.Request request
+      @Valid @RequestBody ReportRejectionHTTP.Request request
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
