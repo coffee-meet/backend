@@ -109,4 +109,12 @@ public class ChattingFixture {
         .create();
   }
 
+  public static UserChattingHistory userChattingHistory(User user,
+      ChattingRoomHistory chattingRoomHistory) {
+    return Instancio.of(UserChattingHistory.class)
+        .set(field(UserChattingHistory::getUser), user)
+        .set(field(UserChattingHistory::getChattingRoomHistory), chattingRoomHistory)
+        .create();
+  }
+
 }
