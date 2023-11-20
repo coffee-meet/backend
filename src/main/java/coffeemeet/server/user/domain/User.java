@@ -12,6 +12,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,7 +46,7 @@ public class User extends AdvancedBaseEntity {
   @Column(nullable = false)
   private Profile profile;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chatting_room_id")
   private ChattingRoom chattingRoom;
 
@@ -87,6 +88,10 @@ public class User extends AdvancedBaseEntity {
 
   public void enterChattingRoom(ChattingRoom chattingRoom) {
     this.chattingRoom = chattingRoom;
+  }
+
+  public void deleteChattingRoom() {
+    this.chattingRoom = null;
   }
 
   public void enterChattingRoom() {

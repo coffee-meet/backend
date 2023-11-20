@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 public enum ChattingErrorCode implements ErrorCode {
   INVALID_MESSAGE("CM000", "유효하지 않은 메세지 형식입니다."),
   SOCKET_SESSION_NOT_FOUND("CM004", "사용자 소켓 연결 정보를 찾을 수 없습니다."),
-  CHATTING_ROOM_NOT_FOUND("CR004", "채팅방을 찾을 수 없습니다.");
+  CHATTING_ROOM_NOT_FOUND("CR004", "채팅방을 찾을 수 없습니다."),
+  CHATTING_ROOM_HISTORY_NOT_FOUND("CH004", "채팅방 내역을 찾을 수 없습니다.");
 
   private final String errorCode;
   private final String message;

@@ -2,16 +2,18 @@ package coffeemeet.server.chatting.history.domain;
 
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MESSAGE;
 
-import coffeemeet.server.common.domain.BaseEntity;
 import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +24,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @Table(name = "chatting_message_histories")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChattingMessageHistory extends BaseEntity {
+public class ChattingMessageHistory {
 
   private static final String INVALID_CHATTING_MESSAGE = "입력된 (%s)는 올바르지 않은 메시지입니다.";
 
@@ -33,15 +35,25 @@ public class ChattingMessageHistory extends BaseEntity {
   @Column(nullable = false)
   private String message;
 
-  @ManyToOne
+  @Column(nullable = false)
+  private LocalDateTime createdAt;
+
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chatting_room_history_id", nullable = false)
   private ChattingRoomHistory chattingRoomHistory;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
   public ChattingMessageHistory(@NonNull String message,
-      @NonNull ChattingRoomHistory chattingRoomHistory) {
+      @NonNull ChattingRoomHistory chattingRoomHistory, @NonNull LocalDateTime createdAt,
+      @NonNull User user) {
     validateMessage(message);
     this.message = message;
     this.chattingRoomHistory = chattingRoomHistory;
+    this.createdAt = createdAt;
+    this.user = user;
   }
 
   private void validateMessage(String message) {
