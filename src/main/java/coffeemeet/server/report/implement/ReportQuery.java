@@ -6,8 +6,10 @@ import static coffeemeet.server.report.exception.ReportErrorCode.REPORT_NOT_FOUN
 import coffeemeet.server.common.execption.DuplicatedDataException;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
+import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class ReportQuery {
   private static final String REPORT_NOT_FOUND_MESSAGE = "해당 아이디(%s)에 대한 신고 내역을 찾을 수 없습니다.";
 
   private final ReportRepository reportRepository;
+  private final ReportQueryRepository reportQueryRepository;
 
   public void hasDuplicatedReport(long reporterId, long chattingRoomId, long targetId) {
     if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(reporterId, chattingRoomId,
@@ -34,16 +37,19 @@ public class ReportQuery {
   }
 
   public Report getReportById(long reportId) {
-    return reportRepository.findById(reportId)
-        .orElseThrow(() -> new NotFoundException(
-                REPORT_NOT_FOUND,
-                String.format(REPORT_NOT_FOUND_MESSAGE, reportId)
-            )
-        );
+    Optional<Report> foundReport = reportQueryRepository.findById(reportId);
+    if (foundReport.isEmpty()) {
+      throw new NotFoundException(
+          REPORT_NOT_FOUND,
+          String.format(REPORT_NOT_FOUND_MESSAGE, reportId)
+      );
+    }
+    return foundReport.get();
   }
 
   public List<Report> getReportsByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
-    List<Report> reports = reportRepository.findByTargetIdAndChattingRoomId(targetId, chattingRoomId);
+    List<Report> reports = reportQueryRepository.findByTargetIdAndChattingRoomId(targetId,
+        chattingRoomId);
     if (reports.isEmpty()) {
       throw new NotFoundException(
           REPORT_NOT_FOUND,
@@ -54,7 +60,7 @@ public class ReportQuery {
   }
 
   public List<Report> getAllReports() {
-    return reportRepository.findAllReportsGroupedByTargetIdAndChattingRoomId();
+    return reportQueryRepository.findAll();
   }
 
 }
