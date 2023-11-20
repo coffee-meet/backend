@@ -39,7 +39,7 @@ class ChattingMessageHistoryQueryTest {
         pageSize)).willReturn(chattingMessageHistories);
 
     // when
-    List<ChattingMessageHistory> messages = chattingMessageHistoryQuery.findMessageHistories(
+    List<ChattingMessageHistory> messages = chattingMessageHistoryQuery.getMessageHistories(
         chattingRoomHistory, firstMessageId,
         pageSize);
 

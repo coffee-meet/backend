@@ -15,7 +15,7 @@ public class ChattingMessageHistoryQuery {
 
   private final ChattingMessageHistoryQueryRepository chattingMessageHistoryQueryRepository;
 
-  public List<ChattingMessageHistory> findMessageHistories(ChattingRoomHistory chattingRoomHistory,
+  public List<ChattingMessageHistory> getMessageHistories(ChattingRoomHistory chattingRoomHistory,
       Long firstMessageId,
       int pageSize) {
     return chattingMessageHistoryQueryRepository.findChattingMessageHistories(chattingRoomHistory,
