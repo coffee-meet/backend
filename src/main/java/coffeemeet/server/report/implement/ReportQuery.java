@@ -37,6 +37,7 @@ public class ReportQuery {
     }
   }
 
+  // TODO: 11/21/23 Optional api 사용해서 처리 해주세요 
   public Report getReportById(long reportId) {
     Optional<Report> foundReport = reportQueryRepository.findById(reportId);
     if (foundReport.isEmpty()) {
