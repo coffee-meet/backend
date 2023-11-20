@@ -71,8 +71,9 @@ public class ChattingRoomService {
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(
         chattingRoom);
     chattingMessageHistoryCommand.createChattingMessageHistory(allMessages.stream().map(
-        chattingMessage -> new ChattingMessageHistory(chattingMessage.getMessage(),
-            chattingRoomHistory, chattingMessage.getCreatedAt())).toList());
+            chattingMessage -> new ChattingMessageHistory(chattingMessage.getMessage(),
+                chattingRoomHistory, chattingMessage.getCreatedAt(), chattingMessage.getUser()))
+        .toList());
     userChattingHistoryCommand.createUserChattingHistory(
         users.stream().map(user -> new UserChattingHistory(user, chattingRoomHistory)).toList());
   }
