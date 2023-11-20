@@ -3,6 +3,7 @@ package coffeemeet.server.chatting.history.domain;
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.INVALID_MESSAGE;
 
 import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,12 +42,18 @@ public class ChattingMessageHistory {
   @JoinColumn(name = "chatting_room_history_id", nullable = false)
   private ChattingRoomHistory chattingRoomHistory;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
   public ChattingMessageHistory(@NonNull String message,
-      @NonNull ChattingRoomHistory chattingRoomHistory, @NonNull LocalDateTime createdAt) {
+      @NonNull ChattingRoomHistory chattingRoomHistory, @NonNull LocalDateTime createdAt,
+      @NonNull User user) {
     validateMessage(message);
     this.message = message;
     this.chattingRoomHistory = chattingRoomHistory;
     this.createdAt = createdAt;
+    this.user = user;
   }
 
   private void validateMessage(String message) {
