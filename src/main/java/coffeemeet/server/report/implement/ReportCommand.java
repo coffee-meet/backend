@@ -13,7 +13,7 @@ public class ReportCommand {
 
   private final ReportRepository reportRepository;
 
-  public void save(Report report) {
+  public void create(Report report) {
     reportRepository.save(report);
   }
 
