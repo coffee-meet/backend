@@ -8,24 +8,16 @@ import java.time.LocalDateTime;
 public sealed interface ReportDto permits ReportDto.Response {
 
   record Response(
-      String reporterNickname,
-      String targetNickname,
-      String targetEmail,
+      String targetUserNickname,
       ReportReason reason,
-      String reasonDetail,
-      int reportedCount,
-      LocalDateTime createAt
+      LocalDateTime createdAt
   ) implements ReportDto {
 
-    public static Response of(Report report, User reporter, User targetUser) {
+    public static Response of(User targetUser, Report report) {
       return new Response(
-          reporter.getProfile().getNickname(),
           targetUser.getProfile().getNickname(),
-          targetUser.getProfile().getEmail().getValue(),
           report.getReason(),
-          report.getReasonDetail(),
-          targetUser.getReportInfo().getReportedCount(),
-          report.getCreatedAt()
+          targetUser.getCreatedAt()
       );
     }
   }
