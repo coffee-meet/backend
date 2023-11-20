@@ -1,6 +1,6 @@
 package coffeemeet.server.common.fixture.entity;
 
-import coffeemeet.server.admin.presentation.AdminLoginHTTP;
+import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.CertificationApprovalHTTP;
 import coffeemeet.server.admin.presentation.dto.CertificationRejectionHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportApprovalHTTP;
