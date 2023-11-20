@@ -1,14 +1,18 @@
 package coffeemeet.server.user.service.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface MyProfileDto permits MyProfileDto.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class MyProfileDto {
 
-  record Response(
+  public record Response(
       String nickname,
       String email,
       String profileImageUrl,
@@ -16,7 +20,7 @@ public sealed interface MyProfileDto permits MyProfileDto.Response {
       LocalDateTime sanctionPeriod,
       Department department,
       List<Keyword> interests
-  ) implements MyProfileDto {
+  ) {
 
     public static Response of(User user, List<Keyword> interests, Department department) {
       return new Response(
@@ -24,7 +28,7 @@ public sealed interface MyProfileDto permits MyProfileDto.Response {
           user.getProfile().getEmail().getValue(),
           user.getProfile().getProfileImageUrl(),
           user.getReportInfo().getReportedCount(),
-          user.getReportInfo().getSanctionPeriod(),
+          user.getReportInfo().getPenaltyExpiration(),
           department,
           interests
       );

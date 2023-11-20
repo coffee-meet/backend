@@ -22,4 +22,8 @@ public class Admin extends BaseEntity {
   @Column(nullable = false)
   private String password;
 
+  public boolean isCorrectPassword(String password) {
+    return this.password.equals(password);
+  }
+
 }

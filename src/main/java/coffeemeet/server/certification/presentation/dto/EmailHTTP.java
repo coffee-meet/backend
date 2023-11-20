@@ -1,14 +1,17 @@
 package coffeemeet.server.certification.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
-public sealed interface EmailHTTP permits EmailHTTP.Request {
+@NoArgsConstructor(access = PRIVATE)
+public final class EmailHTTP {
 
-  record Request(
-      @Email @NotNull
-      String companyEmail
-  ) implements EmailHTTP {
+  public record Request(
+      @Email @NotNull String companyEmail
+  ) {
 
   }
 

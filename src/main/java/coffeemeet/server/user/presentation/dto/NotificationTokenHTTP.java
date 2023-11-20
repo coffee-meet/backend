@@ -1,14 +1,18 @@
 package coffeemeet.server.user.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
-public sealed interface NotificationTokenHTTP permits NotificationTokenHTTP.Request {
+@NoArgsConstructor(access = PRIVATE)
+public final class NotificationTokenHTTP {
 
-  record Request(
+  public record Request(
       @Email @NotNull
       String token
-  ) implements NotificationTokenHTTP {
+  ) {
 
   }
 

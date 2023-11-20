@@ -1,15 +1,19 @@
 package coffeemeet.server.user.service.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface LoginDetailsDto permits LoginDetailsDto.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class LoginDetailsDto {
 
-  record Response(
+  public record Response(
       String accessToken,
       String refreshToken,
       String nickname,
@@ -17,7 +21,7 @@ public sealed interface LoginDetailsDto permits LoginDetailsDto.Response {
       String companyName,
       Department department,
       List<Keyword> interests
-  ) implements LoginDetailsDto {
+  ) {
 
     public static Response of(User user, List<Keyword> interests, Certification certification,
         AuthTokens authTokens) {

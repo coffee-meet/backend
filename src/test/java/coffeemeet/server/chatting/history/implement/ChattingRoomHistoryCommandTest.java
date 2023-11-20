@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.infrastructure.ChattingRoomHistoryRepository;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
@@ -27,11 +28,13 @@ class ChattingRoomHistoryCommandTest {
   @Test
   void createChattingRoomHistoryTest() {
     // given
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
     given(chattingRoomHistoryRepository.save(any())).willReturn(chattingRoomHistory);
 
     // when
-    ChattingRoomHistory savedChattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory();
+    ChattingRoomHistory savedChattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(
+        chattingRoom);
 
     // then
     assertThat(savedChattingRoomHistory).isEqualTo(chattingRoomHistory);
