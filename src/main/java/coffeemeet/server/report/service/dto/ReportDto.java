@@ -1,7 +1,6 @@
 package coffeemeet.server.report.service.dto;
 
-import coffeemeet.server.report.domain.Report;
-import coffeemeet.server.report.domain.ReportReason;
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
 
@@ -9,14 +8,14 @@ public sealed interface ReportDto permits ReportDto.Response {
 
   record Response(
       String targetUserNickname,
-      ReportReason reason,
+      String chattingRoomName,
       LocalDateTime createdAt
   ) implements ReportDto {
 
-    public static Response of(User targetUser, Report report) {
+    public static Response of(User targetUser, ChattingRoom chattingRoom) {
       return new Response(
           targetUser.getProfile().getNickname(),
-          report.getReason(),
+          chattingRoom.getName(),
           targetUser.getCreatedAt()
       );
     }
