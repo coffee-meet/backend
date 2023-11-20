@@ -55,7 +55,7 @@ class ReportServiceTest {
 
     willDoNothing().given(reportQuery).hasDuplicatedReport(anyLong(), anyLong(), anyLong());
     willDoNothing().given(chattingRoomQuery).existsById(anyLong());
-    willDoNothing().given(reportCommand).create(any(Report.class));
+    willDoNothing().given(reportCommand).createReport(any(Report.class));
 
     // when
     assertThatCode(

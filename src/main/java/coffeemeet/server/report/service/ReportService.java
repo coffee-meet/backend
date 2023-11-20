@@ -44,7 +44,7 @@ public class ReportService {
         .reason(reason)
         .reasonDetail(reasonDetail)
         .build();
-    reportCommand.create(report);
+    reportCommand.createReport(report);
   }
 
   public ReportDetailDto.Response findReportById(Long reportId) {
