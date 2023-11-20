@@ -58,6 +58,15 @@ public class ChattingFixture {
         .create();
   }
 
+  public static List<ChattingMessageHistory> chattingMessageHistories(
+      ChattingRoomHistory chattingRoomHistory, User user, int size) {
+    return Instancio.ofList(ChattingMessageHistory.class).size(size)
+        .set(field(ChattingMessageHistory::getChattingRoomHistory), chattingRoomHistory)
+        .set(field(ChattingMessageHistory::getUser), user)
+        .generate(field(ChattingMessageHistory::getId), gen -> gen.longSeq().start(1L))
+        .create();
+  }
+
   public static ChattingRoomHistory chattingRoomHistory() {
     return Instancio.of(ChattingRoomHistory.class)
         .create();
