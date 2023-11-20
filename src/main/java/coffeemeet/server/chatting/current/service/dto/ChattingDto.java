@@ -1,19 +1,23 @@
 package coffeemeet.server.chatting.current.service.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
-public sealed interface ChattingDto permits ChattingDto.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class ChattingDto {
 
-  record Response(
+  public record Response(
       Long userId,
       Long messageId,
       String nickname,
       String content,
       String profileImageUrl,
       LocalDateTime createdAt
-  ) implements ChattingDto {
+  ) {
 
     public static Response of(User user, ChattingMessage chattingMessage) {
       return new Response(

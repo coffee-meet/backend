@@ -1,15 +1,19 @@
 package coffeemeet.server.admin.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
 
-public sealed interface AdminLoginHTTP permits AdminLoginHTTP.Request {
+@NoArgsConstructor(access = PRIVATE)
+public final class AdminLoginHTTP {
 
-  record Request(
+  public record Request(
       @NotBlank
       String id,
       @NotBlank
       String password
-  ) implements AdminLoginHTTP {
+  ) {
 
   }
 
