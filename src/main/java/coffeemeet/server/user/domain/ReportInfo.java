@@ -1,6 +1,10 @@
 package coffeemeet.server.user.domain;
 
 import coffeemeet.server.report.domain.ReportAmount;
+import static coffeemeet.server.report.exception.ReportErrorCode.EXCEEDED_MAX_REPORT_COUNT;
+
+import coffeemeet.server.common.execption.LimitExceededException;
+import coffeemeet.server.report.domain.ReportPenalty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.LocalDateTime;
@@ -16,11 +20,24 @@ public class ReportInfo {
   @Column(nullable = false)
   private int reportedCount;
 
-  private LocalDateTime sanctionPeriod;
+  private LocalDateTime penaltyExpiration;
 
   public ReportInfo() {
     this.reportedCount = REPORT_MIN_COUNT;
-    this.sanctionPeriod = null;
+    this.penaltyExpiration = null;
+  }
+
+  public void increment() {
+    if (reportedCount >= REPORT_MAX_COUNT) {
+      throw new LimitExceededException(EXCEEDED_MAX_REPORT_COUNT,
+          String.format("최대 신고 누적 횟수를 초과합니다. 신고 누적 횟수(%s)", reportedCount));
+    }
+    this.reportedCount++;
+    int sanctionPeriodByReportCount = ReportPenalty.getSanctionPeriodByReportCount(reportedCount);
+    if (sanctionPeriodByReportCount == -1) {
+      penaltyExpiration = LocalDateTime.MAX;
+    }
+    penaltyExpiration = LocalDateTime.now().plusDays(sanctionPeriodByReportCount);
   }
 
   public void updateReportedCount(int reportedCount) {

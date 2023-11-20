@@ -1,14 +1,18 @@
 package coffeemeet.server.certification.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-public sealed interface VerificationCodeHTTP permits VerificationCodeHTTP.Request {
+@NoArgsConstructor(access = PRIVATE)
+public final class VerificationCodeHTTP {
 
-  record Request(
+  public record Request(
       @NotNull @Length(min = 6, max = 6)
       String verificationCode
-  ) implements VerificationCodeHTTP {
+  ) {
 
   }
 

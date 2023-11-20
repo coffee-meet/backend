@@ -11,10 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReportCommand {
 
+  private final ReportQuery reportQuery;
   private final ReportRepository reportRepository;
 
   public void createReport(Report report) {
     reportRepository.save(report);
+  }
+  
+  public void processReport(Long reportId) {
+    Report report = reportQuery.getReportById(reportId);
+    report.processed();
   }
 
 }

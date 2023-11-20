@@ -1,18 +1,22 @@
 package coffeemeet.server.user.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface UserProfileHTTP permits UserProfileHTTP.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class UserProfileHTTP {
 
-  record Response(
+  public record Response(
       String nickname,
       String profileImageUrl,
       Department department,
       List<Keyword> interests
-  ) implements UserProfileHTTP {
+  ) {
 
     public static Response of(UserProfileDto.Response response) {
       return new Response(

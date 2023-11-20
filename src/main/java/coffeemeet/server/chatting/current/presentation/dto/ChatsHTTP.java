@@ -1,12 +1,16 @@
 package coffeemeet.server.chatting.current.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface ChatsHTTP permits ChatsHTTP.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class ChatsHTTP {
 
-  record Chat(
+  public record Chat(
       Long userId,
       Long messageId,
       String nickname,
@@ -28,7 +32,7 @@ public sealed interface ChatsHTTP permits ChatsHTTP.Response {
 
   }
 
-  record Response(List<Chat> chats) implements ChatsHTTP {
+  public record Response(List<Chat> chats) {
 
     public static Response from(List<ChattingDto.Response> responses) {
       List<Chat> chatList = responses.stream()

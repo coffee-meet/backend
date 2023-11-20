@@ -76,6 +76,14 @@ public class UserQuery {
     }
   }
 
+  public NotificationInfo getNotificationInfoByUserId(Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new NotFoundException(
+            NOT_EXIST_USER,
+            String.format(NOT_EXIST_USER_MESSAGE, userId))
+        ).getNotificationInfo();
+  }
+
   public List<User> getUsersByRoom(ChattingRoom room) {
     return userRepository.findAllByChattingRoom(room);
   }

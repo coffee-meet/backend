@@ -49,6 +49,9 @@ public class Report extends BaseEntity {
   @Column(nullable = false, length = REASON_MAX_LENGTH)
   private String reasonDetail;
 
+  @Column(nullable = false)
+  private boolean isProcessed;
+
   @Builder
   private Report(
       @NonNull Long reporterId,
@@ -72,6 +75,10 @@ public class Report extends BaseEntity {
           String.format(INVALID_REASON_DETAIL_MESSAGE, reasonDetails)
       );
     }
+  }
+  
+  public void processed() {
+    isProcessed = true;
   }
 
 }

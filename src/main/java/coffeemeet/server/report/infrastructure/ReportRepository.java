@@ -7,4 +7,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
   boolean existsByReporterIdAndChattingRoomIdAndTargetedId(long reporterId, long chattingRoomId,
       long targetedId);
+
 }

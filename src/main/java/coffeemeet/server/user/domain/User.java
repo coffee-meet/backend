@@ -1,5 +1,10 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.IDLE;
+import static coffeemeet.server.user.domain.UserStatus.REPORTED;
+
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import jakarta.persistence.Column;
@@ -7,6 +12,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,7 +46,7 @@ public class User extends AdvancedBaseEntity {
   @Column(nullable = false)
   private Profile profile;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chatting_room_id")
   private ChattingRoom chattingRoom;
 
@@ -69,7 +75,7 @@ public class User extends AdvancedBaseEntity {
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
     this.isBlacklisted = false;
-    this.userStatus = UserStatus.IDLE;
+    this.userStatus = IDLE;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
@@ -88,16 +94,20 @@ public class User extends AdvancedBaseEntity {
     this.chattingRoom = chattingRoom;
   }
 
+  public void deleteChattingRoom() {
+    this.chattingRoom = null;
+  }
+
   public void enterChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_CONNECTED;
+    this.userStatus = CHATTING_CONNECTED;
   }
 
   public void exitChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_UNCONNECTED;
+    this.userStatus = CHATTING_UNCONNECTED;
   }
 
-  public void setIdleState() {
-    this.userStatus = UserStatus.IDLE;
+  public void setIdleStatus() {
+    this.userStatus = IDLE;
   }
 
   public void convertToBlacklist() {
@@ -129,6 +139,11 @@ public class User extends AdvancedBaseEntity {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
+  }
+
+  public void punished() {
+    this.userStatus = REPORTED;
+    reportInfo.increment();
   }
 
 }

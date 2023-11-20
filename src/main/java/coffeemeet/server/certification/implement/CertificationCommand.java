@@ -21,6 +21,7 @@ public class CertificationCommand {
   private static final String EXISTED_COMPANY_EMAIL_MESSAGE = "이미 사용 중인 회사 이메일(%s) 입니다.";
 
   private final CertificationRepository certificationRepository;
+  private final CertificationQuery certificationQuery;
 
   public void createCertification(User user, String companyName, CompanyEmail companyEmail,
       Department department, String businessCardUrl) {
@@ -42,8 +43,18 @@ public class CertificationCommand {
     }
   }
 
+  public void certificated(Long userId) {
+    Certification certification = certificationQuery.getCertificationByUserId(userId);
+    certification.qualify();
+  }
+
+  @Transactional(readOnly = true)
   public void applyIfCertifiedUser(Long userId, Consumer<? super Certification> consumer) {
     certificationRepository.findByUserId(userId).ifPresent(consumer);
+  }
+
+  public void deleteUserCertification(Long userId) {
+    certificationRepository.deleteById(userId);
   }
 
 }

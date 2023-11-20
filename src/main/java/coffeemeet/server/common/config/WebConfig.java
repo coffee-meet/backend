@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(authenticationInterceptor)
-        .addPathPatterns("/api/v1/chatting/rooms/**");
+        .addPathPatterns("/api/v1/chatting/rooms/**", "/api/v1/chatting/room/histories/**");
   }
 
 }

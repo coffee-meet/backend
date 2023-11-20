@@ -42,4 +42,21 @@ class CertificationQueryTest {
     assertThat(foundCertification).isEqualTo(certification);
   }
 
+  @Test
+  @DisplayName("유저 아이디로 회사 이름을 가져올 수 있다.")
+  void getCompanyNameByUserIdTest() {
+    // given
+    User user = user();
+    Long userId = user.getId();
+    Certification certification = certification(user);
+
+    given(certificationRepository.findByUserId(userId)).willReturn(Optional.of(certification));
+
+    // when
+    String companyName = certificationQuery.getCompanyNameByUserId(userId);
+
+    // then
+    assertThat(companyName).isEqualTo(certification.getCompanyName());
+  }
+
 }

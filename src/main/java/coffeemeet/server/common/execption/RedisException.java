@@ -7,7 +7,7 @@ public class RedisException extends CoffeeMeetException {
 
   private final ErrorCode errorCode;
 
-  public RedisException(String message, ErrorCode errorCode) {
+  public RedisException(ErrorCode errorCode, String message) {
     super(message);
     this.errorCode = errorCode;
   }

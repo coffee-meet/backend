@@ -113,7 +113,8 @@ class ChattingRoomServiceTest {
     given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(chattingMessageQuery.findAllMessages(chattingRoom)).willReturn(chattingMessages);
-    given(chattingRoomHistoryCommand.createChattingRoomHistory()).willReturn(chattingRoomHistory);
+    given(chattingRoomHistoryCommand.createChattingRoomHistory(chattingRoom)).willReturn(
+        chattingRoomHistory);
 
     // when
     chattingRoomService.deleteChattingRoom(roomId);

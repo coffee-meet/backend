@@ -7,8 +7,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 
 import coffeemeet.server.common.execption.RedisException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +33,11 @@ class MatchingQueueCommandTest {
   @Mock
   private ZSetOperations<String, Long> zSetOperations;
 
+  @BeforeEach
+  void setUp() {
+    given(redisTemplate.opsForZSet()).willReturn(zSetOperations);
+  }
+
   @DisplayName("매칭을 요청한 사용자를 해당 회사 이름의 큐에 추가할 수 있다.")
   @Test
   void enqueueUserByCompanyNameTest() {
@@ -38,7 +46,6 @@ class MatchingQueueCommandTest {
     Long userId = 1L;
     Boolean result = true;
 
-    given(redisTemplate.opsForZSet()).willReturn(zSetOperations);
     given(zSetOperations.add(any(), anyLong(), anyDouble())).willReturn(result);
 
     // when, then
@@ -53,15 +60,28 @@ class MatchingQueueCommandTest {
     String companyName = "회사명";
     Long userId = 1L;
 
-    given(redisTemplate.opsForZSet()).willReturn(zSetOperations);
     given(zSetOperations.add(any(String.class), anyLong(), anyDouble()))
         .willThrow(
-            new RedisException("Redis가 Pipeline 상태이거나 Transaction 상태입니다.", INTERNAL_SERVER_ERROR));
+            new RedisException(INTERNAL_SERVER_ERROR, "Redis가 Pipeline 상태이거나 Transaction 상태입니다."));
 
     // when, then
     assertThatThrownBy(
         () -> matchingQueueCommand.enqueueUserByCompanyName(companyName, userId))
         .isInstanceOf(RedisException.class);
+  }
+
+  @Test
+  @DisplayName("매칭큐에 들어있는 사용자를 지울 수 있다.")
+  void deleteUserByUserIdTest() {
+    // given
+    String companyName = "회사명";
+    Long userId = 1L;
+
+    // when
+    matchingQueueCommand.deleteUserByUserId(companyName, userId);
+
+    // then
+    then(zSetOperations).should(only()).remove(companyName, userId);
   }
 
 }
