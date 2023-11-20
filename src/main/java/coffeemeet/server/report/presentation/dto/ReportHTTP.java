@@ -1,7 +1,7 @@
 package coffeemeet.server.report.presentation.dto;
 
 import coffeemeet.server.report.domain.ReportReason;
-import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportDetailDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
       LocalDateTime createdAt
   ) implements ReportHTTP {
 
-    public static ReportHTTP.Response of(ReportDto.Response response) {
+    public static ReportHTTP.Response of(ReportDetailDto.Response response) {
       return new ReportHTTP.Response(
           response.reporterNickname(),
           response.targetNickname(),

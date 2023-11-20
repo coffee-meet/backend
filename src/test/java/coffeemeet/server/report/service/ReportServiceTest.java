@@ -14,9 +14,9 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
-import coffeemeet.server.report.service.dto.AllReportDto;
 import coffeemeet.server.report.service.dto.ReportDto;
-import coffeemeet.server.report.service.dto.ReportDto.Response;
+import coffeemeet.server.report.service.dto.ReportDetailDto;
+import coffeemeet.server.report.service.dto.ReportDetailDto.Response;
 import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -70,14 +70,14 @@ class ReportServiceTest {
     Report report = report();
     User reporter = user();
     User targetUser = user();
-    ReportDto.Response response = Response.of(report, reporter, targetUser);
+    ReportDetailDto.Response response = Response.of(report, reporter, targetUser);
 
     given(reportQuery.getReportById(anyLong())).willReturn(report);
     given(userQuery.getUserById(anyLong())).willReturn(reporter);
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
-    ReportDto.Response result = reportService.findReportById(report.getId());
+    ReportDetailDto.Response result = reportService.findReportById(report.getId());
 
     // then
     assertAll(
@@ -100,7 +100,7 @@ class ReportServiceTest {
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
-    List<AllReportDto.Response> response = reportService.findAllReports();
+    List<ReportDto.Response> response = reportService.findAllReports();
 
     // then
     assertThat(response.size()).isEqualTo(reports.size());
