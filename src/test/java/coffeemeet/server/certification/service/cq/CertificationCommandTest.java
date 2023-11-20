@@ -6,6 +6,7 @@ import static coffeemeet.server.common.fixture.entity.CertificationFixture.compa
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -16,6 +17,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.implement.CertificationCommand;
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;
@@ -37,6 +39,8 @@ class CertificationCommandTest {
   private CertificationCommand certificationCommand;
   @Mock
   private CertificationRepository certificationRepository;
+  @Mock
+  private CertificationQuery certificationQuery;
 
   @Test
   @DisplayName("새로운 Certification 객체를 저장할 수 있다.")
@@ -84,6 +88,34 @@ class CertificationCommandTest {
 
     // then
     then(consumer).should(only()).accept(certification);
+  }
+
+  @Test
+  @DisplayName("사용자 인증을 완료시킬 수 있다.")
+  void certificatedTest() {
+    // given
+    Certification certification = certification();
+    Long userId = certification.getUser().getId();
+    given(certificationQuery.getCertificationByUserId(userId)).willReturn(certification);
+
+    // when
+    certificationCommand.certificated(userId);
+
+    // then
+    assertThat(certification.isCertificated()).isTrue();
+  }
+
+  @Test
+  @DisplayName("인증 정보를 삭제할 수 있다.")
+  void deleteUserCertification() {
+    // given
+    Long userId = 1L;
+
+    // when
+    certificationCommand.deleteUserCertification(userId);
+
+    // then
+    then(certificationRepository).should(only()).deleteById(userId);
   }
 
 }

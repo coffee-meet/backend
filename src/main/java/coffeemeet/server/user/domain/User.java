@@ -1,5 +1,10 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.IDLE;
+import static coffeemeet.server.user.domain.UserStatus.REPORTED;
+
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
 import jakarta.persistence.Column;
@@ -65,7 +70,7 @@ public class User extends AdvancedBaseEntity {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
-    this.userStatus = UserStatus.IDLE;
+    this.userStatus = IDLE;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
@@ -85,15 +90,15 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void enterChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_CONNECTED;
+    this.userStatus = CHATTING_CONNECTED;
   }
 
   public void exitChattingRoom() {
-    this.userStatus = UserStatus.CHATTING_UNCONNECTED;
+    this.userStatus = CHATTING_UNCONNECTED;
   }
 
-  public void setIdleState() {
-    this.userStatus = UserStatus.IDLE;
+  public void setIdleStatus() {
+    this.userStatus = IDLE;
   }
 
   @Override
@@ -121,6 +126,11 @@ public class User extends AdvancedBaseEntity {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
+  }
+
+  public void punished() {
+    this.userStatus = REPORTED;
+    reportInfo.increment();
   }
 
 }

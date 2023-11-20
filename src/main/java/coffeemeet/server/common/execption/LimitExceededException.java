@@ -3,13 +3,12 @@ package coffeemeet.server.common.execption;
 import lombok.Getter;
 
 @Getter
-public class RedisException extends CoffeeMeetException {
+public class LimitExceededException extends CoffeeMeetException {
 
   private final ErrorCode errorCode;
 
-  public RedisException(ErrorCode errorCode, String message) {
+  public LimitExceededException(ErrorCode errorCode, String message) {
     super(message);
     this.errorCode = errorCode;
   }
-
 }

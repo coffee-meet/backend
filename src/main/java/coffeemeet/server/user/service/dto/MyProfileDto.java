@@ -24,7 +24,7 @@ public sealed interface MyProfileDto permits MyProfileDto.Response {
           user.getProfile().getEmail().getValue(),
           user.getProfile().getProfileImageUrl(),
           user.getReportInfo().getReportedCount(),
-          user.getReportInfo().getSanctionPeriod(),
+          user.getReportInfo().getPenaltyExpiration(),
           department,
           interests
       );

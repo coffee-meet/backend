@@ -12,7 +12,7 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompanyEmail {
 
-  @Column(name = "company_email")
+  @Column(name = "company_email", nullable = false)
   private String value;
 
   public CompanyEmail(@NonNull String value) {
