@@ -25,14 +25,14 @@ class ReportCommandTest {
 
   @DisplayName("신고를 생성해 저장할 수 있다.")
   @Test
-  void saveTest() {
+  void createTest() {
     // given
     Report report = report();
 
     given(reportRepository.save(any(Report.class))).willReturn(report);
 
     // when, then
-    assertThatCode(() -> reportCommand.save(report)).doesNotThrowAnyException();
+    assertThatCode(() -> reportCommand.create(report)).doesNotThrowAnyException();
   }
 
 }
