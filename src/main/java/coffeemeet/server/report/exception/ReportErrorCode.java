@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ReportErrorCode implements ErrorCode {
   EXCEEDED_MAX_REPORT_COUNT("R000", "이미 영구 정지된 사용자입니다."),
-  INVALID_REPORTED_COUNT("R000","유효하지 않은 신고 횟수입니다."),
-  INVALID_REASON("R000","유효하지 않은 신고 사유입니다."),
-  INVALID_REASON_DETAIL("R000","유효하지 않은 신고 상세 사유입니다."),
+  INVALID_REPORTED_COUNT("R000", "유효하지 않은 신고 횟수입니다."),
+  INVALID_REASON("R000", "유효하지 않은 신고 사유입니다."),
+  INVALID_REASON_DETAIL("R000", "유효하지 않은 신고 상세 사유입니다."),
   INVALID_REPORTER("R000", "유효하지 않은 신고자입니다."),
   INVALID_CHATTING_ROOM("R000", "유효하지 않은 채팅방입니다."),
   INVALID_TARGET_USER("R000", "유효하지 않은 신고 대상입니다."),

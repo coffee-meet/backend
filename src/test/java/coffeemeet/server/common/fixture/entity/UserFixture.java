@@ -66,4 +66,9 @@ public class UserFixture {
     return Instancio.create(String.class);
   }
 
+  public static Set<User> user(int size) {
+    return Instancio.ofSet(User.class).size(size)
+        .create();
+  }
+
 }

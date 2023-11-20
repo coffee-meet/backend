@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum ReportPenalty {
-  ONE_TIME(1,3),
+  ONE_TIME(1, 3),
   TWO_TIMES(2, 7),
   THREE_TIMES(3, 15),
   FOUR_TIMES(4, 30),

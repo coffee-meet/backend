@@ -9,8 +9,8 @@ import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
+import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -45,7 +45,7 @@ public class ReportService {
     Report report = Report.builder()
         .reporterId(reporterId)
         .chattingRoomId(chattingRoomId)
-        .targetId(targetId)
+        .targetedId(targetId)
         .reason(reason)
         .reasonDetail(reasonDetail)
         .build();
@@ -55,7 +55,7 @@ public class ReportService {
   public ReportDetailDto.Response findReportById(Long reportId) {
     Report report = reportQuery.getReportById(reportId);
     User reporter = userQuery.getUserById(report.getReporterId());
-    User targetUser = userQuery.getUserById(report.getTargetId());
+    User targetUser = userQuery.getUserById(report.getTargetedId());
     return ReportDetailDto.Response.of(report, reporter, targetUser);
   }
 
@@ -66,7 +66,7 @@ public class ReportService {
 
     return allReports.stream()
         .map(report -> {
-          User targetUser = userMap.get(report.getTargetId());
+          User targetUser = userMap.get(report.getTargetedId());
           ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
           return ReportDto.Response.of(targetUser, chattingRoom);
         })
@@ -111,7 +111,7 @@ public class ReportService {
 
   private Map<Long, User> getUsers(List<Report> allReports) {
     Set<Long> targetUserIds = allReports.stream()
-        .map(Report::getTargetId)
+        .map(Report::getTargetedId)
         .collect(Collectors.toSet());
     Set<User> users = userQuery.getUsersByIdSet(targetUserIds);
     return users.stream()

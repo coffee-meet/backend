@@ -37,7 +37,7 @@ public class ReportQueryRepository {
             JPAExpressions
                 .select(subReport.createdAt.max())
                 .from(subReport)
-                .groupBy(subReport.targetId, subReport.chattingRoomId)
+                .groupBy(subReport.targetedId, subReport.chattingRoomId)
         ))
         .fetch();
 
@@ -52,7 +52,7 @@ public class ReportQueryRepository {
     QReport report = QReport.report;
     return jpaQueryFactory
         .selectFrom(report)
-        .where(report.targetId.eq(targetId).and(report.chattingRoomId.eq(chattingRoomId)))
+        .where(report.targetedId.eq(targetId).and(report.chattingRoomId.eq(chattingRoomId)))
         .fetch();
   }
 

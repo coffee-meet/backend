@@ -76,7 +76,7 @@ public class Report extends BaseEntity {
       );
     }
   }
-  
+
   public void processed() {
     isProcessed = true;
   }

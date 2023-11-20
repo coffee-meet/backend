@@ -1,5 +1,6 @@
 package coffeemeet.server.report.presentation;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -7,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -70,7 +70,7 @@ class ReportControllerTest extends ControllerTestConfig {
                 headerWithName("Authorization").description("토큰")),
             requestFields(
                 fieldWithPath("chattingRoomId").type(JsonFieldType.NUMBER).description("채팅방 아이디"),
-                fieldWithPath("targetId").type(JsonFieldType.NUMBER).description("신고 대상 아이디"),
+                fieldWithPath("targetedId").type(JsonFieldType.NUMBER).description("신고 대상 아이디"),
                 fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 사유"),
                 fieldWithPath("reasonDetail").type(JsonFieldType.STRING).description("신고 상세 사유")
             )

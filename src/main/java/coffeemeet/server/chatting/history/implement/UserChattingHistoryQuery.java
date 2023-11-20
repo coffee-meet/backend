@@ -1,6 +1,5 @@
 package coffeemeet.server.chatting.history.implement;
 
-import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
@@ -20,7 +19,7 @@ public class UserChattingHistoryQuery {
   public boolean existsByUserId(Long userId) {
     return userChattingHistoryRepository.existsByUserId(userId);
   }
-  
+
   public List<UserChattingHistory> getUserChattingHistoriesBy(
       ChattingRoomHistory chattingRoomHistory) {
     return userChattingHistoryRepository.findAllByChattingRoomHistory(chattingRoomHistory);

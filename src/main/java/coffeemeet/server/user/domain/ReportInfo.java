@@ -1,9 +1,9 @@
 package coffeemeet.server.user.domain;
 
-import coffeemeet.server.report.domain.ReportAmount;
 import static coffeemeet.server.report.exception.ReportErrorCode.EXCEEDED_MAX_REPORT_COUNT;
 
 import coffeemeet.server.common.execption.LimitExceededException;
+import coffeemeet.server.report.domain.ReportAmount;
 import coffeemeet.server.report.domain.ReportPenalty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -54,11 +54,11 @@ public class ReportInfo {
 
   private void updateSanctionPeriod(int reportedCount) {
     int period = ReportAmount.getSanctionPeriod(reportedCount);
-    this.sanctionPeriod = this.sanctionPeriod.plusDays(period);
+    this.penaltyExpiration = this.penaltyExpiration.plusDays(period);
   }
 
   private void permanentBan() {
-    this.sanctionPeriod = LocalDateTime.MAX;
+    this.penaltyExpiration = LocalDateTime.MAX;
   }
 
 }

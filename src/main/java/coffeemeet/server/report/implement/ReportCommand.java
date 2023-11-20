@@ -17,7 +17,7 @@ public class ReportCommand {
   public void createReport(Report report) {
     reportRepository.save(report);
   }
-  
+
   public void processReport(Long reportId) {
     Report report = reportQuery.getReportById(reportId);
     report.processed();

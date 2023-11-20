@@ -30,10 +30,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @WebMvcTest(AdminController.class)
 class AdminControllerTest extends ControllerTestConfig {
 
+  private static final String SESSION = "session";
   @MockBean
   private AdminService adminService;
-
-  private static final String SESSION = "session";
 
   @Test
   @DisplayName("관리자 로그인을 할 수 있다.")

@@ -1,7 +1,7 @@
 package coffeemeet.server.report.infrastructure;
 
 import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.report.domain.Report;
@@ -33,7 +33,8 @@ class ReportRepositoryTest extends RepositoryTestConfig {
 
     // when, then
     assertTrue(
-        reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(reporterId, chattingRoomId,
+        reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(reporterId,
+            chattingRoomId,
             targetId));
   }
 

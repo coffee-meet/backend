@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ReportQuery {
 
-  private static final String REPORT_NOT_FOUND_ERROR_MESSAGE = "해당 id(%s)에 매칭되는 신고가 없습니다.";
   private static final String ALREADY_REPORTED_MESSAGE = "해당 사용자(%s)의 채팅방(%s)의 사용자(%s)에 대한 신고가 이미 존재합니다.";
   private static final String REPORT_NOT_FOUND_MESSAGE = "해당 아이디(%s)에 대한 신고 내역을 찾을 수 없습니다.";
 
@@ -27,7 +26,8 @@ public class ReportQuery {
   private final ReportQueryRepository reportQueryRepository;
 
   public void hasDuplicatedReport(long reporterId, long chattingRoomId, long targetId) {
-    if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(reporterId, chattingRoomId,
+    if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(reporterId,
+        chattingRoomId,
         targetId)) {
       throw new DuplicatedDataException(
           ALREADY_EXIST_REPORT,

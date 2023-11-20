@@ -1,8 +1,8 @@
 package coffeemeet.server.report.infrastructure;
 
 import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.report.domain.Report;
@@ -32,8 +32,8 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     Report report = report();
     Report report1 = report();
     Report report2 = report();
-    Report sameReport1 = report(report1.getTargetId(), report1.getChattingRoomId());
-    Report sameReport2 = report(report2.getTargetId(), report2.getChattingRoomId());
+    Report sameReport1 = report(report1.getTargetedId(), report1.getChattingRoomId());
+    Report sameReport2 = report(report2.getTargetedId(), report2.getChattingRoomId());
 
     List<Report> reports = List.of(report, report1, report2, sameReport1, sameReport2);
     List<Report> expectedReports = List.of(report, report1, report2);
@@ -43,7 +43,7 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     List<Report> allReports = reportQueryRepository.findAll();
 
     // then
-    assertThat(allReports.size()).isEqualTo(expectedReports.size());
+    assertThat(allReports).hasSize(expectedReports.size());
   }
 
   @DisplayName("신고 대상 아이디와 채팅방 아이디와 일치하는 신고 내역을 조회할 수 있다.")
@@ -51,12 +51,12 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
   void findByTargetIdAndChattingRoomIdTest() {
     // given
     Report report = report();
-    Report sameReport = report(report.getTargetId(), report.getChattingRoomId());
+    Report sameReport = report(report.getTargetedId(), report.getChattingRoomId());
     reportRepository.save(report);
     reportRepository.save(sameReport);
 
     List<Report> expectedReports = List.of(report, sameReport);
-    Long targetId = report.getTargetId();
+    Long targetId = report.getTargetedId();
     Long chattingRoomId = report.getChattingRoomId();
 
     // when
@@ -65,9 +65,9 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
 
     // then
     assertAll(
-        () -> assertThat(reports.size()).isEqualTo(expectedReports.size()),
-        () -> assertThat(reports.get(0).getTargetId()).isEqualTo(
-            expectedReports.get(1).getTargetId()),
+        () -> assertThat(reports).hasSize(expectedReports.size()),
+        () -> assertThat(reports.get(0).getTargetedId()).isEqualTo(
+            expectedReports.get(1).getTargetedId()),
         () -> assertThat(reports.get(0).getChattingRoomId()).isEqualTo(
             expectedReports.get(1).getChattingRoomId())
     );
@@ -79,7 +79,7 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     // given
     Report report = report();
     Report report1 = report();
-    Report sameReport = report(report.getTargetId(), report.getChattingRoomId());
+    Report sameReport = report(report.getTargetedId(), report.getChattingRoomId());
     List<Report> reports = List.of(report, report1, sameReport);
     reportRepository.saveAll(reports);
 
@@ -88,11 +88,11 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
 
     // then
     assertAll(
-        () -> assertThat(allReports.size()).isEqualTo(2),
+        () -> assertThat(allReports).hasSize(2),
         () -> assertThat(allReports.get(0).getChattingRoomId()).isNotEqualTo(
             allReports.get(1).getChattingRoomId()),
-        () -> assertThat(allReports.get(0).getTargetId()).isNotEqualTo(
-            allReports.get(1).getTargetId())
+        () -> assertThat(allReports.get(0).getTargetedId()).isNotEqualTo(
+            allReports.get(1).getTargetedId())
     );
   }
 
