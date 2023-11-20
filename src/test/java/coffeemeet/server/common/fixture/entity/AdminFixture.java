@@ -22,7 +22,7 @@ public class AdminFixture {
     return Instancio.of(CertificationRejectionHTTP.Request.class).create();
   }
 
-  public static  ReportApprovalHTTP.Request reportApprovalHTTPRequest() {
+  public static ReportApprovalHTTP.Request reportApprovalHTTPRequest() {
     return Instancio.of(ReportApprovalHTTP.Request.class).create();
   }
 

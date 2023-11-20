@@ -16,6 +16,10 @@ public class UserChattingHistoryQuery {
 
   private final UserChattingHistoryRepository userChattingHistoryRepository;
 
+  public boolean existsByUserId(Long userId) {
+    return userChattingHistoryRepository.existsByUserId(userId);
+  }
+
   public List<UserChattingHistory> getUserChattingHistoriesBy(
       ChattingRoomHistory chattingRoomHistory) {
     return userChattingHistoryRepository.findAllByChattingRoomHistory(chattingRoomHistory);

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserChattingHistoryRepository extends JpaRepository<UserChattingHistory, Long> {
 
+  boolean existsByUserId(Long userId);
+
   List<UserChattingHistory> findAllByChattingRoomHistory(ChattingRoomHistory chattingRoomHistory);
 
   List<UserChattingHistory> findAllByUser(User user);

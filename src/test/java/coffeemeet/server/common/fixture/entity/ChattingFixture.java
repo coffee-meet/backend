@@ -18,6 +18,7 @@ import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
+import java.util.Set;
 import org.instancio.Instancio;
 
 public class ChattingFixture {
@@ -114,6 +115,11 @@ public class ChattingFixture {
     return Instancio.of(UserChattingHistory.class)
         .set(field(UserChattingHistory::getUser), user)
         .set(field(UserChattingHistory::getChattingRoomHistory), chattingRoomHistory)
+        .create();
+  }
+
+  public static Set<ChattingRoom> chattingRoom(int size) {
+    return Instancio.ofSet(ChattingRoom.class).size(size)
         .create();
   }
 

@@ -5,6 +5,9 @@ import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_RO
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.common.execption.NotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,19 @@ public class ChattingRoomQuery {
             CHATTING_ROOM_NOT_FOUND,
             String.format(CHATTING_ROOM_NOT_FOUND_MESSAGE, roomId)
         ));
+  }
+
+  public void existsById(Long roomId) {
+    if (!chattingRoomRepository.existsById(roomId)) {
+      throw new NotFoundException(
+          CHATTING_ROOM_NOT_FOUND,
+          String.format(CHATTING_ROOM_NOT_FOUND_MESSAGE, roomId)
+      );
+    }
+  }
+
+  public Set<ChattingRoom> getUserByIdSet(Set<Long> chattingRoomIds) {
+    return new HashSet<>(chattingRoomRepository.findByIdIn(chattingRoomIds));
   }
 
 }

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
 @NoArgsConstructor(access = PRIVATE)
 public final class SignupHTTP {
 
@@ -19,7 +19,7 @@ public final class SignupHTTP {
       List<Keyword> keywords,
       @NotBlank
       String authCode,
-      @NonNull
+      @NotNull
       OAuthProvider oAuthProvider
   ) {
 

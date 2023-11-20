@@ -18,6 +18,7 @@ public class UserFixture {
   public static User user() {
     return Instancio.of(User.class).set(field(User::getProfile), profile())
         .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
         .ignore(field(User::getChattingRoom))
         .create();
   }
@@ -63,6 +64,11 @@ public class UserFixture {
 
   public static String content() {
     return Instancio.create(String.class);
+  }
+
+  public static Set<User> user(int size) {
+    return Instancio.ofSet(User.class).size(size)
+        .create();
   }
 
 }

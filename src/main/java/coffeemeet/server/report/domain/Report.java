@@ -1,8 +1,13 @@
 package coffeemeet.server.report.domain;
 
+import static coffeemeet.server.report.exception.ReportErrorCode.INVALID_REASON_DETAIL;
+
 import coffeemeet.server.common.domain.BaseEntity;
+import coffeemeet.server.common.execption.DataLengthExceededException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +25,8 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report extends BaseEntity {
 
-  private static final int TITLE_MAX_LENGTH = 20;
+  private static final String INVALID_REASON_DETAIL_MESSAGE = "해당 신고 상세 사유(%s)는 유효하지 않습니다.";
+
   private static final int REASON_MAX_LENGTH = 200;
 
   @Id
@@ -31,13 +37,17 @@ public class Report extends BaseEntity {
   private Long reporterId;
 
   @Column(nullable = false)
-  private Long targetId;
+  private Long chattingRoomId;
 
-  @Column(nullable = false, length = TITLE_MAX_LENGTH)
-  private String title;
+  @Column(nullable = false)
+  private Long targetedId;
+
+  @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false)
+  private ReportReason reason;
 
   @Column(nullable = false, length = REASON_MAX_LENGTH)
-  private String reason;
+  private String reasonDetail;
 
   @Column(nullable = false)
   private boolean isProcessed;
@@ -45,30 +55,28 @@ public class Report extends BaseEntity {
   @Builder
   private Report(
       @NonNull Long reporterId,
-      @NonNull Long targetId,
-      @NonNull String title,
-      @NonNull String reason
+      @NonNull Long chattingRoomId,
+      @NonNull Long targetedId,
+      @NonNull String reason,
+      @NonNull String reasonDetail
   ) {
-    validateTitle(title);
-    validateReason(reason);
+    validateReasonDetails(reasonDetail);
     this.reporterId = reporterId;
-    this.targetId = targetId;
-    this.title = title;
-    this.reason = reason;
-    isProcessed = false;
+    this.chattingRoomId = chattingRoomId;
+    this.targetedId = targetedId;
+    this.reason = ReportReason.getReason(reason);
+    this.reasonDetail = reasonDetail;
   }
 
-  private void validateTitle(String title) {
-    if (!StringUtils.hasText(title) || title.length() > TITLE_MAX_LENGTH) {
-      throw new IllegalArgumentException("올바르지 않은 제목입니다.");
+  private void validateReasonDetails(String reasonDetails) {
+    if (!StringUtils.hasText(reasonDetails) || reasonDetails.length() > REASON_MAX_LENGTH) {
+      throw new DataLengthExceededException(
+          INVALID_REASON_DETAIL,
+          String.format(INVALID_REASON_DETAIL_MESSAGE, reasonDetails)
+      );
     }
   }
 
-  private void validateReason(String reason) {
-    if (!StringUtils.hasText(reason) || reason.length() > REASON_MAX_LENGTH) {
-      throw new IllegalArgumentException("올바르지 않은 사유입니다.");
-    }
-  }
   public void processed() {
     isProcessed = true;
   }

@@ -22,7 +22,7 @@ public class MatchingQueueCommand {
     }
   }
 
-  public void deleteUserByUserId(String companyName,Long userId) {
+  public void deleteUserByUserId(String companyName, Long userId) {
     redisTemplate.opsForZSet().remove(companyName, userId);
   }
 
