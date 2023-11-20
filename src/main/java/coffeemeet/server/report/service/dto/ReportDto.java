@@ -7,16 +7,16 @@ import java.time.LocalDateTime;
 public sealed interface ReportDto permits ReportDto.Response {
 
   record Response(
-      String targetUserNickname,
+      String targetedNickname,
       String chattingRoomName,
       LocalDateTime createdAt
   ) implements ReportDto {
 
-    public static Response of(User targetUser, ChattingRoom chattingRoom) {
+    public static Response of(User targeted, ChattingRoom chattingRoom) {
       return new Response(
-          targetUser.getProfile().getNickname(),
+          targeted.getProfile().getNickname(),
           chattingRoom.getName(),
-          targetUser.getCreatedAt()
+          targeted.getCreatedAt()
       );
     }
   }

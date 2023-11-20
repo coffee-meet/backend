@@ -28,12 +28,12 @@ class ReportRepositoryTest extends RepositoryTestConfig {
     reportRepository.save(report);
 
     Long reporterId = report.getReporterId();
-    Long targetId = report.getTargetId();
+    Long targetId = report.getTargetedId();
     Long chattingRoomId = report.getChattingRoomId();
 
     // when, then
     assertTrue(
-        reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(reporterId, chattingRoomId,
+        reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(reporterId, chattingRoomId,
             targetId));
   }
 

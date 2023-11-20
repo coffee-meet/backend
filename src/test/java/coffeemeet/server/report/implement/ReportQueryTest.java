@@ -29,7 +29,7 @@ class ReportQueryTest {
     long chattingRoomId = 1L;
     long targetId = 1L;
 
-    given(reportRepository.existsByReporterIdAndChattingRoomIdAndTargetId(anyLong(), anyLong(),
+    given(reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(anyLong(), anyLong(),
         anyLong())).willReturn(Boolean.FALSE);
 
     // when, then

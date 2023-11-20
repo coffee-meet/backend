@@ -9,22 +9,22 @@ public sealed interface ReportDetailDto permits ReportDetailDto.Response {
 
   record Response(
       String reporterNickname,
-      String targetNickname,
-      String targetEmail,
+      String targetedNickname,
+      String targetedEmail,
       ReportReason reason,
       String reasonDetail,
       int reportedCount,
       LocalDateTime createAt
   ) implements ReportDetailDto {
 
-    public static Response of(Report report, User reporter, User targetUser) {
+    public static Response of(Report report, User reporter, User targeted) {
       return new Response(
           reporter.getProfile().getNickname(),
-          targetUser.getProfile().getNickname(),
-          targetUser.getProfile().getEmail().getValue(),
+          targeted.getProfile().getNickname(),
+          targeted.getProfile().getEmail().getValue(),
           report.getReason(),
           report.getReasonDetail(),
-          targetUser.getReportInfo().getReportedCount(),
+          targeted.getReportInfo().getReportedCount(),
           report.getCreatedAt()
       );
     }

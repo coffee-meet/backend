@@ -40,7 +40,7 @@ public class Report extends BaseEntity {
   private Long chattingRoomId;
 
   @Column(nullable = false)
-  private Long targetId;
+  private Long targetedId;
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
@@ -53,14 +53,14 @@ public class Report extends BaseEntity {
   private Report(
       @NonNull Long reporterId,
       @NonNull Long chattingRoomId,
-      @NonNull Long targetId,
+      @NonNull Long targetedId,
       @NonNull String reason,
       @NonNull String reasonDetail
   ) {
     validateReasonDetails(reasonDetail);
     this.reporterId = reporterId;
     this.chattingRoomId = chattingRoomId;
-    this.targetId = targetId;
+    this.targetedId = targetedId;
     this.reason = ReportReason.getReason(reason);
     this.reasonDetail = reasonDetail;
   }

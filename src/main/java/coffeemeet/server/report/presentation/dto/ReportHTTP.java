@@ -13,7 +13,7 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
       @NotNull
       Long chattingRoomId,
       @NotNull
-      Long targetId,
+      Long targetedId,
       @NotBlank
       String reason,
       @NotBlank @Length(max = 200)
@@ -24,8 +24,8 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
 
   record Response(
       String reporterNickname,
-      String targetNickname,
-      String targetEmail,
+      String targetedNickname,
+      String targetedEmail,
       ReportReason reason,
       String reasonDetail,
       int reportedCount,
@@ -35,8 +35,8 @@ public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Respon
     public static ReportHTTP.Response of(ReportDetailDto.Response response) {
       return new ReportHTTP.Response(
           response.reporterNickname(),
-          response.targetNickname(),
-          response.targetEmail(),
+          response.targetedNickname(),
+          response.targetedEmail(),
           response.reason(),
           response.reasonDetail(),
           response.reportedCount(),

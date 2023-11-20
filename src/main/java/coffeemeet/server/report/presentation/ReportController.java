@@ -22,7 +22,7 @@ public class ReportController {
   @PostMapping
   public ResponseEntity<Void> reportUser(@Login AuthInfo authInfo,
       @Valid @RequestBody ReportHTTP.Request request) {
-    reportService.reportUser(authInfo.userId(), request.chattingRoomId(), request.targetId(),
+    reportService.reportUser(authInfo.userId(), request.chattingRoomId(), request.targetedId(),
         request.reason(), request.reasonDetail());
     return ResponseEntity.ok().build();
   }
