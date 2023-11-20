@@ -10,6 +10,12 @@ import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP.ChatHistory;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP.ChatRoomHistory;
+import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
 import org.instancio.Instancio;
@@ -46,9 +52,34 @@ public class ChattingFixture {
         .create();
   }
 
+  public static List<ChattingRoomHistoryDto.Response> chattingRoomHistoryDtoResponses(int size) {
+    return Instancio.ofList(ChattingRoomHistoryDto.Response.class).size(size)
+        .create();
+  }
+
+  public static List<ChattingMessageHistoryDto.Response> chattingMessageHistoryDtoResponse(
+      int size) {
+    return Instancio.ofList(ChattingMessageHistoryDto.Response.class).size(size)
+        .create();
+  }
+
   public static ChatsHTTP.Response chatsHTTPResponse(List<Chat> chats) {
     return Instancio.of(ChatsHTTP.Response.class)
         .set(field(ChatsHTTP.Response::chats), chats)
+        .create();
+  }
+
+  public static ChattingRoomHistoriesHTTP.Response chattingRoomHistoriesHTTP(
+      List<ChatRoomHistory> chatRoomHistories) {
+    return Instancio.of(ChattingRoomHistoriesHTTP.Response.class)
+        .set(field(ChattingRoomHistoriesHTTP.Response::chatRoomHistories), chatRoomHistories)
+        .create();
+  }
+
+  public static ChattingMessageHistoriesHTTP.Response chattingMessageHistoriesHTTP(
+      List<ChatHistory> chatHistories) {
+    return Instancio.of(ChattingMessageHistoriesHTTP.Response.class)
+        .set(field(ChattingMessageHistoriesHTTP.Response::chatHistories), chatHistories)
         .create();
   }
 
