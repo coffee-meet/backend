@@ -2,6 +2,7 @@ package coffeemeet.server.report.service;
 
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_NOT_FOUND;
 
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.common.execption.NotFoundException;
@@ -14,6 +15,10 @@ import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +61,15 @@ public class ReportService {
 
   public List<ReportDto.Response> findAllReports() {
     List<Report> allReports = reportQuery.getAllReports();
+    Map<Long, User> userMap = getUsers(allReports);
+    Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(allReports);
+
     return allReports.stream()
-        .map(this::mapToAllReportDto)
+        .map(report -> {
+          User targetUser = userMap.get(report.getTargetId());
+          ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
+          return ReportDto.Response.of(targetUser, chattingRoom);
+        })
         .toList();
   }
 
@@ -88,9 +100,22 @@ public class ReportService {
     }
   }
 
-  private ReportDto.Response mapToAllReportDto(Report report) {
-    User targetUser = userQuery.getUserById(report.getTargetId());
-    return ReportDto.Response.of(targetUser, report);
+  private Map<Long, ChattingRoom> getChattingRooms(List<Report> allReports) {
+    Set<Long> chattingRoomIds = allReports.stream()
+        .map(Report::getChattingRoomId)
+        .collect(Collectors.toSet());
+    Set<ChattingRoom> chattingRooms = chattingRoomQuery.getUserByIdSet(chattingRoomIds);
+    return chattingRooms.stream()
+        .collect(Collectors.toMap(ChattingRoom::getId, Function.identity()));
+  }
+
+  private Map<Long, User> getUsers(List<Report> allReports) {
+    Set<Long> targetUserIds = allReports.stream()
+        .map(Report::getTargetId)
+        .collect(Collectors.toSet());
+    Set<User> users = userQuery.getUsersByIdSet(targetUserIds);
+    return users.stream()
+        .collect(Collectors.toMap(User::getId, Function.identity()));
   }
 
   private TargetReportDto.Response mapToReportDto(Report report) {
