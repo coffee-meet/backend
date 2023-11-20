@@ -20,7 +20,6 @@ import coffeemeet.server.report.service.dto.ReportDto.Response;
 import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,7 +94,7 @@ class ReportServiceTest {
     User targetUser = user();
     Report report = report();
     Report report1 = report();
-    List<Report> reports = new ArrayList<>(List.of(report, report1));
+    List<Report> reports = List.of(report, report1);
 
     given(reportQuery.getAllReports()).willReturn(reports);
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
@@ -116,7 +115,7 @@ class ReportServiceTest {
     Long targetId = report.getTargetId();
     Long chattingRoomId = report.getChattingRoomId();
     Report sameReport = report(targetId, chattingRoomId);
-    List<Report> reports = new ArrayList<>(List.of(report, sameReport));
+    List<Report> reports = List.of(report, sameReport);
 
     given(reportQuery.getReportsByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
         reports);
