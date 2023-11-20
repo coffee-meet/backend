@@ -1,15 +1,18 @@
 package coffeemeet.server.user.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthProvider;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+@NoArgsConstructor(access = PRIVATE)
+public final class SignupHTTP {
 
-public sealed interface SignupHTTP permits SignupHTTP.Request {
-
-  record Request(
+  public record Request(
       @NotBlank
       String nickname,
       @NotNull
@@ -18,7 +21,7 @@ public sealed interface SignupHTTP permits SignupHTTP.Request {
       String authCode,
       @NonNull
       OAuthProvider oAuthProvider
-  ) implements SignupHTTP {
+  ) {
 
   }
 

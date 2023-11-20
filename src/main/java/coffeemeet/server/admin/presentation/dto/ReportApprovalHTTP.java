@@ -1,15 +1,19 @@
 package coffeemeet.server.admin.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import jakarta.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
-public sealed interface ReportApprovalHTTP permits ReportApprovalHTTP.Request {
+@NoArgsConstructor(access = PRIVATE)
+public final class ReportApprovalHTTP {
 
-  record Request(
+  public record Request(
       @NotNull
       Long reportId,
       @NotNull
       Long userId
-  ) implements ReportApprovalHTTP {
+  ) {
 
   }
 
