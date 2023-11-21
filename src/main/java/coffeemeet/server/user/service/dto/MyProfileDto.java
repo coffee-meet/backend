@@ -25,8 +25,8 @@ public final class MyProfileDto {
     public static Response of(User user, List<Keyword> interests, Department department) {
       return new Response(
           user.getProfile().getNickname(),
-          user.getProfile().getEmail().getValue(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getEmail().getValue(),
+          user.getOauthInfo().getProfileImageUrl(),
           user.getReportInfo().getReportedCount(),
           user.getReportInfo().getPenaltyExpiration(),
           department,
