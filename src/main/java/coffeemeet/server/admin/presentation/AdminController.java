@@ -7,17 +7,27 @@ import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
+import coffeemeet.server.report.presentation.dto.ReportHTTP;
+import coffeemeet.server.report.presentation.dto.TargetReportHTTP;
+import coffeemeet.server.report.service.ReportService;
+import coffeemeet.server.report.service.dto.ReportDetailDto;
+import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.TargetReportDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -29,6 +39,7 @@ public class AdminController {
   private static final String REQUEST_WITHOUT_SESSION_MESSAGE = "SESSION 값이 존재하지 않습니다.";
   private static final String ADMIN_SESSION_ATTRIBUTE = "adminId";
   private final AdminService adminService;
+  private final ReportService reportService;
 
   @PostMapping("/login")
   public ResponseEntity<Void> login(
@@ -99,6 +110,47 @@ public class AdminController {
     }
     adminService.dismissReport(request.reportIds());
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/reports")
+  public ResponseEntity<List<ReportHTTP.Response>> findAllReports(
+      @SessionAttribute(name = ADMIN_ID, required = false) String adminId
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    List<ReportDto.Response> response = reportService.findAllReports();
+    return ResponseEntity.ok(response.stream()
+        .map(ReportHTTP.Response::from)
+        .toList());
+  }
+
+  @GetMapping("/reports/{chattingRoomId}")
+  public ResponseEntity<List<TargetReportHTTP.Response>> findAllReports(
+      @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
+      @PathVariable Long chattingRoomId,
+      @RequestParam Long targetedId
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    List<TargetReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+        targetedId, chattingRoomId);
+    return ResponseEntity.ok(response.stream()
+        .map(TargetReportHTTP.Response::from)
+        .toList());
+  }
+
+  @GetMapping("/reports/{reportId}")
+  public ResponseEntity<ReportDetailHTTP.Response> findReport(
+      @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
+      @PathVariable Long reportId
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    ReportDetailDto.Response response = reportService.findReportById(reportId);
+    return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
   }
 
 }

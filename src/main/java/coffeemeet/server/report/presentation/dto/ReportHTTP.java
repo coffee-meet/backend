@@ -1,46 +1,21 @@
 package coffeemeet.server.report.presentation.dto;
 
-import coffeemeet.server.report.domain.ReportReason;
-import coffeemeet.server.report.service.dto.ReportDetailDto;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import coffeemeet.server.report.service.dto.ReportDto;
 import java.time.LocalDateTime;
-import org.hibernate.validator.constraints.Length;
 
-public sealed interface ReportHTTP permits ReportHTTP.Request, ReportHTTP.Response {
+public final class ReportHTTP {
 
-  record Request(
-      @NotNull
-      Long chattingRoomId,
-      @NotNull
-      Long targetedId,
-      @NotBlank
-      String reason,
-      @NotBlank @Length(max = 200)
-      String reasonDetail
-  ) implements ReportHTTP {
-
-  }
-
-  record Response(
-      String reporterNickname,
+  public record Response(
       String targetedNickname,
-      String targetedEmail,
-      ReportReason reason,
-      String reasonDetail,
-      int reportedCount,
+      String chattingRoomName,
       LocalDateTime createdAt
-  ) implements ReportHTTP {
+  ) {
 
-    public static ReportHTTP.Response of(ReportDetailDto.Response response) {
-      return new ReportHTTP.Response(
-          response.reporterNickname(),
+    public static Response from(ReportDto.Response response) {
+      return new Response(
           response.targetedNickname(),
-          response.targetedEmail(),
-          response.reason(),
-          response.reasonDetail(),
-          response.reportedCount(),
-          response.createAt()
+          response.chattingRoomName(),
+          response.createdAt()
       );
     }
   }
