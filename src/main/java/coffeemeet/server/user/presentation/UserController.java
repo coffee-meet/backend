@@ -1,6 +1,5 @@
 package coffeemeet.server.user.presentation;
 
-import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
@@ -40,10 +39,9 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<AuthTokens> signup(@Valid @RequestBody SignupHTTP.Request request) {
-    return ResponseEntity.ok(
-        userService.signup(request.nickname(), request.keywords(), request.authCode(),
-            request.oAuthProvider()));
+  public ResponseEntity<Void> signup(@Valid @RequestBody SignupHTTP.Request request) {
+    userService.signup(request.userId(), request.nickname(), request.keywords());
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/login/{oAuthProvider}")
