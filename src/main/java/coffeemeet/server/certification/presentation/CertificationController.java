@@ -3,8 +3,6 @@ package coffeemeet.server.certification.presentation;
 import coffeemeet.server.certification.presentation.dto.EmailHTTP;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.common.annotation.Login;
-import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,13 +24,13 @@ public class CertificationController {
 
   @PostMapping("/users/me/company-info")
   public ResponseEntity<Void> registerCompanyInfo(
-      @Login AuthInfo authInfo,
+      @RequestPart("userId") @NotNull String userId,
       @RequestPart("companyName") @NotNull String companyName,
       @RequestPart("companyEmail") @NotNull String companyEmail,
       @RequestPart("department") @NotNull String department,
       @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.registerCertification(authInfo.userId(), companyName, companyEmail,
+    certificationService.registerCertification(Long.valueOf(userId), companyName, companyEmail,
         department,
         FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();
@@ -40,19 +38,17 @@ public class CertificationController {
 
   @PostMapping("/users/me/company-mail")
   public ResponseEntity<Void> sendVerificationCodeByEmail(
-      @Login AuthInfo authInfo,
       @Valid @RequestBody EmailHTTP.Request request
   ) {
-    certificationService.sendVerificationMail(authInfo.userId(), request.companyEmail());
+    certificationService.sendVerificationMail(request.userId(), request.companyEmail());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/users/me/company-mail/verification")
   public ResponseEntity<Void> verifyEmail(
-      @Login AuthInfo authInfo,
       @Valid @RequestBody VerificationCodeHTTP.Request request
   ) {
-    certificationService.compareCode(authInfo.userId(), request.verificationCode());
+    certificationService.compareCode(request.userId(), request.verificationCode());
     return ResponseEntity.ok().build();
   }
 
