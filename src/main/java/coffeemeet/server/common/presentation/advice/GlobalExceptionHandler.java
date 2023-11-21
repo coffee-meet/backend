@@ -17,6 +17,7 @@ import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 
 @Slf4j
 @RestControllerAdvice
@@ -101,6 +102,13 @@ public class GlobalExceptionHandler {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse.of(GlobalErrorCode.PARAMETER_INPUT_MISSING));
+  }
+
+  @ExceptionHandler(MultipartException.class)
+  public ResponseEntity<ErrorResponse> handleException(MultipartException exception) {
+    log.info(exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+        .body(ErrorResponse.of(GlobalErrorCode.PAYLOAD_TOO_LARGE));
   }
 
 }
