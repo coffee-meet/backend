@@ -21,7 +21,7 @@ public sealed interface ChattingMessageHistoryDto permits ChattingMessageHistory
           chattingMessageHistory.getId(),
           user.getProfile().getNickname(),
           chattingMessageHistory.getMessage(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getProfileImageUrl(),
           chattingMessageHistory.getCreatedAt()
       );
     }
