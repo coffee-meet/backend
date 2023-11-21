@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public final class EmailHTTP {
 
   public record Request(
+      @NotNull Long userId,
       @Email @NotNull String companyEmail
   ) {
 
