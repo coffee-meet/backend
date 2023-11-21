@@ -11,6 +11,7 @@ import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportDto.Response;
 import coffeemeet.server.report.service.dto.TargetReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -20,6 +21,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,18 +62,16 @@ public class ReportService {
     return ReportDetailDto.Response.of(report, reporter, targetUser);
   }
 
-  public List<ReportDto.Response> findAllReports() {
-    List<Report> allReports = reportQuery.getAllReports();
-    Map<Long, User> userMap = getUsers(allReports);
-    Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(allReports);
+  public Page<Response> findAllReports(Pageable pageable) {
+    Page<Report> reportPage = reportQuery.getAllReports(pageable);
+    Map<Long, User> userMap = getUsers(reportPage.getContent());
+    Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reportPage.getContent());
 
-    return allReports.stream()
-        .map(report -> {
-          User targetUser = userMap.get(report.getTargetedId());
-          ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-          return ReportDto.Response.of(targetUser, chattingRoom);
-        })
-        .toList();
+    return reportPage.map(report -> {
+      User targetUser = userMap.get(report.getTargetedId());
+      ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
+      return ReportDto.Response.of(targetUser, chattingRoom);
+    });
   }
 
   public List<TargetReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,

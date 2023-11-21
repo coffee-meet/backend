@@ -7,6 +7,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +29,7 @@ public class ReportQueryRepository {
     return Optional.ofNullable(foundReport);
   }
 
-  public List<Report> findAll() {
+  public Page<Report> findAll(Pageable pageable) {
     QReport report = QReport.report;
     QReport subReport = new QReport("subReport");
 
@@ -42,10 +45,19 @@ public class ReportQueryRepository {
         .fetch();
 
     // TODO: 11/20/23 order by, limit, offset 페이징 처리 추가
-    return jpaQueryFactory
+    List<Report> content = jpaQueryFactory
         .selectFrom(report)
         .where(report.id.in(subReports))
+        .orderBy(report.createdAt.asc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
         .fetch();
+
+    Long total = jpaQueryFactory
+        .select(report.count())
+        .from(report)
+        .fetchOne();
+    return new PageImpl<>(content, pageable, (total != null) ? total : 0);
   }
 
   public List<Report> findByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
@@ -53,6 +65,7 @@ public class ReportQueryRepository {
     return jpaQueryFactory
         .selectFrom(report)
         .where(report.targetedId.eq(targetId).and(report.chattingRoomId.eq(chattingRoomId)))
+        .orderBy(report.createdAt.desc())
         .fetch();
   }
 

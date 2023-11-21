@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,8 +68,8 @@ public class ReportQuery {
     return reports;
   }
 
-  public List<Report> getAllReports() {
-    return reportQueryRepository.findAll();
+  public Page<Report> getAllReports(Pageable pageable) {
+    return reportQueryRepository.findAll(pageable);
   }
 
 }

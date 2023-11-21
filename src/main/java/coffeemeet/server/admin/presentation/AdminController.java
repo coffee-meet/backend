@@ -12,13 +12,16 @@ import coffeemeet.server.report.presentation.dto.ReportHTTP;
 import coffeemeet.server.report.presentation.dto.TargetReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportDto.Response;
 import coffeemeet.server.report.service.dto.TargetReportDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,22 +116,22 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<List<ReportHTTP.Response>> findAllReports(
-      @SessionAttribute(name = ADMIN_ID, required = false) String adminId
+  public ResponseEntity<Page<ReportHTTP.Response>> findAllReports(
+      @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
+      @PageableDefault Pageable pageable
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    List<ReportDto.Response> response = reportService.findAllReports();
-    return ResponseEntity.ok(response.stream()
-        .map(ReportHTTP.Response::from)
-        .toList());
+    Page<Response> reportPage = reportService.findAllReports(pageable);
+    Page<ReportHTTP.Response> responsePage = reportPage.map(ReportHTTP.Response::from);
+    return ResponseEntity.ok(responsePage);
   }
 
-  @GetMapping("/reports/{chattingRoomId}")
-  public ResponseEntity<List<TargetReportHTTP.Response>> findAllReports(
+  @GetMapping("/reports/group")
+  public ResponseEntity<List<TargetReportHTTP.Response>> findReportByTargetIdAndChattingRoomId(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-      @PathVariable Long chattingRoomId,
+      @RequestParam Long chattingRoomId,
       @RequestParam Long targetedId
   ) {
     if (adminId == null) {
@@ -141,7 +144,7 @@ public class AdminController {
         .toList());
   }
 
-  @GetMapping("/reports/{reportId}")
+  @GetMapping("/reports/detail/{reportId}")
   public ResponseEntity<ReportDetailHTTP.Response> findReport(
       @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
       @PathVariable Long reportId
