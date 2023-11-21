@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.user.domain.NotificationInfo;
-import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.Arrays;
@@ -92,13 +91,11 @@ class UserQueryTest {
   void getUserByOAuthInfoTest() {
     // given
     User user = UserFixture.user();
-    OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
-    String oAuthProviderId = "1";
 
     given(userRepository.findByOauthInfo(any())).willReturn(Optional.of(user));
 
     // when
-    User foundUser = userQuery.getUserByOAuthInfo(oAuthProvider, oAuthProviderId);
+    User foundUser = userQuery.getUserByOAuthInfo(user.getOauthInfo());
 
     // then
     assertThat(user).isEqualTo(foundUser);
@@ -114,20 +111,6 @@ class UserQueryTest {
 
     // when, then
     assertThatCode(() -> userQuery.hasDuplicatedNickname(nickname))
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  @DisplayName("이미 존재하는 유저인지 체크할 수 있다.")
-  void hasDuplicatedUserTest() {
-    // given
-    OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
-    String oAuthProviderId = "1";
-
-    given(userRepository.existsUserByOauthInfo(any())).willReturn(Boolean.FALSE);
-
-    // when, then
-    assertThatCode(() -> userQuery.hasDuplicatedUser(oAuthProvider, oAuthProviderId))
         .doesNotThrowAnyException();
   }
 
