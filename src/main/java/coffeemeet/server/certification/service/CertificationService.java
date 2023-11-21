@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class CertificationService {
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
+  @Transactional
   public void registerCertification(long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     String key = mediaManager.generateKey(BUSINESS_CARD);
