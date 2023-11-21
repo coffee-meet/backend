@@ -63,10 +63,13 @@ public class UserService {
         new Email(memberDetail.email()), memberDetail.profileImage());
     if (userQuery.isRegistered(oauthInfo)) {
       User user = userQuery.getUserByOAuthInfo(oauthInfo);
-      List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-      Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-      AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-      return LoginDetailsDto.Response.of(user, interests, certification, authTokens);
+      if (user.isRegistered()) {
+        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+        return LoginDetailsDto.Response.of(user, interests, certification, authTokens);
+      }
+      return LoginDetailsDto.Response.of(user, Collections.emptyList(), null, null);
     }
     User user = new User(oauthInfo);
     userCommand.saveUser(user);
