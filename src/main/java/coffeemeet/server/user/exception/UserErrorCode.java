@@ -14,9 +14,9 @@ public enum UserErrorCode implements ErrorCode {
   INVALID_BIRTH_YEAR("U000", "올바르지 않은 출생년도입니다."),
   INVALID_BIRTH_DAY("U000", "올바르지 않은 날짜형입니다."),
   NOT_EXIST_USER("U004", "존재하지 않는 사용자입니다"),
+  ALREADY_REGISTERED_USER("U004", "이미 회원가입된 사용자 입니다."),
   ALREADY_EXIST_NICKNAME("U009", "이미 존재하는 닉네임입니다."),
-  ALREADY_EXIST_USER("U009", "이미 존재하는 사용자입니다."),
-  ;
+  ALREADY_EXIST_USER("U009", "이미 존재하는 사용자입니다.");
 
   private final String errorCode;
   private final String message;

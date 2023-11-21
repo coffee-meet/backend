@@ -43,7 +43,6 @@ public class User extends AdvancedBaseEntity {
   private OAuthInfo oauthInfo;
 
   @Embedded
-  @Column(nullable = false)
   private Profile profile;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +50,6 @@ public class User extends AdvancedBaseEntity {
   private ChattingRoom chattingRoom;
 
   @Embedded
-  @Column(nullable = false)
   private ReportInfo reportInfo;
 
   @Embedded
@@ -60,26 +58,28 @@ public class User extends AdvancedBaseEntity {
   @Enumerated(EnumType.STRING)
   private UserStatus userStatus;
 
-  @Column(nullable = false)
   private boolean isDeleted;
 
-  @Column(nullable = false)
   private boolean isBlacklisted;
 
-  public User(
-      @NonNull OAuthInfo oauthInfo,
-      @NonNull Profile profile
-  ) {
+  @Column(nullable = false)
+  private boolean isRegistered;
+
+  public User(@NonNull OAuthInfo oauthInfo) {
     this.oauthInfo = oauthInfo;
+  }
+
+  public void registerUser(@NonNull Profile profile) {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
     this.isDeleted = false;
     this.isBlacklisted = false;
     this.userStatus = IDLE;
+    this.isRegistered = true;
   }
 
   public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
-    this.profile.updateProfileImageUrl(newProfileImageUrl);
+    this.oauthInfo.updateProfileImageUrl(newProfileImageUrl);
   }
 
   public void updateNickname(@NonNull String newNickname) {
@@ -122,12 +122,12 @@ public class User extends AdvancedBaseEntity {
     if (o == null) {
       return false;
     }
-    Class<?> oEffectiveClass = (o instanceof HibernateProxy)
-        ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
-        : o.getClass();
-    Class<?> thisEffectiveClass = this instanceof HibernateProxy
-        ? ((HibernateProxy) this).getHibernateLazyInitializer()
-        .getPersistentClass() : this.getClass();
+    Class<?> oEffectiveClass =
+        (o instanceof HibernateProxy) ? ((HibernateProxy) o).getHibernateLazyInitializer()
+            .getPersistentClass() : o.getClass();
+    Class<?> thisEffectiveClass =
+        this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+            .getPersistentClass() : this.getClass();
     if (thisEffectiveClass != oEffectiveClass) {
       return false;
     }

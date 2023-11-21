@@ -6,6 +6,7 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.docume
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -30,7 +31,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
@@ -81,9 +81,8 @@ class UserControllerTest extends ControllerTestConfig {
   void signupTest() throws Exception {
     // given
     SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
-    AuthTokens authTokens = new AuthTokens("accessToken", "refreshToken");
 
-    given(userService.signup(any(), any(), any(), any())).willReturn(authTokens);
+    willDoNothing().given(userService).signup(any(), any(), anyList());
 
     // when, then
     mockMvc.perform(post("/api/v1/users/sign-up")
@@ -98,16 +97,10 @@ class UserControllerTest extends ControllerTestConfig {
             requestFields(
                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                 fieldWithPath("keywords").type(JsonFieldType.ARRAY).description("관심사"),
-                fieldWithPath("authCode").type(JsonFieldType.STRING).description("인증 코드"),
-                fieldWithPath("oAuthProvider").type(JsonFieldType.STRING).description("OAuth 제공자")
-            ),
-            responseFields(
-                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("사용자 아이디")
             )
         ))
-        .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(authTokens)));
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -136,6 +129,8 @@ class UserControllerTest extends ControllerTestConfig {
                 parameterWithName("authCode").description("인증 코드")
             ),
             responseFields(
+                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("사용자 아이디"),
+                fieldWithPath("isRegistered").type(JsonFieldType.BOOLEAN).description("회원 가입 여부"),
                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),

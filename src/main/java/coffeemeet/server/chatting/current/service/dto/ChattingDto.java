@@ -25,7 +25,7 @@ public final class ChattingDto {
           chattingMessage.getId(),
           user.getProfile().getNickname(),
           chattingMessage.getMessage(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getProfileImageUrl(),
           chattingMessage.getCreatedAt()
       );
     }

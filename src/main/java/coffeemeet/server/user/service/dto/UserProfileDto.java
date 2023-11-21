@@ -22,7 +22,7 @@ public final class UserProfileDto {
         List<Keyword> interests) {
       return new Response(
           user.getProfile().getNickname(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getProfileImageUrl(),
           department,
           interests
       );

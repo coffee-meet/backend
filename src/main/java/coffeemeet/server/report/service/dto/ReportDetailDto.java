@@ -21,7 +21,7 @@ public sealed interface ReportDetailDto permits ReportDetailDto.Response {
       return new Response(
           reporter.getProfile().getNickname(),
           targeted.getProfile().getNickname(),
-          targeted.getProfile().getEmail().getValue(),
+          targeted.getOauthInfo().getEmail().getValue(),
           report.getReason(),
           report.getReasonDetail(),
           targeted.getReportInfo().getReportedCount(),
