@@ -54,6 +54,10 @@ public class CertificationFixture {
     return Instancio.create(String.class);
   }
 
+  public static String userId() {
+    return String.valueOf(new IntegerGenerator().range(0, 999999).get());
+  }
+
   public static String verificationCode() {
     return String.format("%06d", new IntegerGenerator().range(0, 999999).get());
   }
