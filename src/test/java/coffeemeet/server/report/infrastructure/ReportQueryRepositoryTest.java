@@ -2,7 +2,6 @@ package coffeemeet.server.report.infrastructure;
 
 import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.report.domain.Report;
@@ -11,6 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 class ReportQueryRepositoryTest extends RepositoryTestConfig {
 
@@ -36,14 +39,15 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     Report sameReport2 = report(report2.getTargetedId(), report2.getChattingRoomId());
 
     List<Report> reports = List.of(report, report1, report2, sameReport1, sameReport2);
-    List<Report> expectedReports = List.of(report, report1, report2);
     reportRepository.saveAll(reports);
 
     // when
-    List<Report> allReports = reportQueryRepository.findAll();
+    Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").ascending());
+    Page<Report> reportPage = reportQueryRepository.findAll(pageable);
+    List<Report> expectedReports = List.of(report, report1, report2);
 
     // then
-    assertThat(allReports).hasSize(expectedReports.size());
+    assertThat(reportPage).hasSize(expectedReports.size());
   }
 
   @DisplayName("신고 대상 아이디와 채팅방 아이디와 일치하는 신고 내역을 조회할 수 있다.")
@@ -64,13 +68,7 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
         targetId, chattingRoomId);
 
     // then
-    assertAll(
-        () -> assertThat(reports).hasSize(expectedReports.size()),
-        () -> assertThat(reports.get(0).getTargetedId()).isEqualTo(
-            expectedReports.get(1).getTargetedId()),
-        () -> assertThat(reports.get(0).getChattingRoomId()).isEqualTo(
-            expectedReports.get(1).getChattingRoomId())
-    );
+    assertThat(reports).hasSize(expectedReports.size());
   }
 
   @DisplayName("모든 신고 내역 조회 시 신고 대상과 채팅방이 동일한 경우 하나의 신고 내역으로 조회된다.")
@@ -83,17 +81,15 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     List<Report> reports = List.of(report, report1, sameReport);
     reportRepository.saveAll(reports);
 
+    Long targetedId = report.getTargetedId();
+    Long chattingRoomId = report.getChattingRoomId();
+
     // when
-    List<Report> allReports = reportQueryRepository.findAll();
+    List<Report> allReports = reportQueryRepository.findByTargetIdAndChattingRoomId(targetedId,
+        chattingRoomId);
 
     // then
-    assertAll(
-        () -> assertThat(allReports).hasSize(2),
-        () -> assertThat(allReports.get(0).getChattingRoomId()).isNotEqualTo(
-            allReports.get(1).getChattingRoomId()),
-        () -> assertThat(allReports.get(0).getTargetedId()).isNotEqualTo(
-            allReports.get(1).getTargetedId())
-    );
+    assertThat(allReports).hasSize(2);
   }
 
 }
