@@ -112,7 +112,7 @@ class CertificationCommandTest {
     Long userId = 1L;
 
     // when
-    certificationCommand.deleteUserCertification(userId);
+    certificationCommand.deleteCertification(userId);
 
     // then
     then(certificationRepository).should(only()).deleteById(userId);
