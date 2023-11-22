@@ -5,7 +5,7 @@ import coffeemeet.server.report.domain.ReportReason;
 import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
 
-public final class ReportDetailDto{
+public final class ReportDetailDto {
 
   public record Response(
       String reporterNickname,
@@ -15,7 +15,7 @@ public final class ReportDetailDto{
       String reasonDetail,
       int reportedCount,
       LocalDateTime createAt
-  )  {
+  ) {
 
     public static Response of(Report report, User reporter, User targeted) {
       return new Response(

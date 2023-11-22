@@ -23,7 +23,7 @@ public final class MyProfileDto {
         Department department) {
       return new Response(
           user.getProfile().getNickname(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getProfileImageUrl(),
           companyName,
           department,
           interests
