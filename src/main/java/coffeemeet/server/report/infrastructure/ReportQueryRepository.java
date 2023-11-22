@@ -44,7 +44,6 @@ public class ReportQueryRepository {
         ))
         .fetch();
 
-    // TODO: 11/20/23 order by, limit, offset 페이징 처리 추가
     List<Report> content = jpaQueryFactory
         .selectFrom(report)
         .where(report.id.in(subReports))
