@@ -4,7 +4,7 @@ import coffeemeet.server.common.util.Patterns;
 
 public enum ReportReason {
   혐오_발언,
-  괴롭힘_또는_스토킹,
+  괴롭힘,
   성적인_괴롭힘,
   스팸_및_광고,
   부적절한_콘텐츠,
