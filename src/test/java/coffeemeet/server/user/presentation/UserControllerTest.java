@@ -204,11 +204,9 @@ class UserControllerTest extends ControllerTestConfig {
                 ),
                 responseFields(
                     fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
                         .description("프로필 사진 url"),
-                    fieldWithPath("reportedCount").type(JsonFieldType.NUMBER).description("신고 횟수"),
-                    fieldWithPath("sanctionPeriod").type(JsonFieldType.STRING).description("제재 기간"),
+                    fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사명"),
                     fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
                     fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
                 )

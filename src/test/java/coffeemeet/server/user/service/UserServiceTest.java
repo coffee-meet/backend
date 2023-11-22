@@ -161,6 +161,7 @@ class UserServiceTest {
     List<Keyword> keywords = UserFixture.keywords();
     Certification certification = certification(user);
     MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
+        certification.getCompanyName(),
         certification.getDepartment());
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
@@ -173,8 +174,9 @@ class UserServiceTest {
     // then
     assertAll(
         () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
-        () -> assertThat(result.email()).isEqualTo(response.email()),
         () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
+        () -> assertThat(result.companyName()).isEqualTo(response.companyName()),
+        () -> assertThat(result.department()).isEqualTo(response.department()),
         () -> assertThat(result.department()).isEqualTo(response.department())
     );
   }

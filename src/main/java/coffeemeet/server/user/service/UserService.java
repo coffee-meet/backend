@@ -87,7 +87,8 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return MyProfileDto.Response.of(user, keywords, certification.getDepartment());
+    return MyProfileDto.Response.of(user, keywords, certification.getCompanyName(),
+        certification.getDepartment());
   }
 
   public void updateProfileImage(Long userId, File file) {
