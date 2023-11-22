@@ -2,19 +2,19 @@ package coffeemeet.server.admin.presentation;
 
 import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
 
-
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
+import coffeemeet.server.report.presentation.dto.GroupReportsHTTP;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.report.presentation.dto.ReportHTTP;
-import coffeemeet.server.report.presentation.dto.TargetReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto.Response;
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -130,20 +130,19 @@ public class AdminController {
     }
 
     @GetMapping("/reports/group")
-    public ResponseEntity<GroupReportsListHTTP.Response> findReportByTargetIdAndChattingRoomId(
+    public ResponseEntity<GroupReportsHTTP.Response> findReportByTargetIdAndChattingRoomId(
             @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-            @RequestParam Long chattingRoomId,
-            @RequestParam Long targetedId
+            @ModelAttribute GroupReportsHTTP.Request groupReportsHTTP
     ) {
         if (adminId == null) {
             throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
         }
-        List<TargetReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
-                targetedId, chattingRoomId);
-        List<TargetReportHTTP.Response> responses = response.stream()
-                .map(TargetReportHTTP.Response::from)
+        List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+                groupReportsHTTP.targetedId(), groupReportsHTTP.chattingRoomId());
+        List<GroupReportHTTP.Response> responses = response.stream()
+                .map(GroupReportHTTP.Response::from)
                 .toList();
-        return ResponseEntity.ok(GroupReportsListHTTP.Response.from(responses));
+        return ResponseEntity.ok(GroupReportsHTTP.Response.from(responses));
     }
 
     @GetMapping("/reports/detail/{reportId}")

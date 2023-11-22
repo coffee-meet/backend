@@ -29,23 +29,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.dto.GroupReportsHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
 import coffeemeet.server.common.fixture.dto.TargetReportDtoFixture;
 import coffeemeet.server.common.fixture.dto.TargetReportHTTPFixture;
+import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
+import coffeemeet.server.report.presentation.dto.GroupReportsHTTP;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.TargetReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportDto.Response;
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import com.epages.restdocs.apispec.Schema;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(AdminController.class)
 class AdminControllerTest extends ControllerTestConfig {
@@ -316,12 +325,12 @@ class AdminControllerTest extends ControllerTestConfig {
     @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
     void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
         // given
-        List<TargetReportDto.Response> response = List.of(TargetReportDtoFixture.targetReportDto(),
+        List<GroupReportDto.Response> response = List.of(TargetReportDtoFixture.targetReportDto(),
                 TargetReportDtoFixture.targetReportDto());
-        List<TargetReportHTTP.Response> expectedResponse = response.stream()
+        List<GroupReportHTTP.Response> expectedResponse = response.stream()
                 .map(TargetReportHTTPFixture::targatReportHTTPResponse)
                 .toList();
-        GroupReportsListHTTP.Response resultResponse = GroupReportsListHTTPFixture.myProfileHTTPResponse(expectedResponse);
+        GroupReportsHTTP.Response resultResponse = GroupReportsHTTPFixture.myProfileHTTPResponse(expectedResponse);
 
         given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
                 response);
