@@ -19,7 +19,7 @@ import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto.Response;
 import coffeemeet.server.report.service.dto.ReportDto;
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -155,7 +155,7 @@ class ReportServiceTest {
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
-    List<TargetReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
         targetId, chattingRoomId);
 
     // given

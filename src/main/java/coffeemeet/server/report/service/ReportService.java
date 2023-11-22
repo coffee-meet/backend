@@ -12,7 +12,7 @@ import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportDto.Response;
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -74,8 +74,8 @@ public class ReportService {
     });
   }
 
-  public List<TargetReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,
-      long chattingRoomId) {
+  public List<GroupReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,
+                                                                             long chattingRoomId) {
     List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(targetId,
         chattingRoomId);
     return reports.stream()
@@ -119,9 +119,9 @@ public class ReportService {
         .collect(Collectors.toMap(User::getId, Function.identity()));
   }
 
-  private TargetReportDto.Response mapToReportDto(Report report) {
+  private GroupReportDto.Response mapToReportDto(Report report) {
     User reporter = userQuery.getUserById(report.getReporterId());
-    return TargetReportDto.Response.of(reporter.getProfile().getNickname(), report.getCreatedAt());
+    return GroupReportDto.Response.of(reporter.getProfile().getNickname(), report.getCreatedAt());
   }
 
 }

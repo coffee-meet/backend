@@ -1,12 +1,12 @@
 package coffeemeet.server.common.fixture.dto;
 
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import org.instancio.Instancio;
 
 public class TargetReportDtoFixture {
 
-  public static TargetReportDto.Response targetReportDto() {
-    return Instancio.of(TargetReportDto.Response.class)
+  public static GroupReportDto.Response targetReportDto() {
+    return Instancio.of(GroupReportDto.Response.class)
         .create();
   }
 

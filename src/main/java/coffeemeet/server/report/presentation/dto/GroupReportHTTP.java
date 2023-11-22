@@ -1,16 +1,16 @@
 package coffeemeet.server.report.presentation.dto;
 
-import coffeemeet.server.report.service.dto.TargetReportDto;
+import coffeemeet.server.report.service.dto.GroupReportDto;
 import java.time.LocalDateTime;
 
-public final class TargetReportHTTP {
+public final class GroupReportHTTP {
 
   public record Response(
       String reporterNickname,
       LocalDateTime createdAt
   ) {
 
-    public static Response from(TargetReportDto.Response response) {
+    public static Response from(GroupReportDto.Response response) {
       return new Response(
           response.reporterNickname(),
           response.createdAt()

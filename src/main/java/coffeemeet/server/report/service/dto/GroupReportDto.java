@@ -2,7 +2,7 @@ package coffeemeet.server.report.service.dto;
 
 import java.time.LocalDateTime;
 
-public final class TargetReportDto {
+public final class GroupReportDto {
 
   public record Response(
       String reporterNickname,
