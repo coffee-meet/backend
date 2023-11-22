@@ -25,6 +25,7 @@ import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,36 +48,32 @@ public class UserService {
   private final UserQuery userQuery;
   private final UserCommand userCommand;
 
-  public AuthTokens signup(String nickname, List<Keyword> keywords, String authCode,
-      OAuthProvider oAuthProvider) {
-    OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider,
-        authCode);
-
-    userQuery.hasDuplicatedUser(memberDetail.oAuthProvider(), memberDetail.oAuthProviderId());
+  @Transactional
+  public void signup(Long userId, String nickname, List<Keyword> keywords) {
+    User user = userQuery.getNonRegisteredUserById(userId);
     userQuery.hasDuplicatedNickname(nickname);
-
-    User user = new User(new OAuthInfo(memberDetail.oAuthProvider(),
-        memberDetail.oAuthProviderId()),
-        new Profile(nickname, new Email(memberDetail.email()), memberDetail.profileImage())
-    );
-
-    Long userId = userCommand.saveUser(user);
-    User newUser = userQuery.getUserById(userId);
-
-    interestCommand.saveAll(keywords, newUser);
-    return authTokensGenerator.generate(newUser.getId());
+    user.registerUser(new Profile(nickname));
+    interestCommand.saveAll(keywords, user);
   }
 
   public LoginDetailsDto.Response login(OAuthProvider oAuthProvider, String authCode) {
     OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
-
-    User user = userQuery.getUserByOAuthInfo(oAuthProvider, memberDetail.oAuthProviderId());
-    isBlacklist(user);
-    List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-    Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-
-    AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-    return LoginDetailsDto.Response.of(user, interests, certification, authTokens);
+    OAuthInfo oauthInfo = new OAuthInfo(memberDetail.oAuthProvider(),
+        memberDetail.oAuthProviderId(),
+        new Email(memberDetail.email()), memberDetail.profileImage());
+    if (userQuery.isRegistered(oauthInfo)) {
+      User user = userQuery.getUserByOAuthInfo(oauthInfo);
+      if (user.isRegistered()) {
+        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+        return LoginDetailsDto.Response.of(user, interests, certification, authTokens);
+      }
+      return LoginDetailsDto.Response.of(user, Collections.emptyList(), null, null);
+    }
+    User user = new User(oauthInfo);
+    userCommand.saveUser(user);
+    return LoginDetailsDto.Response.of(user, Collections.emptyList(), null, null);
   }
 
   public UserProfileDto.Response findUserProfile(long userId) {
@@ -95,7 +92,7 @@ public class UserService {
 
   public void updateProfileImage(Long userId, File file) {
     User user = userQuery.getUserById(userId);
-    deleteCurrentProfileImage(user.getProfile().getProfileImageUrl());
+    deleteCurrentProfileImage(user.getOauthInfo().getProfileImageUrl());
 
     String key = mediaManager.generateKey(PROFILE_IMAGE);
     mediaManager.upload(key, file);

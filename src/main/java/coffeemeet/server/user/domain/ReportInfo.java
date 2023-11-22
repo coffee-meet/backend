@@ -5,7 +5,6 @@ import static coffeemeet.server.report.exception.ReportErrorCode.EXCEEDED_MAX_RE
 import coffeemeet.server.common.execption.LimitExceededException;
 import coffeemeet.server.report.domain.ReportAmount;
 import coffeemeet.server.report.domain.ReportPenalty;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -17,9 +16,7 @@ public class ReportInfo {
   private static final int REPORT_MIN_COUNT = 0;
   private static final int REPORT_MAX_COUNT = 5;
 
-  @Column(nullable = false)
-  private int reportedCount;
-
+  private Integer reportedCount;
   private LocalDateTime penaltyExpiration;
 
   public ReportInfo() {

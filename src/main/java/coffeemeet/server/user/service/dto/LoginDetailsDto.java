@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 public final class LoginDetailsDto {
 
   public record Response(
+      Long userId,
+      boolean isRegistered,
       String accessToken,
       String refreshToken,
       String nickname,
@@ -25,11 +27,26 @@ public final class LoginDetailsDto {
 
     public static Response of(User user, List<Keyword> interests, Certification certification,
         AuthTokens authTokens) {
+      if (certification == null || authTokens == null) {
+        return new Response(
+            user.getId(),
+            user.isRegistered(),
+            null,
+            null,
+            null,
+            user.getOauthInfo().getProfileImageUrl(),
+            null,
+            null,
+            interests
+        );
+      }
       return new Response(
+          user.getId(),
+          user.isRegistered(),
           authTokens.accessToken(),
           authTokens.refreshToken(),
           user.getProfile().getNickname(),
-          user.getProfile().getProfileImageUrl(),
+          user.getOauthInfo().getProfileImageUrl(),
           certification.getCompanyName(),
           certification.getDepartment(),
           interests

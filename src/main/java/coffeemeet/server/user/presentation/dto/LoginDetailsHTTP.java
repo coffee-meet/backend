@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public final class LoginDetailsHTTP {
 
   public record Response(
+      Long userId,
+      boolean isRegistered,
       String accessToken,
       String refreshToken,
       String nickname,
@@ -23,6 +25,8 @@ public final class LoginDetailsHTTP {
 
     public static Response of(LoginDetailsDto.Response response) {
       return new Response(
+          response.userId(),
+          response.isRegistered(),
           response.accessToken(),
           response.refreshToken(),
           response.nickname(),

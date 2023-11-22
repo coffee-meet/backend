@@ -3,7 +3,6 @@ package coffeemeet.server.common.fixture.entity;
 import static java.time.LocalDateTime.now;
 import static org.instancio.Select.field;
 
-import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.Profile;
@@ -31,7 +30,6 @@ public class UserFixture {
 
   private static Profile profile() {
     return Instancio.of(Profile.class)
-        .set(field(Profile::getEmail), new Email("test123@gmail.com"))
         .generate(field(Profile::getNickname), gen -> gen.string().maxLength(20)).create();
   }
 

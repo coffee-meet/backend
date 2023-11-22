@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.Length;
 public final class VerificationCodeHTTP {
 
   public record Request(
+      @NotNull
+      Long userId,
       @NotNull @Length(min = 6, max = 6)
       String verificationCode
   ) {

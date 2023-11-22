@@ -5,16 +5,14 @@ import static coffeemeet.server.common.fixture.entity.CertificationFixture.compa
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.emailDtoRequest;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.userId;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCodeDtoRequest;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -55,6 +53,7 @@ class CertificationControllerTest extends ControllerTestConfig {
   @DisplayName("회사 인증 정보를 등록할 수 있다.")
   void registerCompanyInfoTest() throws Exception {
     // given
+    String sUserId = "userId";
     String sCompanyName = "companyName";
     String sBusinessCard = "businessCard";
     String sCompanyEmail = "companyEmail";
@@ -66,6 +65,7 @@ class CertificationControllerTest extends ControllerTestConfig {
         "image/jpeg",
         sBusinessCard.getBytes()
     );
+    MockPart userId = new MockPart(sUserId, userId().getBytes());
     MockPart companyName = new MockPart(sCompanyName, companyName().getBytes());
     MockPart companyEmail = new MockPart(sCompanyEmail, email().getBytes());
     MockPart department = new MockPart(sDepartment, department().name().getBytes());
@@ -73,10 +73,7 @@ class CertificationControllerTest extends ControllerTestConfig {
     // when, then
     mockMvc.perform(multipart("/api/v1/certification/users/me/company-info")
             .file("businessCard", businessCardImage.getBytes())
-            .part(companyName)
-            .part(companyEmail)
-            .part(department)
-            .header(AUTHORIZATION, TOKEN)
+            .part(userId, companyName, companyEmail, department)
             .contentType(MULTIPART_FORM_DATA)
         )
         .andExpect(status().isOk())
@@ -84,10 +81,8 @@ class CertificationControllerTest extends ControllerTestConfig {
             resourceDetails().tag("회사 인증").description("회사 정보 등록"),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
-            requestHeaders(
-                headerWithName(AUTHORIZATION).description("토큰")
-            ),
             requestParts(
+                partWithName(sUserId).description("유저 아이디"),
                 partWithName(sCompanyName).description("회사명"),
                 partWithName(sBusinessCard).description("회사 명함 이미지"),
                 partWithName(sCompanyEmail).description("회사 이메일"),
@@ -104,17 +99,14 @@ class CertificationControllerTest extends ControllerTestConfig {
 
     // when, then
     mockMvc.perform(post("/api/v1/certification/users/me/company-mail")
-            .header(AUTHORIZATION, TOKEN)
             .contentType(APPLICATION_JSON)
             .content(emailDtoRequest))
         .andDo(document("certification-sendVerificationCode",
                 resourceDetails().tag("회사 인증").description("회사 이메일 인증을 위한 메일 전송"),
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName(AUTHORIZATION).description("토큰")
-                ),
                 requestFields(
+                    fieldWithPath("userId").description("사용자 아이디"),
                     fieldWithPath("companyEmail").description("회사 이메일")
                 )
             )
@@ -129,17 +121,14 @@ class CertificationControllerTest extends ControllerTestConfig {
         verificationCodeDtoRequest());
 
     mockMvc.perform(post("/api/v1/certification/users/me/company-mail/verification")
-            .header(AUTHORIZATION, TOKEN)
             .contentType(APPLICATION_JSON)
             .content(verificationCodeDtoRequest))
         .andDo(document("certification-verifyEmail",
                 resourceDetails().tag("회사 인증").description("회사 이메일 인증을 위한 코드 검증"),
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName(AUTHORIZATION).description("토큰")
-                ),
                 requestFields(
+                    fieldWithPath("userId").description("사용자 아이디"),
                     fieldWithPath("verificationCode").description("인증 코드")
                 )
             )

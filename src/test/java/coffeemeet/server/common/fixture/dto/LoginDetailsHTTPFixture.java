@@ -9,6 +9,8 @@ public class LoginDetailsHTTPFixture {
   public static LoginDetailsHTTP.Response loginDetailsHTTPResponse(
       LoginDetailsDto.Response response) {
     return new Response(
+        response.userId(),
+        response.isRegistered(),
         response.accessToken(),
         response.refreshToken(),
         response.nickname(),
