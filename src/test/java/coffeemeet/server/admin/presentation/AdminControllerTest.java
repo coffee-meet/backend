@@ -59,139 +59,139 @@ import org.springframework.restdocs.payload.JsonFieldType;
 @WebMvcTest(AdminController.class)
 class AdminControllerTest extends ControllerTestConfig {
 
-  private static final String JSESSION = "JSESSION";
-  private static final String SESSION_VALUE = "session";
+    private static final String JSESSION = "JSESSION";
+    private static final String SESSION_VALUE = "session";
 
-  private static final String SESSION = "session";
+    private static final String SESSION = "session";
 
-  @MockBean
-  private AdminService adminService;
+    @MockBean
+    private AdminService adminService;
 
-  private String baseUrl = "/api/v1/admins";
+    private String baseUrl = "/api/v1/admins";
 
-  @MockBean
-  private ReportService reportService;
+    @MockBean
+    private ReportService reportService;
 
-  @Test
-  @DisplayName("관리자 로그인을 할 수 있다.")
-  void loginTest() throws Exception {
-    // given
-    String loginRequest = objectMapper.writeValueAsString(adminLoginHTTPRequest());
+    @Test
+    @DisplayName("관리자 로그인을 할 수 있다.")
+    void loginTest() throws Exception {
+        // given
+        String loginRequest = objectMapper.writeValueAsString(adminLoginHTTPRequest());
 
-    // when, then
-    mockMvc.perform(post(baseUrl + "/login")
-            .contentType(APPLICATION_JSON)
-            .content(loginRequest))
-        .andDo(document("admin-login",
-            resourceDetails().tag("관리자").description("관리자 로그인")
-                .requestSchema(Schema.schema("AdminLoginHTTP.Request")),
-            preprocessRequest(prettyPrint()),
-            preprocessResponse(prettyPrint()),
-            requestFields(
-                fieldWithPath("id").description("관리자 ID"),
-                fieldWithPath("password").description("관리자 비밀번호")
-            )
-        ))
-        .andExpect(status().isOk());
-  }
+        // when, then
+        mockMvc.perform(post(baseUrl + "/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(loginRequest))
+                .andDo(document("admin-login",
+                        resourceDetails().tag("관리자").description("관리자 로그인")
+                                .requestSchema(Schema.schema("AdminLoginHTTP.Request")),
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("id").description("관리자 ID"),
+                                fieldWithPath("password").description("관리자 비밀번호")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
 
-  @Test
-  @DisplayName("관리자 로그아웃 할 수 있다.")
-  void name() throws Exception {
-    // given, when, then
-    mockMvc.perform(post(baseUrl + "/logout")
-            .header(JSESSION, SESSION_VALUE)
-        )
-        .andDo(document("admin-logout",
-            resourceDetails().tag("관리자").description("관리자 로그아웃"),
-            preprocessRequest(prettyPrint()),
-            preprocessResponse(prettyPrint()),
-            requestHeaders(
-                headerWithName(JSESSION).description("세션")
-            )
-        ))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  @DisplayName("인증 허가 요청을 처리할 수 있다.")
-  void approveCertification() throws Exception {
-    // given
-    Long certificationId = 1L;
-
-    // when, then
-    mockMvc.perform(patch(baseUrl + "/certifications/{certificationId}/approval", certificationId)
-            .header(JSESSION, SESSION_VALUE)
-            .sessionAttr("adminId", "admin")
-            .contentType(APPLICATION_JSON)
-        )
-        .andDo(document(
-                "certification-approval",
-                resourceDetails()
-                    .tag("관리자")
-                    .description("회사 인증 허가"),
-                requestHeaders(
-                    headerWithName(JSESSION).description("세션")
+    @Test
+    @DisplayName("관리자 로그아웃 할 수 있다.")
+    void name() throws Exception {
+        // given, when, then
+        mockMvc.perform(post(baseUrl + "/logout")
+                        .header(JSESSION, SESSION_VALUE)
                 )
-            )
-        )
-        .andExpect(status().isOk());
-  }
+                .andDo(document("admin-logout",
+                        resourceDetails().tag("관리자").description("관리자 로그아웃"),
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(JSESSION).description("세션")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
 
-  @Test
-  @DisplayName("인증 반려 요청을 처리할 수 있다.")
-  void rejectCertification() throws Exception {
-    // given
-    Long certificationId = 1L;
+    @Test
+    @DisplayName("인증 허가 요청을 처리할 수 있다.")
+    void approveCertification() throws Exception {
+        // given
+        Long certificationId = 1L;
 
-    // when, then
-    mockMvc.perform(delete(baseUrl + "/certifications/{certificationId}/rejection", certificationId)
-            .header(JSESSION, SESSION_VALUE)
-            .sessionAttr("adminId", "admin")
-            .contentType(APPLICATION_JSON)
-        )
-        .andDo(document(
-                "certification-rejection",
-                resourceDetails()
-                    .tag("관리자")
-                    .description("회사 인증 반려"),
-                requestHeaders(
-                    headerWithName(JSESSION).description("세션")
+        // when, then
+        mockMvc.perform(patch(baseUrl + "/certifications/{certificationId}/approval", certificationId)
+                        .header(JSESSION, SESSION_VALUE)
+                        .sessionAttr("adminId", "admin")
+                        .contentType(APPLICATION_JSON)
                 )
-            )
-        )
-        .andExpect(status().isOk());
-  }
+                .andDo(document(
+                                "certification-approval",
+                                resourceDetails()
+                                        .tag("관리자")
+                                        .description("회사 인증 허가"),
+                                requestHeaders(
+                                        headerWithName(JSESSION).description("세션")
+                                )
+                        )
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("인증 반려 요청을 처리할 수 있다.")
+    void rejectCertification() throws Exception {
+        // given
+        Long certificationId = 1L;
+
+        // when, then
+        mockMvc.perform(delete(baseUrl + "/certifications/{certificationId}/rejection", certificationId)
+                        .header(JSESSION, SESSION_VALUE)
+                        .sessionAttr("adminId", "admin")
+                        .contentType(APPLICATION_JSON)
+                )
+                .andDo(document(
+                                "certification-rejection",
+                                resourceDetails()
+                                        .tag("관리자")
+                                        .description("회사 인증 반려"),
+                                requestHeaders(
+                                        headerWithName(JSESSION).description("세션")
+                                )
+                        )
+                )
+                .andExpect(status().isOk());
+    }
 
 
-  @Test
-  @DisplayName("신고 승인 요청을 처리할 수 있다.")
-  void assignReportPenalty() throws Exception {
-    // given
-    Long userId = 1L;
-    String approvalRequestJson = objectMapper.writeValueAsString(reportApprovalHTTPRequest());
+    @Test
+    @DisplayName("신고 승인 요청을 처리할 수 있다.")
+    void assignReportPenalty() throws Exception {
+        // given
+        Long userId = 1L;
+        String approvalRequestJson = objectMapper.writeValueAsString(reportApprovalHTTPRequest());
 
-    // when, then
-    mockMvc.perform(patch(baseUrl + "/users/{userId}/punishment", userId)
-            .header(JSESSION, SESSION_VALUE)
-            .sessionAttr("adminId", "admin")
-            .contentType(APPLICATION_JSON)
-            .content(approvalRequestJson)
-        )
-        .andDo(document("user-punishment",
-            resourceDetails()
-                .tag("관리자")
-                .description("사용자 처벌 및 신고 처리")
-                .requestSchema(Schema.schema("UserPunishmentHTTP.Request")),
-            requestHeaders(
-                headerWithName(JSESSION).description("세션")
-            ),
-            requestFields(
-                fieldWithPath("reportIds").description("특정 채팅방에서 특정 사용자에게 들어온 신고 ID 목록")
-            )
-        ))
-        .andExpect(status().isOk());
-  }
+        // when, then
+        mockMvc.perform(patch(baseUrl + "/users/{userId}/punishment", userId)
+                        .header(JSESSION, SESSION_VALUE)
+                        .sessionAttr("adminId", "admin")
+                        .contentType(APPLICATION_JSON)
+                        .content(approvalRequestJson)
+                )
+                .andDo(document("user-punishment",
+                        resourceDetails()
+                                .tag("관리자")
+                                .description("사용자 처벌 및 신고 처리")
+                                .requestSchema(Schema.schema("UserPunishmentHTTP.Request")),
+                        requestHeaders(
+                                headerWithName(JSESSION).description("세션")
+                        ),
+                        requestFields(
+                                fieldWithPath("reportIds").description("특정 채팅방에서 특정 사용자에게 들어온 신고 ID 목록")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
 
 
     @Test
@@ -201,51 +201,23 @@ class AdminControllerTest extends ControllerTestConfig {
         String rejectionRequestJson = objectMapper.writeValueAsString(reportRejectionHTTPRequest());
 
         // when, then
-        mockMvc.perform(patch("/api/v1/admin/report/rejection")
-                        .header("JSESSION", SESSION)
+        mockMvc.perform(delete(baseUrl + "/reports")
+                        .header(JSESSION, SESSION_VALUE)
                         .sessionAttr("adminId", "admin")
                         .contentType(APPLICATION_JSON)
                         .content(rejectionRequestJson))
-                .andDo(document("report-rejection",
-                                resourceDetails().tag("관리자").description("관리자 신고 거부")
-                                        .requestSchema(Schema.schema("ReportRejectionHTTP.Request")),
-                                requestHeaders(
-                                        headerWithName("JSESSION").description("세션")
-                                ),
-                                requestFields(
-                                        fieldWithPath("reportId").description("거부할 신고의 ID")
-                                )
+                .andDo(document("report-delete",
+                        resourceDetails().tag("관리자").description("신고 무시 및 삭제")
+                                .requestSchema(Schema.schema("ReportDeletionHTTP.Request")),
+                        requestHeaders(
+                                headerWithName(JSESSION).description("세션")
+                        ),
+                        requestFields(
+                                fieldWithPath("reportIds").description("삭제할 신고 ID 목록")
                         )
-                )
+                ))
                 .andExpect(status().isOk());
     }
-    // when, then
-    mockMvc.perform(delete(baseUrl + "/reports")
-            .header(JSESSION, SESSION_VALUE)
-            .sessionAttr("adminId", "admin")
-            .contentType(APPLICATION_JSON)
-            .content(rejectionRequestJson))
-        .andDo(document("report-delete",
-            resourceDetails().tag("관리자").description("신고 무시 및 삭제")
-                .requestSchema(Schema.schema("ReportDeletionHTTP.Request")),
-            requestHeaders(
-                headerWithName(JSESSION).description("세션")
-            ),
-            requestFields(
-                fieldWithPath("reportIds").description("삭제할 신고 ID 목록")
-        .andDo(document("report-rejection",
-                resourceDetails().tag("관리자").description("관리자 신고 거부")
-                    .requestSchema(Schema.schema("ReportRejectionHTTP.Request")),
-                requestHeaders(
-                    headerWithName("JSESSION").description("세션")
-                ),
-                requestFields(
-                    fieldWithPath("reportId").description("거부할 신고의 ID")
-                )
-            )
-        )
-        .andExpect(status().isOk());
-  }
 
     @Test
     @DisplayName("신고 내역을 전체 조회할 수 있다.")
@@ -269,7 +241,7 @@ class AdminControllerTest extends ControllerTestConfig {
         given(reportService.findAllReports(any(Pageable.class))).willReturn(reportPage);
 
         // when, then
-        mockMvc.perform(get("/api/v1/admin/reports")
+        mockMvc.perform(get("/api/v1/admins/reports")
                         .header("JSESSION", SESSION)
                         .sessionAttr("adminId", "admin")
                         .param("page", String.valueOf(page))
@@ -315,7 +287,7 @@ class AdminControllerTest extends ControllerTestConfig {
                 response);
 
         // when, then
-        mockMvc.perform(get("/api/v1/admin/reports/group")
+        mockMvc.perform(get("/api/v1/admins/reports/group")
                         .header("JSESSION", SESSION)
                         .sessionAttr("adminId", "admin")
                         .contentType(APPLICATION_JSON)
@@ -353,7 +325,7 @@ class AdminControllerTest extends ControllerTestConfig {
         given(reportService.findReportById(anyLong())).willReturn(response);
 
         // when, then
-        mockMvc.perform(get("/api/v1/admin/reports/detail/{reportId}", reportId)
+        mockMvc.perform(get("/api/v1/admins/reports/detail/{reportId}", reportId)
                         .header("JSESSION", SESSION)
                         .sessionAttr("adminId", "admin")
                         .contentType(APPLICATION_JSON))
