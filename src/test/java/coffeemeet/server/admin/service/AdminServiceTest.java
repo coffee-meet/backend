@@ -15,6 +15,9 @@ import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,13 +54,16 @@ class AdminServiceTest {
   @DisplayName("인증 수락 처리를 할 수 있다.")
   void approveCertificationTest() {
     // given
+    Long certificationId = 1L;
     Long userId = 1L;
 
+    given(certificationQuery.getUserIdByCertificationId(certificationId)).willReturn(userId);
+
     // when
-    adminService.approveCertification(userId);
+    adminService.approveCertification(certificationId);
 
     // then
-    then(certificationCommand).should(only()).certificated(userId);
+    then(certificationCommand).should(only()).certificated(certificationId);
     then(userQuery).should(only()).getNotificationInfoByUserId(userId);
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }
@@ -66,14 +72,17 @@ class AdminServiceTest {
   @DisplayName("인증 거절 처리를 할 수 있다.")
   void rejectCertificationTest() {
     // given
+    Long certificationId = 1L;
     Long userId = 1L;
+    given(certificationQuery.getUserIdByCertificationId(certificationId)).willReturn(userId);
 
     // when
-    adminService.rejectCertification(userId);
+    adminService.rejectCertification(certificationId);
 
     // then
-    then(certificationCommand).should(only()).deleteUserCertification(userId);
-    then(userQuery).should(only()).getNotificationInfoByUserId(userId);
+    then(certificationCommand).should(only()).deleteCertification(certificationId);
+    then(certificationQuery).should(only()).getUserIdByCertificationId(certificationId);
+    then(userQuery).should(only()).getNotificationInfoByUserId(certificationId);
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }
 
@@ -82,7 +91,7 @@ class AdminServiceTest {
   void punishUserTest() {
     // given
     Long userId = 1L;
-    Long reportId = 1L;
+    Set<Long> reportIds = Set.of(1L, 2L, 3L, 4L, 5L);
     User user = mock(User.class);
     String companyName = "Company";
 
@@ -92,11 +101,11 @@ class AdminServiceTest {
     given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
 
     // when
-    adminService.punishUser(reportId, userId);
+    adminService.punishUser(userId, reportIds);
 
     // then
     then(matchingQueueCommand).should(only()).deleteUserByUserId(companyName, userId);
-    then(reportCommand).should(only()).processReport(reportId);
+    then(reportCommand).should(only()).processReports(new HashSet<>(reportIds));
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }
 
@@ -104,13 +113,13 @@ class AdminServiceTest {
   @DisplayName("신고 반려 처리를 할 수 있다.")
   void dismissReportTest() {
     // given
-    Long reportId = 1L;
+    Set<Long> reportIds = Set.of(1L, 2L, 3L, 4L, 5L);
 
     // when
-    adminService.dismissReport(reportId);
+    adminService.dismissReport(reportIds);
 
     // then
-    then(reportCommand).should(only()).processReport(reportId);
+    then(reportCommand).should(only()).deleteReports(reportIds);
   }
 
 }

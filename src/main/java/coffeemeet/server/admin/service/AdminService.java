@@ -11,6 +11,7 @@ import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,23 +32,27 @@ public class AdminService {
     adminQuery.checkIdAndPassword(id, password);
   }
 
-  public void approveCertification(Long userId) {
-    certificationCommand.certificated(userId);
+  public void approveCertification(Long certificationId) {
+    certificationCommand.certificated(certificationId);
 
+    Long userId = certificationQuery.getUserIdByCertificationId(certificationId);
     NotificationInfo notificationInfo = userQuery.getNotificationInfoByUserId(userId);
+
     fcmNotificationSender.sendNotification(notificationInfo,
         "축하드립니다! 회사 인증이 완료됐습니다. 이제부터 모든 서비스를 자유롭게 이용하실 수 있습니다.");
   }
 
-  public void rejectCertification(Long userId) {
-    certificationCommand.deleteUserCertification(userId);
+  public void rejectCertification(Long certificationId) {
+    certificationCommand.deleteCertification(certificationId);
 
+    Long userId = certificationQuery.getUserIdByCertificationId(certificationId);
     NotificationInfo notificationInfo = userQuery.getNotificationInfoByUserId(userId);
+
     fcmNotificationSender.sendNotification(notificationInfo, "규정 및 기준에 부합하지 않아 회사 인증이 반려되었습니다.");
   }
 
   @Transactional  // TODO: 2023/11/17 추후 구조 변경을 통해서 개선 예정
-  public void punishUser(Long reportId, Long userId) {
+  public void punishUser(Long userId, Set<Long> reportIds) {
     User user = userQuery.getUserById(userId);
     if (user.getUserStatus() == MATCHING) {
       String companyName = certificationQuery.getCompanyNameByUserId(userId);
@@ -55,13 +60,13 @@ public class AdminService {
     }
     user.punished();
 
-    reportCommand.processReport(reportId);
+    reportCommand.processReports(reportIds);
     fcmNotificationSender.sendNotification(user.getNotificationInfo(),
         "귀하의 계정은 최근 신고 접수로 인해 일시적으로 서비스 이용이 제한되었습니다.");
   }
 
-  public void dismissReport(Long reportId) {
-    reportCommand.processReport(reportId);
+  public void dismissReport(Set<Long> reportIds) {
+    reportCommand.deleteReports(reportIds);
   }
 
 }

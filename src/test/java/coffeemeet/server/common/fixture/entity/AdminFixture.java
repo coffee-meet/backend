@@ -11,6 +11,8 @@ import coffeemeet.server.admin.presentation.dto.ReportRejectionHTTP;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import java.util.List;
+import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
+import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import org.instancio.Instancio;
 
 public class AdminFixture {
@@ -20,20 +22,12 @@ public class AdminFixture {
     return Instancio.of(AdminLoginHTTP.Request.class).create();
   }
 
-  public static CertificationApprovalHTTP.Request certificationApprovalHTTPRequest() {
-    return Instancio.of(CertificationApprovalHTTP.Request.class).create();
+  public static UserPunishmentHTTP.Request reportApprovalHTTPRequest() {
+    return Instancio.of(UserPunishmentHTTP.Request.class).create();
   }
 
-  public static CertificationRejectionHTTP.Request certificationRejectionHTTPRequest() {
-    return Instancio.of(CertificationRejectionHTTP.Request.class).create();
-  }
-
-  public static ReportApprovalHTTP.Request reportApprovalHTTPRequest() {
-    return Instancio.of(ReportApprovalHTTP.Request.class).create();
-  }
-
-  public static ReportRejectionHTTP.Request reportRejectionHTTPRequest() {
-    return Instancio.of(ReportRejectionHTTP.Request.class).create();
+  public static ReportDeletionHTTP.Request reportRejectionHTTPRequest() {
+    return Instancio.of(ReportDeletionHTTP.Request.class).create();
   }
 
   public static AdminCustomPage<InquirySearchResponse.InquirySummary> adminCustomPageByInquiry(
