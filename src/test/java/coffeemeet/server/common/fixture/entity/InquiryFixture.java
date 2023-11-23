@@ -30,4 +30,13 @@ public class InquiryFixture {
         .generate(field(Inquiry::getContent), gen -> gen.string().maxLength(200)).create();
   }
 
+  public static List<Inquiry> inquiriesWithFixedId(int size, Long id) {
+    return Instancio.ofList(Inquiry.class).size(size)
+        .set(field(Inquiry::isCheck), false)
+        .set(field(Inquiry::getInquirerId), id)
+        .generate(field(Inquiry::getId), gen -> gen.longSeq().start(1L))
+        .generate(field(Inquiry::getTitle), gen -> gen.string().maxLength(20))
+        .generate(field(Inquiry::getContent), gen -> gen.string().maxLength(200)).create();
+  }
+
 }
