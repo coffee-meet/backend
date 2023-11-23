@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +33,7 @@ public class AdminController {
 
   private static final String REQUEST_WITHOUT_SESSION_MESSAGE = "SESSION 값이 존재하지 않습니다.";
   private static final String ADMIN_SESSION_ATTRIBUTE = "adminId";
-  
+
   private final AdminService adminService;
   private final InquiryService inquiryService;
 
@@ -110,7 +110,7 @@ public class AdminController {
 
   @GetMapping("/inquiries")
   public ResponseEntity<AdminCustomPage<InquirySearchResponse.InquirySummary>> searchInquiries(
-      @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastInquiryId,
       @RequestParam(defaultValue = "10") int pageSize) {
     if (adminId == null) {

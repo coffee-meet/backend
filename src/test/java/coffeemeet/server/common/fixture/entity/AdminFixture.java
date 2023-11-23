@@ -4,15 +4,11 @@ import static org.instancio.Select.field;
 
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
-import coffeemeet.server.admin.presentation.dto.CertificationApprovalHTTP;
-import coffeemeet.server.admin.presentation.dto.CertificationRejectionHTTP;
-import coffeemeet.server.admin.presentation.dto.ReportApprovalHTTP;
-import coffeemeet.server.admin.presentation.dto.ReportRejectionHTTP;
+import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
+import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import java.util.List;
-import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
-import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import org.instancio.Instancio;
 
 public class AdminFixture {

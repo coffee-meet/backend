@@ -9,8 +9,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -52,7 +52,7 @@ class AdminControllerTest extends ControllerTestConfig {
   private InquiryService inquiryService;
 
   private String baseUrl = "/api/v1/admins";
-  
+
   @Test
   @DisplayName("관리자 로그인을 할 수 있다.")
   void loginTest() throws Exception {
@@ -214,8 +214,8 @@ class AdminControllerTest extends ControllerTestConfig {
         inquirySearchResponse);
 
     // when, then
-    mockMvc.perform(get("/api/v1/admin/inquiries")
-            .header("JSESSION", SESSION)
+    mockMvc.perform(get(baseUrl + "/inquiries")
+            .header("JSESSION", SESSION_VALUE)
             .param("lastInquiryId", String.valueOf(lastInquiryId))
             .sessionAttr("adminId", "admin")
         )
