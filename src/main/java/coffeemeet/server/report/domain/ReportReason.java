@@ -11,7 +11,7 @@ public enum ReportReason {
   잠수;
 
   public static ReportReason getReason(String reason) {
-    return ReportReason.valueOf(Patterns.BLANCK_PATTERN.matcher(reason).replaceAll("_"));
+    return ReportReason.valueOf(Patterns.BLANK_PATTERN.matcher(reason).replaceAll("_"));
   }
 
 }

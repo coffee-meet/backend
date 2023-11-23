@@ -11,7 +11,6 @@ import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
-import coffeemeet.server.report.service.dto.ReportDto.Response;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -62,7 +61,7 @@ public class ReportService {
     return ReportDetailDto.Response.of(report, reporter, targetUser);
   }
 
-  public Page<Response> findAllReports(Pageable pageable) {
+  public Page<ReportDto.Response> findAllReports(Pageable pageable) {
     Page<Report> reportPage = reportQuery.getAllReports(pageable);
     Map<Long, User> userMap = getUsers(reportPage.getContent());
     Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reportPage.getContent());

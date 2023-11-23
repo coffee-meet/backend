@@ -27,15 +27,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.GroupReportListFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
-import coffeemeet.server.common.fixture.dto.TargetReportDtoFixture;
+import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
 import coffeemeet.server.report.presentation.dto.GroupReportList;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
+import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
@@ -252,10 +254,17 @@ class AdminControllerTest extends ControllerTestConfig {
         int page = 0;
         int size = 10;
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        Response response1 = ReportDtoFixture.reportDto();
+        Response response2 = ReportDtoFixture.reportDto();
 
-        List<ReportDto.Response> reportList = List.of(ReportDtoFixture.reportDto(),
-                ReportDtoFixture.reportDto());
-        Page<Response> reportPage = new PageImpl<>(reportList, pageable, reportList.size());
+        List<ReportDto.Response> reportResponses = List.of(response1, response2);
+
+        Page<ReportDto.Response> reportPage = new PageImpl<>(reportResponses, pageable, reportResponses.size());
+        List<ReportList> responses = reportResponses.stream()
+                .map(ReportList::from)
+                .toList();
+
+        AdminCustomPage<ReportList> expectedResponse = new AdminCustomPage<>(responses, reportPage.getTotalElements(), reportPage.getTotalPages());
 
         given(reportService.findAllReports(any(Pageable.class))).willReturn(reportPage);
 
@@ -278,53 +287,28 @@ class AdminControllerTest extends ControllerTestConfig {
                                 headerWithName("JSESSION").description("세션")
                         ),
                         responseFields(
-                                fieldWithPath("numberOfElements").type(JsonFieldType.NUMBER).description("게시글 수"),
-                                fieldWithPath("content.[].targetedNickname").type(JsonFieldType.STRING)
+                                fieldWithPath("contents").description("List of report details"),
+                                fieldWithPath("contents.[].targetedNickname").type(JsonFieldType.STRING)
                                         .description("신고 대상 닉네임"),
-                                fieldWithPath("content.[].chattingRoomName").type(JsonFieldType.STRING)
+                                fieldWithPath("contents.[].chattingRoomName").type(JsonFieldType.STRING)
                                         .description("신고 대상 채팅방 이름"),
-                                fieldWithPath("content.[].createdAt").type(JsonFieldType.STRING)
+                                fieldWithPath("contents.[].createdAt").type(JsonFieldType.STRING)
                                         .description("신고 생성 날짜"),
-                                fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
-                                        .description("페이지 번호"),
-                                fieldWithPath("pageable.pageSize").type(JsonFieldType.NUMBER)
-                                        .description("페이지당 조회 데이터 개수"),
-                                fieldWithPath("pageable.sort.empty").type(JsonFieldType.BOOLEAN)
-                                        .description("데이터가 비었는지 여부"),
-                                fieldWithPath("pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬 안 됐는지 여부"),
-                                fieldWithPath("pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬 됐는지 여부"),
-                                fieldWithPath("pageable.offset").type(JsonFieldType.NUMBER)
-                                        .description("몇 번째 데이터인지"),
-                                fieldWithPath("pageable.paged").type(JsonFieldType.BOOLEAN)
-                                        .description("페이지 정보를 포함하는지 여부"),
-                                fieldWithPath("pageable.unpaged").type(JsonFieldType.BOOLEAN)
-                                        .description("페이지 정보를 포함하는지 않는지 여부"),
-                                fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("마지막 페이지인지 여부 여부"),
                                 fieldWithPath("totalElements").type(JsonFieldType.NUMBER)
-                                        .description("테이블 총 데이터 개수"),
-                                fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 개수"),
-                                fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 번째 페이지 여부"),
-                                fieldWithPath("size").type(JsonFieldType.NUMBER).description("페이지당 조회할 데이터 개수"),
-                                fieldWithPath("number").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
-                                fieldWithPath("sort.empty").type(JsonFieldType.BOOLEAN).description("데이터가 비었는지 여부"),
-                                fieldWithPath("sort.unsorted").type(JsonFieldType.BOOLEAN)
-                                        .description("정렬 안 됐는지 여부"),
-                                fieldWithPath("sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬 됐는지 여부"),
-                                fieldWithPath("empty").type(JsonFieldType.BOOLEAN).description("데이터가 비었는지 여부")
+                                        .description("총 요소의 수"),
+                                fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
                         )
                 ))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(reportPage)));
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
     @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
     void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
         // given
-        List<GroupReportDto.Response> response = List.of(TargetReportDtoFixture.targetReportDto(),
-                TargetReportDtoFixture.targetReportDto());
+        List<GroupReportDto.Response> response = List.of(GroupReportDtoFixture.targetReportDto(),
+                GroupReportDtoFixture.targetReportDto());
         GroupReportList resultResponse = GroupReportListFixture.groupReportListResponse(response);
 
         given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(

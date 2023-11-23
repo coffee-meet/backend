@@ -2,6 +2,7 @@ package coffeemeet.server.admin.presentation;
 
 import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
 
+import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
@@ -10,10 +11,10 @@ import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.report.presentation.dto.FindGroupReports;
 import coffeemeet.server.report.presentation.dto.GroupReportList;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.ReportHTTP;
+import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto.Response;
+import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -117,16 +118,20 @@ public class AdminController {
     }
 
     @GetMapping("/reports")
-    public ResponseEntity<Page<ReportHTTP.Response>> findAllReports(
+    public ResponseEntity<AdminCustomPage<ReportList>> findAllReports(
             @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
             @PageableDefault Pageable pageable
     ) {
         if (adminId == null) {
             throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
         }
-        Page<Response> reportPage = reportService.findAllReports(pageable);
-        Page<ReportHTTP.Response> responsePage = reportPage.map(ReportHTTP.Response::from);
-        return ResponseEntity.ok(responsePage);
+        Page<ReportDto.Response> reportPage = reportService.findAllReports(pageable);
+        List<ReportList> responses = reportPage.getContent().stream()
+                .map(ReportList::from)
+                .toList();
+
+        AdminCustomPage<ReportList> customPage = AdminCustomPage.of(responses, reportPage.getTotalElements(), reportPage.getTotalPages());
+        return ResponseEntity.ok(customPage);
     }
 
     @GetMapping("/reports/group")
