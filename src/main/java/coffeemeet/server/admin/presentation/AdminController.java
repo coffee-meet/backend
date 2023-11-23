@@ -7,8 +7,8 @@ import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
-import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
-import coffeemeet.server.report.presentation.dto.GroupReportsHTTP;
+import coffeemeet.server.report.presentation.dto.FindGroupReports;
+import coffeemeet.server.report.presentation.dto.GroupReportList;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.report.presentation.dto.ReportHTTP;
 import coffeemeet.server.report.service.ReportService;
@@ -130,19 +130,16 @@ public class AdminController {
     }
 
     @GetMapping("/reports/group")
-    public ResponseEntity<GroupReportsHTTP.Response> findReportByTargetIdAndChattingRoomId(
+    public ResponseEntity<GroupReportList> findReportByTargetIdAndChattingRoomId(
             @SessionAttribute(name = ADMIN_ID, required = false) String adminId,
-            @ModelAttribute GroupReportsHTTP.Request groupReportsHTTP
+            @ModelAttribute FindGroupReports findGroupReports
     ) {
         if (adminId == null) {
             throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
         }
         List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
-                groupReportsHTTP.targetedId(), groupReportsHTTP.chattingRoomId());
-        List<GroupReportHTTP.Response> responses = response.stream()
-                .map(GroupReportHTTP.Response::from)
-                .toList();
-        return ResponseEntity.ok(GroupReportsHTTP.Response.from(responses));
+                findGroupReports.targetedId(), findGroupReports.chattingRoomId());
+        return ResponseEntity.ok(GroupReportList.from(response));
     }
 
     @GetMapping("/reports/detail/{reportId}")

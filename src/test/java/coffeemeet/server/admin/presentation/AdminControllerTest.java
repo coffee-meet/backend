@@ -29,14 +29,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.GroupReportsHTTPFixture;
+import coffeemeet.server.common.fixture.dto.GroupReportListFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
 import coffeemeet.server.common.fixture.dto.TargetReportDtoFixture;
-import coffeemeet.server.common.fixture.dto.TargetReportHTTPFixture;
-import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
-import coffeemeet.server.report.presentation.dto.GroupReportsHTTP;
+import coffeemeet.server.report.presentation.dto.GroupReportList;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
@@ -327,10 +325,7 @@ class AdminControllerTest extends ControllerTestConfig {
         // given
         List<GroupReportDto.Response> response = List.of(TargetReportDtoFixture.targetReportDto(),
                 TargetReportDtoFixture.targetReportDto());
-        List<GroupReportHTTP.Response> expectedResponse = response.stream()
-                .map(TargetReportHTTPFixture::targatReportHTTPResponse)
-                .toList();
-        GroupReportsHTTP.Response resultResponse = GroupReportsHTTPFixture.myProfileHTTPResponse(expectedResponse);
+        GroupReportList resultResponse = GroupReportListFixture.groupReportListResponse(response);
 
         given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
                 response);
