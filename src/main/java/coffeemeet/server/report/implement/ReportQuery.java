@@ -10,6 +10,7 @@ import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,10 @@ public class ReportQuery {
       );
     }
     return foundReport.get();
+  }
+
+  public List<Report> getReportsByIdSet(Set<Long> reportIds) {
+    return reportRepository.findByIdIn(reportIds);
   }
 
   public List<Report> getReportsByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {

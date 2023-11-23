@@ -31,4 +31,8 @@ public class CertificationQuery {
         ).getCompanyName();
   }
 
+  public Long getUserIdByCertificationId(Long certificationId) {
+    return certificationId;
+  }
+
 }
