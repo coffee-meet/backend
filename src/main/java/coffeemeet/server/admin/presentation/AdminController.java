@@ -21,8 +21,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,17 +118,19 @@ public class AdminController {
     @GetMapping("/reports")
     public ResponseEntity<AdminCustomPage<ReportList>> findAllReports(
             @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
-            @PageableDefault Pageable pageable
+            @PageableDefault(value = 0) long lastReportId,
+            @PageableDefault int pageSize
     ) {
         if (adminId == null) {
             throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
         }
-        Page<ReportDto.Response> reportPage = reportService.findAllReports(pageable);
-        List<ReportList> responses = reportPage.getContent().stream()
+        List<ReportDto.Response> responses = reportService.findAllReports(lastReportId, pageSize);
+        List<ReportList> reportList = responses.stream()
                 .map(ReportList::from)
                 .toList();
 
-        AdminCustomPage<ReportList> customPage = AdminCustomPage.of(responses, reportPage.getTotalElements(), reportPage.getTotalPages());
+        boolean hasNext = !responses.isEmpty() && responses.get(responses.size() - 1).hasNext();
+        AdminCustomPage<ReportList> customPage = AdminCustomPage.of(reportList, hasNext);
         return ResponseEntity.ok(customPage);
     }
 
