@@ -5,7 +5,6 @@ import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprova
 import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -49,11 +48,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(AdminController.class)
@@ -223,52 +217,46 @@ class AdminControllerTest extends ControllerTestConfig {
     @DisplayName("신고 내역을 전체 조회할 수 있다.")
     void findAllReportsTest() throws Exception {
         // given
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        long lastReportId = 0L;
+        int pageSize = 10;
         Response response1 = ReportDtoFixture.reportDto();
         Response response2 = ReportDtoFixture.reportDto();
 
         List<ReportDto.Response> reportResponses = List.of(response1, response2);
 
-        Page<ReportDto.Response> reportPage = new PageImpl<>(reportResponses, pageable, reportResponses.size());
+        boolean hasNext = reportResponses.size() == pageSize;
+
         List<ReportList> responses = reportResponses.stream()
                 .map(ReportList::from)
                 .toList();
 
-        AdminCustomPage<ReportList> expectedResponse = new AdminCustomPage<>(responses, reportPage.getTotalElements(), reportPage.getTotalPages());
+        AdminCustomPage<ReportList> expectedResponse = new AdminCustomPage<>(responses, hasNext);
 
-        given(reportService.findAllReports(any(Pageable.class))).willReturn(reportPage);
+        given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportResponses);
 
         // when, then
         mockMvc.perform(get("/api/v1/admins/reports")
                         .header("JSESSION", SESSION)
                         .sessionAttr("adminId", "admin")
-                        .param("page", String.valueOf(page))
-                        .param("size", String.valueOf(size))
-                        .param("sort", "createdAt,asc"))
+                        .param("lastReportId", String.valueOf(lastReportId))
+                        .param("pageSize", String.valueOf(pageSize)))
                 .andDo(document("find-all-reports",
                         resourceDetails().tag("관리자").description("관리자 신고 내역 전체 조회")
                                 .responseSchema(Schema.schema("ReportHTTP.response")),
-                        queryParameters(
-                                parameterWithName("page").description("현재 페이지"),
-                                parameterWithName("size").description("페이지 당 게시물 수"),
-                                parameterWithName("sort").description("정렬 기준")
-                        ),
                         requestHeaders(
                                 headerWithName("JSESSION").description("세션")
                         ),
                         responseFields(
                                 fieldWithPath("contents").description("List of report details"),
+                                fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
                                 fieldWithPath("contents.[].targetedNickname").type(JsonFieldType.STRING)
                                         .description("신고 대상 닉네임"),
                                 fieldWithPath("contents.[].chattingRoomName").type(JsonFieldType.STRING)
                                         .description("신고 대상 채팅방 이름"),
                                 fieldWithPath("contents.[].createdAt").type(JsonFieldType.STRING)
                                         .description("신고 생성 날짜"),
-                                fieldWithPath("totalElements").type(JsonFieldType.NUMBER)
-                                        .description("총 요소의 수"),
-                                fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                                fieldWithPath("contents.[].hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부")
                         )
                 ))
                 .andExpect(status().isOk())
