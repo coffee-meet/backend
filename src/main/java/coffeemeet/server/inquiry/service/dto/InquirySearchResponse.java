@@ -22,7 +22,7 @@ public record InquirySearchResponse(
       String title
   ) {
 
-    public static InquirySearchResponse.InquirySummary from(Inquiry inquiry, User user) {
+    public static InquirySearchResponse.InquirySummary of(Inquiry inquiry, User user) {
       return new InquirySearchResponse.InquirySummary(
           inquiry.getId(),
           user.getProfile().getNickname(),

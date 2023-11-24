@@ -31,7 +31,7 @@ public class InquiryService {
     List<Inquiry> inquiries = inquiryQuery.getInquiriesBy(lastInquiryId, pageSize);
     Map<Long, User> userMap = getUsers(inquiries);
     List<InquirySummary> inquirySummaries = inquiries.stream()
-        .map(inquiry -> InquirySummary.from(inquiry, userMap.get(inquiry.getInquirerId())))
+        .map(inquiry -> InquirySummary.of(inquiry, userMap.get(inquiry.getInquirerId())))
         .toList();
     boolean hasNext = true;
     if (inquiries.size() < pageSize) {
