@@ -20,7 +20,7 @@ public class InquiryQueryRepository {
   public List<Inquiry> findAllInquiries(Long lastInquiryId, int pageSize) {
     return jpaQueryFactory
         .selectFrom(inquiry)
-        .where(inquiry.isCheck.eq(false)
+        .where(inquiry.isChecked.eq(false)
             .and(gtInquiryId(lastInquiryId)))
         .orderBy(inquiry.id.asc())
         .limit(pageSize)

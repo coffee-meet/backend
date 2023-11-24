@@ -1,7 +1,7 @@
 package coffeemeet.server.inquiry.service.dto;
 
 import coffeemeet.server.inquiry.domain.Inquiry;
-import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.Profile;
 import java.util.List;
 
 public record InquirySearchResponse(
@@ -22,10 +22,10 @@ public record InquirySearchResponse(
       String title
   ) {
 
-    public static InquirySearchResponse.InquirySummary of(Inquiry inquiry, User user) {
+    public static InquirySearchResponse.InquirySummary of(Inquiry inquiry, Profile profile) {
       return new InquirySearchResponse.InquirySummary(
           inquiry.getId(),
-          user.getProfile().getNickname(),
+          profile.getNickname(),
           inquiry.getTitle()
       );
     }
