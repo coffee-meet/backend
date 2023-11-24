@@ -1,21 +1,17 @@
 package coffeemeet.server.report.presentation.dto;
 
 import coffeemeet.server.report.service.dto.ReportDto;
-import java.time.LocalDateTime;
+import java.util.List;
 
 public record ReportList(
-        String targetedNickname,
-        String chattingRoomName,
-        LocalDateTime createdAt,
+        List<ReportDto.Response> contents,
         boolean hasNext
 ) {
 
-    public static ReportList from(ReportDto.Response response) {
+    public static ReportList of(List<ReportDto.Response> contents, boolean hasNext) {
         return new ReportList(
-                response.targetedNickname(),
-                response.chattingRoomName(),
-                response.createdAt(),
-                response.hasNext()
+                contents,
+                hasNext
         );
     }
 

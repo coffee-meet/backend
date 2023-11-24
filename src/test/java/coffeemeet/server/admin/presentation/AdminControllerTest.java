@@ -61,7 +61,7 @@ class AdminControllerTest extends ControllerTestConfig {
     @MockBean
     private AdminService adminService;
 
-    private String baseUrl = "/api/v1/admins";
+    private final String baseUrl = "/api/v1/admins";
 
     @MockBean
     private ReportService reportService;
@@ -223,16 +223,13 @@ class AdminControllerTest extends ControllerTestConfig {
         Response response2 = ReportDtoFixture.reportDto();
 
         List<ReportDto.Response> reportResponses = List.of(response1, response2);
+        boolean hasNext = true;
 
-        boolean hasNext = reportResponses.size() == pageSize;
+        ReportList reportList = ReportList.of(reportResponses, hasNext);
 
-        List<ReportList> responses = reportResponses.stream()
-                .map(ReportList::from)
-                .toList();
+        AdminCustomPage<Response> result = new AdminCustomPage<>(reportList.contents(), reportList.hasNext());
 
-        AdminCustomPage<ReportList> expectedResponse = new AdminCustomPage<>(responses, hasNext);
-
-        given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportResponses);
+        given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportList);
 
         // when, then
         mockMvc.perform(get("/api/v1/admins/reports")
@@ -254,13 +251,11 @@ class AdminControllerTest extends ControllerTestConfig {
                                 fieldWithPath("contents.[].chattingRoomName").type(JsonFieldType.STRING)
                                         .description("신고 대상 채팅방 이름"),
                                 fieldWithPath("contents.[].createdAt").type(JsonFieldType.STRING)
-                                        .description("신고 생성 날짜"),
-                                fieldWithPath("contents.[].hasNext").type(JsonFieldType.BOOLEAN)
-                                        .description("다음 페이지 존재 여부")
+                                        .description("신고 생성 날짜")
                         )
                 ))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
+                .andExpect(content().json(objectMapper.writeValueAsString(result)));
     }
 
     @Test

@@ -2,6 +2,7 @@ package coffeemeet.server.report.service;
 
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_NOT_FOUND;
 
+
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
@@ -9,12 +10,12 @@ import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
+import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,23 +61,21 @@ public class ReportService {
         return ReportDetailDto.Response.of(report, reporter, targetUser);
     }
 
-    public List<ReportDto.Response> findAllReports(Long lastReportId, int pageSize) {
+    public ReportList findAllReports(Long lastReportId, int pageSize) {
         List<Report> reports = reportQuery.getAllReports(lastReportId, pageSize);
-        boolean hasNext = reports.size() == pageSize;
+        boolean hasNext = reports.size() >= pageSize;
 
         Map<Long, User> userMap = getUsers(reports);
         Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reports);
 
-        List<ReportDto.Response> responses = new ArrayList<>();
-        for (int i = 0; i < reports.size(); i++) {
-            Report report = reports.get(i);
-            User targetUser = userMap.get(report.getTargetedId());
-            ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-
-            boolean isLastWithNext = hasNext && (i == reports.size() - 1);
-            responses.add(ReportDto.Response.of(targetUser, chattingRoom, isLastWithNext));
-        }
-        return responses;
+        List<ReportDto.Response> responses = reports.stream()
+                .map(report -> {
+                    User targetUser = userMap.get(report.getTargetedId());
+                    ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
+                    return ReportDto.Response.of(targetUser, chattingRoom);
+                })
+                .toList();
+        return ReportList.of(responses, hasNext);
     }
 
     public List<GroupReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,

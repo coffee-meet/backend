@@ -10,16 +10,15 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
-
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
+import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto.Response;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -126,12 +125,12 @@ class ReportServiceTest {
         given(chattingRoomQuery.getUserByIdSet(chattingRoomIds)).willReturn(Set.of(chattingRoom));
 
         // when
-        List<ReportDto.Response> responses = reportService.findAllReports(lastReportId, pageSize);
+        ReportList responses = reportService.findAllReports(lastReportId, pageSize);
 
         // then
         assertAll(
-                () -> assertThat(responses).hasSize(reports.size()),
-                () -> assertThat(responses).allMatch(response -> response.targetedNickname().equals(targetUser.getProfile().getNickname()) &&
+                () -> assertThat(responses.contents()).hasSize(reports.size()),
+                () -> assertThat(responses.contents()).allMatch(response -> response.targetedNickname().equals(targetUser.getProfile().getNickname()) &&
                         response.chattingRoomName().equals(chattingRoom.getName()))
         );
     }

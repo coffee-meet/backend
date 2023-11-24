@@ -9,16 +9,14 @@ public final class ReportDto {
     public record Response(
             String targetedNickname,
             String chattingRoomName,
-            LocalDateTime createdAt,
-            boolean hasNext
+            LocalDateTime createdAt
     ) {
 
-        public static Response of(User targeted, ChattingRoom chattingRoom, boolean hasNext) {
+        public static Response of(User targeted, ChattingRoom chattingRoom) {
             return new Response(
                     targeted.getProfile().getNickname(),
                     chattingRoom.getName(),
-                    targeted.getCreatedAt(),
-                    hasNext
+                    targeted.getCreatedAt()
             );
         }
     }
