@@ -2,6 +2,9 @@ package coffeemeet.server.admin.presentation;
 
 import java.util.List;
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
+import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
+
+import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
@@ -15,6 +18,9 @@ import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.inquiry.service.InquiryService;
+import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
+import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -43,6 +50,7 @@ public class AdminController {
     private static final String ADMIN_SESSION_ATTRIBUTE = "adminId";
     private final AdminService adminService;
     private final ReportService reportService;
+    private final InquiryService inquiryService;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(
@@ -50,7 +58,6 @@ public class AdminController {
             @Valid @RequestBody AdminLoginHTTP.Request request
     ) {
         adminService.login(request.id(), request.password());
-
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(ADMIN_SESSION_ATTRIBUTE, request.id());
         session.setMaxInactiveInterval(1800);
@@ -152,5 +159,17 @@ public class AdminController {
         ReportDetailDto.Response response = reportService.findReportById(reportId);
         return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
     }
+
+  @GetMapping("/inquiries")
+  public ResponseEntity<AdminCustomSlice<InquirySummary>> searchInquiries(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @RequestParam(defaultValue = "0") Long lastInquiryId,
+      @RequestParam(defaultValue = "10") int pageSize) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
+    return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
+  }
 
 }

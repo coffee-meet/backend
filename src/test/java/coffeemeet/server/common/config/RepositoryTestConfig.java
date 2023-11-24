@@ -2,6 +2,7 @@ package coffeemeet.server.common.config;
 
 import coffeemeet.server.chatting.current.infrastructure.ChattingMessageQueryRepository;
 import coffeemeet.server.chatting.history.infrastructure.ChattingMessageHistoryQueryRepository;
+import coffeemeet.server.inquiry.infrastructure.InquiryQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,6 +34,12 @@ public class RepositoryTestConfig {
     public ChattingMessageHistoryQueryRepository chattingMessageHistoryQueryRepository(
         JPAQueryFactory jpaQueryFactory) {
       return new ChattingMessageHistoryQueryRepository(jpaQueryFactory);
+    }
+
+    @Bean
+    public InquiryQueryRepository inquiryQueryRepository(
+        JPAQueryFactory jpaQueryFactory) {
+      return new InquiryQueryRepository(jpaQueryFactory);
     }
 
   }

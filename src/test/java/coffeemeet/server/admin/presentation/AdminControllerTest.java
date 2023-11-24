@@ -42,6 +42,14 @@ import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportDto.Response;
 import coffeemeet.server.report.service.dto.GroupReportDto;
+import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
+import coffeemeet.server.admin.service.AdminService;
+import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.entity.AdminFixture;
+import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.inquiry.service.InquiryService;
+import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
+import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -60,6 +68,10 @@ class AdminControllerTest extends ControllerTestConfig {
 
     @MockBean
     private AdminService adminService;
+  
+  
+  @MockBean
+  private InquiryService inquiryService;
 
     private final String baseUrl = "/api/v1/admins";
 
@@ -336,5 +348,52 @@ class AdminControllerTest extends ControllerTestConfig {
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
     }
+
+  @DisplayName("사용자의 문의 내역을 조회할 수 있다.")
+  @Test
+  void searchInquiriesTest() throws Exception {
+    // given
+    Long lastInquiryId = 10L;
+    int pageSize = 10;
+
+    InquirySearchResponse inquirySearchResponse = InquiryFixture.inquirySearchResponse();
+    AdminCustomSlice<InquirySummary> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
+        inquirySearchResponse.contents(), inquirySearchResponse.hasNext());
+    given(inquiryService.searchInquiries(lastInquiryId, pageSize)).willReturn(
+        inquirySearchResponse);
+
+    // when, then
+    mockMvc.perform(get(baseUrl + "/inquiries")
+            .header("JSESSION", SESSION_VALUE)
+            .param("lastInquiryId", String.valueOf(lastInquiryId))
+            .sessionAttr("adminId", "admin")
+        )
+        .andDo(document("view-inquiry",
+                resourceDetails().tag("관리자").description("문의 조회")
+                    .responseSchema(Schema.schema("AdminCustomPage<InquirySummary>")),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("JSESSION").description("세션")
+                ),
+                queryParameters(
+                    parameterWithName("lastInquiryId").description("마지막 문의 아이디")
+                ),
+                responseFields(
+                    fieldWithPath("contents").type(JsonFieldType.ARRAY)
+                        .description("문의 리스트"),
+                    fieldWithPath("contents[].inquiryId").type(JsonFieldType.NUMBER)
+                        .description("문의 아이디"),
+                    fieldWithPath("contents[].inquirer").type(JsonFieldType.STRING)
+                        .description("문의자 이름"),
+                    fieldWithPath("contents[].title").type(JsonFieldType.STRING)
+                        .description("문의 제목"),
+                    fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN)
+                        .description("다음 페이지 여부")
+                )
+            )
+        )
+        .andExpect(content().string(objectMapper.writeValueAsString(adminCustomSlice)));
+  }
 
 }
