@@ -34,6 +34,9 @@ public class Inquiry extends BaseEntity {
   @Column(nullable = false, length = CONTENT_MAX_LENGTH)
   private String content;
 
+  @Column(nullable = false)
+  private boolean isChecked;
+
   public Inquiry(Long inquirerId, String title, String content) {
     validateInquirer(inquirerId);
     validateTitle(title);
@@ -41,6 +44,10 @@ public class Inquiry extends BaseEntity {
     this.inquirerId = inquirerId;
     this.title = title;
     this.content = content;
+  }
+
+  public void checkInquiry() {
+    this.isChecked = true;
   }
 
   private void validateTitle(String title) {
