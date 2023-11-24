@@ -21,13 +21,13 @@ public class InquiryQueryRepository {
     return jpaQueryFactory
         .selectFrom(inquiry)
         .where(inquiry.isCheck.eq(false)
-            .and(gtInquiryIdId(lastInquiryId)))
+            .and(gtInquiryId(lastInquiryId)))
         .orderBy(inquiry.id.asc())
         .limit(pageSize)
         .fetch();
   }
 
-  private BooleanExpression gtInquiryIdId(Long inquiryId) {
+  private BooleanExpression gtInquiryId(Long inquiryId) {
     if (inquiryId == null || inquiryId == 0L) {
       return null;
     }
