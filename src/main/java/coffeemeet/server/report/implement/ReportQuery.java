@@ -9,7 +9,6 @@ import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,16 +37,12 @@ public class ReportQuery {
     }
   }
 
-  // TODO: 11/21/23 Optional api 사용해서 처리 해주세요 
   public Report getReportById(long reportId) {
-    Optional<Report> foundReport = reportQueryRepository.findById(reportId);
-    if (foundReport.isEmpty()) {
-      throw new NotFoundException(
-          REPORT_NOT_FOUND,
-          String.format(REPORT_NOT_FOUND_MESSAGE, reportId)
-      );
-    }
-    return foundReport.get();
+    return reportQueryRepository.findById(reportId)
+        .orElseThrow(() -> new NotFoundException(
+            REPORT_NOT_FOUND,
+            String.format(REPORT_NOT_FOUND_MESSAGE, reportId)
+        ));
   }
 
   public List<Report> getReportsByIdSet(Set<Long> reportIds) {
@@ -66,8 +61,8 @@ public class ReportQuery {
     return reports;
   }
 
-  public List<Report> getAllReports() {
-    return reportQueryRepository.findAll();
+  public List<Report> getAllReports(Long lastReportId, int pageSize) {
+    return reportQueryRepository.findAll(lastReportId, pageSize);
   }
 
 }

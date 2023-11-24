@@ -1,7 +1,10 @@
 package coffeemeet.server.report.infrastructure;
 
+import static coffeemeet.server.report.domain.QReport.report;
+
 import coffeemeet.server.report.domain.QReport;
 import coffeemeet.server.report.domain.Report;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -26,7 +29,7 @@ public class ReportQueryRepository {
     return Optional.ofNullable(foundReport);
   }
 
-  public List<Report> findAll() {
+  public List<Report> findAll(Long lastReportId, int pageSize) {
     QReport report = QReport.report;
     QReport subReport = new QReport("subReport");
 
@@ -41,11 +44,22 @@ public class ReportQueryRepository {
         ))
         .fetch();
 
-    // TODO: 11/20/23 order by, limit, offset 페이징 처리 추가
     return jpaQueryFactory
         .selectFrom(report)
-        .where(report.id.in(subReports))
+        .where(report.id.in(subReports)
+            .and(report.isProcessed.eq(false)
+                .and(gtReportId(lastReportId))
+            ))
+        .orderBy(report.id.asc())
+        .limit(pageSize)
         .fetch();
+  }
+
+  private BooleanExpression gtReportId(Long inquiryId) {
+    if (inquiryId == null || inquiryId == 0L) {
+      return null;
+    }
+    return report.id.gt(inquiryId);
   }
 
   public List<Report> findByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
@@ -53,6 +67,7 @@ public class ReportQueryRepository {
     return jpaQueryFactory
         .selectFrom(report)
         .where(report.targetedId.eq(targetId).and(report.chattingRoomId.eq(chattingRoomId)))
+        .orderBy(report.createdAt.desc())
         .fetch();
   }
 

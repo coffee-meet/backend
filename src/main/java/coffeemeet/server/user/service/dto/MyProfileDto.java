@@ -5,7 +5,6 @@ import static lombok.AccessLevel.PRIVATE;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
@@ -14,21 +13,18 @@ public final class MyProfileDto {
 
   public record Response(
       String nickname,
-      String email,
       String profileImageUrl,
-      int reportedCount,
-      LocalDateTime sanctionPeriod,
+      String companyName,
       Department department,
       List<Keyword> interests
   ) {
 
-    public static Response of(User user, List<Keyword> interests, Department department) {
+    public static Response of(User user, List<Keyword> interests, String companyName,
+        Department department) {
       return new Response(
           user.getProfile().getNickname(),
-          user.getOauthInfo().getEmail().getValue(),
           user.getOauthInfo().getProfileImageUrl(),
-          user.getReportInfo().getReportedCount(),
-          user.getReportInfo().getPenaltyExpiration(),
+          companyName,
           department,
           interests
       );
