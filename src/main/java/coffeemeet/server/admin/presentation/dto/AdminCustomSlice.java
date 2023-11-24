@@ -2,15 +2,15 @@ package coffeemeet.server.admin.presentation.dto;
 
 import java.util.List;
 
-public record AdminCustomPage<T>(
+public record AdminCustomSlice<T>(
     List<T> contents,
     boolean hasNext
 ) {
 
-  public static <E> AdminCustomPage<E> of(
+  public static <E> AdminCustomSlice<E> of(
       List<E> contents,
       boolean hasNext) {
-    return new AdminCustomPage<>(contents, hasNext);
+    return new AdminCustomSlice<>(contents, hasNext);
   }
 
 }

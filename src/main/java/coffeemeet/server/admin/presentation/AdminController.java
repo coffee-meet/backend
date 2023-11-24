@@ -2,7 +2,7 @@ package coffeemeet.server.admin.presentation;
 
 import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
 
-import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
+import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
@@ -10,6 +10,7 @@ import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
+import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -109,7 +110,7 @@ public class AdminController {
   }
 
   @GetMapping("/inquiries")
-  public ResponseEntity<AdminCustomPage<InquirySearchResponse.InquirySummary>> searchInquiries(
+  public ResponseEntity<AdminCustomSlice<InquirySummary>> searchInquiries(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastInquiryId,
       @RequestParam(defaultValue = "10") int pageSize) {
@@ -117,7 +118,7 @@ public class AdminController {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
     InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
-    return ResponseEntity.ok(AdminCustomPage.of(inquiries.contents(), inquiries.hasNext()));
+    return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
   }
 
 }

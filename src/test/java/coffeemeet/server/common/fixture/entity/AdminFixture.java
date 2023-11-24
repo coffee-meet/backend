@@ -2,7 +2,7 @@ package coffeemeet.server.common.fixture.entity;
 
 import static org.instancio.Select.field;
 
-import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
+import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
@@ -26,12 +26,12 @@ public class AdminFixture {
     return Instancio.of(ReportDeletionHTTP.Request.class).create();
   }
 
-  public static AdminCustomPage<InquirySearchResponse.InquirySummary> adminCustomPageByInquiry(
+  public static AdminCustomSlice<InquirySummary> adminCustomPageByInquiry(
       List<InquirySummary> contents, boolean hasNext) {
-    return Instancio.of(AdminCustomPage.class)
+    return Instancio.of(AdminCustomSlice.class)
         .withTypeParameters(InquirySearchResponse.InquirySummary.class)
-        .set(field(AdminCustomPage<InquirySummary>::contents), contents)
-        .set(field(AdminCustomPage<InquirySummary>::hasNext), hasNext)
+        .set(field(AdminCustomSlice<InquirySummary>::contents), contents)
+        .set(field(AdminCustomSlice<InquirySummary>::hasNext), hasNext)
         .create();
   }
 

@@ -24,7 +24,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
+import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.entity.AdminFixture;
@@ -208,7 +208,7 @@ class AdminControllerTest extends ControllerTestConfig {
     int pageSize = 10;
 
     InquirySearchResponse inquirySearchResponse = InquiryFixture.inquirySearchResponse();
-    AdminCustomPage<InquirySummary> adminCustomPage = AdminFixture.adminCustomPageByInquiry(
+    AdminCustomSlice<InquirySummary> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
         inquirySearchResponse.contents(), inquirySearchResponse.hasNext());
     given(inquiryService.searchInquiries(lastInquiryId, pageSize)).willReturn(
         inquirySearchResponse);
@@ -244,7 +244,7 @@ class AdminControllerTest extends ControllerTestConfig {
                 )
             )
         )
-        .andExpect(content().string(objectMapper.writeValueAsString(adminCustomPage)));
+        .andExpect(content().string(objectMapper.writeValueAsString(adminCustomSlice)));
   }
 
 }
