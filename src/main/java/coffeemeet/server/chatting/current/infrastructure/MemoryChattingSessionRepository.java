@@ -14,7 +14,8 @@ public class MemoryChattingSessionRepository implements
 
   @Override
   public ChattingSession save(ChattingSession session) {
-    return sessions.put(session.sessionId(), session);
+    sessions.put(session.sessionId(), session);
+    return session;
   }
 
   @Override
