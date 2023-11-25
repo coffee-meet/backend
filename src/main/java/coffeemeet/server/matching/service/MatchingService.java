@@ -29,26 +29,32 @@ public class MatchingService {
   private final MatchingQueueQuery matchingQueueQuery;
   private final MatchingQueueCommand matchingQueueCommand;
 
-  public void start(Long userId) {
+  public void startMatching(Long userId) {
     String companyName = certificationQuery.getCompanyNameByUserId(userId);
     matchingQueueCommand.enqueueUserByCompanyName(companyName, userId);
+    userCommand.setToMatching(userId);
 
     long matchingQueueSizeByCompany = matchingQueueQuery.sizeByCompany(companyName);
     if (matchingQueueSizeByCompany >= FIXED_MATCH_GROUP_SIZE) {
-      match(companyName);
+      processMatching(companyName);
     }
   }
 
-  private void match(String companyName) {
+  private void processMatching(String companyName) {
     Set<Long> userIds = matchingQueueQuery.dequeueMatchingGroupSize(companyName,
         FIXED_MATCH_GROUP_SIZE);
     ChattingRoom chattingRoom = chattingRoomCommand.createChattingRoom();
-
     userCommand.assignUsersToChattingRoom(userIds, chattingRoom);
 
     Set<NotificationInfo> notificationInfos = userQuery.getNotificationInfosByIdSet(userIds);
     notificationSender.sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!",
         "chattingRoomId", String.valueOf(chattingRoom.getId()));
+  }
+
+  public void cancelMatching(Long userId) {
+    String companyName = certificationQuery.getCompanyNameByUserId(userId);
+    matchingQueueCommand.deleteUserByUserId(companyName, userId);
+    userCommand.setToIdle(userId);
   }
 
 }
