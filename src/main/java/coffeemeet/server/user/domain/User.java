@@ -91,7 +91,8 @@ public class User extends AdvancedBaseEntity {
     this.notificationInfo = newNotificationInfo;
   }
 
-  public void enterChattingRoom(ChattingRoom chattingRoom) {
+  public void completeMatching(ChattingRoom chattingRoom) {
+    this.userStatus = CHATTING_UNCONNECTED;
     this.chattingRoom = chattingRoom;
   }
 
