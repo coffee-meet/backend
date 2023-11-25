@@ -4,9 +4,9 @@ import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
+import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
-import coffeemeet.server.chatting.exception.ChattingErrorCode;
-import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
@@ -14,9 +14,7 @@ import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChattingMessageService {
 
-  private static final String SOCKET_SESSION_NOT_FOUND_MESSAGE = "소켓 연결 정보가 없습니다.";
-
-  private final Map<String, Long> sessions = new ConcurrentHashMap<>();
+  private final ChattingSessionQuery chattingSessionQuery;
+  private final ChattingSessionCommand chattingSessionCommand;
   private final ChattingMessageCommand chattingMessageCommand;
   private final ChattingRoomQuery chattingRoomQuery;
   private final UserQuery userQuery;
@@ -35,7 +32,7 @@ public class ChattingMessageService {
   private final FCMNotificationSender fcmNotificationSender;
 
   public ChattingDto.Response chatting(String sessionId, Long roomId, String content) {
-    Long userId = getUserId(sessionId);
+    Long userId = chattingSessionQuery.getUserIdById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
     //sendChattingAlarm(content, users);
@@ -58,26 +55,15 @@ public class ChattingMessageService {
         .collect(Collectors.toSet());
   }
 
-  private Long getUserId(String sessionId) {
-    Long userId = sessions.get(sessionId);
-    if (userId == null) {
-      throw new NotFoundException(
-          ChattingErrorCode.SOCKET_SESSION_NOT_FOUND,
-          SOCKET_SESSION_NOT_FOUND_MESSAGE
-      );
-    }
-    return userId;
-  }
-
   public void storeSocketSession(String sessionId, String userId) {
     userCommand.enterToChattingRoom(Long.valueOf(userId));
-    sessions.put(sessionId, Long.valueOf(userId));
+    chattingSessionCommand.connect(sessionId, Long.parseLong(userId));
   }
 
   public void expireSocketSession(String sessionId) {
-    Long userId = sessions.get(sessionId);
+    Long userId = chattingSessionQuery.getUserIdById(sessionId);
     userCommand.exitChattingRoom(userId);
-    sessions.remove(sessionId);
+    chattingSessionCommand.disconnect(sessionId);
   }
 
 }
