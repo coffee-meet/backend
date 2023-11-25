@@ -19,7 +19,7 @@ public final class MyProfileHTTP {
       List<Keyword> interests
   ) {
 
-    public static Response of(MyProfileDto.Response response) {
+    public static Response of(MyProfileDto response) {
       return new Response(
           response.nickname(),
           response.profileImageUrl(),

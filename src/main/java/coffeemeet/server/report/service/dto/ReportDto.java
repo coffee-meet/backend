@@ -4,21 +4,18 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
 
-public final class ReportDto {
+public record ReportDto(
+        String targetedNickname,
+        String chattingRoomName,
+        LocalDateTime createdAt
+) {
 
-  public record Response(
-      String targetedNickname,
-      String chattingRoomName,
-      LocalDateTime createdAt
-  ) {
-
-    public static Response of(User targeted, ChattingRoom chattingRoom) {
-      return new Response(
-          targeted.getProfile().getNickname(),
-          chattingRoom.getName(),
-          targeted.getCreatedAt()
-      );
+    public static ReportDto of(User targeted, ChattingRoom chattingRoom) {
+        return new ReportDto(
+                targeted.getProfile().getNickname(),
+                chattingRoom.getName(),
+                targeted.getCreatedAt()
+        );
     }
-  }
 
 }

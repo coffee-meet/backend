@@ -18,7 +18,7 @@ public final class UserProfileHTTP {
       List<Keyword> interests
   ) {
 
-    public static Response of(UserProfileDto.Response response) {
+    public static Response of(UserProfileDto response) {
       return new Response(
           response.nickname(),
           response.profileImageUrl(),

@@ -4,11 +4,11 @@ import coffeemeet.server.report.service.dto.ReportDto;
 import java.util.List;
 
 public record ReportList(
-    List<ReportDto.Response> contents,
+    List<ReportDto> contents,
     boolean hasNext
 ) {
 
-  public static ReportList of(List<ReportDto.Response> contents, boolean hasNext) {
+  public static ReportList of(List<ReportDto> contents, boolean hasNext) {
     return new ReportList(
         contents,
         hasNext

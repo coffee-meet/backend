@@ -20,7 +20,7 @@ public final class ReportDetailHTTP {
       LocalDateTime createAt
   ) {
 
-    public static Response from(ReportDetailDto.Response response) {
+    public static Response from(ReportDetailDto response) {
       return new Response(
           response.reporterNickname(),
           response.targetedNickname(),
