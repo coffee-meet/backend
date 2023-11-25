@@ -34,11 +34,11 @@ class MatchingControllerTest extends ControllerTestConfig {
   }
 
   @Test
-  @DisplayName("매칭을 시작할 수 있다.")
+  @DisplayName("매칭 시작 요청을 처리할 수 있다.")
   void startTest() throws Exception {
     // given
     long userId = 1;
-    willDoNothing().given(matchingService).start(userId);
+    willDoNothing().given(matchingService).startMatching(userId);
 
     // when, then
     mockMvc.perform(post("/api/v1/matching/start")
@@ -47,6 +47,28 @@ class MatchingControllerTest extends ControllerTestConfig {
         )
         .andDo(document("matching-start",
                 resourceDetails().tag("매칭").description("매칭 시작"),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
+        )
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("매칭 취소 요청을 처리할 수 있다.")
+  void cancelTest() throws Exception {
+    // given
+    long userId = 1;
+    willDoNothing().given(matchingService).cancelMatching(userId);
+
+    // when, then
+    mockMvc.perform(post("/api/v1/matching/cancel")
+            .header("Authorization", TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andDo(document("matching-cancel",
+                resourceDetails().tag("매칭").description("매칭 취소"),
                 requestHeaders(
                     headerWithName("Authorization").description("토큰")
                 )
