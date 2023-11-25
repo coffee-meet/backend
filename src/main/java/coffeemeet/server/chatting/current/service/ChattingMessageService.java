@@ -11,6 +11,7 @@ import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
+import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class ChattingMessageService {
   private final ChattingMessageCommand chattingMessageCommand;
   private final ChattingRoomQuery chattingRoomQuery;
   private final UserQuery userQuery;
+  private final UserCommand userCommand;
   private final FCMNotificationSender fcmNotificationSender;
 
   public ChattingDto.Response chatting(String sessionId, Long roomId, String content) {
@@ -68,15 +70,13 @@ public class ChattingMessageService {
   }
 
   public void storeSocketSession(String sessionId, String userId) {
-    User user = userQuery.getUserById(Long.valueOf(userId));
-    user.enterChattingRoom();
+    userCommand.enterToChattingRoom(Long.valueOf(userId));
     sessions.put(sessionId, Long.valueOf(userId));
   }
 
   public void expireSocketSession(String sessionId) {
     Long userId = sessions.get(sessionId);
-    User user = userQuery.getUserById(userId);
-    user.exitChattingRoom();
+    userCommand.exitChattingRoom(userId);
     sessions.remove(sessionId);
   }
 
