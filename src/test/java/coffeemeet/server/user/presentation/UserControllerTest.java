@@ -107,7 +107,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    LoginDetailsDto.Response response = LoginDetailsDtoFixture.loginDetailsDto();
+    LoginDetailsDto response = LoginDetailsDtoFixture.loginDetailsDto();
     LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(
         response);
 
@@ -150,7 +150,7 @@ class UserControllerTest extends ControllerTestConfig {
   void findUserProfileTest() throws Exception {
     // given
     long userId = 1L;
-    UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
+    UserProfileDto response = UserProfileDtoFixture.userProfileDtoResponse();
     UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
         response);
 
@@ -185,7 +185,7 @@ class UserControllerTest extends ControllerTestConfig {
   void findMyProfileTest() throws Exception {
     // given
     Long userId = 1L;
-    MyProfileDto.Response response = MyProfileDtoFixture.myProfileDtoResponse();
+    MyProfileDto response = MyProfileDtoFixture.myProfileDtoResponse();
     MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);

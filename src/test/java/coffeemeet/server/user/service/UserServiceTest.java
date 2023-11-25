@@ -29,10 +29,10 @@ import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.service.dto.MyProfileDto;
-import coffeemeet.server.user.service.dto.UserProfileDto.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import coffeemeet.server.user.service.dto.UserProfileDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -136,14 +136,14 @@ class UserServiceTest {
     User user = user();
     Certification certification = certification();
     List<Keyword> keywords = UserFixture.keywords();
-    Response response = Response.of(user, certification.getDepartment(), keywords);
+    UserProfileDto response = UserProfileDto.of(user, certification.getDepartment(), keywords);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(user.getId())).willReturn(keywords);
     given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
     // when
-    Response result = userService.findUserProfile(user.getId());
+    UserProfileDto result = userService.findUserProfile(user.getId());
 
     // then
     assertAll(
@@ -160,7 +160,7 @@ class UserServiceTest {
     User user = user();
     List<Keyword> keywords = UserFixture.keywords();
     Certification certification = certification(user);
-    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
+    MyProfileDto response = MyProfileDto.of(user, keywords,
         certification.getCompanyName(),
         certification.getDepartment());
 
@@ -169,7 +169,7 @@ class UserServiceTest {
     given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
     // when
-    MyProfileDto.Response result = userService.findMyProfile(user.getId());
+    MyProfileDto result = userService.findMyProfile(user.getId());
 
     // then
     assertAll(
