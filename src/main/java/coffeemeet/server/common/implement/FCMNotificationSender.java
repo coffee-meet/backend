@@ -46,9 +46,6 @@ public class FCMNotificationSender {
 
   public void sendMultiNotifications(Set<NotificationInfo> notificationInfos, String content) {
     notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
-    if (notificationInfos.isEmpty()) {
-      return;
-    }
 
     Set<String> tokens = notificationInfos.stream().map(
         NotificationInfo::getToken
@@ -68,9 +65,6 @@ public class FCMNotificationSender {
   public void sendMultiNotificationsWithData(Set<NotificationInfo> notificationInfos,
       String content, String key, String value) {
     notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
-    if (notificationInfos.isEmpty()) {
-      return;
-    }
 
     Set<String> tokens = notificationInfos.stream().map(
         NotificationInfo::getToken
