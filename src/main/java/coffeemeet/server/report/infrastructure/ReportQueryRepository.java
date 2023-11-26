@@ -55,13 +55,6 @@ public class ReportQueryRepository {
         .fetch();
   }
 
-  private BooleanExpression gtReportId(Long inquiryId) {
-    if (inquiryId == null || inquiryId == 0L) {
-      return null;
-    }
-    return report.id.gt(inquiryId);
-  }
-
   public List<Report> findByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
     QReport report = QReport.report;
     return jpaQueryFactory
@@ -69,6 +62,13 @@ public class ReportQueryRepository {
         .where(report.targetedId.eq(targetId).and(report.chattingRoomId.eq(chattingRoomId)))
         .orderBy(report.createdAt.desc())
         .fetch();
+  }
+
+  private BooleanExpression gtReportId(Long reportId) {
+    if (reportId == null || reportId == 0L) {
+      return null;
+    }
+    return report.id.gt(reportId);
   }
 
 }
