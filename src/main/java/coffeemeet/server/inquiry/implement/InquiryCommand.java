@@ -17,4 +17,8 @@ public class InquiryCommand {
     inquiryRepository.save(inquiry);
   }
 
+  public void check(Inquiry inquiry) {
+    inquiry.checkInquiry();
+  }
+
 }
