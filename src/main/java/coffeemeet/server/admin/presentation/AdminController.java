@@ -8,6 +8,9 @@ import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
+import coffeemeet.server.certification.service.CertificationService;
+import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
@@ -25,6 +28,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +54,7 @@ public class AdminController {
   private final AdminService adminService;
   private final ReportService reportService;
   private final InquiryService inquiryService;
+  private final CertificationService certificationService;
 
   @PostMapping("/login")
   public ResponseEntity<Void> login(
@@ -120,7 +127,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomPage<ReportDto.Response>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportDto.Response>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -129,7 +136,7 @@ public class AdminController {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
     ReportList allReports = reportService.findAllReports(lastReportId, pageSize);
-    return ResponseEntity.ok(AdminCustomPage.of(allReports.contents(), allReports.hasNext()));
+    return ResponseEntity.ok(AdminCustomSlice.of(allReports.contents(), allReports.hasNext()));
   }
 
   @GetMapping("/reports/group")
@@ -167,6 +174,27 @@ public class AdminController {
     }
     InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
+  }
+
+  @GetMapping("/certifications/pending")
+  public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @RequestParam(defaultValue = "0") int offset,
+      @RequestParam(defaultValue = "10") int size
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+
+    int pageNumber = offset / size;
+    Pageable pageable = PageRequest.of(pageNumber, size);
+    PendingCertificationPageDto uncertifiedUserRequests = certificationService.getUncertifiedUserRequests(
+        pageable);
+
+    Page<PendingCertification> page = uncertifiedUserRequests.page();
+    return ResponseEntity.ok(
+        AdminCustomPage.of(page.getContent(), page.hasNext())
+    );
   }
 
 }
