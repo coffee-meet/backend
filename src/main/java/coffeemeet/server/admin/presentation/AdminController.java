@@ -82,7 +82,7 @@ public class AdminController {
     }
     adminService.approveCertification(certificationId);
     return ResponseEntity.ok().build();
-  } // 완
+  }
 
   @DeleteMapping("/certifications/{certificationId}/rejection")
   public ResponseEntity<Void> rejectCertification(
@@ -168,6 +168,17 @@ public class AdminController {
     }
     InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
+  }
+
+  @PatchMapping("/inquiries/{inquiryId}/check")
+  public ResponseEntity<Void> checkInquiry(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @PathVariable Long inquiryId) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    adminService.checkInquiry(inquiryId);
+    return ResponseEntity.ok().build();
   }
 
 }
