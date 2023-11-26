@@ -53,7 +53,7 @@ public class CertificationCommand {
     certificationRepository.findByUserId(userId).ifPresent(consumer);
   }
 
-  public void deleteUserCertification(Long userId) {
+  public void deleteCertification(Long userId) {
     certificationRepository.deleteById(userId);
   }
 

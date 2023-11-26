@@ -69,4 +69,14 @@ public class UserFixture {
         .create();
   }
 
+  public static User userWithFixedId(Long id) {
+    return Instancio.of(User.class)
+        .set(field(User::getProfile), profile())
+        .set(field(User::getId), id)
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
 }

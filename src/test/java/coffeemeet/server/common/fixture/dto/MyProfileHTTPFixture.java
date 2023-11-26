@@ -8,10 +8,8 @@ public class MyProfileHTTPFixture {
   public static MyProfileHTTP.Response myProfileHTTPResponse(MyProfileDto.Response response) {
     return new MyProfileHTTP.Response(
         response.nickname(),
-        response.email(),
         response.profileImageUrl(),
-        response.reportedCount(),
-        response.sanctionPeriod(),
+        response.companyName(),
         response.department(),
         response.interests()
     );

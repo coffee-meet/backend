@@ -2,7 +2,7 @@ package coffeemeet.server.report.presentation;
 
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
-import coffeemeet.server.report.presentation.dto.ReportHTTP;
+import coffeemeet.server.report.presentation.dto.CreateReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ReportController {
 
   @PostMapping
   public ResponseEntity<Void> reportUser(@Login AuthInfo authInfo,
-      @Valid @RequestBody ReportHTTP.Request request) {
+      @Valid @RequestBody CreateReportHTTP.Request request) {
     reportService.reportUser(authInfo.userId(), request.chattingRoomId(), request.targetedId(),
         request.reason(), request.reasonDetail());
     return ResponseEntity.ok().build();

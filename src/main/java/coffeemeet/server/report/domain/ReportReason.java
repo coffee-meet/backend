@@ -4,14 +4,14 @@ import coffeemeet.server.common.util.Patterns;
 
 public enum ReportReason {
   혐오_발언,
-  괴롭힘_또는_스토킹,
+  괴롭힘,
   성적인_괴롭힘,
   스팸_및_광고,
   부적절한_콘텐츠,
   잠수;
 
   public static ReportReason getReason(String reason) {
-    return ReportReason.valueOf(Patterns.REPORT_REASON_PATTERN.matcher(reason).replaceAll("_"));
+    return ReportReason.valueOf(Patterns.BLANK_PATTERN.matcher(reason).replaceAll("_"));
   }
 
 }

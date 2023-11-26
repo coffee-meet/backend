@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.report.presentation.dto.ReportHTTP;
+import coffeemeet.server.report.presentation.dto.CreateReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ class ReportControllerTest extends ControllerTestConfig {
     Long reporterId = 1L;
     Long targetId = 1L;
     Long chattingRoomId = 1L;
-    ReportHTTP.Request request = new ReportHTTP.Request(chattingRoomId, targetId, "잠수",
+    CreateReportHTTP.Request request = new CreateReportHTTP.Request(chattingRoomId, targetId, "잠수",
         "매칭 시작해놓고 잠수타요.");
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(reporterId);
