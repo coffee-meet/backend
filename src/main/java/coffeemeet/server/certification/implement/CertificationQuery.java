@@ -38,7 +38,7 @@ public class CertificationQuery {
   }
 
   public Page<Certification> getPendingCertification(Pageable pageable) {
-    return certificationRepository.findByIsCertificatedIsFalse(pageable);
+    return certificationRepository.findPendingCertifications(pageable);
   }
 
 }

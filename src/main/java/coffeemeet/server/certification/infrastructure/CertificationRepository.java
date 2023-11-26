@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
 
@@ -13,6 +14,7 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
 
   boolean existsByCompanyEmail(CompanyEmail companyEmail);
 
-  Page<Certification> findByIsCertificatedIsFalse(Pageable pageable);
+  @Query("SELECT c FROM Certification c JOIN FETCH c.user WHERE c.isCertificated = false")
+  Page<Certification> findPendingCertifications(Pageable pageable);
 
 }
