@@ -144,7 +144,8 @@ public class UserService {
     }
 
     private UserStatusDto handleIdleUser(Certification certification) {
-        return UserStatusDto.of(UserStatus.IDLE, null, null, certification.isCertificated(), null);
+        boolean isCertificated = certification != null;
+        return UserStatusDto.of(UserStatus.IDLE, null, null, isCertificated, null);
     }
 
     private UserStatusDto handleMatchingUser(Long userId, Certification certification) {
