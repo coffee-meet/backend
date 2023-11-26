@@ -46,7 +46,7 @@ class ChattingMessageServiceTest {
   void chattingTest() {
     // given
     User user = UserFixture.user();
-    List<User> users = UserFixture.users();
+    List<User> users = UserFixture.fourUsers();
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     String content = "내용";
     ChattingMessage chattingMessage = ChattingFixture.chattingMessage(content);

@@ -104,7 +104,7 @@ class ChattingRoomServiceTest {
     // given
     Long roomId = 1L;
     int size = 10;
-    List<User> users = UserFixture.users();
+    List<User> users = UserFixture.fourUsers();
 
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
