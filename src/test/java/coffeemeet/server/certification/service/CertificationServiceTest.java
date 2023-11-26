@@ -1,11 +1,13 @@
 package coffeemeet.server.certification.service;
 
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.certifications;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -16,15 +18,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationCommand;
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.implement.EmailSender;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.io.File;
+import java.util.List;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +39,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class CertificationServiceTest {
@@ -51,6 +60,9 @@ class CertificationServiceTest {
 
   @Mock
   private CertificationCommand certificationCommand;
+
+  @Mock
+  private CertificationQuery certificationQuery;
 
   @Mock
   private EmailVerificationCommand emailVerificationCommand;
@@ -116,6 +128,25 @@ class CertificationServiceTest {
     // when, then
     assertThatCode(() -> certificationService.compareCode(userId, verificationCode))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("미인증 사용자 요청을 페이지로 가져올 수 있다.")
+  void getUncertifiedUserRequestsTest() {
+    // given
+    Pageable pageable = mock(Pageable.class);
+    List<Certification> certificationList = certifications();
+    Page<Certification> pendingCertificationPage = new PageImpl<>(certificationList);
+
+    given(certificationQuery.getPendingCertification(pageable)).willReturn(
+        pendingCertificationPage);
+
+    // when
+    PendingCertificationPageDto result = certificationService.getUncertifiedUserRequests(pageable);
+
+    // then
+    assertThat(result).isNotNull();
+    assertThat(result.page().getContent()).hasSize(certificationList.size());
   }
 
 }

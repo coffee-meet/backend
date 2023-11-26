@@ -1,5 +1,6 @@
 package coffeemeet.server.common.fixture.entity;
 
+import static coffeemeet.server.common.fixture.entity.UserFixture.users;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.certification.domain.Certification;
@@ -8,11 +9,18 @@ import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.domain.EmailVerification;
 import coffeemeet.server.certification.presentation.dto.EmailHTTP;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
+import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.user.domain.User;
+import java.util.List;
 import org.instancio.Instancio;
 import org.instancio.internal.generator.domain.internet.EmailGenerator;
 import org.instancio.internal.generator.lang.IntegerGenerator;
 import org.instancio.internal.generator.net.URLGenerator;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public class CertificationFixture {
 
@@ -31,18 +39,19 @@ public class CertificationFixture {
         .create();
   }
 
+  public static List<Certification> certifications() {
+    return users().stream().map(CertificationFixture::certification).toList();
+  }
+
   public static EmailVerification emailVerification() {
-    return Instancio.of(EmailVerification.class)
-        .set(field(EmailVerification::getCompanyEmail),
-            new CompanyEmail(new EmailGenerator().get()))
-        .create();
+    return Instancio.of(EmailVerification.class).set(field(EmailVerification::getCompanyEmail),
+        new CompanyEmail(new EmailGenerator().get())).create();
   }
 
   public static EmailVerification emailVerification(Long userId) {
     return Instancio.of(EmailVerification.class).set(field(EmailVerification::getUserId), userId)
         .set(field(EmailVerification::getCompanyEmail),
-            new CompanyEmail(new EmailGenerator().get()))
-        .create();
+            new CompanyEmail(new EmailGenerator().get())).create();
   }
 
   public static CompanyEmail companyEmail() {
@@ -83,6 +92,22 @@ public class CertificationFixture {
     return Instancio.of(VerificationCodeHTTP.Request.class)
         .set(field(VerificationCodeHTTP.Request::verificationCode),
             String.format("%06d", new IntegerGenerator().range(0, 999999).get())).create();
+  }
+
+  public static Pageable pageable() {
+    int page = 0;
+    int size = new IntegerGenerator().range(0, 100).get();
+    return PageRequest.of(page, size, Sort.by("updatedAt").ascending());
+  }
+
+  public static PendingCertificationPageDto pendingCertificationPageDto(int size) {
+    return new PendingCertificationPageDto(new PageImpl<>(pendingCertifications(size)));
+  }
+
+  private static List<PendingCertification> pendingCertifications(int size) {
+    return Instancio.ofList(PendingCertification.class).size(size)
+        .generate(field(PendingCertification::businessCardUrl), gen -> gen.net().url().asString())
+        .generate(field(PendingCertification::companyEmail), gen -> gen.net().email()).create();
   }
 
 }
