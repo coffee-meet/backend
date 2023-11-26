@@ -70,7 +70,7 @@ class CertificationQueryTest {
     Pageable pageable = Pageable.unpaged();
     Page<Certification> expectedPage = new PageImpl<>(Collections.emptyList());
 
-    given(certificationRepository.findByIsCertificatedIsFalse(pageable)).willReturn(expectedPage);
+    given(certificationRepository.findPendingCertifications(pageable)).willReturn(expectedPage);
 
     // when
     Page<Certification> certificationPage = certificationQuery.getPendingCertification(pageable);

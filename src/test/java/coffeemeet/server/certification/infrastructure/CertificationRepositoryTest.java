@@ -83,7 +83,7 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
     Pageable pageable = pageable();
 
     // when
-    Page<Certification> foundCertification = certificationRepository.findByIsCertificatedIsFalse(
+    Page<Certification> foundCertification = certificationRepository.findPendingCertifications(
         pageable);
 
     // then
