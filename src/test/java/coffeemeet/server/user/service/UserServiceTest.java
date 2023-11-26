@@ -53,32 +53,32 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-  @InjectMocks
-  private UserService userService;
+    @InjectMocks
+    private UserService userService;
 
-  @Mock
-  private MediaManager mediaManager;
+    @Mock
+    private MediaManager mediaManager;
 
-  @Mock
-  private OAuthMemberClientComposite oAuthMemberClientComposite;
+    @Mock
+    private OAuthMemberClientComposite oAuthMemberClientComposite;
 
-  @Mock
-  private AuthTokensGenerator authTokensGenerator;
+    @Mock
+    private AuthTokensGenerator authTokensGenerator;
 
-  @Mock
-  private InterestQuery interestQuery;
+    @Mock
+    private InterestQuery interestQuery;
 
-  @Mock
-  private InterestCommand interestCommand;
+    @Mock
+    private InterestCommand interestCommand;
 
-  @Mock
-  private UserQuery userQuery;
+    @Mock
+    private UserQuery userQuery;
 
-  @Mock
-  private UserCommand userCommand;
+    @Mock
+    private UserCommand userCommand;
 
-  @Mock
-  private CertificationQuery certificationQuery;
+    @Mock
+    private CertificationQuery certificationQuery;
 
     @Mock
     private MatchingQueueCommand matchingQueueCommand;
@@ -106,7 +106,7 @@ class UserServiceTest {
 //
 //  }
 
-  // TODO: 11/21/23 로그인 테스트 작성
+    // TODO: 11/21/23 로그인 테스트 작성
 //  @DisplayName("로그인을 할 수 있다.")
 //  @Test
 //  void loginTest() {
@@ -141,69 +141,69 @@ class UserServiceTest {
 //    );
 //  }
 
-  @DisplayName("사용자의 프로필을 조회할 수 있다.")
-  @Test
-  void findUserProfileTest() {
-    // given
-    User user = user();
-    Certification certification = certification();
-    List<Keyword> keywords = UserFixture.keywords();
-    UserProfileDto response = UserProfileDto.of(user, certification.getDepartment(), keywords);
+    @DisplayName("사용자의 프로필을 조회할 수 있다.")
+    @Test
+    void findUserProfileTest() {
+        // given
+        User user = user();
+        Certification certification = certification();
+        List<Keyword> keywords = UserFixture.keywords();
+        UserProfileDto response = UserProfileDto.of(user, certification.getDepartment(), keywords);
 
-    given(userQuery.getUserById(anyLong())).willReturn(user);
-    given(interestQuery.getKeywordsByUserId(user.getId())).willReturn(keywords);
-    given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+        given(userQuery.getUserById(anyLong())).willReturn(user);
+        given(interestQuery.getKeywordsByUserId(user.getId())).willReturn(keywords);
+        given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
-    // when
-    UserProfileDto result = userService.findUserProfile(user.getId());
+        // when
+        UserProfileDto result = userService.findUserProfile(user.getId());
 
-    // then
-    assertAll(
-        () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
-        () -> assertThat(result.department()).isEqualTo(response.department()),
-        () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl())
-    );
-  }
+        // then
+        assertAll(
+                () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
+                () -> assertThat(result.department()).isEqualTo(response.department()),
+                () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl())
+        );
+    }
 
-  @DisplayName("본인의 프로필을 조회할 수 있다.")
-  @Test
-  void findMyProfileTest() {
-    // given
-    User user = user();
-    List<Keyword> keywords = UserFixture.keywords();
-    Certification certification = certification(user);
-    MyProfileDto response = MyProfileDto.of(user, keywords,
-        certification.getCompanyName(),
-        certification.getDepartment());
+    @DisplayName("본인의 프로필을 조회할 수 있다.")
+    @Test
+    void findMyProfileTest() {
+        // given
+        User user = user();
+        List<Keyword> keywords = UserFixture.keywords();
+        Certification certification = certification(user);
+        MyProfileDto response = MyProfileDto.of(user, keywords,
+                certification.getCompanyName(),
+                certification.getDepartment());
 
-    given(userQuery.getUserById(anyLong())).willReturn(user);
-    given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());
-    given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+        given(userQuery.getUserById(anyLong())).willReturn(user);
+        given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());
+        given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
-    // when
-    MyProfileDto result = userService.findMyProfile(user.getId());
+        // when
+        MyProfileDto result = userService.findMyProfile(user.getId());
 
-    // then
-    assertAll(
-        () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
-        () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
-        () -> assertThat(result.companyName()).isEqualTo(response.companyName()),
-        () -> assertThat(result.department()).isEqualTo(response.department()),
-        () -> assertThat(result.department()).isEqualTo(response.department())
-    );
-  }
+        // then
+        assertAll(
+                () -> assertThat(result.nickname()).isEqualTo(response.nickname()),
+                () -> assertThat(result.profileImageUrl()).isEqualTo(response.profileImageUrl()),
+                () -> assertThat(result.companyName()).isEqualTo(response.companyName()),
+                () -> assertThat(result.department()).isEqualTo(response.department()),
+                () -> assertThat(result.department()).isEqualTo(response.department())
+        );
+    }
 
-  @DisplayName("아이디로 사용자를 조회할 수 있다.")
-  @Test
-  void getUserById() {
-    // given
-    User user = user();
-    Long userId = user.getId();
+    @DisplayName("아이디로 사용자를 조회할 수 있다.")
+    @Test
+    void getUserById() {
+        // given
+        User user = user();
+        Long userId = user.getId();
 
-    given(userQuery.getUserById(userId)).willReturn(user);
+        given(userQuery.getUserById(userId)).willReturn(user);
 
-    // when
-    User foundUser = userQuery.getUserById(userId);
+        // when
+        User foundUser = userQuery.getUserById(userId);
 
     // then
     assertAll(
