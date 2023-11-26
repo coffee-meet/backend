@@ -37,7 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-
 import static coffeemeet.server.common.fixture.entity.UserFixture.notificationTokenHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -346,9 +345,8 @@ class UserControllerTest extends ControllerTestConfig {
                 .andExpect(status().isOk());
     }
 
-
     @Test
-    @DisplayName("유저의 상태를 요청할 수 있다.")
+    @DisplayName("유저 상태를 요청할 수 있다.")
     void getUserStatusTest() throws Exception {
         // given
         UserStatusDto response = UserStatusDtoFixture.userStatusDto();
@@ -367,10 +365,10 @@ class UserControllerTest extends ControllerTestConfig {
                                 ),
                                 responseFields(
                                         fieldWithPath("userStatus").type(JsonFieldType.STRING).description("유저 상태"),
-                                        fieldWithPath("startedAt").type(JsonFieldType.STRING).description("매칭 시작 시간"),
-                                        fieldWithPath("chattingRoomId").type(JsonFieldType.NUMBER).description("채팅방 아이디"),
-                                        fieldWithPath("isCertificated").type(JsonFieldType.BOOLEAN).description("인증 여부"),
-                                        fieldWithPath("penaltyExpiration").type(JsonFieldType.STRING).description("제재 기간")
+                                        fieldWithPath("isCertificated").type(JsonFieldType.VARIES).description("인증 여부"),
+                                        fieldWithPath("startedAt").type(JsonFieldType.VARIES).description("매칭 시작 시간"),
+                                        fieldWithPath("chattingRoomId").type(JsonFieldType.VARIES).description("채팅방 아이디"),
+                                        fieldWithPath("penaltyExpiration").type(JsonFieldType.VARIES).description("제재 기간")
                                 )
                         )
                 )

@@ -6,7 +6,6 @@ import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -358,7 +357,7 @@ class UserServiceTest {
             assertAll(
                     () -> assertThat(response.userStatus()).isEqualTo(UserStatus.MATCHING),
                     () -> assertNotNull(response.startedAt()),
-                    () -> assertFalse(response.isCertificated()),
+                    () -> assertNull(response.isCertificated()),
                     () -> assertNull(response.chattingRoomId()),
                     () -> assertNull(response.penaltyExpiration())
             );
@@ -382,7 +381,7 @@ class UserServiceTest {
             assertAll(
                     () -> assertThat(response.userStatus()).isEqualTo(UserStatus.CHATTING_UNCONNECTED),
                     () -> assertNotNull(response.chattingRoomId()),
-                    () -> assertFalse(response.isCertificated()),
+                    () -> assertNull(response.isCertificated()),
                     () -> assertNull(response.penaltyExpiration()),
                     () -> assertNull(response.startedAt())
             );
@@ -406,7 +405,7 @@ class UserServiceTest {
             assertAll(
                     () -> assertThat(response.userStatus()).isEqualTo(UserStatus.REPORTED),
                     () -> assertNotNull(response.penaltyExpiration()),
-                    () -> assertFalse(response.isCertificated()),
+                    () -> assertNull(response.isCertificated()),
                     () -> assertNull(response.chattingRoomId()),
                     () -> assertNull(response.startedAt())
             );

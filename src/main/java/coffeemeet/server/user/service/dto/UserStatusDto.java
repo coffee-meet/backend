@@ -11,7 +11,7 @@ public record UserStatusDto(
         UserStatus userStatus,
         LocalDateTime startedAt,
         Long chattingRoomId,
-        boolean isCertificated,
+        Boolean isCertificated,
         LocalDateTime penaltyExpiration
 ) {
 
@@ -19,7 +19,7 @@ public record UserStatusDto(
             UserStatus userStatus,
             LocalDateTime startedAt,
             Long chattingRoomId,
-            boolean isCertificated,
+            Boolean isCertificated,
             LocalDateTime penaltyExpiration
     ) {
         return new UserStatusDto(
