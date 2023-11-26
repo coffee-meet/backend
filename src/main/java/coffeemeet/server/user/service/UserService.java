@@ -145,12 +145,12 @@ public class UserService {
 
     private UserStatusDto handleIdleUser(Certification certification) {
         boolean isCertificated = certification != null;
-        return UserStatusDto.of(UserStatus.MATCHING, null, null, isCertificated, null);
+        return UserStatusDto.of(UserStatus.IDLE, null, null, isCertificated, null);
     }
 
     private UserStatusDto handleMatchingUser(Long userId, Certification certification) {
         LocalDateTime startedAt = matchingQueueCommand.getTimeByUserId(certification.getCompanyName(), userId);
-        return UserStatusDto.of(UserStatus.IDLE, startedAt, null, false, null);
+        return UserStatusDto.of(UserStatus.MATCHING, startedAt, null, false, null);
     }
 
     private UserStatusDto handleChattingUser(User user) {
@@ -160,7 +160,7 @@ public class UserService {
 
     private UserStatusDto handleReportedUser(User user) {
         LocalDateTime penaltyExpiration = user.getReportInfo().getPenaltyExpiration();
-        return UserStatusDto.of(UserStatus.CHATTING_UNCONNECTED, null, null, false, penaltyExpiration);
+        return UserStatusDto.of(UserStatus.REPORTED, null, null, false, penaltyExpiration);
     }
 
     private void deleteCurrentProfileImage(String profileImageUrl) {
