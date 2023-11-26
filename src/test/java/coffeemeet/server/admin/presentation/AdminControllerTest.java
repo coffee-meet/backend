@@ -392,4 +392,28 @@ class AdminControllerTest extends ControllerTestConfig {
         .andExpect(content().string(objectMapper.writeValueAsString(adminCustomSlice)));
   }
 
+  @DisplayName("사용자 문의를 확인할 수 있다.")
+  @Test
+  void checkInquiryTest() throws Exception {
+    // given
+    Long inquiryId = 1L;
+
+    // when, then
+    mockMvc.perform(patch(baseUrl + "/inquiries/{inquiryId}/check", inquiryId)
+            .header(JSESSION, SESSION_VALUE)
+            .sessionAttr("adminId", "admin")
+        )
+        .andDo(document(
+                "inquiry-check",
+                resourceDetails()
+                    .tag("관리자")
+                    .description("문의 확인"),
+                requestHeaders(
+                    headerWithName(JSESSION).description("세션")
+                )
+            )
+        )
+        .andExpect(status().isOk());
+  }
+
 }
