@@ -5,17 +5,17 @@ import coffeemeet.server.user.domain.User;
 import java.time.LocalDateTime;
 
 public record ReportDto(
-        String targetedNickname,
-        String chattingRoomName,
-        LocalDateTime createdAt
+    String targetedNickname,
+    String chattingRoomName,
+    LocalDateTime createdAt
 ) {
 
-    public static ReportDto of(User targeted, ChattingRoom chattingRoom) {
-        return new ReportDto(
-                targeted.getProfile().getNickname(),
-                chattingRoom.getName(),
-                targeted.getCreatedAt()
-        );
-    }
+  public static ReportDto of(User targeted, ChattingRoom chattingRoom) {
+    return new ReportDto(
+        targeted.getProfile().getNickname(),
+        chattingRoom.getName(),
+        targeted.getCreatedAt()
+    );
+  }
 
 }

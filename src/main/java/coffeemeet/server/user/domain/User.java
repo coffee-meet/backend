@@ -35,116 +35,116 @@ import org.hibernate.proxy.HibernateProxy;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends AdvancedBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Embedded
-    @Column(nullable = false)
-    private OAuthInfo oauthInfo;
+  @Embedded
+  @Column(nullable = false)
+  private OAuthInfo oauthInfo;
 
-    @Embedded
-    private Profile profile;
+  @Embedded
+  private Profile profile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatting_room_id")
-    private ChattingRoom chattingRoom;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "chatting_room_id")
+  private ChattingRoom chattingRoom;
 
-    @Embedded
-    private ReportInfo reportInfo;
+  @Embedded
+  private ReportInfo reportInfo;
 
-    @Embedded
-    private NotificationInfo notificationInfo;
+  @Embedded
+  private NotificationInfo notificationInfo;
 
-    @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+  @Enumerated(EnumType.STRING)
+  private UserStatus userStatus;
 
-    @Column(nullable = false)
-    private LocalDateTime matchingStartedAt;
+  @Column(nullable = false)
+  private LocalDateTime matchingStartedAt;
 
-    private boolean isDeleted;
+  private boolean isDeleted;
 
-    private boolean isBlacklisted;
+  private boolean isBlacklisted;
 
-    @Column(nullable = false)
-    private boolean isRegistered;
+  @Column(nullable = false)
+  private boolean isRegistered;
 
-    public User(@NonNull OAuthInfo oauthInfo) {
-        this.oauthInfo = oauthInfo;
+  public User(@NonNull OAuthInfo oauthInfo) {
+    this.oauthInfo = oauthInfo;
+  }
+
+  public void registerUser(@NonNull Profile profile) {
+    this.profile = profile;
+    this.reportInfo = new ReportInfo();
+    this.userStatus = IDLE;
+    this.matchingStartedAt = null;
+    this.isDeleted = false;
+    this.isBlacklisted = false;
+    this.isRegistered = true;
+  }
+
+  public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
+    this.oauthInfo.updateProfileImageUrl(newProfileImageUrl);
+  }
+
+  public void updateNickname(@NonNull String newNickname) {
+    this.profile.updateNickname(newNickname);
+  }
+
+  public void updateNotificationInfo(@NonNull NotificationInfo newNotificationInfo) {
+    this.notificationInfo = newNotificationInfo;
+  }
+
+  public void enterChattingRoom(ChattingRoom chattingRoom) {
+    this.chattingRoom = chattingRoom;
+  }
+
+  public void deleteChattingRoom() {
+    this.chattingRoom = null;
+  }
+
+  public void enterChattingRoom() {
+    this.userStatus = CHATTING_CONNECTED;
+  }
+
+  public void exitChattingRoom() {
+    this.userStatus = CHATTING_UNCONNECTED;
+  }
+
+  public void setIdleStatus() {
+    this.userStatus = IDLE;
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void registerUser(@NonNull Profile profile) {
-        this.profile = profile;
-        this.reportInfo = new ReportInfo();
-        this.userStatus = IDLE;
-        this.matchingStartedAt = null;
-        this.isDeleted = false;
-        this.isBlacklisted = false;
-        this.isRegistered = true;
+    if (o == null) {
+      return false;
     }
-
-    public void updateProfileImageUrl(@NonNull String newProfileImageUrl) {
-        this.oauthInfo.updateProfileImageUrl(newProfileImageUrl);
+    Class<?> oEffectiveClass =
+        (o instanceof HibernateProxy) ? ((HibernateProxy) o).getHibernateLazyInitializer()
+            .getPersistentClass() : o.getClass();
+    Class<?> thisEffectiveClass =
+        this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+            .getPersistentClass() : this.getClass();
+    if (thisEffectiveClass != oEffectiveClass) {
+      return false;
     }
+    User user = (User) o;
+    return getId() != null && Objects.equals(getId(), user.getId());
+  }
 
-    public void updateNickname(@NonNull String newNickname) {
-        this.profile.updateNickname(newNickname);
-    }
+  @Override
+  public final int hashCode() {
+    return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass().hashCode() : getClass().hashCode();
+  }
 
-    public void updateNotificationInfo(@NonNull NotificationInfo newNotificationInfo) {
-        this.notificationInfo = newNotificationInfo;
-    }
-
-    public void enterChattingRoom(ChattingRoom chattingRoom) {
-        this.chattingRoom = chattingRoom;
-    }
-
-    public void deleteChattingRoom() {
-        this.chattingRoom = null;
-    }
-
-    public void enterChattingRoom() {
-        this.userStatus = CHATTING_CONNECTED;
-    }
-
-    public void exitChattingRoom() {
-        this.userStatus = CHATTING_UNCONNECTED;
-    }
-
-    public void setIdleStatus() {
-        this.userStatus = IDLE;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass =
-                (o instanceof HibernateProxy) ? ((HibernateProxy) o).getHibernateLazyInitializer()
-                        .getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass =
-                this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
-                        .getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) {
-            return false;
-        }
-        User user = (User) o;
-        return getId() != null && Objects.equals(getId(), user.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
-                .getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    public void punished() {
-        this.userStatus = REPORTED;
-        reportInfo.increment();
-    }
+  public void punished() {
+    this.userStatus = REPORTED;
+    reportInfo.increment();
+  }
 
 }

@@ -38,78 +38,78 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<Void> signup(@Valid @RequestBody SignupHTTP.Request request) {
-        userService.signup(request.userId(), request.nickname(), request.keywords());
-        return ResponseEntity.ok().build();
-    }
+  @PostMapping("/sign-up")
+  public ResponseEntity<Void> signup(@Valid @RequestBody SignupHTTP.Request request) {
+    userService.signup(request.userId(), request.nickname(), request.keywords());
+    return ResponseEntity.ok().build();
+  }
 
-    @GetMapping("/login/{oAuthProvider}")
-    public ResponseEntity<LoginDetailsHTTP.Response> login(@PathVariable OAuthProvider oAuthProvider,
-                                                           @RequestParam String authCode) {
-        LoginDetailsDto response = userService.login(oAuthProvider, authCode);
-        return ResponseEntity.ok(LoginDetailsHTTP.Response.of(response));
-    }
+  @GetMapping("/login/{oAuthProvider}")
+  public ResponseEntity<LoginDetailsHTTP.Response> login(@PathVariable OAuthProvider oAuthProvider,
+      @RequestParam String authCode) {
+    LoginDetailsDto response = userService.login(oAuthProvider, authCode);
+    return ResponseEntity.ok(LoginDetailsHTTP.Response.of(response));
+  }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable long userId) {
-        UserProfileDto response = userService.findUserProfile(userId);
-        return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
-    }
+  @GetMapping("/{userId}")
+  public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable long userId) {
+    UserProfileDto response = userService.findUserProfile(userId);
+    return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
+  }
 
-    @GetMapping("/me")
-    public ResponseEntity<MyProfileHTTP.Response> getMyProfile(@Login AuthInfo authInfo) {
-        MyProfileDto response = userService.findMyProfile(authInfo.userId());
-        return ResponseEntity.ok(MyProfileHTTP.Response.of(response));
-    }
+  @GetMapping("/me")
+  public ResponseEntity<MyProfileHTTP.Response> getMyProfile(@Login AuthInfo authInfo) {
+    MyProfileDto response = userService.findMyProfile(authInfo.userId());
+    return ResponseEntity.ok(MyProfileHTTP.Response.of(response));
+  }
 
-    @GetMapping("/status")
-    public ResponseEntity<UserStatusHTTP.Response> getUserStatus(@Login AuthInfo authInfo) {
-        UserStatusDto response = userService.getUserStatus(authInfo.userId());
-        return ResponseEntity.ok(UserStatusHTTP.Response.of(response));
-    }
+  @GetMapping("/status")
+  public ResponseEntity<UserStatusHTTP.Response> getUserStatus(@Login AuthInfo authInfo) {
+    UserStatusDto response = userService.getUserStatus(authInfo.userId());
+    return ResponseEntity.ok(UserStatusHTTP.Response.of(response));
+  }
 
-    @PostMapping("/me/profile-image")
-    public ResponseEntity<Void> updateProfileImage(
-            @Login AuthInfo authInfo,
-            @RequestPart("profileImage")
-            @NotNull MultipartFile profileImage) {
-        userService.updateProfileImage(
-                authInfo.userId(),
-                FileUtils.convertMultipartFileToFile(profileImage));
-        return ResponseEntity.ok().build();
-    }
+  @PostMapping("/me/profile-image")
+  public ResponseEntity<Void> updateProfileImage(
+      @Login AuthInfo authInfo,
+      @RequestPart("profileImage")
+      @NotNull MultipartFile profileImage) {
+    userService.updateProfileImage(
+        authInfo.userId(),
+        FileUtils.convertMultipartFileToFile(profileImage));
+    return ResponseEntity.ok().build();
+  }
 
-    @PatchMapping("/me")
-    public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
-                                                  @Valid @RequestBody UpdateProfileHTTP.Request request) {
-        userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
-        return ResponseEntity.ok().build();
-    }
+  @PatchMapping("/me")
+  public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
+      @Valid @RequestBody UpdateProfileHTTP.Request request) {
+    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
+    return ResponseEntity.ok().build();
+  }
 
-    @GetMapping("/duplicate")
-    public ResponseEntity<Void> checkDuplicatedNickname(@RequestParam @NotBlank String nickname) {
-        userService.checkDuplicatedNickname(nickname);
-        return ResponseEntity.ok().build();
-    }
+  @GetMapping("/duplicate")
+  public ResponseEntity<Void> checkDuplicatedNickname(@RequestParam @NotBlank String nickname) {
+    userService.checkDuplicatedNickname(nickname);
+    return ResponseEntity.ok().build();
+  }
 
-    @PutMapping("/notification/token")
-    public ResponseEntity<Void> registerOrUpdateNotificationToken(
-            @Login AuthInfo authInfo,
-            @RequestBody NotificationTokenHTTP.Request request
-    ) {
-        userService.registerOrUpdateNotificationToken(authInfo.userId(), request.token());
-        return ResponseEntity.ok().build();
-    }
+  @PutMapping("/notification/token")
+  public ResponseEntity<Void> registerOrUpdateNotificationToken(
+      @Login AuthInfo authInfo,
+      @RequestBody NotificationTokenHTTP.Request request
+  ) {
+    userService.registerOrUpdateNotificationToken(authInfo.userId(), request.token());
+    return ResponseEntity.ok().build();
+  }
 
-    @PutMapping("/notification/unsubscription")
-    public ResponseEntity<Void> unsubscribeNotification(
-            @Login AuthInfo authInfo
-    ) {
-        userService.unsubscribeNotification(authInfo.userId());
-        return ResponseEntity.ok().build();
-    }
+  @PutMapping("/notification/unsubscription")
+  public ResponseEntity<Void> unsubscribeNotification(
+      @Login AuthInfo authInfo
+  ) {
+    userService.unsubscribeNotification(authInfo.userId());
+    return ResponseEntity.ok().build();
+  }
 
 }

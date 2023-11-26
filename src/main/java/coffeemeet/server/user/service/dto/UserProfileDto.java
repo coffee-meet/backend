@@ -6,23 +6,23 @@ import coffeemeet.server.user.domain.User;
 import java.util.List;
 
 public record UserProfileDto(
-        String nickname,
-        String profileImageUrl,
-        Department department,
-        List<Keyword> interests
+    String nickname,
+    String profileImageUrl,
+    Department department,
+    List<Keyword> interests
 ) {
 
-    public static UserProfileDto of(
-            User user,
-            Department department,
-            List<Keyword> interests
-    ) {
-        return new UserProfileDto(
-                user.getProfile().getNickname(),
-                user.getOauthInfo().getProfileImageUrl(),
-                department,
-                interests
-        );
-    }
+  public static UserProfileDto of(
+      User user,
+      Department department,
+      List<Keyword> interests
+  ) {
+    return new UserProfileDto(
+        user.getProfile().getNickname(),
+        user.getOauthInfo().getProfileImageUrl(),
+        department,
+        interests
+    );
+  }
 
 }
