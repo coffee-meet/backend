@@ -25,7 +25,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,8 +122,8 @@ public class AdminController {
   @GetMapping("/reports")
   public ResponseEntity<AdminCustomPage<ReportDto.Response>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
-      @PageableDefault(value = 0) long lastReportId,
-      @PageableDefault int pageSize
+      @RequestParam(defaultValue = "0") Long lastReportId,
+      @RequestParam(defaultValue = "10") int pageSize
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
