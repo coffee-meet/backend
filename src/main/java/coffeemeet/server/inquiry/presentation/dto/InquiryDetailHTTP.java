@@ -3,6 +3,7 @@ package coffeemeet.server.inquiry.presentation.dto;
 import static lombok.AccessLevel.PRIVATE;
 
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public final class InquiryDetailHTTP {
       String inquirerEmail,
       String title,
       String content,
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime createAt
   ) {
 

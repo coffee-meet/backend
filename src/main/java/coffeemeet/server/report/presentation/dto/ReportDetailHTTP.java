@@ -4,6 +4,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 import coffeemeet.server.report.domain.ReportReason;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ public final class ReportDetailHTTP {
       ReportReason reason,
       String reasonDetail,
       int reportedCount,
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime createAt
   ) {
 

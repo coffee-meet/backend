@@ -3,6 +3,7 @@ package coffeemeet.server.chatting.current.presentation.dto;
 import static lombok.AccessLevel.PRIVATE;
 
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public final class ChatsHTTP {
       String nickname,
       String content,
       String profileImageUrl,
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime createdAt
   ) {
 
