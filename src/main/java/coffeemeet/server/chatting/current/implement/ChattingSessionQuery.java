@@ -5,10 +5,8 @@ import coffeemeet.server.chatting.current.infrastructure.ChattingSessionReposito
 import coffeemeet.server.chatting.exception.ChattingErrorCode;
 import coffeemeet.server.common.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ChattingSessionQuery {
@@ -18,7 +16,6 @@ public class ChattingSessionQuery {
   private final ChattingSessionRepository<ChattingSession, String> chattingSessionRepository;
 
   public Long getUserIdById(String id) {
-    log.info("getUserIdById 함수 시작");
     return chattingSessionRepository.findById(id).orElseThrow(
         () -> new NotFoundException(ChattingErrorCode.SOCKET_SESSION_NOT_FOUND,
             SOCKET_SESSION_NOT_FOUND_MESSAGE)
