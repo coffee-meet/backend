@@ -366,7 +366,7 @@ class AdminControllerTest extends ControllerTestConfig {
             .param("lastInquiryId", String.valueOf(lastInquiryId))
             .sessionAttr("adminId", "admin")
         )
-        .andDo(document("view-inquiry",
+        .andDo(document("view-all-inquiry",
                 resourceDetails().tag("관리자").description("문의 조회")
                     .responseSchema(Schema.schema("AdminCustomPage<InquirySummary>")),
                 preprocessRequest(prettyPrint()),
