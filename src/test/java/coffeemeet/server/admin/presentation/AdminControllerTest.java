@@ -320,6 +320,8 @@ class AdminControllerTest extends ControllerTestConfig {
             responseFields(
                 fieldWithPath("reports.[].reporterNickname").type(JsonFieldType.STRING)
                     .description("신고자 닉네임"),
+                fieldWithPath("reports.[].reportId").type(JsonFieldType.NUMBER)
+                    .description("신고자 닉네임"),
                 fieldWithPath("reports.[].createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )
