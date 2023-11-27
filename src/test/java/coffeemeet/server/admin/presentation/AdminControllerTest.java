@@ -47,7 +47,6 @@ import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
-import coffeemeet.server.report.service.dto.ReportDto.Response;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -225,15 +224,15 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     long lastReportId = 0L;
     int pageSize = 10;
-    Response response1 = ReportDtoFixture.reportDto();
-    Response response2 = ReportDtoFixture.reportDto();
+    ReportDto response1 = ReportDtoFixture.reportDto();
+      ReportDto response2 = ReportDtoFixture.reportDto();
 
-    List<ReportDto.Response> reportResponses = List.of(response1, response2);
+    List<ReportDto> reportResponses = List.of(response1, response2);
     boolean hasNext = true;
 
     ReportList reportList = ReportList.of(reportResponses, hasNext);
 
-    AdminCustomPage<Response> result = new AdminCustomPage<>(reportList.contents(),
+    AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportList.contents(),
         reportList.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportList);
@@ -269,7 +268,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
   void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
     // given
-    List<GroupReportDto.Response> response = List.of(GroupReportDtoFixture.targetReportDto(),
+    List<GroupReportDto> response = List.of(GroupReportDtoFixture.targetReportDto(),
         GroupReportDtoFixture.targetReportDto());
     GroupReportList resultResponse = GroupReportListFixture.groupReportListResponse(response);
 
@@ -309,7 +308,7 @@ class AdminControllerTest extends ControllerTestConfig {
   void findReportTest() throws Exception {
     // given
     Long reportId = 1L;
-    ReportDetailDto.Response response = ReportDetailDtoFixture.reportDetailDto();
+    ReportDetailDto response = ReportDetailDtoFixture.reportDetailDto();
     ReportDetailHTTP.Response expectedResponse = ReportDetailHTTPFixture.reportDetailHTTPResponse(
         response);
 

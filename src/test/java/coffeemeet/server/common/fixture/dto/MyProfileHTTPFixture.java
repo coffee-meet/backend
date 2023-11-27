@@ -5,7 +5,7 @@ import coffeemeet.server.user.service.dto.MyProfileDto;
 
 public class MyProfileHTTPFixture {
 
-  public static MyProfileHTTP.Response myProfileHTTPResponse(MyProfileDto.Response response) {
+  public static MyProfileHTTP.Response myProfileHTTPResponse(MyProfileDto response) {
     return new MyProfileHTTP.Response(
         response.nickname(),
         response.profileImageUrl(),

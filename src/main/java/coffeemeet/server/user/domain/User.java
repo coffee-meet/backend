@@ -20,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -59,6 +60,9 @@ public class User extends AdvancedBaseEntity {
   @Enumerated(EnumType.STRING)
   private UserStatus userStatus;
 
+  @Column(nullable = false)
+  private LocalDateTime matchingStartedAt;
+
   private boolean isDeleted;
 
   private boolean isBlacklisted;
@@ -73,9 +77,10 @@ public class User extends AdvancedBaseEntity {
   public void registerUser(@NonNull Profile profile) {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
+    this.userStatus = IDLE;
+    this.matchingStartedAt = null;
     this.isDeleted = false;
     this.isBlacklisted = false;
-    this.userStatus = IDLE;
     this.isRegistered = true;
   }
 
