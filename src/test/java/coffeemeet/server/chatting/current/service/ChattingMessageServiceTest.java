@@ -2,8 +2,8 @@ package coffeemeet.server.chatting.current.service;
 
 import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingMessage;
 import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -60,9 +60,9 @@ class ChattingMessageServiceTest {
   @Test
   void chattingTest() {
     // given
-    User user = UserFixture.user();
-    List<User> users = UserFixture.fourUsers();
-    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+    User user = user();
+    List<User> users = fourUsers();
+    ChattingRoom chattingRoom = chattingRoom();
 
     String content = "내용";
     ChattingMessage chattingMessage = chattingMessage(content);

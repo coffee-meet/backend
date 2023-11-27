@@ -6,6 +6,9 @@ import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.inquiry.domain.Inquiry;
+import coffeemeet.server.inquiry.implement.InquiryCommand;
+import coffeemeet.server.inquiry.implement.InquiryQuery;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.user.domain.NotificationInfo;
@@ -27,6 +30,8 @@ public class AdminService {
   private final MatchingQueueCommand matchingQueueCommand;
   private final CertificationQuery certificationQuery;
   private final AdminQuery adminQuery;
+  private final InquiryQuery inquiryQuery;
+  private final InquiryCommand inquiryCommand;
 
   public void login(String id, String password) {
     adminQuery.checkIdAndPassword(id, password);
@@ -67,6 +72,14 @@ public class AdminService {
 
   public void dismissReport(Set<Long> reportIds) {
     reportCommand.deleteReports(reportIds);
+  }
+
+  public void checkInquiry(Long inquiryId) {
+    Inquiry inquiry = inquiryQuery.getInquiryBy(inquiryId);
+    inquiryCommand.check(inquiry);
+    NotificationInfo notificationInfo = userQuery.getNotificationInfoByUserId(
+        inquiry.getInquirerId());
+    fcmNotificationSender.sendNotification(notificationInfo, "작성하신 문의가 확인되었습니다. 계정 메일을 확인해주세요");
   }
 
 }

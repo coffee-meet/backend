@@ -3,6 +3,7 @@ package coffeemeet.server.inquiry.service;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.user.domain.Profile;
@@ -47,6 +48,12 @@ public class InquiryService {
     Set<User> users = userQuery.getUsersByIdSet(inquirerIds);
     return users.stream()
         .collect(Collectors.toMap(User::getId, User::getProfile));
+  }
+
+  public InquiryDetailDto findInquiryBy(Long inquiryId) {
+    Inquiry inquiry = inquiryQuery.getInquiryBy(inquiryId);
+    User user = userQuery.getUserById(inquiry.getInquirerId());
+    return InquiryDetailDto.of(inquiry, user);
   }
 
 }

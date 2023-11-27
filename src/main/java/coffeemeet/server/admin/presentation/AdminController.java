@@ -12,7 +12,9 @@ import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.report.presentation.dto.FindGroupReports;
@@ -88,7 +90,7 @@ public class AdminController {
     }
     adminService.approveCertification(certificationId);
     return ResponseEntity.ok().build();
-  } // 완
+  }
 
   @DeleteMapping("/certifications/{certificationId}/rejection")
   public ResponseEntity<Void> rejectCertification(
@@ -127,7 +129,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomSlice<ReportDto.Response>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportDto>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -176,6 +178,30 @@ public class AdminController {
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
   }
 
+  @GetMapping("/inquiries/detail/{inquiryId}")
+  public ResponseEntity<InquiryDetailHTTP.Response> viewInquiry(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @PathVariable Long inquiryId
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    InquiryDetailDto response = inquiryService.findInquiryBy(inquiryId);
+    return ResponseEntity.ok(InquiryDetailHTTP.Response.from(response));
+  }
+
+  @PatchMapping("/inquiries/{inquiryId}/check")
+  public ResponseEntity<Void> checkInquiry(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @PathVariable Long inquiryId) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    adminService.checkInquiry(inquiryId);
+    return ResponseEntity.ok().build();
+  }
+
+  // TODO: 11/27/23 임시로 페이징(옵셋 기반) 처리, 개선 필요
   @GetMapping("/certifications/pending")
   public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,

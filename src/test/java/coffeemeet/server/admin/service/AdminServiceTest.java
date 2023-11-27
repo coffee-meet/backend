@@ -2,6 +2,7 @@ package coffeemeet.server.admin.service;
 
 import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -10,7 +11,11 @@ import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.common.fixture.entity.InquiryFixture;
 import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.inquiry.domain.Inquiry;
+import coffeemeet.server.inquiry.implement.InquiryCommand;
+import coffeemeet.server.inquiry.implement.InquiryQuery;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.user.domain.User;
@@ -47,6 +52,12 @@ class AdminServiceTest {
 
   @Mock
   private CertificationQuery certificationQuery;
+
+  @Mock
+  private InquiryQuery inquiryQuery;
+
+  @Mock
+  private InquiryCommand inquiryCommand;
 
 
   @Test
@@ -119,6 +130,22 @@ class AdminServiceTest {
 
     // then
     then(reportCommand).should(only()).deleteReports(reportIds);
+  }
+
+  @Test
+  @DisplayName("문의 확인 처리를 할 수 있다.")
+  void checkInquiryTest() {
+    // given
+    Inquiry inquiry = InquiryFixture.inquiry();
+    given(inquiryQuery.getInquiryBy(anyLong())).willReturn(inquiry);
+
+    // when
+    adminService.checkInquiry(inquiry.getInquirerId());
+
+    // then
+    then(inquiryCommand).should(only()).check(inquiry);
+    then(userQuery).should(only()).getNotificationInfoByUserId(inquiry.getInquirerId());
+    then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }
 
 }
