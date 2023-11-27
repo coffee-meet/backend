@@ -3,6 +3,7 @@ package coffeemeet.server.user.implement;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.time.LocalDateTime;
@@ -61,6 +62,9 @@ public class UserCommand {
 
   public void exitChattingRoom(Long userId) {
     User user = userQuery.getUserById(userId);
+    if (user.getUserStatus() == UserStatus.IDLE) {
+      return;
+    }
     user.exitChattingRoom();
   }
 
