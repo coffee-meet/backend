@@ -275,6 +275,10 @@ class AdminControllerTest extends ControllerTestConfig {
                     .description("신고 대상 닉네임"),
                 fieldWithPath("contents.[].chattingRoomName").type(JsonFieldType.STRING)
                     .description("신고 대상 채팅방 이름"),
+                fieldWithPath("contents.[].targetedId").type(JsonFieldType.NUMBER)
+                    .description("신고 대상 아이디"),
+                fieldWithPath("contents.[].chattingRoomId").type(JsonFieldType.NUMBER)
+                    .description("신고 대상 채팅방 이름"),
                 fieldWithPath("contents.[].createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )

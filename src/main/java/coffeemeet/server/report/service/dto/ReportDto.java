@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 public record ReportDto(
     String targetedNickname,
     String chattingRoomName,
+    Long targetedId,
+    Long chattingRoomId,
     LocalDateTime createdAt
 ) {
 
@@ -14,6 +16,8 @@ public record ReportDto(
     return new ReportDto(
         targeted.getProfile().getNickname(),
         chattingRoom.getName(),
+        targeted.getId(),
+        chattingRoom.getId(),
         targeted.getCreatedAt()
     );
   }
