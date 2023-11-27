@@ -53,11 +53,11 @@ public class ReportService {
     reportCommand.createReport(report);
   }
 
-  public ReportDetailDto.Response findReportById(Long reportId) {
+  public ReportDetailDto findReportById(Long reportId) {
     Report report = reportQuery.getReportById(reportId);
     User reporter = userQuery.getUserById(report.getReporterId());
     User targetUser = userQuery.getUserById(report.getTargetedId());
-    return ReportDetailDto.Response.of(report, reporter, targetUser);
+    return ReportDetailDto.of(report, reporter, targetUser);
   }
 
   public ReportList findAllReports(Long lastReportId, int pageSize) {
@@ -67,17 +67,17 @@ public class ReportService {
     Map<Long, User> userMap = getUsers(reports);
     Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reports);
 
-    List<ReportDto.Response> responses = reports.stream()
+    List<ReportDto> responses = reports.stream()
         .map(report -> {
           User targetUser = userMap.get(report.getTargetedId());
           ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-          return ReportDto.Response.of(targetUser, chattingRoom);
+          return ReportDto.of(targetUser, chattingRoom);
         })
         .toList();
     return ReportList.of(responses, hasNext);
   }
 
-  public List<GroupReportDto.Response> findReportByTargetIdAndChattingRoomId(long targetId,
+  public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(long targetId,
       long chattingRoomId) {
     List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(targetId,
         chattingRoomId);
@@ -122,9 +122,9 @@ public class ReportService {
         .collect(Collectors.toMap(User::getId, Function.identity()));
   }
 
-  private GroupReportDto.Response mapToReportDto(Report report) {
+  private GroupReportDto mapToReportDto(Report report) {
     User reporter = userQuery.getUserById(report.getReporterId());
-    return GroupReportDto.Response.of(reporter.getProfile().getNickname(), report.getCreatedAt());
+    return GroupReportDto.of(reporter.getProfile().getNickname(), report.getCreatedAt());
   }
 
 }

@@ -120,7 +120,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomPage<ReportDto.Response>> findAllReports(
+  public ResponseEntity<AdminCustomPage<ReportDto>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -140,7 +140,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto> response = reportService.findReportByTargetIdAndChattingRoomId(
         findGroupReports.targetedId(), findGroupReports.chattingRoomId());
     return ResponseEntity.ok(GroupReportList.from(response));
   }
@@ -153,7 +153,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    ReportDetailDto.Response response = reportService.findReportById(reportId);
+    ReportDetailDto response = reportService.findReportById(reportId);
     return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
   }
 

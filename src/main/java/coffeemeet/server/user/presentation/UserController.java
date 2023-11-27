@@ -10,10 +10,12 @@ import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
+import coffeemeet.server.user.presentation.dto.UserStatusHTTP;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserStatusDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,20 +49,26 @@ public class UserController {
   @GetMapping("/login/{oAuthProvider}")
   public ResponseEntity<LoginDetailsHTTP.Response> login(@PathVariable OAuthProvider oAuthProvider,
       @RequestParam String authCode) {
-    LoginDetailsDto.Response response = userService.login(oAuthProvider, authCode);
+    LoginDetailsDto response = userService.login(oAuthProvider, authCode);
     return ResponseEntity.ok(LoginDetailsHTTP.Response.of(response));
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserProfileHTTP.Response> findUserProfile(@PathVariable long userId) {
-    UserProfileDto.Response response = userService.findUserProfile(userId);
+  public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable long userId) {
+    UserProfileDto response = userService.findUserProfile(userId);
     return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
   }
 
   @GetMapping("/me")
-  public ResponseEntity<MyProfileHTTP.Response> findMyProfile(@Login AuthInfo authInfo) {
-    MyProfileDto.Response response = userService.findMyProfile(authInfo.userId());
+  public ResponseEntity<MyProfileHTTP.Response> getMyProfile(@Login AuthInfo authInfo) {
+    MyProfileDto response = userService.findMyProfile(authInfo.userId());
     return ResponseEntity.ok(MyProfileHTTP.Response.of(response));
+  }
+
+  @GetMapping("/status")
+  public ResponseEntity<UserStatusHTTP.Response> getUserStatus(@Login AuthInfo authInfo) {
+    UserStatusDto response = userService.getUserStatus(authInfo.userId());
+    return ResponseEntity.ok(UserStatusHTTP.Response.of(response));
   }
 
   @PostMapping("/me/profile-image")
