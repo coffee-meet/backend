@@ -6,6 +6,9 @@ import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -21,19 +24,24 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.MediaManager;
+import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.service.dto.MyProfileDto;
-import coffeemeet.server.user.service.dto.UserProfileDto.Response;
+import coffeemeet.server.user.service.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -70,6 +78,9 @@ class UserServiceTest {
 
   @Mock
   private CertificationQuery certificationQuery;
+
+  @Mock
+  private MatchingQueueCommand matchingQueueCommand;
 
   // TODO: 11/21/23 회원가입 테스트 작성
 //  @DisplayName("회원가입을 할 수 있다.")
@@ -136,14 +147,14 @@ class UserServiceTest {
     User user = user();
     Certification certification = certification();
     List<Keyword> keywords = UserFixture.keywords();
-    Response response = Response.of(user, certification.getDepartment(), keywords);
+    UserProfileDto response = UserProfileDto.of(user, certification.getDepartment(), keywords);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(user.getId())).willReturn(keywords);
     given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
     // when
-    Response result = userService.findUserProfile(user.getId());
+    UserProfileDto result = userService.findUserProfile(user.getId());
 
     // then
     assertAll(
@@ -160,7 +171,7 @@ class UserServiceTest {
     User user = user();
     List<Keyword> keywords = UserFixture.keywords();
     Certification certification = certification(user);
-    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords,
+    MyProfileDto response = MyProfileDto.of(user, keywords,
         certification.getCompanyName(),
         certification.getDepartment());
 
@@ -169,7 +180,7 @@ class UserServiceTest {
     given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
 
     // when
-    MyProfileDto.Response result = userService.findMyProfile(user.getId());
+    MyProfileDto result = userService.findMyProfile(user.getId());
 
     // then
     assertAll(
@@ -296,6 +307,109 @@ class UserServiceTest {
 
     // then
     then(userCommand).should(only()).unsubscribeNotification(any());
+  }
+
+  @DisplayName("유저 상태를 조회할 수 있다.")
+  @Nested
+  class GetUserStatusTest {
+
+    @DisplayName("유저 상태가 IDLE일 경우 상태와 인증 여부를 반환한다.")
+    @Test
+    void getUserStatusIdleTest() {
+      // given
+      Long userId = 1L;
+      User user = UserFixture.user(UserStatus.IDLE);
+      Certification certification = certification();
+
+      given(userQuery.getUserById(anyLong())).willReturn(user);
+      given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+
+      // when
+      UserStatusDto response = userService.getUserStatus(userId);
+
+      // then
+      assertAll(
+          () -> assertThat(response.userStatus()).isEqualTo(UserStatus.IDLE),
+          () -> assertTrue(response.isCertificated()),
+          () -> assertNull(response.chattingRoomId()),
+          () -> assertNull(response.penaltyExpiration()),
+          () -> assertNull(response.startedAt())
+      );
+    }
+
+    @DisplayName("유저 상태가 MATCHING일 경우 상태와 매칭 시작 시간을 반환한다.")
+    @Test
+    void getUserStatusMatchingTest() {
+      // given
+      Long userId = 1L;
+      LocalDateTime startedAt = LocalDateTime.of(2020, 10, 9, 8, 9);
+      User user = UserFixture.user(UserStatus.MATCHING);
+      Certification certification = certification();
+
+      given(userQuery.getUserById(anyLong())).willReturn(user);
+      given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+      given(matchingQueueCommand.getTimeByUserId(any(), anyLong())).willReturn(startedAt);
+
+      // when
+      UserStatusDto response = userService.getUserStatus(userId);
+
+      // then
+      assertAll(
+          () -> assertThat(response.userStatus()).isEqualTo(UserStatus.MATCHING),
+          () -> assertNotNull(response.startedAt()),
+          () -> assertNull(response.isCertificated()),
+          () -> assertNull(response.chattingRoomId()),
+          () -> assertNull(response.penaltyExpiration())
+      );
+    }
+
+    @DisplayName("유저 상태가 CHATTING_UNCONNECTTIONG일 경우 상태와 매칭 시작 시간을 반환한다.")
+    @Test
+    void getUserStatusChattingUnConnectingTest() {
+      // given
+      Long userId = 1L;
+      User user = UserFixture.user(UserStatus.CHATTING_UNCONNECTED);
+      Certification certification = certification();
+
+      given(userQuery.getUserById(anyLong())).willReturn(user);
+      given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+
+      // when
+      UserStatusDto response = userService.getUserStatus(userId);
+
+      // then
+      assertAll(
+          () -> assertThat(response.userStatus()).isEqualTo(UserStatus.CHATTING_UNCONNECTED),
+          () -> assertNotNull(response.chattingRoomId()),
+          () -> assertNull(response.isCertificated()),
+          () -> assertNull(response.penaltyExpiration()),
+          () -> assertNull(response.startedAt())
+      );
+    }
+
+    @DisplayName("유저 상태가 REPORTED일 경우 상태와 제재 기간을 반환한다.")
+    @Test
+    void getUserStatusReportedTest() {
+      // given
+      Long userId = 1L;
+      User user = UserFixture.user(UserStatus.REPORTED);
+      Certification certification = certification();
+
+      given(userQuery.getUserById(anyLong())).willReturn(user);
+      given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
+
+      // when
+      UserStatusDto response = userService.getUserStatus(userId);
+
+      // then
+      assertAll(
+          () -> assertThat(response.userStatus()).isEqualTo(UserStatus.REPORTED),
+          () -> assertNotNull(response.penaltyExpiration()),
+          () -> assertNull(response.isCertificated()),
+          () -> assertNull(response.chattingRoomId()),
+          () -> assertNull(response.startedAt())
+      );
+    }
   }
 
 }

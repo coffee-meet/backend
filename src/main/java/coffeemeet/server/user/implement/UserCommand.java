@@ -40,7 +40,7 @@ public class UserCommand {
 
   public void assignUsersToChattingRoom(Set<Long> matchedUserIds, ChattingRoom chattingRoom) {
     Set<User> users = userQuery.getUsersByIdSet(matchedUserIds);
-    users.forEach(user -> user.enterChattingRoom(chattingRoom));
+    users.forEach(user -> user.completeMatching(chattingRoom));
   }
 
   public void registerOrUpdateNotificationToken(Long userId, String token) {
@@ -52,6 +52,26 @@ public class UserCommand {
   public void unsubscribeNotification(Long userId) {
     User user = userQuery.getUserById(userId);
     user.updateNotificationInfo(NotificationInfo.createRefusedNotificationInfo());
+  }
+
+  public void enterToChattingRoom(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.enterChattingRoom();
+  }
+
+  public void exitChattingRoom(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.exitChattingRoom();
+  }
+
+  public void setToIdle(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.setIdleStatus();
+  }
+
+  public void setToMatching(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.matching();
   }
 
 }

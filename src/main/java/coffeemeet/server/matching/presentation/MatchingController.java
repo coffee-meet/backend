@@ -18,7 +18,13 @@ public class MatchingController {
 
   @PostMapping("/start")
   public ResponseEntity<Void> start(@Login AuthInfo authInfo) {
-    matchingService.start(authInfo.userId());
+    matchingService.startMatching(authInfo.userId());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/cancel")
+  public ResponseEntity<Void> cancel(@Login AuthInfo authInfo) {
+    matchingService.cancelMatching(authInfo.userId());
     return ResponseEntity.ok().build();
   }
 

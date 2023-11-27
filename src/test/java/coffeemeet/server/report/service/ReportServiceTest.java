@@ -19,7 +19,6 @@ import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDetailDto.Response;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -75,14 +74,14 @@ class ReportServiceTest {
     Report report = report();
     User reporter = user();
     User targetUser = user();
-    ReportDetailDto.Response response = Response.of(report, reporter, targetUser);
+    ReportDetailDto response = ReportDetailDto.of(report, reporter, targetUser);
 
     given(reportQuery.getReportById(anyLong())).willReturn(report);
     given(userQuery.getUserById(anyLong())).willReturn(reporter);
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
-    ReportDetailDto.Response result = reportService.findReportById(report.getId());
+    ReportDetailDto result = reportService.findReportById(report.getId());
 
     // then
     assertAll(
@@ -152,7 +151,7 @@ class ReportServiceTest {
     given(userQuery.getUserById(anyLong())).willReturn(targetUser);
 
     // when
-    List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto> response = reportService.findReportByTargetIdAndChattingRoomId(
         targetId, chattingRoomId);
 
     // given

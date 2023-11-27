@@ -1,5 +1,6 @@
 package coffeemeet.server.inquiry.implement;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -33,6 +34,19 @@ class InquiryCommandTest {
 
     // when, then
     assertThatCode(() -> inquiryCommand.createReport(inquiry)).doesNotThrowAnyException();
+  }
+
+  @DisplayName("문의를 확인할 수 있다.")
+  @Test
+  void checkTest() {
+    // given
+    Inquiry inquiry = InquiryFixture.inquiry();
+
+    // when
+    inquiryCommand.check(inquiry);
+
+    // then
+    assertThat(inquiry.isChecked()).isTrue();
   }
 
 }

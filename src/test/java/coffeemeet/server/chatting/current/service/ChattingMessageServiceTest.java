@@ -1,19 +1,25 @@
 package coffeemeet.server.chatting.current.service;
 
+import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingMessage;
+import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
+import coffeemeet.server.chatting.current.domain.ChattingSession;
 import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
+import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.domain.UserStatus;
+import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +36,12 @@ class ChattingMessageServiceTest {
   private ChattingMessageService chattingMessageService;
 
   @Mock
+  private ChattingSessionCommand chattingSessionCommand;
+
+  @Mock
+  private ChattingSessionQuery chattingSessionQuery;
+
+  @Mock
   private ChattingMessageCommand chattingMessageCommand;
 
   @Mock
@@ -39,30 +51,36 @@ class ChattingMessageServiceTest {
   private UserQuery userQuery;
 
   @Mock
+  private UserCommand userCommand;
+
+  @Mock
   private FCMNotificationSender fcmNotificationSender;
 
   @DisplayName("채팅 메세지를 만들고, 클라이언트에 채팅 응답을 반환할 수 있다.")
   @Test
   void chattingTest() {
     // given
-    User user = UserFixture.user();
-    List<User> users = UserFixture.users();
-    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    String content = "내용";
-    ChattingMessage chattingMessage = ChattingFixture.chattingMessage(content);
-    String sessionId = "sessionId";
+    User user = user();
+    List<User> users = fourUsers();
+    ChattingRoom chattingRoom = chattingRoom();
 
+    String content = "내용";
+    ChattingMessage chattingMessage = chattingMessage(content);
+    ChattingSession chattingSession = new ChattingSession("sessionId", user.getId());
+
+    given(chattingSessionQuery.getUserIdById(chattingSession.sessionId())).willReturn(
+        chattingSession.userId());
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
+    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(userQuery.getUserById(user.getId())).willReturn(user);
 //    willDoNothing().given(fcmNotificationSender)
 //        .sendMultiNotifications(anySet(), any());
-    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 
     // when
-    chattingMessageService.storeSocketSession(sessionId, String.valueOf(user.getId()));
-    Response response = chattingMessageService.chatting(sessionId, chattingRoom.getId(), content);
+    Response response = chattingMessageService.chatting(chattingSession.sessionId(),
+        chattingRoom.getId(), content);
 
     // then
     assertThat(response.content()).isEqualTo(content);
@@ -73,14 +91,15 @@ class ChattingMessageServiceTest {
   void storeSocketSessionTest() {
     // given
     String sessionId = "sessionId";
-    User user = UserFixture.user();
-    given(userQuery.getUserById(any())).willReturn(user);
+    User user = user();
+    Long userId = user.getId();
 
     // when
-    chattingMessageService.storeSocketSession(sessionId, String.valueOf(user.getId()));
+    chattingMessageService.storeSocketSession(sessionId, String.valueOf(userId));
 
     // then
-    assertThat(user.getUserStatus()).isEqualTo(UserStatus.CHATTING_CONNECTED);
+    then(userCommand).should(only()).enterToChattingRoom(userId);
+    then(chattingSessionCommand).should(only()).connect(sessionId, userId);
   }
 
   @DisplayName("세션을 만료하고, 유저의 상태를 연결되지 않은 상태로 바꿀수 있다.")
@@ -88,15 +107,17 @@ class ChattingMessageServiceTest {
   void expireSocketSessionTest() {
     // given
     String sessionId = "sessionId";
-    User user = UserFixture.user();
-    given(userQuery.getUserById(any())).willReturn(user);
+    User user = user();
+    Long userId = user.getId();
+
+    given(chattingSessionQuery.getUserIdById(sessionId)).willReturn(userId);
 
     // when
     chattingMessageService.expireSocketSession(sessionId);
 
     // then
-    assertThat(user.getUserStatus()).isEqualTo(UserStatus.CHATTING_UNCONNECTED);
-
+    then(userCommand).should(only()).exitChattingRoom(userId);
+    then(chattingSessionCommand).should(only()).disconnect(sessionId);
   }
 
 }

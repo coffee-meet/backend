@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
+import coffeemeet.server.common.fixture.UserStatusDtoFixture;
 import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
 import coffeemeet.server.common.fixture.dto.LoginDetailsHTTPFixture;
 import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
@@ -42,6 +43,7 @@ import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
 import coffeemeet.server.common.fixture.dto.UpdateProfileHTTPFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
 import coffeemeet.server.common.fixture.dto.UserProfileHTTPFixture;
+import coffeemeet.server.common.fixture.dto.UserStatusHTTPFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP;
@@ -50,10 +52,12 @@ import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
+import coffeemeet.server.user.presentation.dto.UserStatusHTTP;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserStatusDto;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -107,7 +111,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    LoginDetailsDto.Response response = LoginDetailsDtoFixture.loginDetailsDto();
+    LoginDetailsDto response = LoginDetailsDtoFixture.loginDetailsDto();
     LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(
         response);
 
@@ -150,7 +154,7 @@ class UserControllerTest extends ControllerTestConfig {
   void findUserProfileTest() throws Exception {
     // given
     long userId = 1L;
-    UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
+    UserProfileDto response = UserProfileDtoFixture.userProfileDtoResponse();
     UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
         response);
 
@@ -185,7 +189,7 @@ class UserControllerTest extends ControllerTestConfig {
   void findMyProfileTest() throws Exception {
     // given
     Long userId = 1L;
-    MyProfileDto.Response response = MyProfileDtoFixture.myProfileDtoResponse();
+    MyProfileDto response = MyProfileDtoFixture.myProfileDtoResponse();
     MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
@@ -339,6 +343,38 @@ class UserControllerTest extends ControllerTestConfig {
             )
         ))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("유저 상태를 요청할 수 있다.")
+  void getUserStatusTest() throws Exception {
+    // given
+    UserStatusDto response = UserStatusDtoFixture.userStatusDto();
+    UserStatusHTTP.Response expectedResponse = UserStatusHTTPFixture.userStatusHTTPResponse(
+        response);
+
+    given(userService.getUserStatus(anyLong())).willReturn(response);
+
+    mockMvc.perform(get("/api/v1/users/status")
+            .header(AUTHORIZATION, TOKEN)
+            .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(document("get-UserStatus",
+                resourceDetails().tag("사용자").description("유저 상태 요청")
+                    .responseSchema(Schema.schema("UserStatusHTTP.Response")),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                ),
+                responseFields(
+                    fieldWithPath("userStatus").type(JsonFieldType.STRING).description("유저 상태"),
+                    fieldWithPath("isCertificated").type(JsonFieldType.VARIES).description("인증 여부"),
+                    fieldWithPath("startedAt").type(JsonFieldType.VARIES).description("매칭 시작 시간"),
+                    fieldWithPath("chattingRoomId").type(JsonFieldType.VARIES).description("채팅방 아이디"),
+                    fieldWithPath("penaltyExpiration").type(JsonFieldType.VARIES).description("제재 기간")
+                )
+            )
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
 }

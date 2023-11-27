@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GroupReportListFixture {
 
-  public static GroupReportList groupReportListResponse(List<GroupReportDto.Response> response) {
+  public static GroupReportList groupReportListResponse(List<GroupReportDto> response) {
     return new GroupReportList(response);
   }
 

@@ -5,8 +5,8 @@ import org.instancio.Instancio;
 
 public class LoginDetailsDtoFixture {
 
-  public static LoginDetailsDto.Response loginDetailsDto() {
-    return Instancio.of(LoginDetailsDto.Response.class)
+  public static LoginDetailsDto loginDetailsDto() {
+    return Instancio.of(LoginDetailsDto.class)
         .create();
   }
 

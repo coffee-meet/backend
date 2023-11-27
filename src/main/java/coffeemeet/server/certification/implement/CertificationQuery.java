@@ -6,6 +6,8 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,10 @@ public class CertificationQuery {
 
   public Long getUserIdByCertificationId(Long certificationId) {
     return certificationId;
+  }
+
+  public Page<Certification> getPendingCertification(Pageable pageable) {
+    return certificationRepository.findPendingCertifications(pageable);
   }
 
 }
