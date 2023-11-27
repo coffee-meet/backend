@@ -40,7 +40,7 @@ public class UserCommand {
 
   public void assignUsersToChattingRoom(Set<Long> matchedUserIds, ChattingRoom chattingRoom) {
     Set<User> users = userQuery.getUsersByIdSet(matchedUserIds);
-    users.forEach(user -> user.enterChattingRoom(chattingRoom));
+    users.forEach(user -> user.completeMatching(chattingRoom));
   }
 
   public void registerOrUpdateNotificationToken(Long userId, String token) {
