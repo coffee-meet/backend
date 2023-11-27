@@ -367,7 +367,7 @@ class AdminControllerTest extends ControllerTestConfig {
             .sessionAttr("adminId", "admin")
         )
         .andDo(document("view-all-inquiry",
-                resourceDetails().tag("관리자").description("문의 조회")
+                resourceDetails().tag("관리자").description("관리자 문의 전체 조회")
                     .responseSchema(Schema.schema("AdminCustomPage<InquirySummary>")),
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
