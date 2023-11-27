@@ -7,6 +7,7 @@ import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,24 @@ public class UserFixture {
         .create();
   }
 
+  public static User user(UserStatus userStatus) {
+    return Instancio.of(User.class).set(field(User::getProfile), profile())
+        .set(field(User::getUserStatus), userStatus)
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .create();
+  }
+
   public static List<User> users() {
+    return Instancio.ofList(User.class)
+        .generate(field(User::getId), gen -> gen.longSeq().start(1L))
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
+  public static List<User> fourUsers() {
     return Instancio.ofList(User.class).size(4)
         .generate(field(User::getId), gen -> gen.longSeq().start(1L))
         .create();

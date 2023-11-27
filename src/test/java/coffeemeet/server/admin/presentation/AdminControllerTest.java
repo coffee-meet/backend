@@ -3,8 +3,11 @@ package coffeemeet.server.admin.presentation;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.adminLoginHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprovalHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.pageable;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPageDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -29,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.service.AdminService;
+import coffeemeet.server.certification.service.CertificationService;
+import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
 import coffeemeet.server.common.fixture.dto.GroupReportListFixture;
@@ -49,13 +55,14 @@ import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
-import coffeemeet.server.report.service.dto.ReportDto.Response;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @WebMvcTest(AdminController.class)
@@ -73,6 +80,9 @@ class AdminControllerTest extends ControllerTestConfig {
 
   @MockBean
   private ReportService reportService;
+
+  @MockBean
+  private CertificationService certificationService;
 
   @Test
   @DisplayName("관리자 로그인을 할 수 있다.")
@@ -129,9 +139,9 @@ class AdminControllerTest extends ControllerTestConfig {
         )
         .andDo(document(
                 "certification-approval",
-                resourceDetails()
-                    .tag("관리자")
-                    .description("회사 인증 허가"),
+                resourceDetails().tag("관리자").description("회사 인증 허가"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName(JSESSION).description("세션")
                 )
@@ -157,6 +167,8 @@ class AdminControllerTest extends ControllerTestConfig {
                 resourceDetails()
                     .tag("관리자")
                     .description("회사 인증 반려"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName(JSESSION).description("세션")
                 )
@@ -181,10 +193,10 @@ class AdminControllerTest extends ControllerTestConfig {
             .content(approvalRequestJson)
         )
         .andDo(document("user-punishment",
-            resourceDetails()
-                .tag("관리자")
-                .description("사용자 처벌 및 신고 처리")
+            resourceDetails().tag("관리자").description("사용자 처벌 및 신고 처리")
                 .requestSchema(Schema.schema("UserPunishmentHTTP.Request")),
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
             requestHeaders(
                 headerWithName(JSESSION).description("세션")
             ),
@@ -211,6 +223,8 @@ class AdminControllerTest extends ControllerTestConfig {
         .andDo(document("report-delete",
             resourceDetails().tag("관리자").description("신고 무시 및 삭제")
                 .requestSchema(Schema.schema("ReportDeletionHTTP.Request")),
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
             requestHeaders(
                 headerWithName(JSESSION).description("세션")
             ),
@@ -227,15 +241,15 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     long lastReportId = 0L;
     int pageSize = 10;
-    Response response1 = ReportDtoFixture.reportDto();
-    Response response2 = ReportDtoFixture.reportDto();
+    ReportDto response1 = ReportDtoFixture.reportDto();
+      ReportDto response2 = ReportDtoFixture.reportDto();
 
-    List<ReportDto.Response> reportResponses = List.of(response1, response2);
+    List<ReportDto> reportResponses = List.of(response1, response2);
     boolean hasNext = true;
 
     ReportList reportList = ReportList.of(reportResponses, hasNext);
 
-    AdminCustomPage<Response> result = new AdminCustomPage<>(reportList.contents(),
+    AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportList.contents(),
         reportList.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportList);
@@ -249,6 +263,8 @@ class AdminControllerTest extends ControllerTestConfig {
         .andDo(document("find-all-reports",
             resourceDetails().tag("관리자").description("관리자 신고 내역 전체 조회")
                 .responseSchema(Schema.schema("ReportHTTP.response")),
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
             requestHeaders(
                 headerWithName("JSESSION").description("세션")
             ),
@@ -271,7 +287,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
   void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
     // given
-    List<GroupReportDto.Response> response = List.of(GroupReportDtoFixture.targetReportDto(),
+    List<GroupReportDto> response = List.of(GroupReportDtoFixture.targetReportDto(),
         GroupReportDtoFixture.targetReportDto());
     GroupReportList resultResponse = GroupReportListFixture.groupReportListResponse(response);
 
@@ -288,6 +304,8 @@ class AdminControllerTest extends ControllerTestConfig {
         .andDo(document("find-reports-by-targetedId-and-chattingRoomId",
             resourceDetails().tag("관리자").description("신고 대상과 채팅방 아이디로 관리자 신고 내역 조회")
                 .responseSchema(Schema.schema("TargetReportHTTP.Response")),
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
             queryParameters(
                 parameterWithName("targetedId").description("신고 대상 아이디"),
                 parameterWithName("chattingRoomId").description("신고 대상 채팅방 아이디")
@@ -311,7 +329,7 @@ class AdminControllerTest extends ControllerTestConfig {
   void findReportTest() throws Exception {
     // given
     Long reportId = 1L;
-    ReportDetailDto.Response response = ReportDetailDtoFixture.reportDetailDto();
+    ReportDetailDto response = ReportDetailDtoFixture.reportDetailDto();
     ReportDetailHTTP.Response expectedResponse = ReportDetailHTTPFixture.reportDetailHTTPResponse(
         response);
 
@@ -325,6 +343,8 @@ class AdminControllerTest extends ControllerTestConfig {
         .andDo(document("find-report-by-id",
                 resourceDetails().tag("관리자").description("관리자 신고 내역 조회")
                     .responseSchema(Schema.schema("ReportHTTP.Response")),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 pathParameters(
                     parameterWithName("reportId").description("신고 아이디")
                 ),
@@ -391,6 +411,7 @@ class AdminControllerTest extends ControllerTestConfig {
                 )
             )
         )
+        .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(adminCustomSlice)));
   }
 
@@ -427,12 +448,58 @@ class AdminControllerTest extends ControllerTestConfig {
                     fieldWithPath("title").type(JsonFieldType.STRING).description("문의 제목"),
                     fieldWithPath("content").type(JsonFieldType.STRING).description("문의 내용"),
                     fieldWithPath("createAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
-                )
-            )
-        )
-        .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
+                )).andExpect(status().isOk())
+     .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
+                  
+  @Test
+  @DisplayName("회사 인증 대기중인 목록을 조회할 수 있다.")
+  void getPendingCertificationsTest() throws Exception {
+    // given
+    Pageable pageable = pageable();
+    PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
+        pageable.getPageSize());
+    Page<PendingCertification> page = pendingCertificationPageDto.page();
+    AdminCustomPage<PendingCertification> pendingCertificationAdminCustomPage = AdminCustomPage.of(
+        page.getContent(), page.hasNext());
+
+    given(certificationService.getUncertifiedUserRequests(any())).willReturn(
+        pendingCertificationPageDto);
+
+    // when, then
+    mockMvc.perform(get(baseUrl + "/certifications/pending")
+            .header("JSESSION", SESSION_VALUE)
+            .param("offset", String.valueOf(pageable.getOffset()))
+            .param("size", String.valueOf(pageable.getPageSize()))
+            .sessionAttr("adminId", "admin")
+        )
+        .andDo(document("admin-pendingCertifications",
+                resourceDetails().tag("관리자").description("회사 인증 요청 조회")
+                    .responseSchema(Schema.schema("AdminCustomPage<PendingCertification>")),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("JSESSION").description("세션")
+                ),
+                queryParameters(
+                    parameterWithName("offset").description("오프셋"),
+                    parameterWithName("size").description("사이즈")
+                ),
+                responseFields(
+                    fieldWithPath("contents").description("대기 중인 회사 인증 목록"),
+                    fieldWithPath("contents[].certificationId").description("회사 인증 ID"),
+                    fieldWithPath("contents[].nickname").description("닉네임"),
+                    fieldWithPath("contents[].companyName").description("회사명"),
+                    fieldWithPath("contents[].companyEmail").description("회사 이메일"),
+                    fieldWithPath("contents[].businessCardUrl").description("명함 URL"),
+                    fieldWithPath("contents[].department").description("부서"),
+                    fieldWithPath("hasNext").description("다음 페이지 존재 여부")
+                    .andExpect(
+            content().string(objectMapper.writeValueAsString(pendingCertificationAdminCustomPage)));
+  }
+                  }
+
+   
 
   @DisplayName("사용자 문의를 확인할 수 있다.")
   @Test
@@ -457,5 +524,5 @@ class AdminControllerTest extends ControllerTestConfig {
         )
         .andExpect(status().isOk());
   }
-
+      
 }

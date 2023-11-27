@@ -3,6 +3,7 @@ package coffeemeet.server.user.domain;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static coffeemeet.server.user.domain.UserStatus.REPORTED;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
@@ -19,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,6 +60,9 @@ public class User extends AdvancedBaseEntity {
   @Enumerated(EnumType.STRING)
   private UserStatus userStatus;
 
+  @Column(nullable = false)
+  private LocalDateTime matchingStartedAt;
+
   private boolean isDeleted;
 
   private boolean isBlacklisted;
@@ -72,9 +77,10 @@ public class User extends AdvancedBaseEntity {
   public void registerUser(@NonNull Profile profile) {
     this.profile = profile;
     this.reportInfo = new ReportInfo();
+    this.userStatus = IDLE;
+    this.matchingStartedAt = null;
     this.isDeleted = false;
     this.isBlacklisted = false;
-    this.userStatus = IDLE;
     this.isRegistered = true;
   }
 
@@ -90,7 +96,8 @@ public class User extends AdvancedBaseEntity {
     this.notificationInfo = newNotificationInfo;
   }
 
-  public void enterChattingRoom(ChattingRoom chattingRoom) {
+  public void completeMatching(ChattingRoom chattingRoom) {
+    this.userStatus = CHATTING_UNCONNECTED;
     this.chattingRoom = chattingRoom;
   }
 
@@ -108,6 +115,15 @@ public class User extends AdvancedBaseEntity {
 
   public void setIdleStatus() {
     this.userStatus = IDLE;
+  }
+
+  public void punished() {
+    this.userStatus = REPORTED;
+    reportInfo.increment();
+  }
+
+  public void matching() {
+    this.userStatus = MATCHING;
   }
 
   public void convertToBlacklist() {
@@ -139,11 +155,6 @@ public class User extends AdvancedBaseEntity {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public void punished() {
-    this.userStatus = REPORTED;
-    reportInfo.increment();
   }
 
 }

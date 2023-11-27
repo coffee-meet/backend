@@ -3,11 +3,15 @@ package coffeemeet.server.certification.service;
 import static coffeemeet.server.certification.exception.CertificationErrorCode.INVALID_VERIFICATION_CODE;
 import static coffeemeet.server.common.domain.KeyType.BUSINESS_CARD;
 
+import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.implement.CertificationCommand;
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
+import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.implement.EmailSender;
 import coffeemeet.server.common.implement.MediaManager;
@@ -17,6 +21,8 @@ import coffeemeet.server.user.implement.UserQuery;
 import java.io.File;
 import java.util.random.RandomGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +37,7 @@ public class CertificationService {
   private final EmailSender emailSender;
   private final UserQuery userQuery;
   private final CertificationCommand certificationCommand;
+  private final CertificationQuery certificationQuery;
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
@@ -67,6 +74,10 @@ public class CertificationService {
     emailVerificationCommand.createEmailVerification(userId, companyEmail, verificationCode);
   }
 
+  private String generateVerificationCode() {
+    return String.format("%06d", RANDOM_GENERATOR.nextInt(1000000));
+  }
+
   public void compareCode(Long userId, String verificationCode) {
     String correctCode = emailVerificationQuery.getCodeById(userId);
     if (!correctCode.equals(verificationCode)) {
@@ -75,8 +86,12 @@ public class CertificationService {
     }
   }
 
-  private String generateVerificationCode() {
-    return String.format("%06d", RANDOM_GENERATOR.nextInt(1000000));
+  public PendingCertificationPageDto getUncertifiedUserRequests(Pageable pageable) {
+    Page<Certification> pendingCertification =
+        certificationQuery.getPendingCertification(pageable);
+    Page<PendingCertification> pendingCertificationPage = pendingCertification.map(
+        PendingCertification::from);
+    return new PendingCertificationPageDto(pendingCertificationPage);
   }
 
 }

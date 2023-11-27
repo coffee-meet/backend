@@ -5,7 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
@@ -80,8 +82,25 @@ class MatchingServiceTest {
     given(userQuery.getNotificationInfosByIdSet(anySet())).willReturn(notificationInfos);
 
     // when, then
-    assertThatCode(() -> matchingService.start(userId))
+    assertThatCode(() -> matchingService.startMatching(userId))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("매칭을 취소할 수 있다.")
+  void cancelMatching() {
+    // given
+    Long userId = 1L;
+    String companyName = "회사명";
+
+    given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
+
+    // when
+    matchingService.cancelMatching(userId);
+
+    // then
+    then(matchingQueueCommand).should(only()).deleteUserByUserId(companyName, userId);
+    then(userCommand).should(only()).setToIdle(userId);
   }
 
 }

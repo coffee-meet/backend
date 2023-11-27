@@ -9,6 +9,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.user.domain.User;
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class CertificationQueryTest {
@@ -57,6 +61,22 @@ class CertificationQueryTest {
 
     // then
     assertThat(companyName).isEqualTo(certification.getCompanyName());
+  }
+
+  @Test
+  @DisplayName("펜딩 중인 인증 정보를 페이지로 가져올 수 있다.")
+  void getPendingCertificationTest() {
+    // given
+    Pageable pageable = Pageable.unpaged();
+    Page<Certification> expectedPage = new PageImpl<>(Collections.emptyList());
+
+    given(certificationRepository.findPendingCertifications(pageable)).willReturn(expectedPage);
+
+    // when
+    Page<Certification> certificationPage = certificationQuery.getPendingCertification(pageable);
+
+    // then
+    assertThat(certificationPage).isEqualTo(expectedPage);
   }
 
 }

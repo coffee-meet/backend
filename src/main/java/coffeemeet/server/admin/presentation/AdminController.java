@@ -8,6 +8,9 @@ import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
+import coffeemeet.server.certification.service.CertificationService;
+import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
@@ -27,7 +30,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +56,7 @@ public class AdminController {
   private final AdminService adminService;
   private final ReportService reportService;
   private final InquiryService inquiryService;
+  private final CertificationService certificationService;
 
   @PostMapping("/login")
   public ResponseEntity<Void> login(
@@ -123,16 +129,16 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomPage<ReportDto.Response>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportDto.Response>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
-      @PageableDefault(value = 0) long lastReportId,
-      @PageableDefault int pageSize
+      @RequestParam(defaultValue = "0") Long lastReportId,
+      @RequestParam(defaultValue = "10") int pageSize
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
     ReportList allReports = reportService.findAllReports(lastReportId, pageSize);
-    return ResponseEntity.ok(AdminCustomPage.of(allReports.contents(), allReports.hasNext()));
+    return ResponseEntity.ok(AdminCustomSlice.of(allReports.contents(), allReports.hasNext()));
   }
 
   @GetMapping("/reports/group")
@@ -143,7 +149,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto> response = reportService.findReportByTargetIdAndChattingRoomId(
         findGroupReports.targetedId(), findGroupReports.chattingRoomId());
     return ResponseEntity.ok(GroupReportList.from(response));
   }
@@ -156,7 +162,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    ReportDetailDto.Response response = reportService.findReportById(reportId);
+    ReportDetailDto response = reportService.findReportById(reportId);
     return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
   }
 
@@ -193,6 +199,24 @@ public class AdminController {
     }
     adminService.checkInquiry(inquiryId);
     return ResponseEntity.ok().build();
+  }
+  
+  // TODO: 11/17/23 임시로 페이징(옵셋 기반) 처리,  
+  @GetMapping("/certifications/pending")
+  public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @RequestParam(defaultValue = "0") int offset,
+      @RequestParam(defaultValue = "10") int size
+
+    int pageNumber = offset / size;
+    Pageable pageable = PageRequest.of(pageNumber, size);
+    PendingCertificationPageDto uncertifiedUserRequests = certificationService.getUncertifiedUserRequests(
+        pageable);
+
+    Page<PendingCertification> page = uncertifiedUserRequests.page();
+    return ResponseEntity.ok(
+        AdminCustomPage.of(page.getContent(), page.hasNext())
+    );
   }
 
 }

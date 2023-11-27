@@ -5,8 +5,8 @@ import org.instancio.Instancio;
 
 public class GroupReportDtoFixture {
 
-  public static GroupReportDto.Response targetReportDto() {
-    return Instancio.of(GroupReportDto.Response.class)
+  public static GroupReportDto targetReportDto() {
+    return Instancio.of(GroupReportDto.class)
         .create();
   }
 
