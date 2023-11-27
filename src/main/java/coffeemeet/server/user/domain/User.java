@@ -3,6 +3,7 @@ package coffeemeet.server.user.domain;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static coffeemeet.server.user.domain.UserStatus.REPORTED;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
@@ -115,6 +116,19 @@ public class User extends AdvancedBaseEntity {
     this.userStatus = IDLE;
   }
 
+  public void punished() {
+    this.userStatus = REPORTED;
+    reportInfo.increment();
+  }
+
+  public void matching() {
+    this.userStatus = MATCHING;
+  }
+
+  public void convertToBlacklist() {
+    this.isBlacklisted = true;
+  }
+
   @Override
   public final boolean equals(Object o) {
     if (this == o) {
@@ -140,11 +154,6 @@ public class User extends AdvancedBaseEntity {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
         .getPersistentClass().hashCode() : getClass().hashCode();
-  }
-
-  public void punished() {
-    this.userStatus = REPORTED;
-    reportInfo.increment();
   }
 
 }

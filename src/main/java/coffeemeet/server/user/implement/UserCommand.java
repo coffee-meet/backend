@@ -54,4 +54,24 @@ public class UserCommand {
     user.updateNotificationInfo(NotificationInfo.createRefusedNotificationInfo());
   }
 
+  public void enterToChattingRoom(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.enterChattingRoom();
+  }
+
+  public void exitChattingRoom(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.exitChattingRoom();
+  }
+
+  public void setToIdle(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.setIdleStatus();
+  }
+
+  public void setToMatching(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.matching();
+  }
+
 }

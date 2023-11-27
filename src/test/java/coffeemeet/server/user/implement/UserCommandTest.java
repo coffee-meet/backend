@@ -2,6 +2,10 @@ package coffeemeet.server.user.implement;
 
 import static coffeemeet.server.common.fixture.entity.UserFixture.token;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.IDLE;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
@@ -136,6 +140,66 @@ class UserCommandTest {
 
     // then
     assertThat(user.getNotificationInfo().isSubscribedToNotification()).isFalse();
+  }
+
+  @Test
+  @DisplayName("유저 상태를 채팅방 연결로 변경할 수 있다.")
+  void enterToChattingRoomTest() {
+    // given
+    User user = user();
+
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+
+    // when
+    userCommand.enterToChattingRoom(user.getId());
+
+    // then
+    assertThat(user.getUserStatus()).isEqualTo(CHATTING_CONNECTED);
+  }
+
+  @Test
+  @DisplayName("유저 상태를 채팅방 연결 해제로 변경할 수 있다.")
+  void exitChattingRoomTest() {
+    // given
+    User user = user();
+
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+
+    // when
+    userCommand.exitChattingRoom(user.getId());
+
+    // then
+    assertThat(user.getUserStatus()).isEqualTo(CHATTING_UNCONNECTED);
+  }
+
+  @Test
+  @DisplayName("유저 상태를 기본 상태로 변경할 수 있다.")
+  void setToIdleTest() {
+    // given
+    User user = user();
+
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+
+    // when
+    userCommand.setToIdle(user.getId());
+
+    // then
+    assertThat(user.getUserStatus()).isEqualTo(IDLE);
+  }
+
+  @Test
+  @DisplayName("유저 상태를 매칭 중으로 변경할 수 있다.")
+  void setToMatchingTest() {
+    // given
+    User user = user();
+
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+
+    // when
+    userCommand.setToMatching(user.getId());
+
+    // then
+    assertThat(user.getUserStatus()).isEqualTo(MATCHING);
   }
 
 }

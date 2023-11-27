@@ -4,6 +4,7 @@ import static org.instancio.Select.field;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
+import coffeemeet.server.chatting.current.domain.ChattingSession;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
@@ -121,6 +122,10 @@ public class ChattingFixture {
   public static Set<ChattingRoom> chattingRoom(int size) {
     return Instancio.ofSet(ChattingRoom.class).size(size)
         .create();
+  }
+
+  public static ChattingSession chattingSession() {
+    return Instancio.create(ChattingSession.class);
   }
 
 }
