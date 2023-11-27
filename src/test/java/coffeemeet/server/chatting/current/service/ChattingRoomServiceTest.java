@@ -3,6 +3,7 @@ package coffeemeet.server.chatting.current.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
@@ -123,7 +124,7 @@ class ChattingRoomServiceTest {
     then(chattingMessageHistoryCommand).should(only()).createChattingMessageHistory(anyList());
     then(userChattingHistoryCommand).should(only()).createUserChattingHistory(anyList());
     then(chattingRoomCommand).should(only()).removeChattingRoom(any());
-    //then(fcmNotificationSender).should(only()).sendMultiNotifications(anySet(), any());
+    then(fcmNotificationSender).should(only()).sendMultiNotifications(anySet(), any());
   }
 
 }

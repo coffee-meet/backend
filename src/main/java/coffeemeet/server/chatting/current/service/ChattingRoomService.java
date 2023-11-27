@@ -56,7 +56,7 @@ public class ChattingRoomService {
     List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
     backUpChattingRoom(allMessages, users, chattingRoom);
     chattingRoomCommand.removeChattingRoom(chattingRoom);
-    //sendChattingEndAlarm(users);
+    sendChattingEndAlarm(users);
     updateUserStatusToIdle(users);
   }
 
