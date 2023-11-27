@@ -33,6 +33,7 @@ public class CertificationFixture {
 
   public static Certification certification(User user) {
     return Instancio.of(Certification.class)
+        .generate(field(Certification::getId), gen -> gen.longSeq().start(1L))
         .generate(field(Certification::getBusinessCardUrl), gen -> gen.net().url().asString())
         .set(field(Certification::getCompanyEmail), new CompanyEmail(new EmailGenerator().get()))
         .set(field(Certification::getId), user.getId()).set(field(Certification::getUser), user)
