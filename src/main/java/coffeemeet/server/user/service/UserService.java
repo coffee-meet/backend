@@ -24,6 +24,7 @@ import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -35,8 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-  private static final String BLACKLIST_USER_MESSAGE = "해당 사용자(%s)는 영구정지된 사용자입니다.";
 
   private final MediaManager mediaManager;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;

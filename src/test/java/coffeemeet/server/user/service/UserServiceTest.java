@@ -45,8 +45,6 @@ import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
-import coffeemeet.server.user.service.dto.UserProfileDto.Response;
-import coffeemeet.server.user.service.dto.UserProfileDto;
 import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.io.File;
 import java.io.IOException;
@@ -91,6 +89,9 @@ class UserServiceTest {
   @Mock
   private CertificationQuery certificationQuery;
 
+  @Mock
+  private MatchingQueueCommand matchingQueueCommand;
+
   @DisplayName("회원가입을 할 수 있다.")
   @Test
   void signupTest() {
@@ -118,7 +119,7 @@ class UserServiceTest {
     List<Keyword> keywords = keywords();
     AuthTokens authTokens = authTokens();
     OAuthMemberDetail response = response();
-    LoginDetailsDto.Response expectedResponse = LoginDetailsDto.Response.of(user,
+    LoginDetailsDto expectedResponse = LoginDetailsDto.of(user,
         keywords, certification, authTokens);
 
     given(oAuthMemberClientComposite.fetch(any(), anyString())).willReturn(response);
@@ -129,7 +130,7 @@ class UserServiceTest {
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
 
     // when
-    LoginDetailsDto.Response result = userService.login(KAKAO, authCode);
+    LoginDetailsDto result = userService.login(KAKAO, authCode);
 
     // then
     assertAll(
@@ -151,7 +152,7 @@ class UserServiceTest {
     User user = user();
     Certification certification = certification();
     List<Keyword> keywords = UserFixture.keywords();
-    UserProfileDto response = UserProfileDto.of(user, certification.getDepartment(), keywords);
+    UserProfileDto response = UserProfileDto.of(user, keywords, certification);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(keywords);
@@ -174,11 +175,8 @@ class UserServiceTest {
     // given
     User user = user();
     Certification certification = certification(user);
-    MyProfileDto response = MyProfileDto.of(user, keywords,
-        certification.getCompanyName(),
-        certification.getDepartment());
     List<Keyword> keywords = keywords();
-    MyProfileDto.Response response = MyProfileDto.Response.of(user, keywords, certification);
+    MyProfileDto response = MyProfileDto.of(user, keywords, certification);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(response.interests());

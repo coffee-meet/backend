@@ -155,8 +155,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("사용자 프로필을 조회할 수 있다.")
   void findUserProfileTest() throws Exception {
     // given
-    long userId = 1L;
-    UserProfileDto.Response response = UserProfileDtoFixture.userProfileDtoResponse();
+    UserProfileDto response = UserProfileDtoFixture.userProfileDtoResponse();
     UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
         response);
 
@@ -190,8 +189,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("마이페이지를 조회할 수 있다.")
   void findMyProfileTest() throws Exception {
     // given
-    Long userId = 1L;
-    MyProfileDto.Response response = MyProfileDtoFixture.myProfileDtoResponse();
+    MyProfileDto response = MyProfileDtoFixture.myProfileDtoResponse();
     MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
