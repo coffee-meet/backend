@@ -17,7 +17,7 @@ public final class InquiryDetailHTTP {
       String title,
       String content,
       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-      LocalDateTime createAt
+      LocalDateTime createdAt
   ) {
 
     public static InquiryDetailHTTP.Response from(InquiryDetailDto response) {
@@ -27,7 +27,7 @@ public final class InquiryDetailHTTP {
           response.inquirerEmail(),
           response.title(),
           response.content(),
-          response.createAt()
+          response.createdAt()
       );
     }
   }

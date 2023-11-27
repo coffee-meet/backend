@@ -12,7 +12,7 @@ public record ReportDetailDto(
     ReportReason reason,
     String reasonDetail,
     int reportedCount,
-    LocalDateTime createAt
+    LocalDateTime createdAt
 ) {
 
   public static ReportDetailDto of(Report report, User reporter, User targeted) {

@@ -19,7 +19,7 @@ public final class ReportDetailHTTP {
       String reasonDetail,
       int reportedCount,
       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-      LocalDateTime createAt
+      LocalDateTime createdAt
   ) {
 
     public static Response from(ReportDetailDto response) {
@@ -30,7 +30,7 @@ public final class ReportDetailHTTP {
           response.reason(),
           response.reasonDetail(),
           response.reportedCount(),
-          response.createAt()
+          response.createdAt()
       );
     }
   }
