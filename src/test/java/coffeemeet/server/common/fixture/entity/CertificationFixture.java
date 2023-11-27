@@ -97,7 +97,7 @@ public class CertificationFixture {
 
   public static Pageable pageable() {
     int page = 0;
-    int size = new IntegerGenerator().range(0, 100).get();
+    int size = new IntegerGenerator().range(1, 100).get();
     return PageRequest.of(page, size, Sort.by("updatedAt").ascending());
   }
 
