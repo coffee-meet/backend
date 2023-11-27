@@ -10,7 +10,7 @@ public final class UserStatusHTTP {
       UserStatus userStatus,
       LocalDateTime startedAt,
       Long chattingRoomId,
-      boolean isCertificated,
+      Boolean isCertificated,
       LocalDateTime penaltyExpiration
   ) {
 
