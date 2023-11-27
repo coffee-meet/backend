@@ -1,5 +1,6 @@
 package coffeemeet.server.user.service.dto;
 
+import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
@@ -16,14 +17,13 @@ public record MyProfileDto(
   public static MyProfileDto of(
       User user,
       List<Keyword> interests,
-      String companyName,
-      Department department
+      Certification certification
   ) {
     return new MyProfileDto(
         user.getProfile().getNickname(),
         user.getOauthInfo().getProfileImageUrl(),
-        companyName,
-        department,
+        certification.getCompanyName(),
+        certification.getDepartment(),
         interests
     );
   }
