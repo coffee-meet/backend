@@ -36,7 +36,7 @@ public class ChattingMessageService {
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
     User user = userQuery.getUserById(userId);
-    sendChattingAlarm(user.getProfile().getNickname(), content, users);
+    //sendChattingAlarm(user.getProfile().getNickname(), content, users);
     ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
     return ChattingDto.Response.of(user, chattingMessage);
