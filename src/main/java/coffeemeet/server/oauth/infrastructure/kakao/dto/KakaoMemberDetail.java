@@ -12,7 +12,7 @@ public record KakaoMemberDetail(
     KakaoAccount kakaoAccount
 ) {
 
-  private static final String EMPTY_IMAGE_URL = "";
+  private static final String DEFAULT_IMAGE_URL = "default_image_url";
 
   public OAuthMemberDetail toOAuthMemberDetail() {
     String profileImageUrl =
@@ -28,7 +28,7 @@ public record KakaoMemberDetail(
 
   private String getProfileImageOrDefault(String profileImageUrl) {
     if (profileImageUrl == null) {
-      profileImageUrl = EMPTY_IMAGE_URL;
+      profileImageUrl = DEFAULT_IMAGE_URL;
     }
     return profileImageUrl;
   }
