@@ -242,7 +242,7 @@ class AdminControllerTest extends ControllerTestConfig {
     long lastReportId = 0L;
     int pageSize = 10;
     ReportDto response1 = ReportDtoFixture.reportDto();
-      ReportDto response2 = ReportDtoFixture.reportDto();
+    ReportDto response2 = ReportDtoFixture.reportDto();
 
     List<ReportDto> reportResponses = List.of(response1, response2);
     boolean hasNext = true;
@@ -432,26 +432,27 @@ class AdminControllerTest extends ControllerTestConfig {
             .sessionAttr("adminId", "admin")
             .contentType(APPLICATION_JSON))
         .andDo(document("view-inquiry",
-                resourceDetails().tag("관리자").description("관리자 문의 상세 조회")
-                    .responseSchema(Schema.schema("InquiryDetailHTTP.Response")),
-                pathParameters(
-                    parameterWithName("inquiryId").description("문의 아이디")
-                ),
-                requestHeaders(
-                    headerWithName("JSESSION").description("세션")
-                ),
-                responseFields(
-                    fieldWithPath("inquirerId").type(JsonFieldType.NUMBER).description("문의자 아이디"),
-                    fieldWithPath("inquirerNickname").type(JsonFieldType.STRING)
-                        .description("문의자 닉네임"),
-                    fieldWithPath("inquirerEmail").type(JsonFieldType.STRING).description("문의자 이메일"),
-                    fieldWithPath("title").type(JsonFieldType.STRING).description("문의 제목"),
-                    fieldWithPath("content").type(JsonFieldType.STRING).description("문의 내용"),
-                    fieldWithPath("createAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
-                )).andExpect(status().isOk())
-     .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
+            resourceDetails().tag("관리자").description("관리자 문의 상세 조회")
+                .responseSchema(Schema.schema("InquiryDetailHTTP.Response")),
+            pathParameters(
+                parameterWithName("inquiryId").description("문의 아이디")
+            ),
+            requestHeaders(
+                headerWithName("JSESSION").description("세션")
+            ),
+            responseFields(
+                fieldWithPath("inquirerId").type(JsonFieldType.NUMBER).description("문의자 아이디"),
+                fieldWithPath("inquirerNickname").type(JsonFieldType.STRING)
+                    .description("문의자 닉네임"),
+                fieldWithPath("inquirerEmail").type(JsonFieldType.STRING).description("문의자 이메일"),
+                fieldWithPath("title").type(JsonFieldType.STRING).description("문의 제목"),
+                fieldWithPath("content").type(JsonFieldType.STRING).description("문의 내용"),
+                fieldWithPath("createAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
+            )))
+        .andExpect(status().isOk())
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
-                  
+
   @Test
   @DisplayName("회사 인증 대기중인 목록을 조회할 수 있다.")
   void getPendingCertificationsTest() throws Exception {
@@ -493,13 +494,13 @@ class AdminControllerTest extends ControllerTestConfig {
                     fieldWithPath("contents[].companyEmail").description("회사 이메일"),
                     fieldWithPath("contents[].businessCardUrl").description("명함 URL"),
                     fieldWithPath("contents[].department").description("부서"),
-                    fieldWithPath("hasNext").description("다음 페이지 존재 여부")
-                    .andExpect(
-            content().string(objectMapper.writeValueAsString(pendingCertificationAdminCustomPage)));
+                    fieldWithPath("hasNext").description("다음 페이지 존재 여부"))
+            )
+        )
+        .andExpect(
+            content().string(
+                objectMapper.writeValueAsString(pendingCertificationAdminCustomPage)));
   }
-                  }
-
-   
 
   @DisplayName("사용자 문의를 확인할 수 있다.")
   @Test
@@ -524,5 +525,5 @@ class AdminControllerTest extends ControllerTestConfig {
         )
         .andExpect(status().isOk());
   }
-      
+
 }

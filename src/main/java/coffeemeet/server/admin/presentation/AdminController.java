@@ -129,7 +129,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomSlice<ReportDto.Response>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportDto>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -200,13 +200,17 @@ public class AdminController {
     adminService.checkInquiry(inquiryId);
     return ResponseEntity.ok().build();
   }
-  
-  // TODO: 11/17/23 임시로 페이징(옵셋 기반) 처리,  
+
+  // TODO: 11/27/23 임시로 페이징(옵셋 기반) 처리, 개선 필요
   @GetMapping("/certifications/pending")
   public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") int offset,
       @RequestParam(defaultValue = "10") int size
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
 
     int pageNumber = offset / size;
     Pageable pageable = PageRequest.of(pageNumber, size);

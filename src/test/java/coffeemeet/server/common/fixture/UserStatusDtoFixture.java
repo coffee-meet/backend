@@ -4,9 +4,10 @@ import coffeemeet.server.user.service.dto.UserStatusDto;
 import org.instancio.Instancio;
 
 public class UserStatusDtoFixture {
-    public static UserStatusDto userStatusDto() {
-        return Instancio.of(UserStatusDto.class)
-                .create();
-    }
+
+  public static UserStatusDto userStatusDto() {
+    return Instancio.of(UserStatusDto.class)
+        .create();
+  }
 
 }
