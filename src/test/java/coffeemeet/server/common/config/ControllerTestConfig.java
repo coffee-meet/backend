@@ -21,6 +21,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 public abstract class ControllerTestConfig {
 
   protected static final String TOKEN = "Bearer header.payload.signature";
+  protected static final Long USER_ID = 1L;
 
   @Autowired
   protected ObjectMapper objectMapper;

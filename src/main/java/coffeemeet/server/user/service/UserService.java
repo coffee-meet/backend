@@ -84,15 +84,14 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return UserProfileDto.of(user, certification.getDepartment(), keywords);
+    return UserProfileDto.of(user, keywords, certification);
   }
 
   public MyProfileDto findMyProfile(Long userId) {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return MyProfileDto.of(user, keywords, certification.getCompanyName(),
-        certification.getDepartment());
+    return MyProfileDto.of(user, keywords, certification);
   }
 
   public void updateProfileImage(Long userId, File file) {
