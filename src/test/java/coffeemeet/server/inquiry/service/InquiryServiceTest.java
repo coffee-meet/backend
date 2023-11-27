@@ -13,6 +13,7 @@ import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -79,6 +80,23 @@ class InquiryServiceTest {
         () -> assertThat(inquirySearchResponse.contents()).hasSize(size),
         () -> assertThat(inquirySearchResponse.hasNext()).isTrue()
     );
+  }
+
+  @DisplayName("문의 아이디로 문의를 찾을 수 있다.")
+  @Test
+  void findInquiryByInquiryId() {
+    // given
+    Inquiry inquiry = InquiryFixture.inquiry();
+    User user = UserFixture.user();
+
+    given(inquiryQuery.getInquiryBy(inquiry.getId())).willReturn(inquiry);
+    given(userQuery.getUserById(inquiry.getInquirerId())).willReturn(user);
+
+    // when
+    InquiryDetailDto response = inquiryService.findInquiryBy(inquiry.getId());
+
+    // then
+    assertThat(response.inquirerId()).isEqualTo(inquiry.getInquirerId());
   }
 
 }

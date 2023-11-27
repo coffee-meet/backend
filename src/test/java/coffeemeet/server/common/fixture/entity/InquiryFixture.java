@@ -4,6 +4,7 @@ import static org.instancio.Select.field;
 
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.presentation.dto.InquiryHTTP;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import java.util.List;
 import org.instancio.Instancio;
@@ -42,6 +43,11 @@ public class InquiryFixture {
 
   public static InquirySearchResponse inquirySearchResponse() {
     return Instancio.of(InquirySearchResponse.class)
+        .create();
+  }
+
+  public static InquiryDetailDto inquiryDetailDto() {
+    return Instancio.of(InquiryDetailDto.class)
         .create();
   }
 
