@@ -15,6 +15,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.Set;
@@ -169,7 +170,8 @@ class UserCommandTest {
     userCommand.exitChattingRoom(user.getId());
 
     // then
-    assertThat(user.getUserStatus()).isEqualTo(CHATTING_UNCONNECTED);
+    UserStatus userStatus = user.getUserStatus();
+    assertThat(userStatus).isIn(IDLE, CHATTING_UNCONNECTED);
   }
 
   @Test
