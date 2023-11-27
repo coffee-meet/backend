@@ -5,6 +5,7 @@ import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
+import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
@@ -18,13 +19,13 @@ import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.report.presentation.dto.FindGroupReports;
-import coffeemeet.server.report.presentation.dto.GroupReportList;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.ReportList;
+import coffeemeet.server.report.presentation.dto.ReportListHTTP;
+import coffeemeet.server.report.presentation.dto.ReportListHTTP.Response;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportListDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -129,7 +130,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomSlice<ReportDto>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportListHTTP.Response>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -137,21 +138,24 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    ReportList allReports = reportService.findAllReports(lastReportId, pageSize);
-    return ResponseEntity.ok(AdminCustomSlice.of(allReports.contents(), allReports.hasNext()));
+    ReportListDto reportListDto = reportService.findAllReports(lastReportId, pageSize);
+    List<ReportListHTTP.Response> responses = reportListDto.contents().stream()
+        .map(Response::from)
+        .toList();
+    return ResponseEntity.ok(AdminCustomSlice.of(responses, reportListDto.hasNext()));
   }
 
   @GetMapping("/reports/group")
-  public ResponseEntity<GroupReportList> findReportByTargetIdAndChattingRoomId(
+  public ResponseEntity<GroupReportHTTP.Response> findReportByTargetIdAndChattingRoomId(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @ModelAttribute FindGroupReports findGroupReports
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    List<GroupReportDto> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto> responses = reportService.findReportByTargetIdAndChattingRoomId(
         findGroupReports.targetedId(), findGroupReports.chattingRoomId());
-    return ResponseEntity.ok(GroupReportList.from(response));
+    return ResponseEntity.ok(GroupReportHTTP.Response.from(responses));
   }
 
   @GetMapping("/reports/detail/{reportId}")
