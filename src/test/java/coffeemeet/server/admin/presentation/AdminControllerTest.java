@@ -37,7 +37,9 @@ import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
 import coffeemeet.server.common.fixture.entity.AdminFixture;
 import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.report.presentation.dto.GroupReportList;
@@ -390,6 +392,46 @@ class AdminControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(content().string(objectMapper.writeValueAsString(adminCustomSlice)));
+  }
+
+  @DisplayName("사용자 문의를 상세 조회할 수 있다.")
+  @Test
+  void viewInquiryTest() throws Exception {
+    // given
+    Long inquiryId = 1L;
+    InquiryDetailDto response = InquiryFixture.inquiryDetailDto();
+    InquiryDetailHTTP.Response expectedResponse = InquiryFixture.inquiryDetailHTTPResponse(
+        response);
+
+    given(inquiryService.findInquiryBy(anyLong())).willReturn(response);
+
+    // when, then
+    mockMvc.perform(get(baseUrl + "/inquiries/detail/{inquiryId}", inquiryId)
+            .header("JSESSION", SESSION_VALUE)
+            .sessionAttr("adminId", "admin")
+            .contentType(APPLICATION_JSON))
+        .andDo(document("view-inquiry",
+                resourceDetails().tag("관리자").description("관리자 문의 상세 조회")
+                    .responseSchema(Schema.schema("InquiryDetailHTTP.Response")),
+                pathParameters(
+                    parameterWithName("inquiryId").description("문의 아이디")
+                ),
+                requestHeaders(
+                    headerWithName("JSESSION").description("세션")
+                ),
+                responseFields(
+                    fieldWithPath("inquirerId").type(JsonFieldType.NUMBER).description("문의자 아이디"),
+                    fieldWithPath("inquirerNickname").type(JsonFieldType.STRING)
+                        .description("문의자 닉네임"),
+                    fieldWithPath("inquirerEmail").type(JsonFieldType.STRING).description("문의자 이메일"),
+                    fieldWithPath("title").type(JsonFieldType.STRING).description("문의 제목"),
+                    fieldWithPath("content").type(JsonFieldType.STRING).description("문의 내용"),
+                    fieldWithPath("createAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
+                )
+            )
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
   @DisplayName("사용자 문의를 확인할 수 있다.")
