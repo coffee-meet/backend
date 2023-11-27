@@ -47,7 +47,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     Long firstMessageId = 51L;
     int pageSize = 50;
     List<Response> responses = ChattingFixture.chattingDtoResponse(pageSize);
-    List<Chat> chats = responses.stream().map(response -> Chat.from(response)).toList();
+    List<Chat> chats = responses.stream().map(Chat::from).toList();
     ChatsHTTP.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(chats);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
@@ -79,7 +79,8 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
                     fieldWithPath("chats[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("chats[].content").type(JsonFieldType.STRING)
                         .description("내용"),
-                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간")
+                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간"),
+                    fieldWithPath("size").type(JsonFieldType.NUMBER).description("채팅 개수")
                 )
             )
         )

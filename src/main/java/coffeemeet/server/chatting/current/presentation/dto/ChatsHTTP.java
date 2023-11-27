@@ -34,13 +34,16 @@ public final class ChatsHTTP {
 
   }
 
-  public record Response(List<Chat> chats) {
+  public record Response(
+      List<Chat> chats,
+      int size
+  ) {
 
     public static Response from(List<ChattingDto.Response> responses) {
       List<Chat> chatList = responses.stream()
           .map(Chat::from)
           .toList();
-      return new Response(chatList);
+      return new Response(chatList, chatList.size());
     }
 
   }
