@@ -1,11 +1,13 @@
 package coffeemeet.server.user.service;
 
 import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.execption.GlobalErrorCode.BAD_REQUEST_ERROR;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+  private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
   private final MediaManager mediaManager;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
 
@@ -139,7 +142,8 @@ public class UserService {
       case MATCHING -> handleMatchingUser(userId, certification);
       case CHATTING_UNCONNECTED -> handleChattingUser(user);
       case REPORTED -> handleReportedUser(user);
-      case CHATTING_CONNECTED -> null;
+      case CHATTING_CONNECTED -> throw new BadRequestException(BAD_REQUEST_ERROR,
+          INVALID_REQUEST_MESSAGE);
     };
   }
 
