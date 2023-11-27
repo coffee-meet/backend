@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChattingMessageService {
@@ -39,6 +41,7 @@ public class ChattingMessageService {
     User user = userQuery.getUserById(userId);
     ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
+    log.info("chatting 메서드 정상 종료");
     return ChattingDto.Response.of(user, chattingMessage);
   }
 
