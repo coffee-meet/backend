@@ -4,8 +4,10 @@ import coffeemeet.server.chatting.current.domain.ChattingSession;
 import coffeemeet.server.chatting.current.infrastructure.ChattingSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class ChattingSessionCommand {
 

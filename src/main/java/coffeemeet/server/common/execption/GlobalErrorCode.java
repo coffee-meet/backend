@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum GlobalErrorCode implements ErrorCode {
 
   VALIDATION_ERROR("G000", "유효하지 않은 입력입니다."),
+  BAD_REQUEST_ERROR("G000", "잘못된 요청입니다."),
   PARAMETER_INPUT_MISSING("G000", "입력 파라미터가 없습니다."),
   PAYLOAD_TOO_LARGE("G000", "요청 데이터가 6MB를 초과했습니다."),
   INVALID_FCM_TOKEN("G004", "유효하지 않은 FCM토큰입니다."),

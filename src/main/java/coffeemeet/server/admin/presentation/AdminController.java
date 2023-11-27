@@ -103,16 +103,16 @@ public class AdminController {
     return ResponseEntity.ok().build();
   }
 
-  @PatchMapping("/users/{userId}/punishment")
+  @PatchMapping("/users/{targetedId}/punishment")
   public ResponseEntity<Void> assignReportPenalty(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
-      @PathVariable Long userId,
+      @PathVariable Long targetedId,
       @Valid @RequestBody UserPunishmentHTTP.Request request
   ) {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    adminService.punishUser(userId, request.reportIds());
+    adminService.punishUser(targetedId, request.reportIds());
     return ResponseEntity.ok().build();
   }
 

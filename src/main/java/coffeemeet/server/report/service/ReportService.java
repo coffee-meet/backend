@@ -124,7 +124,7 @@ public class ReportService {
 
   private GroupReportDto mapToReportDto(Report report) {
     User reporter = userQuery.getUserById(report.getReporterId());
-    return GroupReportDto.of(reporter.getProfile().getNickname(), report.getCreatedAt());
+    return GroupReportDto.of(reporter.getProfile().getNickname(), reporter.getId(), report.getCreatedAt());
   }
 
 }
