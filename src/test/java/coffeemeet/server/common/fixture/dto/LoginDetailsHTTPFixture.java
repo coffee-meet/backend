@@ -7,7 +7,7 @@ import coffeemeet.server.user.service.dto.LoginDetailsDto;
 public class LoginDetailsHTTPFixture {
 
   public static LoginDetailsHTTP.Response loginDetailsHTTPResponse(
-      LoginDetailsDto.Response response) {
+      LoginDetailsDto response) {
     return new Response(
         response.userId(),
         response.isRegistered(),

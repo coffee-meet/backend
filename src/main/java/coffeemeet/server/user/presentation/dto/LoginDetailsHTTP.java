@@ -23,7 +23,7 @@ public final class LoginDetailsHTTP {
       List<Keyword> interests
   ) {
 
-    public static Response of(LoginDetailsDto.Response response) {
+    public static Response of(LoginDetailsDto response) {
       return new Response(
           response.userId(),
           response.isRegistered(),

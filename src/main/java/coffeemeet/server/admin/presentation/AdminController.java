@@ -147,7 +147,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    List<GroupReportDto.Response> response = reportService.findReportByTargetIdAndChattingRoomId(
+    List<GroupReportDto> response = reportService.findReportByTargetIdAndChattingRoomId(
         findGroupReports.targetedId(), findGroupReports.chattingRoomId());
     return ResponseEntity.ok(GroupReportList.from(response));
   }
@@ -160,7 +160,7 @@ public class AdminController {
     if (adminId == null) {
       throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
     }
-    ReportDetailDto.Response response = reportService.findReportById(reportId);
+    ReportDetailDto response = reportService.findReportById(reportId);
     return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
   }
 

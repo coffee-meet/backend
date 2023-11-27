@@ -6,7 +6,7 @@ import coffeemeet.server.report.service.dto.ReportDetailDto;
 public class ReportDetailHTTPFixture {
 
   public static ReportDetailHTTP.Response reportDetailHTTPResponse(
-      ReportDetailDto.Response response) {
+      ReportDetailDto response) {
     return new ReportDetailHTTP.Response(
         response.reporterNickname(),
         response.targetedNickname(),
