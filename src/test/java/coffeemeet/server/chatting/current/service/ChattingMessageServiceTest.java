@@ -60,9 +60,10 @@ class ChattingMessageServiceTest {
   @Test
   void chattingTest() {
     // given
-    User user = user();
-    List<User> users = users();
-    ChattingRoom chattingRoom = chattingRoom();
+    User user = UserFixture.user();
+    List<User> users = UserFixture.fourUsers();
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+
     String content = "내용";
     ChattingMessage chattingMessage = chattingMessage(content);
     ChattingSession chattingSession = new ChattingSession("sessionId", user.getId());

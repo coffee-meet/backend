@@ -52,7 +52,7 @@ class ChattingRoomCommandTest {
     // given
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(10);
-    List<User> users = UserFixture.users();
+    List<User> users = UserFixture.fourUsers();
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
 
     // when
