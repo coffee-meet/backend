@@ -201,20 +201,20 @@ class UserControllerTest extends ControllerTestConfig {
             .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(document("my-profile",
-                resourceDetails().tag("사용자").description("마이페이지 조회")
-                    .responseSchema(Schema.schema("MyProfileDto.Response")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                responseFields(
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
-                        .description("프로필 사진 url"),
-                    fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사명"),
-                    fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
-                    fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
-                )
-            ))
+            resourceDetails().tag("사용자").description("마이페이지 조회")
+                .responseSchema(Schema.schema("MyProfileDto.Response")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            responseFields(
+                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                    .description("프로필 사진 url"),
+                fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사명"),
+                fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
+                fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
+            )
+        ))
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
@@ -237,15 +237,15 @@ class UserControllerTest extends ControllerTestConfig {
             .contentType(MediaType.MULTIPART_FORM_DATA)
         ))
         .andDo(document("update-profile-image",
-                resourceDetails().tag("사용자").description("본인 프로필 사진 수정")
-                    .requestSchema(Schema.schema("MultipartFile")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                requestParts(
-                    partWithName("profileImage").description("새 프로필 사진")
-                )
-            ))
+            resourceDetails().tag("사용자").description("본인 프로필 사진 수정")
+                .requestSchema(Schema.schema("MultipartFile")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            requestParts(
+                partWithName("profileImage").description("새 프로필 사진")
+            )
+        ))
         .andExpect(status().isOk());
   }
 
@@ -267,16 +267,16 @@ class UserControllerTest extends ControllerTestConfig {
             .content(objectMapper.writeValueAsString(request))
         )
         .andDo(document("update-my-profile",
-                resourceDetails().tag("사용자").description("본인 프로필 정보 수정")
-                    .requestSchema(Schema.schema("UpdateProfileDto.Request")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                requestFields(
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
-                )
-            ))
+            resourceDetails().tag("사용자").description("본인 프로필 정보 수정")
+                .requestSchema(Schema.schema("UpdateProfileDto.Request")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            requestFields(
+                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
+            )
+        ))
         .andExpect(status().isOk());
   }
 
