@@ -9,7 +9,9 @@ import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
+import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.report.presentation.dto.FindGroupReports;
@@ -168,6 +170,18 @@ public class AdminController {
     }
     InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
+  }
+
+  @GetMapping("/inquiries/detail/{inquiryId}")
+  public ResponseEntity<InquiryDetailHTTP.Response> viewInquiry(
+      @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
+      @PathVariable Long inquiryId
+  ) {
+    if (adminId == null) {
+      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+    }
+    InquiryDetailDto response = inquiryService.findInquiryBy(inquiryId);
+    return ResponseEntity.ok(InquiryDetailHTTP.Response.from(response));
   }
 
   @PatchMapping("/inquiries/{inquiryId}/check")
