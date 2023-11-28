@@ -14,6 +14,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class FCMNotificationSender {
   private final FirebaseMessaging firebaseMessaging;
 
   public void sendNotification(NotificationInfo notificationInfo, String content) {
-    if (!notificationInfo.isSubscribedToNotification()) {
+    if (notificationInfo == null || !notificationInfo.isSubscribedToNotification()) {
       return;
     }
 
@@ -45,11 +46,10 @@ public class FCMNotificationSender {
   }
 
   public void sendMultiNotifications(Set<NotificationInfo> notificationInfos, String content) {
-    notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
-
-    Set<String> tokens = notificationInfos.stream().map(
-        NotificationInfo::getToken
-    ).collect(Collectors.toUnmodifiableSet());
+    Set<String> tokens = convertNotificationInfoToToken(notificationInfos);
+    if(tokens.isEmpty()) {
+      return;
+    }
 
     Notification notification = createNotification(content);
     MulticastMessage message = MulticastMessage.builder().addAllTokens(tokens)
@@ -58,17 +58,16 @@ public class FCMNotificationSender {
     try {
       firebaseMessaging.sendMulticast(message);
     } catch (FirebaseMessagingException e) {
-      handleFirebaseMessagingException(e, String.join(", ", tokens)); //
+      handleFirebaseMessagingException(e, String.join(", ", tokens));
     }
   }
 
   public void sendMultiNotificationsWithData(Set<NotificationInfo> notificationInfos,
       String content, String key, String value) {
-    notificationInfos.removeIf(notificationInfo -> !notificationInfo.isSubscribedToNotification());
-
-    Set<String> tokens = notificationInfos.stream().map(
-        NotificationInfo::getToken
-    ).collect(Collectors.toUnmodifiableSet());
+    Set<String> tokens = convertNotificationInfoToToken(notificationInfos);
+    if(tokens.isEmpty()) {
+      return;
+    }
 
     Notification notification = createNotification(content);
     MulticastMessage message = MulticastMessage.builder().addAllTokens(tokens)
@@ -95,6 +94,19 @@ public class FCMNotificationSender {
 
   private Notification createNotification(String content) {
     return Notification.builder().setTitle("커피밋").setBody(content).build();
+  }
+
+  private Set<String> convertNotificationInfoToToken(Set<NotificationInfo> notificationInfos) {
+    if (notificationInfos.isEmpty()) {
+      return Collections.emptySet();
+    }
+
+    notificationInfos.removeIf(notificationInfo -> notificationInfo == null
+        || !notificationInfo.isSubscribedToNotification());
+
+    return notificationInfos.stream().map(
+        NotificationInfo::getToken
+    ).collect(Collectors.toUnmodifiableSet());
   }
 
 }
