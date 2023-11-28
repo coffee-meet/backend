@@ -1,5 +1,14 @@
 package coffeemeet.server.oauth.infrastructure.kakao;
 
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.AUTHORIZATION;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.AUTHORIZATION_CODE;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.BEARER_TYPE;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.CLIENT_ID;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.CLIENT_SECRET;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.CODE;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.GRANT_TYPE;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.REDIRECT_URI;
+
 import coffeemeet.server.oauth.config.kakao.KakaoProperties;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
@@ -19,8 +28,6 @@ public class KakaoClient {
 
   private static final String REQUEST_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
   private static final String REQUEST_INFO_URL = "https://kapi.kakao.com/v2/user/me";
-  private static final String GRANT_TYPE = "authorization_code";
-  private static final String BEARER_TYPE = "Bearer ";
 
   private final RestTemplate restTemplate;
   private final KakaoProperties kakaoProperties;
@@ -30,11 +37,11 @@ public class KakaoClient {
     httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-    body.add("grant_type", GRANT_TYPE);
-    body.add("client_id", kakaoProperties.getClientId());
-    body.add("redirect_uri", kakaoProperties.getRedirectUrl());
-    body.add("client_secret", kakaoProperties.getClientSecret());
-    body.add("code", authCode);
+    body.add(GRANT_TYPE, AUTHORIZATION_CODE);
+    body.add(CLIENT_ID, kakaoProperties.getClientId());
+    body.add(REDIRECT_URI, kakaoProperties.getRedirectUrl());
+    body.add(CLIENT_SECRET, kakaoProperties.getClientSecret());
+    body.add(CODE, authCode);
 
     HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
@@ -48,7 +55,7 @@ public class KakaoClient {
   public KakaoMemberDetail fetchMember(String accessToken) {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    httpHeaders.set("Authorization", BEARER_TYPE + accessToken);
+    httpHeaders.set(AUTHORIZATION, BEARER_TYPE + accessToken);
 
     HttpEntity<?> request = new HttpEntity<>(httpHeaders);
 

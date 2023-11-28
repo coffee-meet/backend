@@ -1,5 +1,7 @@
 package coffeemeet.server.oauth.infrastructure.kakao.dto;
 
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.DEFAULT_IMAGE_URL;
+
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.user.domain.OAuthProvider;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
@@ -11,8 +13,6 @@ public record KakaoMemberDetail(
     Long id,
     KakaoAccount kakaoAccount
 ) {
-
-  private static final String DEFAULT_IMAGE_URL = "default_image_url";
 
   public OAuthMemberDetail toOAuthMemberDetail() {
     String profileImageUrl =
@@ -27,10 +27,7 @@ public record KakaoMemberDetail(
   }
 
   private String getProfileImageOrDefault(String profileImageUrl) {
-    if (profileImageUrl == null) {
-      profileImageUrl = DEFAULT_IMAGE_URL;
-    }
-    return profileImageUrl;
+    return profileImageUrl == null ? DEFAULT_IMAGE_URL : profileImageUrl;
   }
 
   @JsonNaming(SnakeCaseStrategy.class)
