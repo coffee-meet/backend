@@ -365,6 +365,7 @@ class UserControllerTest extends ControllerTestConfig {
                     fieldWithPath("isCertificated").type(JsonFieldType.VARIES).description("인증 여부"),
                     fieldWithPath("startedAt").type(JsonFieldType.VARIES).description("매칭 시작 시간"),
                     fieldWithPath("chattingRoomId").type(JsonFieldType.VARIES).description("채팅방 아이디"),
+                    fieldWithPath("chattingRoomName").type(JsonFieldType.VARIES).description("채팅방 이름"),
                     fieldWithPath("penaltyExpiration").type(JsonFieldType.VARIES).description("제재 기간")
                 )
             )
