@@ -57,7 +57,7 @@ class ReportServiceTest {
     Long reporterId = report.getReporterId();
 
     willDoNothing().given(reportQuery).hasDuplicatedReport(anyLong(), anyLong(), anyLong());
-    willDoNothing().given(chattingRoomQuery).existsById(anyLong());
+    willDoNothing().given(chattingRoomQuery).verifyChatRoomExistence(anyLong());
     willDoNothing().given(reportCommand).createReport(any(Report.class));
 
     // when
@@ -121,7 +121,8 @@ class ReportServiceTest {
     given(userQuery.getUsersByIdSet(userIds)).willReturn(Set.of(targetUser));
 
     Set<Long> chattingRoomIds = Set.of(chattingRoomId);
-    given(chattingRoomQuery.getUserByIdSet(chattingRoomIds)).willReturn(Set.of(chattingRoom));
+    given(chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds)).willReturn(
+        Set.of(chattingRoom));
 
     // when
     ReportList responses = reportService.findAllReports(lastReportId, pageSize);

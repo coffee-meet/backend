@@ -91,7 +91,7 @@ public class ReportService {
     boolean isChattingHistoryExists = false;
 
     try {
-      chattingRoomQuery.existsById(chattingRoomId);
+      chattingRoomQuery.verifyChatRoomExistence(chattingRoomId);
       isChattingRoomExists = true;
     } catch (NotFoundException e) {
       isChattingHistoryExists = userChattingHistoryQuery.existsByUserId(reporterId);
@@ -108,7 +108,7 @@ public class ReportService {
     Set<Long> chattingRoomIds = allReports.stream()
         .map(Report::getChattingRoomId)
         .collect(Collectors.toSet());
-    Set<ChattingRoom> chattingRooms = chattingRoomQuery.getUserByIdSet(chattingRoomIds);
+    Set<ChattingRoom> chattingRooms = chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds);
     return chattingRooms.stream()
         .collect(Collectors.toMap(ChattingRoom::getId, Function.identity()));
   }
