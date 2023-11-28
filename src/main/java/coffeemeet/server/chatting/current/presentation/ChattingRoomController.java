@@ -1,7 +1,9 @@
 package coffeemeet.server.chatting.current.presentation;
 
+import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
+import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,12 @@ public class ChattingRoomController {
   public ResponseEntity<Void> exitChattingRoom(@PathVariable Long roomId) {
     chattingRoomService.deleteChattingRoom(roomId);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/{roomId}/exist")
+  public ResponseEntity<ChatRoomStatusHTTP.Response> checkChattingRoom(@PathVariable Long roomId) {
+    ChatRoomStatusDto chatRoomStatusDto = chattingRoomService.checkChattingRoomStatus(roomId);
+    return ResponseEntity.ok(ChatRoomStatusHTTP.Response.from(chatRoomStatusDto));
   }
 
 }
