@@ -29,7 +29,7 @@ public class ChattingRoomQuery {
         ));
   }
 
-  public void existsById(Long roomId) {
+  public void verifyChatRoomExistence(Long roomId) {
     if (!chattingRoomRepository.existsById(roomId)) {
       throw new NotFoundException(
           CHATTING_ROOM_NOT_FOUND,
@@ -38,8 +38,12 @@ public class ChattingRoomQuery {
     }
   }
 
-  public Set<ChattingRoom> getUserByIdSet(Set<Long> chattingRoomIds) {
+  public Set<ChattingRoom> getChattingRoomsSetBy(Set<Long> chattingRoomIds) {
     return new HashSet<>(chattingRoomRepository.findByIdIn(chattingRoomIds));
+  }
+
+  public boolean existsBy(Long roomId) {
+    return chattingRoomRepository.existsById(roomId);
   }
 
 }
