@@ -7,6 +7,7 @@ public record UserStatusDto(
     UserStatus userStatus,
     LocalDateTime startedAt,
     Long chattingRoomId,
+    String chattingRoomName,
     Boolean isCertificated,
     LocalDateTime penaltyExpiration
 ) {
@@ -15,6 +16,7 @@ public record UserStatusDto(
       UserStatus userStatus,
       LocalDateTime startedAt,
       Long chattingRoomId,
+      String chattingRoomName,
       Boolean isCertificated,
       LocalDateTime penaltyExpiration
   ) {
@@ -22,6 +24,7 @@ public record UserStatusDto(
         userStatus,
         startedAt,
         chattingRoomId,
+        chattingRoomName,
         isCertificated,
         penaltyExpiration
     );

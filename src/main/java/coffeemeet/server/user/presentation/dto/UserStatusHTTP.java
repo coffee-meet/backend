@@ -15,6 +15,7 @@ public final class UserStatusHTTP {
       UserStatus userStatus,
       LocalDateTime startedAt,
       Long chattingRoomId,
+      String chattingRoomName,
       Boolean isCertificated,
       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime penaltyExpiration
@@ -25,6 +26,7 @@ public final class UserStatusHTTP {
           response.userStatus(),
           response.startedAt(),
           response.chattingRoomId(),
+          response.chattingRoomName(),
           response.isCertificated(),
           response.penaltyExpiration()
       );
