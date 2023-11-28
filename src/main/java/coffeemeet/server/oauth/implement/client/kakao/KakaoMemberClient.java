@@ -24,7 +24,6 @@ public class KakaoMemberClient implements OAuthMemberClient {
   public OAuthMemberDetail fetch(String authCode) {
     KakaoTokens tokenInfo = kakaoClient.fetchToken(authCode);
     KakaoMemberDetail response = kakaoClient.fetchMember(tokenInfo.accessToken());
-
     return response.toOAuthMemberDetail();
   }
 
