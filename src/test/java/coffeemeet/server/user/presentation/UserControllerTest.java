@@ -90,6 +90,7 @@ class UserControllerTest extends ControllerTestConfig {
 
     // when, then
     mockMvc.perform(post("/api/v1/users/sign-up")
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andDo(document("user-signup",
@@ -119,6 +120,7 @@ class UserControllerTest extends ControllerTestConfig {
 
     // when, then
     mockMvc.perform(get("/api/v1/users/login/{oAuthProvider}", OAuthProvider.KAKAO)
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .param("authCode", "authCode"))
         .andDo(document("user-login",
@@ -153,15 +155,14 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("사용자 프로필을 조회할 수 있다.")
   void findUserProfileTest() throws Exception {
     // given
-    long userId = 1L;
     UserProfileDto response = UserProfileDtoFixture.userProfileDtoResponse();
     UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
         response);
 
-    given(userService.findUserProfile(userId)).willReturn(response);
+    given(userService.findUserProfile(anyLong())).willReturn(response);
 
     // when, then
-    mockMvc.perform(get("/api/v1/users/{id}", userId)
+    mockMvc.perform(get("/api/v1/users/{id}", USER_ID)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         )
@@ -188,11 +189,10 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("마이페이지를 조회할 수 있다.")
   void findMyProfileTest() throws Exception {
     // given
-    Long userId = 1L;
     MyProfileDto response = MyProfileDtoFixture.myProfileDtoResponse();
     MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
 
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
     given(userService.findMyProfile(anyLong())).willReturn(response);
 
     // when, then
@@ -201,21 +201,21 @@ class UserControllerTest extends ControllerTestConfig {
             .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(document("my-profile",
-                resourceDetails().tag("사용자").description("마이페이지 조회")
-                    .responseSchema(Schema.schema("MyProfileDto.Response")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                responseFields(
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
-                        .description("프로필 사진 url"),
-                    fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사명"),
-                    fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
-                    fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
-                )
+            resourceDetails().tag("사용자").description("마이페이지 조회")
+                .responseSchema(Schema.schema("MyProfileDto.Response")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            responseFields(
+                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING)
+                    .description("프로필 사진 url"),
+                fieldWithPath("companyName").type(JsonFieldType.STRING).description("회사명"),
+                fieldWithPath("department").type(JsonFieldType.STRING).description("부서"),
+                fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
             )
-        )
+        ))
+        .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));
   }
 
@@ -223,9 +223,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("본인 프로필 사진을 수정할 수 있다.")
   void updateProfileImageTest() throws Exception {
     // given
-    Long userId = 1L;
-
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
 
     MockMultipartFile file = new MockMultipartFile("image",
         "test.png",
@@ -239,16 +237,15 @@ class UserControllerTest extends ControllerTestConfig {
             .contentType(MediaType.MULTIPART_FORM_DATA)
         ))
         .andDo(document("update-profile-image",
-                resourceDetails().tag("사용자").description("본인 프로필 사진 수정")
-                    .requestSchema(Schema.schema("MultipartFile")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                requestParts(
-                    partWithName("profileImage").description("새 프로필 사진")
-                )
+            resourceDetails().tag("사용자").description("본인 프로필 사진 수정")
+                .requestSchema(Schema.schema("MultipartFile")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            requestParts(
+                partWithName("profileImage").description("새 프로필 사진")
             )
-        )
+        ))
         .andExpect(status().isOk());
   }
 
@@ -256,33 +253,31 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("본인 프로필 정보를 수정할 수 있다.")
   void updateProfileInfoTest() throws Exception {
     // given
-    Long userId = 1L;
     UpdateProfileHTTP.Request request = UpdateProfileHTTPFixture.updateProfileHTTPRequest();
 
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
     willDoNothing().given(
         userService).updateProfileInfo(any(), any(), any());
 
     // when, then
     mockMvc.perform(patch("/api/v1/users/me")
             .header("Authorization", TOKEN)
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
         )
         .andDo(document("update-my-profile",
-                resourceDetails().tag("사용자").description("본인 프로필 정보 수정")
-                    .requestSchema(Schema.schema("UpdateProfileDto.Request")),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                requestFields(
-                    fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
-                )
+            resourceDetails().tag("사용자").description("본인 프로필 정보 수정")
+                .requestSchema(Schema.schema("UpdateProfileDto.Request")),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
+            requestFields(
+                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                fieldWithPath("interests").type(JsonFieldType.ARRAY).description("관심사")
             )
-        )
-        .andExpect(status().isOk()
-        );
+        ))
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -302,8 +297,7 @@ class UserControllerTest extends ControllerTestConfig {
                 parameterWithName("nickname").description("닉네임")
             )
         ))
-        .andExpect(status().isOk()
-        );
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -315,6 +309,7 @@ class UserControllerTest extends ControllerTestConfig {
     // when, then
     mockMvc.perform(put("/api/v1/users/notification/token")
             .header(AUTHORIZATION, TOKEN)
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
         ).andDo(document("register-or-update-token",
@@ -335,6 +330,7 @@ class UserControllerTest extends ControllerTestConfig {
     // given, when, then
     mockMvc.perform(put("/api/v1/users/notification/unsubscription")
             .header(AUTHORIZATION, TOKEN)
+            .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         ).andDo(document("unsubscribe-notification",
             resourceDetails().tag("사용자").description("알림 거부"),
@@ -369,6 +365,7 @@ class UserControllerTest extends ControllerTestConfig {
                     fieldWithPath("isCertificated").type(JsonFieldType.VARIES).description("인증 여부"),
                     fieldWithPath("startedAt").type(JsonFieldType.VARIES).description("매칭 시작 시간"),
                     fieldWithPath("chattingRoomId").type(JsonFieldType.VARIES).description("채팅방 아이디"),
+                    fieldWithPath("chattingRoomName").type(JsonFieldType.VARIES).description("채팅방 이름"),
                     fieldWithPath("penaltyExpiration").type(JsonFieldType.VARIES).description("제재 기간")
                 )
             )

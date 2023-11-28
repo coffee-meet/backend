@@ -17,10 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChattingMessageService {
@@ -37,18 +35,18 @@ public class ChattingMessageService {
     Long userId = chattingSessionQuery.getUserIdById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
-    //sendChattingAlarm(content, users);
     User user = userQuery.getUserById(userId);
+    //sendChattingAlarm(user.getProfile().getNickname(), content, users);
     ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
-    log.info("chatting 메서드 정상 종료");
     return ChattingDto.Response.of(user, chattingMessage);
   }
 
-  private void sendChattingAlarm(String content, List<User> users) {
+  private void sendChattingAlarm(String chattingUserNickname, String content, List<User> users) {
     Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
         users);
-    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos, content);
+    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos,
+        chattingUserNickname + " : " + content);
   }
 
   private Set<NotificationInfo> getUnConnectedUserNotificationInfos(List<User> users) {

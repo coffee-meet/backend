@@ -17,6 +17,7 @@ public class UserFixture {
 
   public static User user() {
     return Instancio.of(User.class).set(field(User::getProfile), profile())
+        .set(field(User::isRegistered), true)
         .ignore(field(User::isDeleted))
         .ignore(field(User::isBlacklisted))
         .ignore(field(User::getChattingRoom))

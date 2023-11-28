@@ -1,6 +1,7 @@
 package coffeemeet.server.chatting.history.presentation.dto;
 
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public sealed interface ChattingRoomHistoriesHTTP permits ChattingRoomHistoriesH
       Long roomId,
       String roomName,
       List<String> users,
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime createdAt
   ) {
 

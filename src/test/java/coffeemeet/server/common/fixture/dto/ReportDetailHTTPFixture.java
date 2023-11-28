@@ -14,7 +14,7 @@ public class ReportDetailHTTPFixture {
         response.reason(),
         response.reasonDetail(),
         response.reportedCount(),
-        response.createAt()
+        response.createdAt()
     );
   }
 

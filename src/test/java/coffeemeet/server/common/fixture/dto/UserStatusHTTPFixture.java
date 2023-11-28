@@ -10,6 +10,7 @@ public class UserStatusHTTPFixture {
         response.userStatus(),
         response.startedAt(),
         response.chattingRoomId(),
+        response.chattingRoomName(),
         response.isCertificated(),
         response.penaltyExpiration()
     );

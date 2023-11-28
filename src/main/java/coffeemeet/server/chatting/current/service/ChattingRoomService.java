@@ -43,6 +43,7 @@ public class ChattingRoomService {
     return chattingRoomCommand.createChattingRoom().getId();
   }
 
+  @Transactional
   public List<Response> searchMessages(Long roomId, Long firstMessageId, int pageSize) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     return chattingMessageQuery.findMessages(chattingRoom, firstMessageId, pageSize).stream()
@@ -56,7 +57,7 @@ public class ChattingRoomService {
     List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
     backUpChattingRoom(allMessages, users, chattingRoom);
     chattingRoomCommand.removeChattingRoom(chattingRoom);
-    //sendChattingEndAlarm(users);
+    sendChattingEndAlarm(users);
     updateUserStatusToIdle(users);
   }
 

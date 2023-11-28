@@ -5,7 +5,6 @@ import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChattingMessageController {
@@ -28,7 +26,6 @@ public class ChattingMessageController {
     String userId = String.valueOf(event.getMessage().getHeaders().get("nativeHeaders"))
         .split("userId=\\[")[1].split("]")[0];
     chattingMessageService.storeSocketSession(sessionId, userId);
-    log.info("세션 연결 됨");
   }
 
   @EventListener(SessionDisconnectEvent.class)

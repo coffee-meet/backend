@@ -47,7 +47,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     Long firstMessageId = 51L;
     int pageSize = 50;
     List<Response> responses = ChattingFixture.chattingDtoResponse(pageSize);
-    List<Chat> chats = responses.stream().map(response -> Chat.from(response)).toList();
+    List<Chat> chats = responses.stream().map(Chat::from).toList();
     ChatsHTTP.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(chats);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);

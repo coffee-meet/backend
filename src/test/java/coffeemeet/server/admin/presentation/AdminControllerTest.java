@@ -365,7 +365,7 @@ class AdminControllerTest extends ControllerTestConfig {
                     fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 사유"),
                     fieldWithPath("reasonDetail").type(JsonFieldType.STRING).description("신고 상세 사유"),
                     fieldWithPath("reportedCount").type(JsonFieldType.NUMBER).description("신고 누적 횟수"),
-                    fieldWithPath("createAt").type(JsonFieldType.STRING).description("신고 생성 날짜")
+                    fieldWithPath("createdAt").type(JsonFieldType.STRING).description("신고 생성 날짜")
                 )
             )
         )
@@ -412,6 +412,8 @@ class AdminControllerTest extends ControllerTestConfig {
                         .description("문의자 이름"),
                     fieldWithPath("contents[].title").type(JsonFieldType.STRING)
                         .description("문의 제목"),
+                    fieldWithPath("contents[].createdAt").type(JsonFieldType.STRING)
+                        .description("문의 생성 날짜"),
                     fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN)
                         .description("다음 페이지 여부")
                 )
@@ -453,7 +455,7 @@ class AdminControllerTest extends ControllerTestConfig {
                 fieldWithPath("inquirerEmail").type(JsonFieldType.STRING).description("문의자 이메일"),
                 fieldWithPath("title").type(JsonFieldType.STRING).description("문의 제목"),
                 fieldWithPath("content").type(JsonFieldType.STRING).description("문의 내용"),
-                fieldWithPath("createAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
+                fieldWithPath("createdAt").type(JsonFieldType.STRING).description("문의 생성 날짜")
             )))
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedResponse)));

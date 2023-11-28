@@ -4,7 +4,6 @@ import coffeemeet.server.common.presentation.interceptor.AuthenticationIntercept
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -16,15 +15,16 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        .allowedHeaders("*");
+        .allowedOriginPatterns("*")
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+        .allowedHeaders("*")
+        .allowCredentials(true);
   }
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authenticationInterceptor)
-        .addPathPatterns("/api/v1/chatting/rooms/**", "/api/v1/chatting/room/histories/**");
-  }
+//  @Override
+//  public void addInterceptors(InterceptorRegistry registry) {
+//    registry.addInterceptor(authenticationInterceptor)
+//        .addPathPatterns("/api/v1/chatting/rooms/**", "/api/v1/chatting/room/histories/**");
+//  }
 
 }

@@ -10,7 +10,7 @@ public record InquiryDetailDto(
     String inquirerEmail,
     String title,
     String content,
-    LocalDateTime createAt
+    LocalDateTime createdAt
 ) {
 
   public static InquiryDetailDto of(Inquiry inquiry, User user) {

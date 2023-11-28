@@ -73,8 +73,8 @@ class ChattingMessageServiceTest {
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(userQuery.getUserById(user.getId())).willReturn(user);
-//    willDoNothing().given(fcmNotificationSender)
-//        .sendMultiNotifications(anySet(), any());
+    //    willDoNothing().given(fcmNotificationSender)
+    //        .sendMultiNotifications(anySet(), any());
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 

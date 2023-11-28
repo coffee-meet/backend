@@ -9,11 +9,9 @@ import coffeemeet.server.common.execption.NotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,7 +22,6 @@ public class ChattingRoomQuery {
   private final ChattingRoomRepository chattingRoomRepository;
 
   public ChattingRoom getChattingRoomById(Long roomId) {
-    log.info("getChattingRoomById 함수 시작");
     return chattingRoomRepository.findById(roomId)
         .orElseThrow(() -> new InvalidInputException(
             CHATTING_ROOM_NOT_FOUND,
