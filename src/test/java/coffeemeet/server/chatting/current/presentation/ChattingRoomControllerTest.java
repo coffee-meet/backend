@@ -18,9 +18,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
+import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
@@ -109,6 +111,35 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
             )
         )
         .andExpect(status().isOk());
+  }
+
+  @DisplayName("채팅방의 상태를 체크할 수 있다.")
+  @Test
+  void checkChattingRoomTest() throws Exception {
+    // given
+    Long userId = 1L;
+    Long roomId = 1L;
+    ChatRoomStatusDto chatRoomStatusDto = ChattingFixture.chatRoomStatusDto();
+    ChatRoomStatusHTTP.Response response = ChattingFixture.chatRoomStatusHTTPResponse(
+        chatRoomStatusDto);
+
+    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
+    given(chattingRoomService.checkChattingRoomStatus(roomId)).willReturn(chatRoomStatusDto);
+
+    // when, then
+    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}/exist", roomId)
+            .header("Authorization", TOKEN)
+        )
+        .andDo(document("check-chatting-room-status",
+                resourceDetails().tag("채팅방").description("채팅방 상태 확인"),
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("토큰")
+                )
+            )
+        )
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
   }
 
 }
