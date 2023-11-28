@@ -13,6 +13,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
@@ -125,6 +126,22 @@ class ChattingRoomServiceTest {
     then(userChattingHistoryCommand).should(only()).createUserChattingHistory(anyList());
     then(chattingRoomCommand).should(only()).removeChattingRoom(any());
     then(fcmNotificationSender).should(only()).sendMultiNotifications(anySet(), any());
+  }
+
+  @DisplayName("채팅방의 유무 상태를 조회할 수 있다.")
+  @Test
+  void checkChattingRoomStatusTest() {
+    // given
+    Long roomId = 1L;
+    ChatRoomStatusDto chatRoomStatusDto = ChattingFixture.chatRoomStatusDto();
+
+    given(chattingRoomQuery.existsBy(any())).willReturn(chatRoomStatusDto.isExisted());
+
+    // when
+    ChatRoomStatusDto response = chattingRoomService.checkChattingRoomStatus(roomId);
+
+    // then
+    assertThat(response).isEqualTo(chatRoomStatusDto);
   }
 
 }
