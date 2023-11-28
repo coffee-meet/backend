@@ -1,6 +1,11 @@
 package coffeemeet.server.oauth.utils.constant;
 
-public class OAuthConstant {
+import static lombok.AccessLevel.PRIVATE;
+
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = PRIVATE)
+public final class OAuthConstant {
 
   public static final String RESPONSE_TYPE = "response_type";
   public static final String CODE = "code";
@@ -14,6 +19,6 @@ public class OAuthConstant {
   public static final String BEARER_TYPE = "Bearer ";
   public static final String AUTHORIZATION = "Authorization";
 
-  public static final String DEFAULT_IMAGE_URL = "기본 이미지 URL";
+  public static final String DEFAULT_IMAGE_URL = "default_image_url";
 
 }
