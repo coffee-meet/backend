@@ -79,8 +79,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
                     fieldWithPath("chats[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("chats[].content").type(JsonFieldType.STRING)
                         .description("내용"),
-                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간"),
-                    fieldWithPath("size").type(JsonFieldType.NUMBER).description("채팅 개수")
+                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간")
                 )
             )
         )

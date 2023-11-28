@@ -10,8 +10,8 @@ import static coffeemeet.server.oauth.utils.constant.OAuthConstant.GRANT_TYPE;
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.REDIRECT_URI;
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.STATE;
 
-import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.config.naver.NaverProperties;
+import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverTokens;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

@@ -68,7 +68,6 @@ public class ChattingFixture {
   public static ChatsHTTP.Response chatsHTTPResponse(List<Chat> chats) {
     return Instancio.of(ChatsHTTP.Response.class)
         .set(field(ChatsHTTP.Response::chats), chats)
-        .set(field(ChatsHTTP.Response::size), chats.size())
         .create();
   }
 
