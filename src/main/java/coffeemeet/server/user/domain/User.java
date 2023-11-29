@@ -1,5 +1,6 @@
 package coffeemeet.server.user.domain;
 
+import static coffeemeet.server.common.execption.GlobalErrorCode.BAD_REQUEST_ERROR;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;
@@ -8,6 +9,7 @@ import static coffeemeet.server.user.domain.UserStatus.REPORTED;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
+import coffeemeet.server.common.execption.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -34,6 +36,8 @@ import org.hibernate.proxy.HibernateProxy;
 @Where(clause = "is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends AdvancedBaseEntity {
+
+  public static final String INVALID_USER_STATUS = "올바르지 않은 유저 상태입니다.";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,6 +96,9 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void completeMatching(ChattingRoom chattingRoom) {
+    if (this.userStatus != MATCHING) {
+      throw new BadRequestException(BAD_REQUEST_ERROR, INVALID_USER_STATUS);
+    }
     this.userStatus = CHATTING_UNCONNECTED;
     this.chattingRoom = chattingRoom;
   }
@@ -101,10 +108,16 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void enterChattingRoom() {
+    if (this.userStatus != CHATTING_UNCONNECTED) {
+      throw new BadRequestException(BAD_REQUEST_ERROR, INVALID_USER_STATUS);
+    }
     this.userStatus = CHATTING_CONNECTED;
   }
 
   public void exitChattingRoom() {
+    if (this.userStatus != CHATTING_CONNECTED) {
+      throw new BadRequestException(BAD_REQUEST_ERROR, INVALID_USER_STATUS);
+    }
     this.userStatus = CHATTING_UNCONNECTED;
   }
 
@@ -118,6 +131,9 @@ public class User extends AdvancedBaseEntity {
   }
 
   public void matching() {
+    if (this.userStatus != IDLE) {
+      throw new BadRequestException(BAD_REQUEST_ERROR, INVALID_USER_STATUS);
+    }
     this.userStatus = MATCHING;
   }
 
