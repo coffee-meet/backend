@@ -16,9 +16,9 @@ import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
-import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
+import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -125,7 +125,7 @@ class ReportServiceTest {
         Set.of(chattingRoom));
 
     // when
-    ReportList responses = reportService.findAllReports(lastReportId, pageSize);
+    ReportListDto responses = reportService.findAllReports(lastReportId, pageSize);
 
     // then
     assertAll(

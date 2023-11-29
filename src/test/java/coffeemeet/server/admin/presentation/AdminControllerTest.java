@@ -37,7 +37,6 @@ import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
-import coffeemeet.server.common.fixture.dto.GroupReportListFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
 import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
 import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
@@ -48,13 +47,15 @@ import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
-import coffeemeet.server.report.presentation.dto.GroupReportList;
+import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
+import coffeemeet.server.report.presentation.dto.ReportListHTTP;
+import coffeemeet.server.report.presentation.dto.ReportListHTTP.Response;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportListDto;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -247,12 +248,14 @@ class AdminControllerTest extends ControllerTestConfig {
     List<ReportDto> reportResponses = List.of(response1, response2);
     boolean hasNext = true;
 
-    ReportList reportList = ReportList.of(reportResponses, hasNext);
+    ReportListDto reportListDto = ReportListDto.of(reportResponses, hasNext);
+    List<ReportListHTTP.Response> responses = reportListDto.contents().stream()
+        .map(Response::from)
+        .toList();
+    AdminCustomPage<ReportListHTTP.Response> result = new AdminCustomPage<>(responses,
+        reportListDto.hasNext());
 
-    AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportList.contents(),
-        reportList.hasNext());
-
-    given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportList);
+    given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportListDto);
 
     // when, then
     mockMvc.perform(get("/api/v1/admins/reports")
@@ -269,17 +272,17 @@ class AdminControllerTest extends ControllerTestConfig {
                 headerWithName("JSESSION").description("세션")
             ),
             responseFields(
-                fieldWithPath("contents").description("List of report details"),
+                fieldWithPath("contents").description("신고 조회 내역 리스트"),
                 fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
-                fieldWithPath("contents.[].targetedNickname").type(JsonFieldType.STRING)
+                fieldWithPath("contents.[].content.targetedNickname").type(JsonFieldType.STRING)
                     .description("신고 대상 닉네임"),
-                fieldWithPath("contents.[].chattingRoomName").type(JsonFieldType.STRING)
+                fieldWithPath("contents.[].content.chattingRoomName").type(JsonFieldType.STRING)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].targetedId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents.[].content.targetedId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 아이디"),
-                fieldWithPath("contents.[].chattingRoomId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents.[].content.chattingRoomId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].createdAt").type(JsonFieldType.STRING)
+                fieldWithPath("contents.[].content.createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )
         ))
@@ -293,7 +296,7 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     List<GroupReportDto> response = List.of(GroupReportDtoFixture.targetReportDto(),
         GroupReportDtoFixture.targetReportDto());
-    GroupReportList resultResponse = GroupReportListFixture.groupReportListResponse(response);
+    GroupReportHTTP.Response result = GroupReportHTTP.Response.from(response);
 
     given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
         response);
@@ -318,16 +321,16 @@ class AdminControllerTest extends ControllerTestConfig {
                 headerWithName("JSESSION").description("세션")
             ),
             responseFields(
-                fieldWithPath("reports.[].reporterNickname").type(JsonFieldType.STRING)
+                fieldWithPath("groupReports.[].reporterNickname").type(JsonFieldType.STRING)
                     .description("신고자 닉네임"),
-                fieldWithPath("reports.[].reportId").type(JsonFieldType.NUMBER)
+                fieldWithPath("groupReports.[].reportId").type(JsonFieldType.NUMBER)
                     .description("신고자 닉네임"),
-                fieldWithPath("reports.[].createdAt").type(JsonFieldType.STRING)
+                fieldWithPath("groupReports.[].createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )
         ))
         .andExpect(status().isOk())
-        .andExpect(content().json(objectMapper.writeValueAsString(resultResponse)));
+        .andExpect(content().json(objectMapper.writeValueAsString(result)));
   }
 
   @Test
