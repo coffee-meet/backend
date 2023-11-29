@@ -86,9 +86,9 @@ public class AdminController {
   public ResponseEntity<Void> approveCertification(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @PathVariable Long certificationId) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     adminService.approveCertification(certificationId);
     return ResponseEntity.ok().build();
   }
@@ -97,9 +97,9 @@ public class AdminController {
   public ResponseEntity<Void> rejectCertification(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @PathVariable Long certificationId) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     adminService.rejectCertification(certificationId);
     return ResponseEntity.ok().build();
   }
@@ -110,9 +110,9 @@ public class AdminController {
       @PathVariable Long targetedId,
       @Valid @RequestBody UserPunishmentHTTP.Request request
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     adminService.punishUser(targetedId, request.reportIds());
     return ResponseEntity.ok().build();
   }
@@ -122,9 +122,9 @@ public class AdminController {
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @Valid @RequestBody ReportDeletionHTTP.Request request
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     adminService.dismissReport(request.reportIds());
     return ResponseEntity.ok().build();
   }
@@ -135,9 +135,9 @@ public class AdminController {
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     ReportListDto reportListDto = reportService.findAllReports(lastReportId, pageSize);
     List<ReportListHTTP.Response> responses = reportListDto.contents().stream()
         .map(Response::from)
@@ -150,9 +150,9 @@ public class AdminController {
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @ModelAttribute FindGroupReports findGroupReports
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     List<GroupReportDto> responses = reportService.findReportByTargetIdAndChattingRoomId(
         findGroupReports.targetedId(), findGroupReports.chattingRoomId());
     return ResponseEntity.ok(GroupReportHTTP.Response.from(responses));
@@ -163,9 +163,9 @@ public class AdminController {
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @PathVariable Long reportId
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     ReportDetailDto response = reportService.findReportById(reportId);
     return ResponseEntity.ok(ReportDetailHTTP.Response.from(response));
   }
@@ -175,9 +175,9 @@ public class AdminController {
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastInquiryId,
       @RequestParam(defaultValue = "10") int pageSize) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
   }
@@ -187,9 +187,9 @@ public class AdminController {
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @PathVariable Long inquiryId
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     InquiryDetailDto response = inquiryService.findInquiryBy(inquiryId);
     return ResponseEntity.ok(InquiryDetailHTTP.Response.from(response));
   }
@@ -198,9 +198,9 @@ public class AdminController {
   public ResponseEntity<Void> checkInquiry(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @PathVariable Long inquiryId) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
     adminService.checkInquiry(inquiryId);
     return ResponseEntity.ok().build();
   }
@@ -212,9 +212,9 @@ public class AdminController {
       @RequestParam(defaultValue = "0") int offset,
       @RequestParam(defaultValue = "10") int size
   ) {
-    if (adminId == null) {
-      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
-    }
+//    if (adminId == null) {
+//      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
+//    }
 
     int pageNumber = offset / size;
     Pageable pageable = PageRequest.of(pageNumber, size);
