@@ -103,7 +103,7 @@ class UserCommandTest {
     // given
     Set<Long> userIds = Set.of(1L, 2L);
     ChattingRoom chattingRoom = new ChattingRoom();
-    Set<User> users = Set.of(user(), user());
+    Set<User> users = Set.of(user(MATCHING), user(MATCHING));
     given(userQuery.getUsersByIdSet(userIds)).willReturn(users);
 
     // when
@@ -147,7 +147,7 @@ class UserCommandTest {
   @DisplayName("유저 상태를 채팅방 연결로 변경할 수 있다.")
   void enterToChattingRoomTest() {
     // given
-    User user = user();
+    User user = user(CHATTING_UNCONNECTED);
 
     given(userQuery.getUserById(user.getId())).willReturn(user);
 
@@ -162,7 +162,7 @@ class UserCommandTest {
   @DisplayName("유저 상태를 채팅방 연결 해제로 변경할 수 있다.")
   void exitChattingRoomTest() {
     // given
-    User user = user();
+    User user = user(CHATTING_CONNECTED);
 
     given(userQuery.getUserById(user.getId())).willReturn(user);
 
@@ -193,7 +193,7 @@ class UserCommandTest {
   @DisplayName("유저 상태를 매칭 중으로 변경할 수 있다.")
   void setToMatchingTest() {
     // given
-    User user = user();
+    User user = user(IDLE);
 
     given(userQuery.getUserById(user.getId())).willReturn(user);
 
