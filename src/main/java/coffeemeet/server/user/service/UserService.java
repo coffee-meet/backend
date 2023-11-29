@@ -2,6 +2,7 @@ package coffeemeet.server.user.service;
 
 import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.common.execption.GlobalErrorCode.BAD_REQUEST_ERROR;
+import static coffeemeet.server.oauth.utils.constant.OAuthConstant.DEFAULT_IMAGE_URL;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
@@ -170,9 +171,11 @@ public class UserService {
   }
 
   private void deleteCurrentProfileImage(String profileImageUrl) {
-    String currentKey = mediaManager.extractKey(profileImageUrl,
-        PROFILE_IMAGE);
-    mediaManager.delete(currentKey);
+    if (!profileImageUrl.equals(DEFAULT_IMAGE_URL)) {
+      String currentKey = mediaManager.extractKey(profileImageUrl,
+          PROFILE_IMAGE);
+      mediaManager.delete(currentKey);
+    }
   }
 
 }
