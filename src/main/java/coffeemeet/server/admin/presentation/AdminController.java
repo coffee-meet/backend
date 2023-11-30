@@ -1,24 +1,21 @@
 package coffeemeet.server.admin.presentation;
 
-import static coffeemeet.server.admin.exception.AdminErrorCode.NOT_AUTHORIZED;
-
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
-import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
-import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
 import coffeemeet.server.report.presentation.dto.FindGroupReports;
+import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
 import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.report.presentation.dto.ReportListHTTP;
 import coffeemeet.server.report.presentation.dto.ReportListHTTP.Response;
