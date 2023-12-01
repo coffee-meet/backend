@@ -30,7 +30,21 @@ public class CertificationController {
       @RequestPart("department") @NotNull String department,
       @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.registerCertification(Long.valueOf(userId), companyName, companyEmail,
+    certificationService.registerCertification(Long.parseLong(userId), companyName, companyEmail,
+        department,
+        FileUtils.convertMultipartFileToFile(businessCardImage));
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/users/me/company-info/update")
+  public ResponseEntity<Void> updateCompanyInfo(
+      @RequestPart("userId") @NotNull String userId,
+      @RequestPart("companyName") @NotNull String companyName,
+      @RequestPart("companyEmail") @NotNull String companyEmail,
+      @RequestPart("department") @NotNull String department,
+      @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
+  ) {
+    certificationService.updateCertification(Long.parseLong(userId), companyName, companyEmail,
         department,
         FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();
