@@ -4,6 +4,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.user.domain.Keyword;
+import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.service.dto.MyProfileDto;
 import java.util.List;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,8 @@ public final class MyProfileHTTP {
       String profileImageUrl,
       String companyName,
       Department department,
-      List<Keyword> interests
+      List<Keyword> interests,
+      OAuthProvider oAuthProvider
   ) {
 
     public static Response of(MyProfileDto response) {
@@ -25,7 +27,8 @@ public final class MyProfileHTTP {
           response.profileImageUrl(),
           response.companyName(),
           response.department(),
-          response.interests()
+          response.interests(),
+          response.oAuthProvider()
       );
     }
   }
