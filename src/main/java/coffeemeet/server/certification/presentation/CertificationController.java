@@ -3,6 +3,8 @@ package coffeemeet.server.certification.presentation;
 import coffeemeet.server.certification.presentation.dto.EmailHTTP;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
 import coffeemeet.server.certification.service.CertificationService;
+import coffeemeet.server.common.annotation.Login;
+import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,13 +40,13 @@ public class CertificationController {
 
   @PostMapping("/users/me/company-info/update")
   public ResponseEntity<Void> updateCompanyInfo(
-      @RequestPart("userId") @NotNull String userId,
+      @Login AuthInfo authInfo,
       @RequestPart("companyName") @NotNull String companyName,
       @RequestPart("companyEmail") @NotNull String companyEmail,
       @RequestPart("department") @NotNull String department,
       @RequestPart("businessCard") @NotNull MultipartFile businessCardImage
   ) {
-    certificationService.updateCertification(Long.parseLong(userId), companyName, companyEmail,
+    certificationService.updateCertification(authInfo.userId(), companyName, companyEmail,
         department,
         FileUtils.convertMultipartFileToFile(businessCardImage));
     return ResponseEntity.ok().build();

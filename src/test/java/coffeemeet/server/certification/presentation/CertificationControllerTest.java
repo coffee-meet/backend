@@ -13,6 +13,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -116,6 +118,7 @@ class CertificationControllerTest extends ControllerTestConfig {
     mockMvc.perform(multipart("/api/v1/certification/users/me/company-info/update")
             .file("businessCard", businessCardImage.getBytes())
             .part(userId, companyName, companyEmail, department)
+            .header("Authorization", TOKEN)
             .contentType(MULTIPART_FORM_DATA)
         )
         .andExpect(status().isOk())
@@ -123,6 +126,9 @@ class CertificationControllerTest extends ControllerTestConfig {
             resourceDetails().tag("회사 인증").description("회사 정보 수정"),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
+            requestHeaders(
+                headerWithName("Authorization").description("토큰")
+            ),
             requestParts(
                 partWithName(sUserId).description("유저 아이디"),
                 partWithName(sCompanyName).description("회사명"),
