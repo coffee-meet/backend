@@ -5,8 +5,11 @@ import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRo
 import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
@@ -73,8 +76,8 @@ class ChattingMessageServiceTest {
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(userQuery.getUserById(user.getId())).willReturn(user);
-    //    willDoNothing().given(fcmNotificationSender)
-    //        .sendMultiNotifications(anySet(), any());
+    willDoNothing().given(fcmNotificationSender)
+        .sendMultiNotifications(anySet(), any());
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 

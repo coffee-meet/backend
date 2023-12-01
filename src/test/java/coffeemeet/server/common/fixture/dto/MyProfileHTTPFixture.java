@@ -11,7 +11,8 @@ public class MyProfileHTTPFixture {
         response.profileImageUrl(),
         response.companyName(),
         response.department(),
-        response.interests()
+        response.interests(),
+        response.oAuthProvider()
     );
   }
 
