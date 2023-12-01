@@ -1,7 +1,6 @@
 package coffeemeet.server.chatting.concurrency;
 
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
-import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.willDoNothing;
 

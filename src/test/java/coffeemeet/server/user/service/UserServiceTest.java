@@ -29,7 +29,6 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
 import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.MediaManager;

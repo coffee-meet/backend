@@ -84,6 +84,7 @@ class CertificationServiceTest {
 
     MockedStatic<FileUtils> fileUtils = mockStatic(FileUtils.class);
     fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
+
     given(mediaManager.generateKey(any())).willReturn("someKey");
     given(mediaManager.getUrl(any())).willReturn(businessCardUrl);
     given(userQuery.getUserById(userId)).willReturn(user);
@@ -93,8 +94,40 @@ class CertificationServiceTest {
 
     // then
     then(mediaManager).should().generateKey(any());
-    then(mediaManager).should().upload(any(), any(File.class));
+    then(mediaManager).should().upload(any(), any());
     then(certificationCommand).should().createCertification(any(), any(), any(), any(), any());
+
+    fileUtils.close();
+  }
+
+  @Test
+  @DisplayName("회사 정보를 수정할 수 있다.")
+  void updateCertificationTest() {
+    // given
+    User user = user();
+    Long userId = user.getId();
+    String companyName = companyName();
+    String email = email();
+    String departmentName = department().name();
+    File file = mock();
+    String businessCardUrl = businessCardUrl();
+
+    MockedStatic<FileUtils> fileUtils = mockStatic(FileUtils.class);
+    fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
+
+    given(mediaManager.generateKey(any())).willReturn("someKey");
+    given(mediaManager.getUrl(any())).willReturn(businessCardUrl);
+    given(userQuery.getUserById(userId)).willReturn(user);
+
+    // when
+    certificationService.updateCertification(userId, companyName, email, departmentName, file);
+
+    // then
+
+    then(mediaManager).should().upload(any(), any());
+    then(certificationCommand).should().deleteCertification(any());
+    then(certificationCommand).should()
+        .createCertification(any(), any(), any(), any(), any());
 
     fileUtils.close();
   }

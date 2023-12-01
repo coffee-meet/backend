@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +40,18 @@ public class CertificationService {
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
-  @Transactional
   public void registerCertification(long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
+    processCertification(userId, companyName, email, departmentName, businessCardImage, false);
+  }
+
+  public void updateCertification(long userId, String companyName, String email,
+      String departmentName, File businessCardImage) {
+    processCertification(userId, companyName, email, departmentName, businessCardImage, true);
+  }
+
+  private void processCertification(long userId, String companyName, String email,
+      String departmentName, File businessCardImage, boolean isUpdate) {
     String key = mediaManager.generateKey(BUSINESS_CARD);
     uploadBusinessCard(userId, key, businessCardImage);
 
@@ -51,6 +59,10 @@ public class CertificationService {
     String businessCardUrl = mediaManager.getUrl(key);
     Department department = Department.valueOf(departmentName);
     User user = userQuery.getUserById(userId);
+
+    if (isUpdate) {
+      certificationCommand.deleteCertification(userId);
+    }
     certificationCommand.createCertification(user, companyName, companyEmail, department,
         businessCardUrl);
   }

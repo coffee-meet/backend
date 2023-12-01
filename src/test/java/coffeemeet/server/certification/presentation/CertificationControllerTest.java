@@ -92,6 +92,48 @@ class CertificationControllerTest extends ControllerTestConfig {
   }
 
   @Test
+  @DisplayName("회사 인증 정보를 수정할 수 있다.")
+  void updateCompanyInfoTest() throws Exception {
+    // given
+    String sUserId = "userId";
+    String sCompanyName = "companyName";
+    String sBusinessCard = "businessCard";
+    String sCompanyEmail = "companyEmail";
+    String sDepartment = "department";
+
+    MockMultipartFile businessCardImage = new MockMultipartFile(
+        sBusinessCard,
+        "business_card.jpg",
+        "image/jpeg",
+        sBusinessCard.getBytes()
+    );
+    MockPart userId = new MockPart(sUserId, userId().getBytes());
+    MockPart companyName = new MockPart(sCompanyName, companyName().getBytes());
+    MockPart companyEmail = new MockPart(sCompanyEmail, email().getBytes());
+    MockPart department = new MockPart(sDepartment, department().name().getBytes());
+
+    // when, then
+    mockMvc.perform(multipart("/api/v1/certification/users/me/company-info/update")
+            .file("businessCard", businessCardImage.getBytes())
+            .part(userId, companyName, companyEmail, department)
+            .contentType(MULTIPART_FORM_DATA)
+        )
+        .andExpect(status().isOk())
+        .andDo(document("certification-register",
+            resourceDetails().tag("회사 인증").description("회사 정보 수정"),
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            requestParts(
+                partWithName(sUserId).description("유저 아이디"),
+                partWithName(sCompanyName).description("회사명"),
+                partWithName(sBusinessCard).description("회사 명함 이미지"),
+                partWithName(sCompanyEmail).description("회사 이메일"),
+                partWithName(sDepartment).description("회사 부서명")
+            )
+        ));
+  }
+
+  @Test
   @DisplayName("이메일을 통해 인증코드를 전송할 수 있다.")
   void sendVerificationCodeByEmailTest() throws Exception {
     // given
