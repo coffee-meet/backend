@@ -16,9 +16,9 @@ import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
-import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
+import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -57,7 +57,7 @@ class ReportServiceTest {
     Long reporterId = report.getReporterId();
 
     willDoNothing().given(reportQuery).hasDuplicatedReport(anyLong(), anyLong(), anyLong());
-    willDoNothing().given(chattingRoomQuery).existsById(anyLong());
+    willDoNothing().given(chattingRoomQuery).verifyChatRoomExistence(anyLong());
     willDoNothing().given(reportCommand).createReport(any(Report.class));
 
     // when
@@ -121,10 +121,11 @@ class ReportServiceTest {
     given(userQuery.getUsersByIdSet(userIds)).willReturn(Set.of(targetUser));
 
     Set<Long> chattingRoomIds = Set.of(chattingRoomId);
-    given(chattingRoomQuery.getUserByIdSet(chattingRoomIds)).willReturn(Set.of(chattingRoom));
+    given(chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds)).willReturn(
+        Set.of(chattingRoom));
 
     // when
-    ReportList responses = reportService.findAllReports(lastReportId, pageSize);
+    ReportListDto responses = reportService.findAllReports(lastReportId, pageSize);
 
     // then
     assertAll(

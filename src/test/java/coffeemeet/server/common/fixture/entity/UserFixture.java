@@ -29,6 +29,7 @@ public class UserFixture {
         .set(field(User::getUserStatus), userStatus)
         .ignore(field(User::isDeleted))
         .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
         .create();
   }
 

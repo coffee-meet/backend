@@ -1,5 +1,6 @@
 package coffeemeet.server.common.presentation.advice;
 
+import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.common.execption.DataLengthExceededException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
 import coffeemeet.server.common.execption.InvalidAuthException;
@@ -54,6 +55,13 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MissMatchException.class)
   public ResponseEntity<ErrorResponse> handleException(MissMatchException exception) {
+    log.info(exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(ErrorResponse.of(exception.getErrorCode()));
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ErrorResponse> handleException(BadRequestException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse.of(exception.getErrorCode()));

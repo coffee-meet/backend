@@ -9,10 +9,10 @@ import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
-import coffeemeet.server.report.presentation.dto.ReportList;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportDto;
+import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ReportService {
     return ReportDetailDto.of(report, reporter, targetUser);
   }
 
-  public ReportList findAllReports(Long lastReportId, int pageSize) {
+  public ReportListDto findAllReports(Long lastReportId, int pageSize) {
     List<Report> reports = reportQuery.getAllReports(lastReportId, pageSize);
     boolean hasNext = reports.size() >= pageSize;
 
@@ -74,7 +74,7 @@ public class ReportService {
           return ReportDto.of(targetUser, chattingRoom);
         })
         .toList();
-    return ReportList.of(responses, hasNext);
+    return ReportListDto.of(responses, hasNext);
   }
 
   public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(long targetId,
@@ -91,7 +91,7 @@ public class ReportService {
     boolean isChattingHistoryExists = false;
 
     try {
-      chattingRoomQuery.existsById(chattingRoomId);
+      chattingRoomQuery.verifyChatRoomExistence(chattingRoomId);
       isChattingRoomExists = true;
     } catch (NotFoundException e) {
       isChattingHistoryExists = userChattingHistoryQuery.existsByUserId(reporterId);
@@ -108,7 +108,7 @@ public class ReportService {
     Set<Long> chattingRoomIds = allReports.stream()
         .map(Report::getChattingRoomId)
         .collect(Collectors.toSet());
-    Set<ChattingRoom> chattingRooms = chattingRoomQuery.getUserByIdSet(chattingRoomIds);
+    Set<ChattingRoom> chattingRooms = chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds);
     return chattingRooms.stream()
         .collect(Collectors.toMap(ChattingRoom::getId, Function.identity()));
   }

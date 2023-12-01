@@ -47,7 +47,7 @@ public class FCMNotificationSender {
 
   public void sendMultiNotifications(Set<NotificationInfo> notificationInfos, String content) {
     Set<String> tokens = convertNotificationInfoToToken(notificationInfos);
-    if(tokens.isEmpty()) {
+    if (tokens.isEmpty()) {
       return;
     }
 
@@ -65,7 +65,7 @@ public class FCMNotificationSender {
   public void sendMultiNotificationsWithData(Set<NotificationInfo> notificationInfos,
       String content, String key, String value) {
     Set<String> tokens = convertNotificationInfoToToken(notificationInfos);
-    if(tokens.isEmpty()) {
+    if (tokens.isEmpty()) {
       return;
     }
 

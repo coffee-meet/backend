@@ -4,6 +4,7 @@ import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
 import static coffeemeet.server.common.fixture.dto.AuthTokensFixture.authTokens;
 import static coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture.response;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
+import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.entity.UserFixture.keywords;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
@@ -28,6 +29,7 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
 import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.MediaManager;
@@ -369,7 +371,8 @@ class UserServiceTest {
     void getUserStatusChattingUnConnectingTest() {
       // given
       Long userId = 1L;
-      User user = UserFixture.user(UserStatus.CHATTING_UNCONNECTED);
+      User user = UserFixture.user(UserStatus.MATCHING);
+      user.completeMatching(chattingRoom());
       Certification certification = certification();
 
       given(userQuery.getUserById(anyLong())).willReturn(user);

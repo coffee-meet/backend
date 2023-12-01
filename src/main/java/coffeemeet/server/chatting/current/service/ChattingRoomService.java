@@ -5,6 +5,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
@@ -83,4 +84,7 @@ public class ChattingRoomService {
     users.forEach(User::setIdleStatus);
   }
 
+  public ChatRoomStatusDto checkChattingRoomStatus(Long roomId) {
+    return ChatRoomStatusDto.from(chattingRoomQuery.existsBy(roomId));
+  }
 }

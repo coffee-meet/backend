@@ -5,8 +5,10 @@ import static org.instancio.Select.field;
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.domain.ChattingSession;
+import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
+import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
@@ -126,6 +128,16 @@ public class ChattingFixture {
 
   public static ChattingSession chattingSession() {
     return Instancio.create(ChattingSession.class);
+  }
+
+  public static ChatRoomStatusDto chatRoomStatusDto() {
+    return Instancio.of(ChatRoomStatusDto.class)
+        .create();
+  }
+
+  public static ChatRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
+      ChatRoomStatusDto chatRoomStatusDto) {
+    return ChatRoomStatusHTTP.Response.from(chatRoomStatusDto);
   }
 
 }

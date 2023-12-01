@@ -1,5 +1,7 @@
 package coffeemeet.server.chatting.concurrency;
 
+import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -57,7 +59,7 @@ class ChattingMessageServiceConcurrencyTest {
   void chattingConcurrencyTest() throws InterruptedException {
     // given
     ChattingRoom room = chattingRoomRepository.save(ChattingFixture.chattingRoom());
-    User user = userRepository.save(UserFixture.user());
+    User user = userRepository.save(UserFixture.user(CHATTING_UNCONNECTED));
 
     String sessionId = "sessionId";
     chattingMessageService.storeSocketSession(sessionId, String.valueOf(user.getId()));
