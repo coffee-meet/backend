@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum KeyType {
 
-  BUSINESS_CARD("BusinessCard"),
-  PROFILE_IMAGE("ProfileImage"),
+  BUSINESS_CARD("business-card"),
+  PROFILE_IMAGE("profile-image"),
   ;
 
   private final String value;
