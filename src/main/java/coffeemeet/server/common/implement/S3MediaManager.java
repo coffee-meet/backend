@@ -4,13 +4,16 @@ import static coffeemeet.server.common.execption.GlobalErrorCode.INVALID_S3_URL;
 
 import coffeemeet.server.common.domain.KeyType;
 import coffeemeet.server.common.execption.InvalidInputException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class S3MediaManager implements MediaManager {
 
@@ -28,12 +31,20 @@ public class S3MediaManager implements MediaManager {
 
   @Override
   public void upload(String key, File file) {
-    amazonS3.putObject(bucketName, key, file);
+    try {
+      amazonS3.putObject(bucketName, key, file);
+    } catch (AmazonServiceException e) {
+      log.warn("이미지 업로드에 실패 했습니다. key: " + key);
+    }
   }
 
   @Override
   public void delete(String key) {
-    amazonS3.deleteObject(bucketName, key);
+    try {
+      amazonS3.deleteObject(bucketName, key);
+    } catch (AmazonServiceException e) {
+      log.warn("이미지 삭제에 실패 했습니다. key: " + key);
+    }
   }
 
   @Override
