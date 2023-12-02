@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
-public class NaverAuthCodeRequestUrl implements AuthCodeRequestUrlProvider {
+public class NaverAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvider {
 
   private static final String AUTHORIZE_URL = "https://nid.naver.com/oauth2.0/authorize";
 
