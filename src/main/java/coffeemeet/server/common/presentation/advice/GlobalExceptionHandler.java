@@ -2,6 +2,7 @@ package coffeemeet.server.common.presentation.advice;
 
 import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.common.execption.DataLengthExceededException;
+import coffeemeet.server.common.execption.ForbiddenException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.common.execption.InvalidInputException;
@@ -117,6 +118,13 @@ public class GlobalExceptionHandler {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
         .body(ErrorResponse.of(GlobalErrorCode.PAYLOAD_TOO_LARGE));
+  }
+
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<ErrorResponse> handleException(ForbiddenException exception) {
+    log.info(exception.getMessage(), exception);
+    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        .body(ErrorResponse.of(exception.getErrorCode()));
   }
 
 }
