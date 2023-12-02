@@ -1,10 +1,9 @@
-package coffeemeet.server.auth.service.cq;
+package coffeemeet.server.auth.implement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.implement.RefreshTokenQuery;
 import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import java.util.Optional;

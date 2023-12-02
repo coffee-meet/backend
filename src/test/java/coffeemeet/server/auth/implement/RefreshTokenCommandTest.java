@@ -1,4 +1,4 @@
-package coffeemeet.server.auth.service.cq;
+package coffeemeet.server.auth.implement;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
 import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
 import org.junit.jupiter.api.DisplayName;
