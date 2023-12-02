@@ -16,12 +16,12 @@ public enum InquiryErrorCode implements ErrorCode {
 
   @Override
   public String code() {
-    return null;
+    return errorCode;
   }
 
   @Override
   public String message() {
-    return null;
+    return message;
   }
 
 }
