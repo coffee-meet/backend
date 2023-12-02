@@ -22,6 +22,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
+  public static final int AUTHENTICATION_PREFIX_LENGTH = 7;
 
   private final JwtTokenProvider jwtTokenProvider;
   private final RefreshTokenQuery refreshTokenQuery;
@@ -39,7 +40,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     String authHeader = httpServletRequest.getHeader("Authorization");
 
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      String token = authHeader.substring(7);
+      String token = authHeader.substring(AUTHENTICATION_PREFIX_LENGTH);
       Long userId = jwtTokenProvider.extractUserId(token);
       RefreshToken refreshToken = refreshTokenQuery.getRefreshToken(userId);
       return new AuthInfo(userId, refreshToken.getValue());
