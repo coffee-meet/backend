@@ -4,14 +4,18 @@ import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
+import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
@@ -49,6 +53,9 @@ class ReportServiceTest {
   @Mock
   private ChattingRoomQuery chattingRoomQuery;
 
+  @Mock
+  private UserChattingHistoryQuery userChattingHistoryQuery;
+
   @DisplayName("신고할 수 있다.")
   @Test
   void reportUserTest() {
@@ -60,11 +67,28 @@ class ReportServiceTest {
     willDoNothing().given(chattingRoomQuery).verifyChatRoomExistence(anyLong());
     willDoNothing().given(reportCommand).createReport(any(Report.class));
 
-    // when
+    // when, then
     assertThatCode(
         () -> reportService.reportUser(reporterId, report.getChattingRoomId(),
             report.getTargetedId(),
             "부적절한 콘텐츠", "신고 상세 내용")).doesNotThrowAnyException();
+  }
+
+  @DisplayName("존재하지 않는 채팅방에 대해 신고할 경우 예외가 발생한다.")
+  @Test
+  void reportUserFailTest() {
+    // given
+    Report report = report();
+    Long reporterId = report.getReporterId();
+
+    willDoNothing().given(reportQuery).hasDuplicatedReport(anyLong(), anyLong(), anyLong());
+    willThrow(NotFoundException.class).given(chattingRoomQuery).verifyChatRoomExistence(anyLong());
+    given(userChattingHistoryQuery.existsByUserId(anyLong())).willReturn(Boolean.FALSE);
+
+    // when, then
+    assertThatThrownBy(() -> reportService.reportUser(reporterId, report.getChattingRoomId(),
+        report.getTargetedId(), "잠수", "잠수타요."))
+        .isInstanceOf(NotFoundException.class);
   }
 
   @DisplayName("신고 아이디로 해당 신고 내역을 조회할 수 있다.")

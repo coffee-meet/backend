@@ -8,7 +8,7 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -39,7 +39,8 @@ class InterestCommandTest {
     List<Keyword> keywords = List.of(Keyword.운동, Keyword.맛집);
 
     // when, then
-    assertDoesNotThrow(() -> interestCommand.saveAll(keywords, user));
+    assertThatCode(() -> interestCommand.saveAll(keywords, user))
+        .doesNotThrowAnyException();
   }
 
   @Test
@@ -54,7 +55,8 @@ class InterestCommandTest {
     given(interestQuery.findAllByUserId(anyLong())).willReturn(interests);
 
     // when, then
-    assertDoesNotThrow(() -> interestCommand.updateInterests(user, newKeywords));
+    assertThatCode(() -> interestCommand.updateInterests(user, newKeywords))
+        .doesNotThrowAnyException();
   }
 
   @Test
@@ -66,7 +68,8 @@ class InterestCommandTest {
         new Interest(Keyword.맛집, user));
 
     // when, then
-    assertDoesNotThrow(() -> interestCommand.deleteAll(interests));
+    assertThatCode(() -> interestCommand.deleteAll(interests))
+        .doesNotThrowAnyException();
   }
 
 }
