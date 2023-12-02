@@ -9,6 +9,7 @@ import static coffeemeet.server.common.fixture.entity.CertificationFixture.verif
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,6 +25,7 @@ import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.implement.EmailSender;
 import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.common.util.FileUtils;
@@ -161,6 +163,20 @@ class CertificationServiceTest {
     // when, then
     assertThatCode(() -> certificationService.compareCode(userId, verificationCode))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("인증 코드가 일치하지 않다면 예외를 던진다.")
+  void compareCodeFailTest() {
+    // given
+    Long userId = Instancio.create(Long.class);
+    String correctCode = "correctCode";
+    String verificationCode = verificationCode();
+    given(emailVerificationQuery.getCodeById(userId)).willReturn(correctCode);
+
+    // when, then
+    assertThatThrownBy(() -> certificationService.compareCode(userId, verificationCode))
+        .isInstanceOf(InvalidInputException.class);
   }
 
   @Test
