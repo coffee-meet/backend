@@ -1,6 +1,7 @@
 package coffeemeet.server.matching.implement;
 
 import static coffeemeet.server.common.execption.GlobalErrorCode.INTERNAL_SERVER_ERROR;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,6 +12,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.common.execption.RedisException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,6 +84,20 @@ class MatchingQueueCommandTest {
 
     // then
     then(zSetOperations).should(only()).remove(companyName, userId);
+  }
+
+  @Test
+  @DisplayName("유저의 매칭 시작 시간을 가져올 수 있다.")
+  void getTimeByUserIdTest() {
+    // given
+    Double score = 1.1;
+    given(zSetOperations.score(any(), anyLong())).willReturn(score);
+
+    // when
+    LocalDateTime matchingStartedAt = matchingQueueCommand.getTimeByUserId("회사명", 1L);
+
+    // then
+    assertThat(matchingStartedAt).isNotNull();
   }
 
 }

@@ -1,4 +1,4 @@
-package coffeemeet.server.certification.service.cq;
+package coffeemeet.server.certification.implement;
 
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.user.domain.User;
 import java.util.Collections;

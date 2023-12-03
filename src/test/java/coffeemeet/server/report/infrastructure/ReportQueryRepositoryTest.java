@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.report.domain.Report;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,30 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
 
     // then
     assertThat(allReports).hasSize(2);
+  }
+
+  @DisplayName("신고 아이디로 해당 신고를 조회할 수 있다.")
+  @Test
+  void findByIdTest() {
+    // given
+    Report report = report();
+    reportRepository.save(report);
+
+    // when
+    Report foundReport = reportQueryRepository.findById(report.getId()).get();
+
+    // then
+    assertThat(foundReport).isNotNull();
+  }
+
+  @DisplayName("신고 아이디로 해당 신고를 조회할 경우 빈값이 반환된다.")
+  @Test
+  void findByIdFailTest() {
+    // when
+    Optional<Report> foundReport = reportQueryRepository.findById(1);
+
+    // then
+    assertThat(foundReport).isEmpty();
   }
 
 }

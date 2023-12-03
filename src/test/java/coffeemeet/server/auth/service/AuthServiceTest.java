@@ -2,6 +2,7 @@ package coffeemeet.server.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyLong;
@@ -12,6 +13,7 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
+import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
 import coffeemeet.server.user.service.UserService;
 import org.instancio.Instancio;
@@ -61,6 +63,17 @@ class AuthServiceTest {
         () -> assertThat(renewedAuthTokens.accessToken()).isNotEqualTo(authTokens.accessToken()),
         () -> assertThat(renewedAuthTokens.refreshToken()).isEqualTo(REFRESH_TOKEN)
     );
+  }
+
+  @DisplayName("refresh token이 만료될 경우 access token 을 갱신 시 예외를 던진다.")
+  @Test
+  void renewFailTest() {
+    // given
+    given(jwtTokenProvider.isExpiredRefreshToken(REFRESH_TOKEN)).willReturn(true);
+
+    // when, then
+    assertThatThrownBy(() -> authService.renew((long) Math.random(), REFRESH_TOKEN))
+        .isInstanceOf(InvalidAuthException.class);
   }
 
   @DisplayName("로그아웃 시킬 수 있다.")

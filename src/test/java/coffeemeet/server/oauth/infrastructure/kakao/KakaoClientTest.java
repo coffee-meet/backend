@@ -1,4 +1,4 @@
-package coffeemeet.server.oauth.infrastructure.kakao.client;
+package coffeemeet.server.oauth.infrastructure.kakao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -10,9 +10,9 @@ import static org.mockito.BDDMockito.given;
 import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
 import coffeemeet.server.oauth.config.kakao.KakaoProperties;
-import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
+import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,11 +58,11 @@ class KakaoClientTest {
     // then
     assertAll(
         () -> assertThat(expectedTokens).isNotNull(),
-        () -> assertThat(expectedTokens.accessToken()).isEqualTo(kakaoTokens.accessToken()),
-        () -> assertThat(expectedTokens.refreshToken()).isEqualTo(kakaoTokens.refreshToken()),
-        () -> assertThat(expectedTokens.tokenType()).isEqualTo(kakaoTokens.tokenType()),
-        () -> assertThat(expectedTokens.expiresIn()).isEqualTo(kakaoTokens.expiresIn()),
-        () -> assertThat(expectedTokens.refreshTokenExpiresIn()).isEqualTo(
+        () -> assertThat(Objects.requireNonNull(expectedTokens).accessToken()).isEqualTo(kakaoTokens.accessToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(kakaoTokens.refreshToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(kakaoTokens.tokenType()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(kakaoTokens.expiresIn()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshTokenExpiresIn()).isEqualTo(
             kakaoTokens.refreshTokenExpiresIn())
     );
   }

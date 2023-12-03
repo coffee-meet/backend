@@ -1,14 +1,17 @@
 package coffeemeet.server.admin.service;
 
 import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.entity.InquiryFixture;
@@ -59,6 +62,22 @@ class AdminServiceTest {
   @Mock
   private InquiryCommand inquiryCommand;
 
+  @Mock
+  private AdminQuery adminQuery;
+
+  @Test
+  @DisplayName("로그인할 수 있다.")
+  void loginTest() {
+    // given
+    String id = "1";
+    String password = "1";
+
+    willDoNothing().given(adminQuery).checkIdAndPassword(anyString(), anyString());
+
+    // when, then
+    assertThatCode(() -> adminService.login(id, password))
+        .doesNotThrowAnyException();
+  }
 
   @Test
   @DisplayName("인증 수락 처리를 할 수 있다.")
