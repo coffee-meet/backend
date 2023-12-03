@@ -1,8 +1,12 @@
 package coffeemeet.server.matching.service;
 
+import static coffeemeet.server.matching.exception.MatchingErrorCode.NOT_CERTIFICATED_USER;
+
+import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
+import coffeemeet.server.common.execption.ForbiddenException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
@@ -28,7 +32,13 @@ public class MatchingService {
   private final MatchingQueueCommand matchingQueueCommand;
 
   public void startMatching(Long userId) {
-    String companyName = certificationQuery.getCompanyNameByUserId(userId);
+    Certification certification = certificationQuery.getCertificationByUserId(userId);
+    if (!certification.isCertificated()) {
+      throw new ForbiddenException(NOT_CERTIFICATED_USER,
+          String.format("사용자(%s) 인증이 완료되지 않았습니다.", userId));
+    }
+
+    String companyName = certification.getCompanyName();
     matchingQueueCommand.enqueueUserByCompanyName(companyName, userId);
     userCommand.setToMatching(userId);
 

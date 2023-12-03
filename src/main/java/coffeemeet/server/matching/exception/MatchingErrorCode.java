@@ -1,4 +1,4 @@
-package coffeemeet.server.inquiry.exception;
+package coffeemeet.server.matching.exception;
 
 
 import coffeemeet.server.common.execption.ErrorCode;
@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum InquiryErrorCode implements ErrorCode {
-  NOT_EXIST_INQUIRY("U004", "존재하지 않는 문의입니다"),
+public enum MatchingErrorCode implements ErrorCode {
+  NOT_CERTIFICATED_USER("M003", "인증되지 않은 사용자입니다."),
   ;
 
   private final String errorCode;
