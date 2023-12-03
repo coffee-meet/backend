@@ -58,10 +58,14 @@ class KakaoClientTest {
     // then
     assertAll(
         () -> assertThat(expectedTokens).isNotNull(),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).accessToken()).isEqualTo(kakaoTokens.accessToken()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(kakaoTokens.refreshToken()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(kakaoTokens.tokenType()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(kakaoTokens.expiresIn()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).accessToken()).isEqualTo(
+            kakaoTokens.accessToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(
+            kakaoTokens.refreshToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(
+            kakaoTokens.tokenType()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(
+            kakaoTokens.expiresIn()),
         () -> assertThat(Objects.requireNonNull(expectedTokens).refreshTokenExpiresIn()).isEqualTo(
             kakaoTokens.refreshTokenExpiresIn())
     );

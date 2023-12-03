@@ -63,9 +63,12 @@ class NaverClientTest {
           assert expectedTokens != null;
           assertThat(expectedTokens.accessToken()).isEqualTo(naverTokens.accessToken());
         },
-        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(naverTokens.refreshToken()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(naverTokens.tokenType()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(naverTokens.expiresIn()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(
+            naverTokens.refreshToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(
+            naverTokens.tokenType()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(
+            naverTokens.expiresIn()),
         () -> assertThat(Objects.requireNonNull(expectedTokens).error()).isEqualTo(
             naverTokens.error())
     );
