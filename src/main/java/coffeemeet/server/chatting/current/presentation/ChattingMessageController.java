@@ -3,8 +3,11 @@ package coffeemeet.server.chatting.current.presentation;
 import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChattingMessageController {
@@ -28,9 +32,12 @@ public class ChattingMessageController {
     chattingMessageService.storeSocketSession(sessionId, userId);
   }
 
+  @PerformanceMeasurement
   @EventListener(SessionDisconnectEvent.class)
   public void onDisconnect(SessionDisconnectEvent event) {
+    log.info("세션 제거하기 시작 : " + LocalDateTime.now());
     chattingMessageService.expireSocketSession(event.getSessionId());
+    log.info("세션 제거하기 완료 : " + LocalDateTime.now());
   }
 
   @MessageMapping("/chatting/messages")

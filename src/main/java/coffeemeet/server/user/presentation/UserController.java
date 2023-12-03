@@ -1,6 +1,7 @@
 package coffeemeet.server.user.presentation;
 
 import coffeemeet.server.common.annotation.Login;
+import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import coffeemeet.server.common.domain.AuthInfo;
 import coffeemeet.server.common.util.FileUtils;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -19,7 +20,9 @@ import coffeemeet.server.user.service.dto.UserStatusDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -65,8 +69,10 @@ public class UserController {
     return ResponseEntity.ok(MyProfileHTTP.Response.of(response));
   }
 
+  @PerformanceMeasurement
   @GetMapping("/status")
   public ResponseEntity<UserStatusHTTP.Response> getUserStatus(@Login AuthInfo authInfo) {
+    log.info("유저 상태 요청 시간: " + LocalDateTime.now());
     UserStatusDto response = userService.getUserStatus(authInfo.userId());
     return ResponseEntity.ok(UserStatusHTTP.Response.of(response));
   }
