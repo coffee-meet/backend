@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -228,6 +229,7 @@ class UserServiceTest {
     given(userQuery.getUserById(anyLong())).willReturn(user);
     given(mediaManager.generateKey(PROFILE_IMAGE)).willReturn("key");
     given(mediaManager.getUrl(anyString())).willReturn("newImageUrl");
+    given(mediaManager.extractKey(any(), eq(PROFILE_IMAGE))).willReturn("");
 
     // when
     userService.updateProfileImage(user.getId(), file);
