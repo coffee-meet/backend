@@ -33,10 +33,10 @@ public class MatchingService {
 
   public void startMatching(Long userId) {
     Certification certification = certificationQuery.getCertificationByUserId(userId);
-    if (!certification.isCertificated()) {
-      throw new ForbiddenException(NOT_CERTIFICATED_USER,
-          String.format("사용자(%s) 인증이 완료되지 않았습니다.", userId));
-    }
+//    if (!certification.isCertificated()) {
+//      throw new ForbiddenException(NOT_CERTIFICATED_USER,
+//          String.format("사용자(%s) 인증이 완료되지 않았습니다.", userId));
+//    }
 
     String companyName = certification.getCompanyName();
     matchingQueueCommand.enqueueUserByCompanyName(companyName, userId);
