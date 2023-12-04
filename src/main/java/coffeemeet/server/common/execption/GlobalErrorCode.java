@@ -12,7 +12,6 @@ public enum GlobalErrorCode implements ErrorCode {
   PARAMETER_INPUT_MISSING("G000", "입력 파라미터가 없습니다."),
   PAYLOAD_TOO_LARGE("G000", "요청 데이터가 6MB를 초과했습니다."),
   INVALID_FCM_TOKEN("G004", "유효하지 않은 FCM토큰입니다."),
-  INVALID_S3_URL("G004", "유효하지 않은 s3 URL 입니다."),
   STOMP_ACCESSOR_NOT_FOUND("G005", "웹소켓 연결을 할 수 없습니다."),
   INTERNAL_SERVER_ERROR("G050", "예상치 못한 오류입니다."),
   PUSH_NOTIFICATION_SEND_FAILURE("G050", "푸시 알림 전송에 실패했습니다."),

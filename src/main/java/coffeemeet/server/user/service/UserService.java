@@ -174,6 +174,9 @@ public class UserService {
     if (!profileImageUrl.equals(DEFAULT_IMAGE_URL)) {
       String currentKey = mediaManager.extractKey(profileImageUrl,
           PROFILE_IMAGE);
+      if (currentKey.isBlank()) {
+        return;
+      }
       mediaManager.delete(currentKey);
     }
   }
