@@ -1,6 +1,6 @@
 <div style="display: flex; align-items: flex-start;">
   <div style="margin-top: 35px;">
-    <img src="./src/main/resources/secret/img/로고.png" width="100" height="100">
+    <img src="./img/로고1.png" width="100" height="100">
   </div>
   <div style="margin-left: 20px;">
     <h1>Coffee-Meet</h1>
@@ -10,8 +10,7 @@
 <br><br>  
 
 ## ☕️ Coffee-Meet  
-
-![기능1.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EA%B8%B0%EB%8A%A51.png)  
+![기능1.png](img%2F%EA%B8%B0%EB%8A%A51.png)
 <br><br>  
 
 ## 👨‍👩‍👧‍👦 Developers
@@ -60,8 +59,8 @@
 
 ## 📲 User Flow  
 
-![최최최최최종.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)  
+![최최최최최종.png](img%2F%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
 <br>  
 
-## 🎶 Backend CI/CD Flow
-![백엔드최최최종.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EB%B0%B1%EC%97%94%EB%93%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
+## 🎶 Backend CI/CD Flow  
+![백엔드최최최종.png](img%2F%EB%B0%B1%EC%97%94%EB%93%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
