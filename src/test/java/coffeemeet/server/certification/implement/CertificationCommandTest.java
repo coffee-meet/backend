@@ -1,4 +1,4 @@
-package coffeemeet.server.certification.service.cq;
+package coffeemeet.server.certification.implement;
 
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
@@ -16,8 +16,6 @@ import static org.mockito.Mockito.only;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
-import coffeemeet.server.certification.implement.CertificationCommand;
-import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.infrastructure.CertificationRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.user.domain.User;

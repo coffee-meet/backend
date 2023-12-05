@@ -33,11 +33,29 @@ public class CertificationFixture {
 
   public static Certification certification(User user) {
     return Instancio.of(Certification.class)
-        .generate(field(Certification::getId), gen -> gen.longSeq().start(1L))
         .generate(field(Certification::getBusinessCardUrl), gen -> gen.net().url().asString())
         .set(field(Certification::getCompanyEmail), new CompanyEmail(new EmailGenerator().get()))
-        .set(field(Certification::getId), user.getId()).set(field(Certification::getUser), user)
+        .set(field(Certification::getId), user.getId())
+        .set(field(Certification::getUser), user)
         .create();
+  }
+
+  public static Certification certificatedCertification(User user, String companyName) {
+    return Instancio.of(Certification.class)
+        .generate(field(Certification::getBusinessCardUrl), gen -> gen.net().url().asString())
+        .set(field(Certification::getCompanyEmail), new CompanyEmail(new EmailGenerator().get()))
+        .set(field(Certification::getCompanyName), companyName)
+        .set(field(Certification::getId), user.getId())
+        .set(field(Certification::getUser), user)
+        .set(field(Certification::isCertificated), true)
+        .create();
+  }
+
+  public static List<Certification> certificatedCertifications(List<User> users,
+      String companyName) {
+    return users.stream()
+        .map(user -> certificatedCertification(user, companyName))
+        .toList();
   }
 
   public static List<Certification> certifications() {

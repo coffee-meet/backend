@@ -30,7 +30,6 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
 
   private User user;
 
-
   @BeforeEach
   void setUp() {
     user = userRepository.save(user());

@@ -1,4 +1,4 @@
-package coffeemeet.server.oauth.infrastructure.kakao.client;
+package coffeemeet.server.oauth.implement.client.kakao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
-import coffeemeet.server.oauth.implement.client.kakao.KakaoMemberClient;
 import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;

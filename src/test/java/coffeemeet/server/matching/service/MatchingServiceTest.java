@@ -1,26 +1,27 @@
 package coffeemeet.server.matching.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anySet;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificatedCertifications;
+import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.common.fixture.entity.UserFixture;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
+import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,31 +60,38 @@ class MatchingServiceTest {
   @Test
   void startTest() {
     // given
+    List<User> users = fourUsers();
+    Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
     String companyName = "회사명";
-    long userId = 1;
-    long matchingQueueSizeByCompany = 4;
-    ChattingRoom chattingRoom = new ChattingRoom();
-    Set<Long> userIds = new HashSet<>(Set.of(1L, 2L, 3L, 4L));
+    List<Certification> certifications = certificatedCertifications(users, companyName);
 
-    NotificationInfo notificationInfo = UserFixture.notificationInfo();
-    NotificationInfo notificationInfo1 = UserFixture.notificationInfo();
-    NotificationInfo notificationInfo2 = UserFixture.notificationInfo();
-    Set<NotificationInfo> notificationInfos = new HashSet<>(
-        Set.of(notificationInfo, notificationInfo1, notificationInfo2));
+    User requestedUser = users.get(0);
+    Certification requestedUsersCertification = certifications.get(0);
+    ChattingRoom chattingRoom = chattingRoom();
+    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo).collect(
+        Collectors.toSet());
 
-    given(certificationQuery.getCompanyNameByUserId(anyLong())).willReturn(companyName);
-    willDoNothing().given(matchingQueueCommand).enqueueUserByCompanyName(any(), anyLong());
-    given(matchingQueueQuery.sizeByCompany(any())).willReturn(matchingQueueSizeByCompany);
-    given(matchingQueueQuery.dequeueMatchingGroupSize(any(), anyLong())).willReturn(userIds);
+    given(certificationQuery.getCertificationByUserId(requestedUser.getId())).willReturn(
+        requestedUsersCertification);
+    given(matchingQueueQuery.sizeByCompany(companyName)).willReturn(Long.valueOf(users.size()));
     given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
-    willDoNothing().given(userCommand).assignUsersToChattingRoom(anySet(), any());
-    willDoNothing().given(fcmNotificationSender)
-        .sendMultiNotificationsWithData(anySet(), any(), any(), any());
-    given(userQuery.getNotificationInfosByIdSet(anySet())).willReturn(notificationInfos);
+    given(matchingQueueQuery.dequeueMatchingGroupSize(companyName, users.size())).willReturn(
+        fourUsers().stream().map(User::getId).collect(Collectors.toSet()));
+    given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
+    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(
+        notificationInfos);
 
-    // when, then
-    assertThatCode(() -> matchingService.startMatching(userId))
-        .doesNotThrowAnyException();
+    // when
+    matchingService.startMatching(requestedUser.getId());
+
+    // then
+    then(matchingQueueCommand).should()
+        .enqueueUserByCompanyName(companyName, requestedUser.getId());
+    then(userCommand).should().setToMatching(requestedUser.getId());
+    then(userCommand).should().assignUsersToChattingRoom(userIds, chattingRoom);
+    then(fcmNotificationSender).should()
+        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!",
+            "chattingRoomId", String.valueOf(chattingRoom.getId()));
   }
 
   @Test
@@ -94,12 +102,12 @@ class MatchingServiceTest {
     String companyName = "회사명";
 
     given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
+    willDoNothing().given(matchingQueueCommand).deleteUserByUserId(companyName, userId);
 
     // when
     matchingService.cancelMatching(userId);
 
     // then
-    then(matchingQueueCommand).should(only()).deleteUserByUserId(companyName, userId);
     then(userCommand).should(only()).setToIdle(userId);
   }
 
