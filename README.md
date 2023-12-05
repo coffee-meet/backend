@@ -1,6 +1,6 @@
 <div style="display: flex; align-items: flex-start;">
   <div style="margin-top: 35px;">
-    <img src="./src/main/resources/secret/img/로고.png" width="100" height="100">
+    <img src="./img/로고.png" width="100" height="100">
   </div>
   <div style="margin-left: 20px;">
     <h1>Coffee-Meet</h1>
@@ -14,17 +14,18 @@
   > 💬 실시간 매칭 후 채팅을 통해 온/오프라인 만남 제공  
   > 💬 같은 회사 내 타 부서와의 교류를 통한 친목, 인사이트 제공 및 스트레스 해소
 
-
-![기능1.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EA%B8%B0%EB%8A%A51.png)
+![기능1.png](img%2F%EA%B8%B0%EB%8A%A51.png)
 
 <br><br>
+--
 ### ▫️ 인증
-  ![인증.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%9D%B8%EC%A6%9D.png)
+![인증.png](img%2F%EC%9D%B8%EC%A6%9D.png)  
+--
 ### ▫️ 매칭
-![매칭.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EB%A7%A4%EC%B9%AD.png)
-### ▫️ 채팅
-![채팅.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%B1%84%ED%8C%85.png)
-
+![매칭.png](img%2F%EB%A7%A4%EC%B9%AD.png)  
+--
+### ▫️ 채팅  
+![채팅.png](img%2F%EC%B1%84%ED%8C%85.png)
 <br><br>  
 
 ## 👨‍👩‍👧‍👦 Developers
@@ -37,8 +38,7 @@
 <br><br>
 
 ## 🏰 System Architecture
-
-![Web App Reference Architecture (5).png](..%2F..%2F..%2FDownloads%2FWeb%20App%20Reference%20Architecture%20%285%29.png)
+![기술스택.png](img%2F%EA%B8%B0%EC%88%A0%EC%8A%A4%ED%83%9D.png)
 
 <br><br>
 
@@ -75,12 +75,12 @@
 
 |                                                **푸시 알림**                                                |                                     **매칭 & 채팅**                                     | **매칭 & 채팅** | **프로필 조회** |
 |:-------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|:----------:|:----------:|
-|![유명한.gif](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%9C%A0%EB%AA%85%ED%95%9C.gif) | ![주다현.gif](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%A3%BC%EB%8B%A4%ED%98%84.gif) |    ![박은지.gif](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EB%B0%95%EC%9D%80%EC%A7%80.gif)|![박상민.gif](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EB%B0%95%EC%83%81%EB%AF%BC.gif)|
+|![유명한.gif](img%2F%EC%9C%A0%EB%AA%85%ED%95%9C.gif)|![주다현.gif](img%2F%EC%A3%BC%EB%8B%A4%ED%98%84.gif)|![박은지.gif](img%2F%EB%B0%95%EC%9D%80%EC%A7%80.gif)|![박상민.gif](img%2F%EB%B0%95%EC%83%81%EB%AF%BC.gif)|
 <br><br> 
-
-## 📲 User Flow  
-![최최최최최종.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
+  ---
+## 📲 User Flow
+![최최최최최종.png](img%2F%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
 <br>
 ## 🎶 Backend CI/CD Flow
 
-![백엔드최최최종.png](src%2Fmain%2Fresources%2Fsecret%2Fimg%2F%EB%B0%B1%EC%97%94%EB%93%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
+![백엔드최최최종.png](img%2F%EB%B0%B1%EC%97%94%EB%93%9C%EC%B5%9C%EC%B5%9C%EC%B5%9C%EC%A2%85.png)
