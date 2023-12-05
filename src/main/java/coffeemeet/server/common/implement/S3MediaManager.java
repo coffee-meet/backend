@@ -1,9 +1,6 @@
 package coffeemeet.server.common.implement;
 
-import static coffeemeet.server.common.execption.GlobalErrorCode.INVALID_S3_URL;
-
 import coffeemeet.server.common.domain.KeyType;
-import coffeemeet.server.common.execption.InvalidInputException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class S3MediaManager implements MediaManager {
 
-  private static final String INVALID_S3_URL_MESSAGE = "올바르지 않은 S3 URL(%s)입니다.";
   private final AmazonS3 amazonS3;
   private final String bucketName;
 
@@ -62,8 +58,7 @@ public class S3MediaManager implements MediaManager {
   public String extractKey(String s3Url, KeyType keyType) {
     int startIndex = s3Url.indexOf(keyType.getValue());
     if (startIndex == -1) {
-      throw new InvalidInputException(INVALID_S3_URL,
-          String.format(INVALID_S3_URL_MESSAGE, s3Url));
+      return "";
     }
     return s3Url.substring(startIndex);
   }
