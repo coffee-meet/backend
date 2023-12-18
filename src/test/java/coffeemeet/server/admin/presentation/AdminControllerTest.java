@@ -47,8 +47,8 @@ import coffeemeet.server.common.fixture.entity.InquiryFixture;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
@@ -372,11 +372,11 @@ class AdminControllerTest extends ControllerTestConfig {
     Long lastInquiryId = 10L;
     int pageSize = 10;
 
-    InquirySearchResponse inquirySearchResponse = InquiryFixture.inquirySearchResponse();
-    AdminCustomSlice<InquirySummary> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
-        inquirySearchResponse.contents(), inquirySearchResponse.hasNext());
+    InquirySearchDto inquirySearchDto = InquiryFixture.inquirySearchResponse();
+    AdminCustomSlice<InquirySummaryDto> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
+        inquirySearchDto.contents(), inquirySearchDto.hasNext());
     given(inquiryService.searchInquiries(lastInquiryId, pageSize)).willReturn(
-        inquirySearchResponse);
+        inquirySearchDto);
 
     // when, then
     mockMvc.perform(get(baseUrl + "/inquiries")

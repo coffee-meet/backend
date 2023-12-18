@@ -6,8 +6,7 @@ import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
+import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
 import java.util.List;
 import org.instancio.Instancio;
 
@@ -26,12 +25,13 @@ public class AdminFixture {
     return Instancio.of(ReportDeletionHTTP.Request.class).create();
   }
 
-  public static AdminCustomSlice<InquirySummary> adminCustomPageByInquiry(
-      List<InquirySummary> contents, boolean hasNext) {
+  @SuppressWarnings("unchecked")
+  public static AdminCustomSlice<InquirySummaryDto> adminCustomPageByInquiry(
+      List<InquirySummaryDto> contents, boolean hasNext) {
     return Instancio.of(AdminCustomSlice.class)
-        .withTypeParameters(InquirySearchResponse.InquirySummary.class)
-        .set(field(AdminCustomSlice<InquirySummary>::contents), contents)
-        .set(field(AdminCustomSlice<InquirySummary>::hasNext), hasNext)
+        .withTypeParameters(InquirySummaryDto.class)
+        .set(field(AdminCustomSlice<InquirySummaryDto>::contents), contents)
+        .set(field(AdminCustomSlice<InquirySummaryDto>::hasNext), hasNext)
         .create();
   }
 
