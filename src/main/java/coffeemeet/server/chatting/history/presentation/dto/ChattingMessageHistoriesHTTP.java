@@ -1,42 +1,22 @@
 package coffeemeet.server.chatting.history.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDateTime;
+import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface ChattingMessageHistoriesHTTP permits ChattingMessageHistoriesHTTP.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class ChattingMessageHistoriesHTTP {
 
-  record ChatHistory(
-      Long userId,
-      Long messageId,
-      String nickname,
-      String content,
-      String profileImageUrl,
-      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-      LocalDateTime createdAt
-  ) {
+  public record Response(
+      List<ChattingMessageHistoryDto> chatHistories,
+      boolean hasNext) {
 
-    public static ChatHistory from(ChattingMessageHistoryDto.Response response) {
-      return new ChatHistory(
-          response.userId(),
-          response.messageId(),
-          response.nickname(),
-          response.content(),
-          response.profileImageUrl(),
-          response.createdAt()
-      );
-    }
-
-  }
-
-  record Response(List<ChatHistory> chatHistories) implements ChattingMessageHistoriesHTTP {
-
-    public static Response from(List<ChattingMessageHistoryDto.Response> responses) {
-      List<ChatHistory> chatHistoryList = responses.stream()
-          .map(ChatHistory::from)
-          .toList();
-      return new Response(chatHistoryList);
+    public static Response from(ChattingMessageHistoryListDto chattingMessageHistoryListDto) {
+      return new Response(chattingMessageHistoryListDto.contents(),
+          chattingMessageHistoryListDto.hasNext());
     }
 
   }

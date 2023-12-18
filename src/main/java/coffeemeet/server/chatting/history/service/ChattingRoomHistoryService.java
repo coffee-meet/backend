@@ -1,11 +1,13 @@
 package coffeemeet.server.chatting.history.service;
 
+import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryQuery;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -23,7 +25,7 @@ public class ChattingRoomHistoryService {
   private final UserQuery userQuery;
 
   // TODO: 11/20/23 쿼리 로직 수정
-  public List<ChattingRoomHistoryDto.Response> searchChattingRoomHistories(Long userId) {
+  public List<ChattingRoomHistoryDto> searchChattingRoomHistories(Long userId) {
     User user = userQuery.getUserById(userId);
     List<UserChattingHistory> userChattingHistories = userChattingHistoryQuery.getUserChattingHistoriesBy(
         user);
@@ -37,22 +39,26 @@ public class ChattingRoomHistoryService {
               .stream()
               .map(UserChattingHistory::getUser)
               .toList();
-          return ChattingRoomHistoryDto.Response.of(users, chattingRoomHistory);
+          return ChattingRoomHistoryDto.of(users, chattingRoomHistory);
         })
         .toList();
   }
 
   // TODO: 11/20/23 캐쉬 로직 적용
-  public List<ChattingMessageHistoryDto.Response> searchChattingMessageHistories(Long roomHistoryId,
+  public ChattingMessageHistoryListDto searchChattingMessageHistories(Long roomHistoryId,
       Long firstMessageId, int pageSize) {
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryQuery.getChattingRoomHistoryBy(
         roomHistoryId);
-    return chattingMessageHistoryQuery.getMessageHistories(chattingRoomHistory, firstMessageId,
-            pageSize)
+    List<ChattingMessageHistory> messageHistories = chattingMessageHistoryQuery.getMessageHistories(
+        chattingRoomHistory, firstMessageId,
+        pageSize);
+    boolean hasNext = messageHistories.size() >= pageSize;
+    List<ChattingMessageHistoryDto> historyDtoList = messageHistories
         .stream()
-        .map(chattingMessageHistory -> ChattingMessageHistoryDto.Response.of(
+        .map(chattingMessageHistory -> ChattingMessageHistoryDto.of(
             chattingMessageHistory.getUser(), chattingMessageHistory))
         .toList();
+    return ChattingMessageHistoryListDto.of(historyDtoList, hasNext);
   }
 
 }

@@ -3,8 +3,8 @@ package coffeemeet.server.chatting.history.presentation;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
 import coffeemeet.server.chatting.history.service.ChattingRoomHistoryService;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
-import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto.Response;
+import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
 import java.util.List;
@@ -27,9 +27,9 @@ public class ChattingRoomHistoryController {
   public ResponseEntity<ChattingRoomHistoriesHTTP.Response> viewChattingRoomHistories(
       @Login AuthInfo authInfo
   ) {
-    List<Response> responses = chattingRoomHistoryService.searchChattingRoomHistories(
+    List<ChattingRoomHistoryDto> chattingRoomHistories = chattingRoomHistoryService.searchChattingRoomHistories(
         authInfo.userId());
-    return ResponseEntity.ok(ChattingRoomHistoriesHTTP.Response.from(responses));
+    return ResponseEntity.ok(ChattingRoomHistoriesHTTP.Response.from(chattingRoomHistories));
   }
 
   @GetMapping("/{roomHistoryId}")
@@ -37,9 +37,10 @@ public class ChattingRoomHistoryController {
       @PathVariable Long roomHistoryId,
       @RequestParam(defaultValue = "0") Long firstMessageId,
       @RequestParam(defaultValue = "50") int pageSize) {
-    List<ChattingMessageHistoryDto.Response> responses = chattingRoomHistoryService.searchChattingMessageHistories(
+    ChattingMessageHistoryListDto chattingMessageHistoryListDto = chattingRoomHistoryService.searchChattingMessageHistories(
         roomHistoryId, firstMessageId, pageSize);
-    return ResponseEntity.ok(ChattingMessageHistoriesHTTP.Response.from(responses));
+    return ResponseEntity.ok(
+        ChattingMessageHistoriesHTTP.Response.from(chattingMessageHistoryListDto));
   }
 
 }
