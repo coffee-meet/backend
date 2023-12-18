@@ -1,6 +1,6 @@
 package coffeemeet.server.common.fixture.dto;
 
-import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
+import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 
 public class ReportDetailHTTPFixture {
