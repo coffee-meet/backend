@@ -1,8 +1,8 @@
 package coffeemeet.server.certification.domain.repository;
 
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.common.fixture.UserFixture.usersWithNullId;
 import static org.assertj.core.api.Assertions.assertThat;
 

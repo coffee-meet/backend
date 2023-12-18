@@ -2,9 +2,9 @@ package coffeemeet.server.user.service;
 
 import static coffeemeet.server.common.domain.S3KeyPrefix.PROFILE_IMAGE;
 import static coffeemeet.server.common.fixture.AuthFixture.authTokens;
-import static coffeemeet.server.common.fixture.OauthFixture.response;
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.OauthFixture.response;
 import static coffeemeet.server.common.fixture.UserFixture.keywords;
 import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;

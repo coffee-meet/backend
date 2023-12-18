@@ -1,13 +1,12 @@
 package coffeemeet.server.certification.service;
 
 import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
-import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPage;
-import static org.assertj.core.api.Assertions.assertThat;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -160,7 +159,8 @@ class CertificationServiceTest {
     Page<Certification> certificationPage = pendingCertificationPage(
         pageable.getPageSize());
 
-    given(certificationQuery.getPendingCertification(any(Pageable.class))).willReturn(certificationPage);
+    given(certificationQuery.getPendingCertification(any(Pageable.class))).willReturn(
+        certificationPage);
 
     // when
     PendingCertificationPageDto result = certificationService.getUncertifiedUserRequests(pageable);

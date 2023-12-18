@@ -1,5 +1,6 @@
 package coffeemeet.server.chatting.history.service.dto;
 
+import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
