@@ -1,8 +1,8 @@
 package coffeemeet.server.common.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;
+import static coffeemeet.server.common.fixture.CertificationFixture.email;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.then;

@@ -1,6 +1,6 @@
 package coffeemeet.server.certification.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.emailVerification;
+import static coffeemeet.server.common.fixture.CertificationFixture.emailVerification;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;

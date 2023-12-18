@@ -1,14 +1,14 @@
 package coffeemeet.server.certification.infrastructure;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pageable;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
+import static coffeemeet.server.common.fixture.CertificationFixture.certification;
+import static coffeemeet.server.common.fixture.CertificationFixture.pageable;
+import static coffeemeet.server.common.fixture.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.users;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.common.config.RepositoryTestConfig;
-import coffeemeet.server.common.fixture.entity.CertificationFixture;
+import coffeemeet.server.common.fixture.CertificationFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;

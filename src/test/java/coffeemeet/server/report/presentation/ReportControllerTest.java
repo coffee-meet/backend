@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import coffeemeet.server.report.presentation.dto.CreateReportHTTP;
 import coffeemeet.server.report.service.ReportService;
 import com.epages.restdocs.apispec.Schema;
@@ -38,7 +38,7 @@ class ReportControllerTest extends ControllerTestConfig {
 
   @BeforeEach
   void setUp() {
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
   }
 

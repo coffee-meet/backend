@@ -1,8 +1,8 @@
 package coffeemeet.server.matching.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificatedCertifications;
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificatedCertifications;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;

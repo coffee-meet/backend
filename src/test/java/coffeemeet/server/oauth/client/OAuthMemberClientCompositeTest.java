@@ -3,7 +3,7 @@ package coffeemeet.server.oauth.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture;
+import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClient;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -36,7 +36,7 @@ class OAuthMemberClientCompositeTest {
     // given
     String authCode = "authCode";
     OAuthProvider oAuthProvider = OAuthProvider.KAKAO;
-    OAuthMemberDetail response = OAuthUserInfoDtoFixture.response();
+    OAuthMemberDetail response = OauthFixture.response();
 
     given(client.oAuthProvider()).willReturn(OAuthProvider.KAKAO);
     given(client.fetch(authCode)).willReturn(response);

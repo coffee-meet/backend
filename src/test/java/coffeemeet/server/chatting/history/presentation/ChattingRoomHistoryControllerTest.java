@@ -23,8 +23,8 @@ import coffeemeet.server.chatting.history.service.ChattingRoomHistoryService;
 import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +46,7 @@ class ChattingRoomHistoryControllerTest extends ControllerTestConfig {
     Long userId = 1L;
     int pageSize = 50;
 
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     List<ChattingRoomHistoryDto> responses = ChattingFixture.chattingRoomHistoryDtoResponses(
         pageSize);
     ChattingRoomHistoriesHTTP.Response response = ChattingFixture.chattingRoomHistoriesHTTP(

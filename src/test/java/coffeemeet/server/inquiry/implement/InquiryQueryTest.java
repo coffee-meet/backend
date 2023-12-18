@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.infrastructure.InquiryQueryRepository;
 import coffeemeet.server.inquiry.infrastructure.InquiryRepository;

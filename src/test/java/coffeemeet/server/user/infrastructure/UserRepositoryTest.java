@@ -1,10 +1,10 @@
 package coffeemeet.server.user.infrastructure;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
-import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.User;
 import java.util.HashSet;

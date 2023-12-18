@@ -1,6 +1,6 @@
 package coffeemeet.server.report.infrastructure;
 
-import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
+import static coffeemeet.server.common.fixture.ReportFixture.report;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
