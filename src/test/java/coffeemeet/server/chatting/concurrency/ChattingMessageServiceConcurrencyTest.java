@@ -86,7 +86,7 @@ class ChattingMessageServiceConcurrencyTest {
 
     // then
     List<ChattingMessage> messages = chattingMessageRepository.findAll();
-    assertThat(messages).hasSize(count);
+    assertThat(messages).hasSize(userSize);
   }
 
 }
