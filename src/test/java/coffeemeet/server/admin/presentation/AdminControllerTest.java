@@ -31,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
+import coffeemeet.server.admin.presentation.dto.GroupReportHTTP;
+import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertification;
@@ -47,10 +49,6 @@ import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
 import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
-import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
-import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.ReportListHTTP;
-import coffeemeet.server.report.presentation.dto.ReportListHTTP.Response;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
@@ -242,17 +240,8 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     Long lastReportId = 0L;
     int pageSize = 10;
-    ReportDto response1 = ReportDtoFixture.reportDto();
-    ReportDto response2 = ReportDtoFixture.reportDto();
-
-    List<ReportDto> reportResponses = List.of(response1, response2);
-    boolean hasNext = true;
-
-    ReportListDto reportListDto = ReportListDto.of(reportResponses, hasNext);
-    List<ReportListHTTP.Response> responses = reportListDto.contents().stream()
-        .map(Response::from)
-        .toList();
-    AdminCustomPage<ReportListHTTP.Response> result = new AdminCustomPage<>(responses,
+    ReportListDto reportListDto = ReportDtoFixture.reportListDto();
+    AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportListDto);
@@ -274,15 +263,15 @@ class AdminControllerTest extends ControllerTestConfig {
             responseFields(
                 fieldWithPath("contents").description("신고 조회 내역 리스트"),
                 fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
-                fieldWithPath("contents.[].content.targetedNickname").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].targetedNickname").type(JsonFieldType.STRING)
                     .description("신고 대상 닉네임"),
-                fieldWithPath("contents.[].content.chattingRoomName").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].chattingRoomName").type(JsonFieldType.STRING)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].content.targetedId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents[].targetedId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 아이디"),
-                fieldWithPath("contents.[].content.chattingRoomId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents[].chattingRoomId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].content.createdAt").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )
         ))
