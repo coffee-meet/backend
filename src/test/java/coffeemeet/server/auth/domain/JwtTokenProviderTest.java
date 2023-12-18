@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class JwtTokenProviderTest {
 
   private static final String SUBJECT = "123";
-  private static final int ACCESS_TOKEN_EXPIRE_TIME = 3600000;
+  private static final long ACCESS_TOKEN_EXPIRE_TIME = 3600000;
 
   private final String secretKey = Base64.getEncoder()
       .encodeToString(Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded());

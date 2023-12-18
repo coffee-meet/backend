@@ -58,7 +58,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable long userId) {
+  public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable Long userId) {
     UserProfileDto response = userService.findUserProfile(userId);
     return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
   }

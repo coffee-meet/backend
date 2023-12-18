@@ -12,7 +12,7 @@ public class ReportFixture {
         .generate(field(Report::getReasonDetail), gen -> gen.string().maxLength(200)).create();
   }
 
-  public static Report report(long targetId, long chattingRoomId) {
+  public static Report report(Long targetId, Long chattingRoomId) {
     return Instancio.of(Report.class)
         .set(field(Report::getTargetedId), targetId)
         .set(field(Report::getChattingRoomId), chattingRoomId)

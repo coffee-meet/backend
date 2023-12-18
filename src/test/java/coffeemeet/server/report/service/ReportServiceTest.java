@@ -121,12 +121,12 @@ class ReportServiceTest {
   @Test
   void findAllReportsTest() {
     // given
-    long lastReportId = 0L;
+    Long lastReportId = 0L;
     int pageSize = 10;
     User targetUser = user();
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    long targetedId = targetUser.getId();
-    long chattingRoomId = chattingRoom.getId();
+    Long targetedId = targetUser.getId();
+    Long chattingRoomId = chattingRoom.getId();
 
     Report report1 = Report.builder()
         .reporterId(1L).chattingRoomId(chattingRoomId).targetedId(targetedId).reason("잠수")

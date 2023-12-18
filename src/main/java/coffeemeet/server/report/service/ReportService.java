@@ -37,7 +37,7 @@ public class ReportService {
   private final UserChattingHistoryQuery userChattingHistoryQuery;
 
   @Transactional
-  public void reportUser(long reporterId, long chattingRoomId, long targetId, String reason,
+  public void reportUser(Long reporterId, Long chattingRoomId, Long targetId, String reason,
       String reasonDetail) {
     reportQuery.hasDuplicatedReport(reporterId, chattingRoomId, targetId);
 
@@ -77,8 +77,8 @@ public class ReportService {
     return ReportListDto.of(responses, hasNext);
   }
 
-  public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(long targetId,
-      long chattingRoomId) {
+  public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(Long targetId,
+      Long chattingRoomId) {
     List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(targetId,
         chattingRoomId);
     return reports.stream()
@@ -86,7 +86,7 @@ public class ReportService {
         .toList();
   }
 
-  private void checkChattingRoomExists(long reporterId, long chattingRoomId) {
+  private void checkChattingRoomExists(Long reporterId, Long chattingRoomId) {
     boolean isChattingRoomExists = false;
     boolean isChattingHistoryExists = false;
 

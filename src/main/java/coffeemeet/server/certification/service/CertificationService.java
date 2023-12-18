@@ -40,17 +40,17 @@ public class CertificationService {
   private final EmailVerificationCommand emailVerificationCommand;
   private final EmailVerificationQuery emailVerificationQuery;
 
-  public void registerCertification(long userId, String companyName, String email,
+  public void registerCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     processCertification(userId, companyName, email, departmentName, businessCardImage, false);
   }
 
-  public void updateCertification(long userId, String companyName, String email,
+  public void updateCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     processCertification(userId, companyName, email, departmentName, businessCardImage, true);
   }
 
-  private void processCertification(long userId, String companyName, String email,
+  private void processCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage, boolean isUpdate) {
     String key = mediaManager.generateKey(BUSINESS_CARD);
     uploadBusinessCard(userId, key, businessCardImage);
@@ -67,7 +67,7 @@ public class CertificationService {
         businessCardUrl);
   }
 
-  private void uploadBusinessCard(long userId, String key, File businessCardUrl) {
+  private void uploadBusinessCard(Long userId, String key, File businessCardUrl) {
     certificationCommand.applyIfCertifiedUser(userId, certification -> {
       String oldKey = mediaManager.extractKey(certification.getBusinessCardUrl(), BUSINESS_CARD);
       mediaManager.delete(oldKey);

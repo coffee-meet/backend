@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-  boolean existsByReporterIdAndChattingRoomIdAndTargetedId(long reporterId, long chattingRoomId,
-      long targetedId);
+  boolean existsByReporterIdAndChattingRoomIdAndTargetedId(Long reporterId, Long chattingRoomId,
+      Long targetedId);
 
   List<Report> findByIdIn(Collection<Long> ids);
 

@@ -81,7 +81,7 @@ public class UserService {
     return LoginDetailsDto.of(user, Collections.emptyList(), null, null);
   }
 
-  public UserProfileDto findUserProfile(long userId) {
+  public UserProfileDto findUserProfile(Long userId) {
     User user = userQuery.getUserById(userId);
     List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
     Certification certification = certificationQuery.getCertificationByUserId(userId);
