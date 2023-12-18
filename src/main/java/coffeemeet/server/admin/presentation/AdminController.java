@@ -10,7 +10,7 @@ import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationDto;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
@@ -203,7 +203,7 @@ public class AdminController {
   // TODO: 11/27/23 임시로 페이징(옵셋 기반) 처리, 개선 필요
   @PerformanceMeasurement
   @GetMapping("/certifications/pending")
-  public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
+  public ResponseEntity<AdminCustomPage<PendingCertificationDto>> getPendingCertifications(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") int offset,
       @RequestParam(defaultValue = "10") int size
@@ -217,7 +217,7 @@ public class AdminController {
     PendingCertificationPageDto uncertifiedUserRequests = certificationService.getUncertifiedUserRequests(
         pageable);
 
-    Page<PendingCertification> page = uncertifiedUserRequests.page();
+    Page<PendingCertificationDto> page = uncertifiedUserRequests.page();
     return ResponseEntity.ok(
         AdminCustomPage.of(page.getContent(), page.hasNext())
     );
