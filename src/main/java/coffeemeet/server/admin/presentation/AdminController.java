@@ -16,8 +16,8 @@ import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
@@ -166,14 +166,14 @@ public class AdminController {
   }
 
   @GetMapping("/inquiries")
-  public ResponseEntity<AdminCustomSlice<InquirySummary>> searchInquiries(
+  public ResponseEntity<AdminCustomSlice<InquirySummaryDto>> searchInquiries(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastInquiryId,
       @RequestParam(defaultValue = "10") int pageSize) {
 //    if (adminId == null) {
 //      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
 //    }
-    InquirySearchResponse inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
+    InquirySearchDto inquiries = inquiryService.searchInquiries(lastInquiryId, pageSize);
     return ResponseEntity.ok(AdminCustomSlice.of(inquiries.contents(), inquiries.hasNext()));
   }
 
