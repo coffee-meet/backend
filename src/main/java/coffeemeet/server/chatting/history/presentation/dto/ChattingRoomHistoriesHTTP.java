@@ -1,38 +1,18 @@
 package coffeemeet.server.chatting.history.presentation.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDateTime;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
-public sealed interface ChattingRoomHistoriesHTTP permits ChattingRoomHistoriesHTTP.Response {
+@NoArgsConstructor(access = PRIVATE)
+public final class ChattingRoomHistoriesHTTP {
 
-  record ChatRoomHistory(
-      Long roomId,
-      String roomName,
-      List<String> users,
-      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-      LocalDateTime createdAt
-  ) {
+  public record Response(List<ChattingRoomHistoryDto> chatRoomHistories) {
 
-    public static ChatRoomHistory from(ChattingRoomHistoryDto.Response response) {
-      return new ChatRoomHistory(
-          response.roomId(),
-          response.roomName(),
-          response.users(),
-          response.createdAt()
-      );
-    }
-
-  }
-
-  record Response(List<ChatRoomHistory> chatRoomHistories) implements ChattingRoomHistoriesHTTP {
-
-    public static Response from(List<ChattingRoomHistoryDto.Response> responses) {
-      List<ChatRoomHistory> roomHistories = responses.stream()
-          .map(ChatRoomHistory::from)
-          .toList();
-      return new Response(roomHistories);
+    public static Response from(List<ChattingRoomHistoryDto> responses) {
+      return new Response(responses);
     }
 
   }
