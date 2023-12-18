@@ -10,7 +10,7 @@ import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
-import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationDto;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.implement.EmailSender;
@@ -101,9 +101,9 @@ public class CertificationService {
   public PendingCertificationPageDto getUncertifiedUserRequests(Pageable pageable) {
     Page<Certification> pendingCertification =
         certificationQuery.getPendingCertification(pageable);
-    Page<PendingCertification> pendingCertificationPage = pendingCertification.map(
-        PendingCertification::from);
-    return new PendingCertificationPageDto(pendingCertificationPage);
+    Page<PendingCertificationDto> pendingCertificationPage = pendingCertification.map(
+        PendingCertificationDto::from);
+    return PendingCertificationPageDto.from(pendingCertificationPage);
   }
 
 }

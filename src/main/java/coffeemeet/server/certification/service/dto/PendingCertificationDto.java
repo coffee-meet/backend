@@ -2,7 +2,7 @@ package coffeemeet.server.certification.service.dto;
 
 import coffeemeet.server.certification.domain.Certification;
 
-public record PendingCertification(
+public record PendingCertificationDto(
     Long certificationId,
     String nickname,
     String companyName,
@@ -11,8 +11,8 @@ public record PendingCertification(
     String department
 ) {
 
-  public static PendingCertification from(Certification certification) {
-    return new PendingCertification(
+  public static PendingCertificationDto from(Certification certification) {
+    return new PendingCertificationDto(
         certification.getId(),
         certification.getUser().getProfile().getNickname(),
         certification.getCompanyName(),
