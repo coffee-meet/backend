@@ -1,16 +1,13 @@
 package coffeemeet.server.certification.service.dto;
 
-import coffeemeet.server.certification.domain.Certification;
 import org.springframework.data.domain.Page;
 
 public record PendingCertificationPageDto(
-    Page<PendingCertification> page
+    Page<PendingCertificationDto> page
 ) {
 
-  public static PendingCertificationPageDto from(
-      Page<Certification> certificationPage
-  ) {
-    return new PendingCertificationPageDto(certificationPage.map(PendingCertification::from));
+  public static PendingCertificationPageDto from(Page<PendingCertificationDto> page) {
+    return new PendingCertificationPageDto(page);
   }
 
 }
