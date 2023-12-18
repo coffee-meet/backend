@@ -13,6 +13,7 @@ import lombok.Getter;
 @Embeddable
 public class ReportInfo {
 
+  private static final String EXCEED_REPORT_COUNT_MESSAGE = "최대 신고 누적 횟수를 초과합니다. 신고 누적 횟수(%s)";
   private static final int REPORT_MIN_COUNT = 0;
   private static final int REPORT_MAX_COUNT = 5;
 
@@ -27,7 +28,7 @@ public class ReportInfo {
   public void increment() {
     if (reportedCount >= REPORT_MAX_COUNT) {
       throw new LimitExceededException(EXCEEDED_MAX_REPORT_COUNT,
-          String.format("최대 신고 누적 횟수를 초과합니다. 신고 누적 횟수(%s)", reportedCount));
+          String.format(EXCEED_REPORT_COUNT_MESSAGE, reportedCount));
     }
     this.reportedCount++;
     int sanctionPeriodByReportCount = ReportPenalty.getSanctionPeriodByReportCount(reportedCount);

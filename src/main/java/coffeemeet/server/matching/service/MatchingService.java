@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MatchingService {
 
+  private static final String NOT_CERTIFICATED_USER_MESSAGE = "사용자(%s) 인증이 완료되지 않았습니다.";
   private static final long FIXED_MATCH_GROUP_SIZE = 4;
 
   private final FCMNotificationSender notificationSender;
@@ -32,7 +33,7 @@ public class MatchingService {
     Certification certification = certificationQuery.getCertificationByUserId(userId);
 //    if (!certification.isCertificated()) {
 //      throw new ForbiddenException(NOT_CERTIFICATED_USER,
-//          String.format("사용자(%s) 인증이 완료되지 않았습니다.", userId));
+//          String.format(NOT_CERTIFICATED_USER_MESSAGE, userId));
 //    }
 
     String companyName = certification.getCompanyName();
