@@ -40,11 +40,7 @@ public class UserQuery {
   }
 
   public boolean isRegistered(OAuthInfo oAuthInfo) {
-    if (userRepository.existsUserByOauthInfo(oAuthInfo)) {
-      getUserByOAuthInfo(oAuthInfo);
-      return true;
-    }
-    return false;
+    return userRepository.existsUserByOauthInfo(oAuthInfo);
   }
 
   public User getNonRegisteredUserById(Long userId) {
