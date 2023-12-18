@@ -35,7 +35,7 @@ public class CertificationService {
   private final VerificationInfoCommand verificationInfoCommand;
   private final VerificationMailSender verificationMailSender;
 
-  public void registerCertification(long userId, String companyName, String email,
+  public void registerCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     CompanyEmail companyEmail = new CompanyEmail(email);
     Department department = Department.valueOf(departmentName);
@@ -47,7 +47,7 @@ public class CertificationService {
         businessCardImageUrl);
   }
 
-  public void updateCertification(long userId, String companyName, String email,
+  public void updateCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     CompanyEmail companyEmail = new CompanyEmail(email);
     Department department = Department.valueOf(departmentName);

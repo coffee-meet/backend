@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MatchingQueueQuery {
 
-  private static final long REDIS_IN_PIPELINE_OR_TRANSACTION = 0;
+  private static final int REDIS_IN_PIPELINE_OR_TRANSACTION = 0;
 
   private final RedisTemplate<String, Long> redisTemplate;
 

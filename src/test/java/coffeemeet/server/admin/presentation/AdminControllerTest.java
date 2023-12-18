@@ -240,7 +240,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("신고 내역을 전체 조회할 수 있다.")
   void findAllReportsTest() throws Exception {
     // given
-    long lastReportId = 0L;
+    Long lastReportId = 0L;
     int pageSize = 10;
     ReportDto response1 = ReportDtoFixture.reportDto();
     ReportDto response2 = ReportDtoFixture.reportDto();

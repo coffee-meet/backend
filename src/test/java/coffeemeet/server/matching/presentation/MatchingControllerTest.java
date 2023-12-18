@@ -37,7 +37,7 @@ class MatchingControllerTest extends ControllerTestConfig {
   @DisplayName("매칭 시작 요청을 처리할 수 있다.")
   void startTest() throws Exception {
     // given
-    long userId = 1;
+    Long userId = 1L;
     willDoNothing().given(matchingService).startMatching(userId);
 
     // when, then
@@ -59,7 +59,7 @@ class MatchingControllerTest extends ControllerTestConfig {
   @DisplayName("매칭 취소 요청을 처리할 수 있다.")
   void cancelTest() throws Exception {
     // given
-    long userId = 1;
+    Long userId = 1L;
     willDoNothing().given(matchingService).cancelMatching(userId);
 
     // when, then
