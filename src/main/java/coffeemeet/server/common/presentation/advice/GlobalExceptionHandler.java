@@ -1,6 +1,7 @@
 package coffeemeet.server.common.presentation.advice;
 
 import coffeemeet.server.common.execption.BadRequestException;
+import coffeemeet.server.common.execption.CoffeeMeetException;
 import coffeemeet.server.common.execption.DataLengthExceededException;
 import coffeemeet.server.common.execption.ForbiddenException;
 import coffeemeet.server.common.execption.GlobalErrorCode;
@@ -34,44 +35,33 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(DataLengthExceededException.class)
-  public ResponseEntity<ErrorResponse> handleException(DataLengthExceededException exception) {
+  public ResponseEntity<ErrorResponse> handleUnprocessableEntityCoffeeMeetException(
+      CoffeeMeetException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
         .body(ErrorResponse.of(exception.getErrorCode()));
   }
 
   @ExceptionHandler(InvalidAuthException.class)
-  public ResponseEntity<ErrorResponse> handleException(InvalidAuthException exception) {
+  public ResponseEntity<ErrorResponse> handleUnauthorizedCoffeeMeetException(
+      CoffeeMeetException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body(ErrorResponse.of(exception.getErrorCode()));
   }
 
-  @ExceptionHandler(InvalidInputException.class)
-  public ResponseEntity<ErrorResponse> handleException(InvalidInputException exception) {
+  @ExceptionHandler({InvalidInputException.class, NotFoundException.class})
+  public ResponseEntity<ErrorResponse> handleNotFoundCoffeeMeetException(
+      CoffeeMeetException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(exception.getErrorCode()));
   }
 
-  @ExceptionHandler(MissMatchException.class)
-  public ResponseEntity<ErrorResponse> handleException(MissMatchException exception) {
+  @ExceptionHandler({MissMatchException.class, BadRequestException.class})
+  public ResponseEntity<ErrorResponse> handleBadRequestException(CoffeeMeetException exception) {
     log.info(exception.getMessage(), exception);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(ErrorResponse.of(exception.getErrorCode()));
-  }
-
-  @ExceptionHandler(BadRequestException.class)
-  public ResponseEntity<ErrorResponse> handleException(BadRequestException exception) {
-    log.info(exception.getMessage(), exception);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(ErrorResponse.of(exception.getErrorCode()));
-  }
-
-  @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleException(NotFoundException exception) {
-    log.info(exception.getMessage(), exception);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(ErrorResponse.of(exception.getErrorCode()));
   }
 

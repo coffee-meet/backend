@@ -1,9 +1,7 @@
 package coffeemeet.server.common.execption;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public enum GlobalErrorCode implements ErrorCode {
 
