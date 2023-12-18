@@ -31,7 +31,7 @@ public final class ChatStomp {
       LocalDateTime createdAt
   ) {
 
-    public static ChatStomp.Response from(ChattingDto.Response response) {
+    public static ChatStomp.Response from(ChattingDto response) {
       return new ChatStomp.Response(
           response.userId(),
           response.messageId(),

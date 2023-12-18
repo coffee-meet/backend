@@ -14,7 +14,7 @@ import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
@@ -93,11 +93,11 @@ class ChattingRoomServiceTest {
         chattingMessages);
 
     // when
-    List<Response> responses = chattingRoomService.searchMessages(chattingRoomId, firstMessageId,
+    ChattingListDto responses = chattingRoomService.searchMessages(chattingRoomId, firstMessageId,
         pageSize);
 
     // then
-    assertThat(responses).hasSize(pageSize);
+    assertThat(responses.contents()).hasSize(pageSize);
   }
 
   @DisplayName("현재 채팅방 백업 및 삭제 후, 유저의 상태 변경 및 알람 전송을 할 수 있다.")

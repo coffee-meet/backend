@@ -1,9 +1,9 @@
 package coffeemeet.server.chatting.current.service;
 
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingMessage;
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessage;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
@@ -19,7 +19,7 @@ import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
@@ -76,13 +76,12 @@ class ChattingMessageServiceTest {
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(userQuery.getUserById(user.getId())).willReturn(user);
-    willDoNothing().given(fcmNotificationSender)
-        .sendMultiNotifications(anySet(), any());
+    willDoNothing().given(fcmNotificationSender).sendMultiNotifications(anySet(), any());
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 
     // when
-    Response response = chattingMessageService.chatting(chattingSession.sessionId(),
+    ChattingDto response = chattingMessageService.chatting(chattingSession.sessionId(),
         chattingRoom.getId(), content);
 
     // then
