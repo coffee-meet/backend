@@ -1,8 +1,8 @@
 package coffeemeet.server.oauth.implement.client.naver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.dto.NaverMemberResponseFixture;
 import coffeemeet.server.common.fixture.dto.NaverTokenFixture;

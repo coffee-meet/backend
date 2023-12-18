@@ -21,9 +21,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
+  private static final int AUTHENTICATION_PREFIX_LENGTH = 7;
   private static final String HEADER_AUTHENTICATION_FAILED_MESSAGE = "(%s)는 잘못된 권한 헤더입니다.";
-  public static final int AUTHENTICATION_PREFIX_LENGTH = 7;
-
   private final JwtTokenProvider jwtTokenProvider;
   private final RefreshTokenQuery refreshTokenQuery;
 

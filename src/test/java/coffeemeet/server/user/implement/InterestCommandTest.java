@@ -1,17 +1,15 @@
 package coffeemeet.server.user.implement;
 
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.user.domain.Interest;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.InterestRepository;
 import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

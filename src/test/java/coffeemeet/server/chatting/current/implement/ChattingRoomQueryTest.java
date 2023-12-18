@@ -5,9 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
+import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import java.util.Optional;
@@ -44,9 +46,36 @@ class ChattingRoomQueryTest {
     assertThat(foundChattingRoom).isEqualTo(chattingRoom);
   }
 
-  @DisplayName("채팅방이 존재하지 않으면 예외가 발생할 수 있다.")
+  @DisplayName("해당 아이디의 채팅방이 없다면, 예외가 발생할 수 있다.")
+  @Test
+  void getChattingRoomByIdTest_InvalidInputException() {
+    // given
+    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+    Long chattingRoomId = chattingRoom.getId();
+    given(chattingRoomRepository.findById(chattingRoomId)).willReturn(Optional.empty());
+
+    // when, then
+    assertThatThrownBy(() -> chattingRoomQuery.getChattingRoomById(chattingRoomId))
+        .isInstanceOf(InvalidInputException.class);
+  }
+
+  @DisplayName("채팅방이 존재한다면, 예외가 발생하지 않는다.")
   @Test
   void verifyChatRoomExistenceTest() {
+    // given
+    Long roomId = 1L;
+    given(chattingRoomRepository.existsById(roomId)).willReturn(true);
+
+    // when
+    chattingRoomQuery.verifyChatRoomExistence(roomId);
+
+    // then
+    then(chattingRoomRepository).should().existsById(roomId);
+  }
+
+  @DisplayName("채팅방이 존재하지 않으면 예외가 발생할 수 있다.")
+  @Test
+  void verifyChatRoomExistenceTest_NotFoundException() {
     // given
     Long roomId = 1L;
     given(chattingRoomRepository.existsById(roomId)).willReturn(false);
@@ -62,7 +91,7 @@ class ChattingRoomQueryTest {
     // given
     int size = 4;
     Set<ChattingRoom> chattingRooms = ChattingFixture.chattingRoom(size);
-    Set<Long> chattingRoomIdsSet = chattingRooms.stream().map(chattingRoom -> chattingRoom.getId())
+    Set<Long> chattingRoomIdsSet = chattingRooms.stream().map(ChattingRoom::getId)
         .collect(Collectors.toSet());
     given(chattingRoomRepository.findByIdIn(anySet())).willReturn(chattingRooms);
 

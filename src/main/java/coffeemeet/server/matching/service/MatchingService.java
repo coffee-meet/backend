@@ -1,12 +1,9 @@
 package coffeemeet.server.matching.service;
 
-import static coffeemeet.server.matching.exception.MatchingErrorCode.NOT_CERTIFICATED_USER;
-
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.common.execption.ForbiddenException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;

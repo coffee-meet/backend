@@ -3,7 +3,7 @@ package coffeemeet.server.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.execption.BadRequestException;
@@ -33,10 +33,14 @@ class UserTest {
   @DisplayName("유저를 등록할 수 있다.")
   void registerUserTest() {
     // given
+    String nickname = "nickname";
     User user = new User();
 
-    // when, then
-    user.registerUser(new Profile("nickname"));
+    // when
+    user.registerUser(new Profile(nickname));
+
+    // then
+    assertThat(user.getProfile().getNickname()).isEqualTo(nickname);
   }
 
   @Test
