@@ -1,4 +1,4 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
 import static org.instancio.Select.field;
 

@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.infrastructure.InquiryRepository;
 import org.junit.jupiter.api.DisplayName;

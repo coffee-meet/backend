@@ -6,7 +6,7 @@ import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

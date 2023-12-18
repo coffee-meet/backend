@@ -1,6 +1,6 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
+import static coffeemeet.server.common.fixture.UserFixture.users;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.certification.domain.Certification;

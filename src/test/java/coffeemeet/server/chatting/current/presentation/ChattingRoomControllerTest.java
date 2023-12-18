@@ -24,7 +24,7 @@ import coffeemeet.server.chatting.current.service.ChattingRoomService;
 import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

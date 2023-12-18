@@ -1,12 +1,8 @@
 package coffeemeet.server.matching.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificatedCertifications;
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.fixture.entity.UserFixture.userExcludingStatus;
-import static coffeemeet.server.user.domain.UserStatus.MATCHING;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificatedCertifications;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -118,7 +114,7 @@ class MatchingServiceTest {
   }
 
   @Test
-  @DisplayName("매칭을 취소할 수 있다.")
+  @DisplayName("MATCHING 상태가 아닐 때 매칭을 취소하면 예외가 발생 한다.")
   void cancelMatching_BadException() {
     // given
     User user = userExcludingStatus(MATCHING);

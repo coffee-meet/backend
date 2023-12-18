@@ -1,8 +1,8 @@
 package coffeemeet.server.common.implement;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.content;
-import static coffeemeet.server.common.fixture.entity.UserFixture.notificationInfo;
-import static coffeemeet.server.common.fixture.entity.UserFixture.notificationInfos;
+import static coffeemeet.server.common.fixture.UserFixture.content;
+import static coffeemeet.server.common.fixture.UserFixture.notificationInfo;
+import static coffeemeet.server.common.fixture.UserFixture.notificationInfos;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;

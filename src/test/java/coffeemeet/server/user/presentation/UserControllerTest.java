@@ -1,7 +1,7 @@
 package coffeemeet.server.user.presentation;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.notificationTokenHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.notificationTokenHTTPRequest;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -33,17 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.UserStatusDtoFixture;
-import coffeemeet.server.common.fixture.dto.LoginDetailsDtoFixture;
-import coffeemeet.server.common.fixture.dto.LoginDetailsHTTPFixture;
-import coffeemeet.server.common.fixture.dto.MyProfileDtoFixture;
-import coffeemeet.server.common.fixture.dto.MyProfileHTTPFixture;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
-import coffeemeet.server.common.fixture.dto.UpdateProfileHTTPFixture;
-import coffeemeet.server.common.fixture.dto.UserProfileDtoFixture;
-import coffeemeet.server.common.fixture.dto.UserProfileHTTPFixture;
-import coffeemeet.server.common.fixture.dto.UserStatusHTTPFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP;
@@ -76,7 +67,7 @@ class UserControllerTest extends ControllerTestConfig {
 
   @BeforeEach
   void setUp() {
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
   }
 
@@ -84,7 +75,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("회원가입을 할 수 있다.")
   void signupTest() throws Exception {
     // given
-    SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
+    SignupHTTP.Request request = UserFixture.signupHTTPRequest();
 
     willDoNothing().given(userService).signup(any(), any(), anyList());
 
@@ -112,8 +103,8 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("로그인을 할 수 있다.")
   void loginTest() throws Exception {
     // given
-    LoginDetailsDto response = LoginDetailsDtoFixture.loginDetailsDto();
-    LoginDetailsHTTP.Response expectedResponse = LoginDetailsHTTPFixture.loginDetailsHTTPResponse(
+    LoginDetailsDto response = UserFixture.loginDetailsDto();
+    LoginDetailsHTTP.Response expectedResponse = UserFixture.loginDetailsHTTPResponse(
         response);
 
     given(userService.login(any(), any())).willReturn(response);
@@ -155,8 +146,8 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("사용자 프로필을 조회할 수 있다.")
   void findUserProfileTest() throws Exception {
     // given
-    UserProfileDto response = UserProfileDtoFixture.userProfileDtoResponse();
-    UserProfileHTTP.Response expectedResponse = UserProfileHTTPFixture.userProfileHTTPResponse(
+    UserProfileDto response = UserFixture.userProfileDtoResponse();
+    UserProfileHTTP.Response expectedResponse = UserFixture.userProfileHTTPResponse(
         response);
 
     given(userService.findUserProfile(anyLong())).willReturn(response);
@@ -189,8 +180,8 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("마이페이지를 조회할 수 있다.")
   void findMyProfileTest() throws Exception {
     // given
-    MyProfileDto response = MyProfileDtoFixture.myProfileDtoResponse();
-    MyProfileHTTP.Response expectedResponse = MyProfileHTTPFixture.myProfileHTTPResponse(response);
+    MyProfileDto response = UserFixture.myProfileDtoResponse();
+    MyProfileHTTP.Response expectedResponse = UserFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
     given(userService.findMyProfile(anyLong())).willReturn(response);
@@ -254,7 +245,7 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("본인 프로필 정보를 수정할 수 있다.")
   void updateProfileInfoTest() throws Exception {
     // given
-    UpdateProfileHTTP.Request request = UpdateProfileHTTPFixture.updateProfileHTTPRequest();
+    UpdateProfileHTTP.Request request = UserFixture.updateProfileHTTPRequest();
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
     willDoNothing().given(
@@ -346,8 +337,8 @@ class UserControllerTest extends ControllerTestConfig {
   @DisplayName("유저 상태를 요청할 수 있다.")
   void getUserStatusTest() throws Exception {
     // given
-    UserStatusDto response = UserStatusDtoFixture.userStatusDto();
-    UserStatusHTTP.Response expectedResponse = UserStatusHTTPFixture.userStatusHTTPResponse(
+    UserStatusDto response = UserFixture.userStatusDto();
+    UserStatusHTTP.Response expectedResponse = UserFixture.userStatusHTTPResponse(
         response);
 
     given(userService.getUserStatus(anyLong())).willReturn(response);

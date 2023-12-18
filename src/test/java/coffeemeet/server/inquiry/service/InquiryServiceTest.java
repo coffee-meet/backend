@@ -8,8 +8,8 @@ import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;

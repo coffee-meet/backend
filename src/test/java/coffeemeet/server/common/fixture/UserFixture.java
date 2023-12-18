@@ -1,4 +1,4 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
 import static java.time.LocalDateTime.now;
 import static org.instancio.Select.field;
@@ -8,7 +8,19 @@ import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
+import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP;
+import coffeemeet.server.user.presentation.dto.LoginDetailsHTTP.Response;
+import coffeemeet.server.user.presentation.dto.MyProfileHTTP;
 import coffeemeet.server.user.presentation.dto.NotificationTokenHTTP;
+import coffeemeet.server.user.presentation.dto.SignupHTTP;
+import coffeemeet.server.user.presentation.dto.SignupHTTP.Request;
+import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
+import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
+import coffeemeet.server.user.presentation.dto.UserStatusHTTP;
+import coffeemeet.server.user.service.dto.LoginDetailsDto;
+import coffeemeet.server.user.service.dto.MyProfileDto;
+import coffeemeet.server.user.service.dto.UserProfileDto;
+import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.util.List;
 import java.util.Set;
 import org.instancio.Instancio;
@@ -96,11 +108,6 @@ public class UserFixture {
     return Instancio.create(NotificationTokenHTTP.Request.class);
   }
 
-  public static List<Keyword> keywords() {
-    return Instancio.ofList(Keyword.class).size(3)
-        .create();
-  }
-
   public static String token() {
     return Instancio.create(String.class);
   }
@@ -136,6 +143,90 @@ public class UserFixture {
         .ignore(field(User::isBlacklisted))
         .ignore(field(User::getChattingRoom))
         .create();
+  }
+
+  public static LoginDetailsDto loginDetailsDto() {
+    return Instancio.of(LoginDetailsDto.class)
+        .create();
+  }
+
+  public static LoginDetailsHTTP.Response loginDetailsHTTPResponse(
+      LoginDetailsDto response) {
+    return new Response(
+        response.userId(),
+        response.isRegistered(),
+        response.accessToken(),
+        response.refreshToken(),
+        response.nickname(),
+        response.profileImageUrl(),
+        response.companyName(),
+        response.department(),
+        response.interests()
+    );
+  }
+
+  public static MyProfileDto myProfileDtoResponse() {
+    return Instancio.of(MyProfileDto.class)
+        .create();
+  }
+
+  public static MyProfileHTTP.Response myProfileHTTPResponse(MyProfileDto response) {
+    return new MyProfileHTTP.Response(
+        response.nickname(),
+        response.profileImageUrl(),
+        response.companyName(),
+        response.department(),
+        response.interests(),
+        response.oAuthProvider()
+    );
+  }
+
+  public static UserStatusDto userStatusDto() {
+    return Instancio.of(UserStatusDto.class)
+        .create();
+  }
+
+  public static SignupHTTP.Request signupHTTPRequest() {
+    return Instancio.of(SignupHTTP.Request.class)
+        .set(field(Request::keywords), keywords())
+        .create();
+  }
+
+  public static List<Keyword> keywords() {
+    return Instancio.ofList(Keyword.class)
+        .size(3)
+        .create();
+  }
+
+  public static UpdateProfileHTTP.Request updateProfileHTTPRequest() {
+    return Instancio.of(UpdateProfileHTTP.Request.class)
+        .set(field(UpdateProfileHTTP.Request::interests), keywords())
+        .create();
+  }
+
+  public static UserProfileDto userProfileDtoResponse() {
+    return Instancio.of(UserProfileDto.class)
+        .create();
+  }
+
+  public static UserProfileHTTP.Response userProfileHTTPResponse(UserProfileDto response) {
+    return new UserProfileHTTP.Response(
+        response.nickname(),
+        response.profileImageUrl(),
+        response.department(),
+        response.interests()
+    );
+  }
+
+  public static UserStatusHTTP.Response userStatusHTTPResponse(UserStatusDto response) {
+    return new UserStatusHTTP.Response(
+        response.userStatus(),
+        response.startedAt(),
+        response.chattingRoomId(),
+        response.chattingRoomName(),
+        response.isCertificated(),
+        response.penaltyExpiration()
+    );
   }
 
 }

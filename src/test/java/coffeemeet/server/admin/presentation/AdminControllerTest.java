@@ -1,10 +1,9 @@
 package coffeemeet.server.admin.presentation;
 
-import static coffeemeet.server.common.fixture.entity.AdminFixture.adminLoginHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprovalHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPageDto;
+import static coffeemeet.server.common.fixture.AdminFixture.adminLoginHTTPRequest;
+import static coffeemeet.server.common.fixture.AdminFixture.reportApprovalHTTPRequest;
+import static coffeemeet.server.common.fixture.AdminFixture.reportRejectionHTTPRequest;
+import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPageDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,12 +37,9 @@ import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertificationDto;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
-import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
-import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
-import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
-import coffeemeet.server.common.fixture.entity.AdminFixture;
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.common.fixture.AdminFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.ReportFixture;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
@@ -240,7 +236,7 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     Long lastReportId = 0L;
     int pageSize = 10;
-    ReportListDto reportListDto = ReportDtoFixture.reportListDto();
+    ReportListDto reportListDto = ReportFixture.reportListDto();
     AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
@@ -283,8 +279,8 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
   void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
     // given
-    List<GroupReportDto> response = List.of(GroupReportDtoFixture.targetReportDto(),
-        GroupReportDtoFixture.targetReportDto());
+    List<GroupReportDto> response = List.of(ReportFixture.targetReportDto(),
+        ReportFixture.targetReportDto());
     GroupReportHTTP.Response result = GroupReportHTTP.Response.from(response);
 
     given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
@@ -327,8 +323,8 @@ class AdminControllerTest extends ControllerTestConfig {
   void findReportTest() throws Exception {
     // given
     Long reportId = 1L;
-    ReportDetailDto response = ReportDetailDtoFixture.reportDetailDto();
-    ReportDetailHTTP.Response expectedResponse = ReportDetailHTTPFixture.reportDetailHTTPResponse(
+    ReportDetailDto response = ReportFixture.reportDetailDto();
+    ReportDetailHTTP.Response expectedResponse = ReportFixture.reportDetailHTTPResponse(
         response);
 
     given(reportService.findReportById(anyLong())).willReturn(response);

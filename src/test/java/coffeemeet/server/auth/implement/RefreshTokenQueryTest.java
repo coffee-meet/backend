@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class RefreshTokenQueryTest {
   void getRefreshTokenTest() {
     // given
     Long userId = 1L;
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     given(refreshTokenRepository.findById(userId)).willReturn(Optional.of(refreshToken));
 
     // when

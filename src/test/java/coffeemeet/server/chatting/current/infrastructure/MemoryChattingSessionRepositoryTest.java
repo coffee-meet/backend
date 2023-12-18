@@ -1,6 +1,6 @@
 package coffeemeet.server.chatting.current.infrastructure;
 
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingSession;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingSession;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.chatting.current.domain.ChattingSession;

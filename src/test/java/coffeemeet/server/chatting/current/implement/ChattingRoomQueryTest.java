@@ -11,7 +11,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.NotFoundException;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

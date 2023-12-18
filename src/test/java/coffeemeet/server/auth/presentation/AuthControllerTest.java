@@ -21,8 +21,7 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,8 +40,8 @@ class AuthControllerTest extends ControllerTestConfig {
   @Test
   void renewTest() throws Exception {
     // given
-    AuthTokens authTokens = AuthTokensFixture.authTokens();
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    AuthTokens authTokens = AuthFixture.authTokens();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
 
     given(authService.renew(anyLong(), any())).willReturn(authTokens);
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
@@ -74,7 +73,7 @@ class AuthControllerTest extends ControllerTestConfig {
   @Test
   void logoutTest() throws Exception {
     // given
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     willDoNothing().given(authService).logout(anyLong());
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
@@ -99,7 +98,7 @@ class AuthControllerTest extends ControllerTestConfig {
   @Test
   void deleteTest() throws Exception {
     // given
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     willDoNothing().given(authService).delete(anyLong());
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 

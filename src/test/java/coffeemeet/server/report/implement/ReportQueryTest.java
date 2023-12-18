@@ -1,6 +1,6 @@
 package coffeemeet.server.report.implement;
 
-import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
+import static coffeemeet.server.common.fixture.ReportFixture.report;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
