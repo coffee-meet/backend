@@ -37,7 +37,7 @@ import org.hibernate.proxy.HibernateProxy;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends AdvancedBaseEntity {
 
-  public static final String INVALID_USER_STATUS = "올바르지 않은 유저 상태입니다.";
+  private static final String INVALID_USER_STATUS = "올바르지 않은 유저 상태입니다.";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
