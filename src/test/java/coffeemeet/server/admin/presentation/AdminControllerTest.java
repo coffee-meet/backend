@@ -35,7 +35,7 @@ import coffeemeet.server.admin.presentation.dto.GroupReportHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.certification.service.dto.PendingCertification;
+import coffeemeet.server.certification.service.dto.PendingCertificationDto;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
@@ -460,8 +460,8 @@ class AdminControllerTest extends ControllerTestConfig {
     Pageable pageable = certificationPageable();
     PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
         pageable.getPageSize());
-    Page<PendingCertification> page = pendingCertificationPageDto.page();
-    AdminCustomPage<PendingCertification> pendingCertificationAdminCustomPage = AdminCustomPage.of(
+    Page<PendingCertificationDto> page = pendingCertificationPageDto.page();
+    AdminCustomPage<PendingCertificationDto> pendingCertificationAdminCustomPage = AdminCustomPage.of(
         page.getContent(), page.hasNext());
 
     given(certificationService.getUncertifiedUserRequests(any())).willReturn(
