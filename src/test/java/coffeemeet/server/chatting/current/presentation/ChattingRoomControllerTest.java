@@ -20,14 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
-import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
 import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import com.epages.restdocs.apispec.Schema;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -48,9 +46,8 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     Long roomId = 1L;
     Long firstMessageId = 51L;
     int pageSize = 50;
-    List<Response> responses = ChattingFixture.chattingDtoResponse(pageSize);
-    List<Chat> chats = responses.stream().map(Chat::from).toList();
-    ChatsHTTP.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(chats);
+    ChattingListDto responses = ChattingFixture.chattingListDto();
+    ChatsHTTP.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(responses);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(chattingRoomService.searchMessages(roomId, firstMessageId, pageSize)).willReturn(
@@ -81,7 +78,8 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
                     fieldWithPath("chats[].nickname").type(JsonFieldType.STRING).description("닉네임"),
                     fieldWithPath("chats[].content").type(JsonFieldType.STRING)
                         .description("내용"),
-                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간")
+                    fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간"),
+                    fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부")
                 )
             )
         )

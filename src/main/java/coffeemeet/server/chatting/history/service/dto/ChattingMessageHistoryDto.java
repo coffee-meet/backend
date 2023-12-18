@@ -2,6 +2,7 @@ package coffeemeet.server.chatting.history.service.dto;
 
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public sealed interface ChattingMessageHistoryDto permits ChattingMessageHistoryDto.Response {
@@ -12,6 +13,7 @@ public sealed interface ChattingMessageHistoryDto permits ChattingMessageHistory
       String nickname,
       String content,
       String profileImageUrl,
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
       LocalDateTime createdAt
   ) implements ChattingMessageHistoryDto {
 

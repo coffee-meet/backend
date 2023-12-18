@@ -4,7 +4,7 @@ import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingMe
 import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
 import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
@@ -19,7 +19,7 @@ import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
@@ -82,7 +82,7 @@ class ChattingMessageServiceTest {
         chattingMessage);
 
     // when
-    Response response = chattingMessageService.chatting(chattingSession.sessionId(),
+    ChattingDto response = chattingMessageService.chatting(chattingSession.sessionId(),
         chattingRoom.getId(), content);
 
     // then

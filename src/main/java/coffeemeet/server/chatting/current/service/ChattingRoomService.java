@@ -7,7 +7,7 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
@@ -45,10 +45,15 @@ public class ChattingRoomService {
   }
 
   @Transactional
-  public List<Response> searchMessages(Long roomId, Long firstMessageId, int pageSize) {
+  public ChattingListDto searchMessages(Long roomId, Long firstMessageId, int pageSize) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
-    return chattingMessageQuery.findMessages(chattingRoom, firstMessageId, pageSize).stream()
-        .map(message -> ChattingDto.Response.of(message.getUser(), message)).toList();
+    List<ChattingMessage> chattingMessages = chattingMessageQuery.findMessages(chattingRoom,
+        firstMessageId,
+        pageSize);
+    boolean hasNext = chattingMessages.size() >= pageSize;
+    List<ChattingDto> chattingDtoList = chattingMessages.stream()
+        .map(message -> ChattingDto.of(message.getUser(), message)).toList();
+    return ChattingListDto.of(chattingDtoList, hasNext);
   }
 
   @Transactional
