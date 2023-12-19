@@ -1,13 +1,19 @@
 package coffeemeet.server.matching.service;
 
+import static coffeemeet.server.matching.exception.MatchingErrorCode.INVALID_USER_STATUS;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
+import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
+import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.Set;
@@ -58,6 +64,11 @@ public class MatchingService {
   }
 
   public void cancelMatching(Long userId) {
+    User user = userQuery.getUserById(userId);
+    if (user.getUserStatus() != MATCHING) {
+      throw new BadRequestException(INVALID_USER_STATUS,
+          String.format("유저 상태가 %s이 아닙니다.", MATCHING));
+    }
     String companyName = certificationQuery.getCompanyNameByUserId(userId);
     matchingQueueCommand.deleteUserByUserId(companyName, userId);
     userCommand.setToIdle(userId);
