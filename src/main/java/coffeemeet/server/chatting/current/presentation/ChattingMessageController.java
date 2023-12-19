@@ -42,7 +42,7 @@ public class ChattingMessageController {
 
   @MessageMapping("/chatting/messages")
   public void message(@Valid ChatStomp.Request request, SimpMessageHeaderAccessor accessor) {
-    Chatting response = chattingMessageService.chatting(
+    Chatting response = chattingMessageService.chat(
         accessor.getSessionId(),
         request.roomId(),
         request.content()

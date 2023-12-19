@@ -31,7 +31,7 @@ public class ChattingMessageService {
   private final UserCommand userCommand;
   private final FCMNotificationSender fcmNotificationSender;
 
-  public Chatting chatting(String sessionId, Long roomId, String content) {
+  public Chatting chat(String sessionId, Long roomId, String content) {
     Long userId = chattingSessionQuery.getUserIdById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);

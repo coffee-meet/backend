@@ -82,7 +82,7 @@ class ChattingMessageServiceTest {
         chattingMessage);
 
     // when
-    Chatting response = chattingMessageService.chatting(chattingSession.sessionId(),
+    Chatting response = chattingMessageService.chat(chattingSession.sessionId(),
         chattingRoom.getId(), content);
 
     // then
