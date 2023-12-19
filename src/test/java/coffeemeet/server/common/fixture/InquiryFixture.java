@@ -1,4 +1,4 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
 import static org.instancio.Select.field;
 
@@ -6,7 +6,7 @@ import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.presentation.dto.InquiryHTTP;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
 import java.util.List;
 import org.instancio.Instancio;
 
@@ -42,8 +42,8 @@ public class InquiryFixture {
         .generate(field(Inquiry::getContent), gen -> gen.string().maxLength(200)).create();
   }
 
-  public static InquirySearchResponse inquirySearchResponse() {
-    return Instancio.of(InquirySearchResponse.class)
+  public static InquirySearchDto inquirySearchResponse() {
+    return Instancio.of(InquirySearchDto.class)
         .create();
   }
 

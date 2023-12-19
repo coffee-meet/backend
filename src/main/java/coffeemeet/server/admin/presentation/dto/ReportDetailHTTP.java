@@ -1,4 +1,4 @@
-package coffeemeet.server.report.presentation.dto;
+package coffeemeet.server.admin.presentation.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 

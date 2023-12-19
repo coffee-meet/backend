@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public final class ChatStomp {
+public final class ChattingStomp {
 
   public record Request(
       @NotNull
@@ -31,14 +31,14 @@ public final class ChatStomp {
       LocalDateTime createdAt
   ) {
 
-    public static ChatStomp.Response from(ChattingDto.Response response) {
-      return new ChatStomp.Response(
-          response.userId(),
-          response.messageId(),
-          response.nickname(),
-          response.content(),
-          response.profileImageUrl(),
-          response.createdAt()
+    public static ChattingStomp.Response from(ChattingDto chatting) {
+      return new ChattingStomp.Response(
+          chatting.userId(),
+          chatting.messageId(),
+          chatting.nickname(),
+          chatting.content(),
+          chatting.profileImageUrl(),
+          chatting.createdAt()
       );
     }
 

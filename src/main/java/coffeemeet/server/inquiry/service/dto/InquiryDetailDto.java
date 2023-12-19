@@ -2,6 +2,7 @@ package coffeemeet.server.inquiry.service.dto;
 
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public record InquiryDetailDto(
@@ -10,6 +11,7 @@ public record InquiryDetailDto(
     String inquirerEmail,
     String title,
     String content,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     LocalDateTime createdAt
 ) {
 

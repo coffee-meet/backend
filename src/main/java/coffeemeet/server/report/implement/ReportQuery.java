@@ -25,7 +25,7 @@ public class ReportQuery {
   private final ReportRepository reportRepository;
   private final ReportQueryRepository reportQueryRepository;
 
-  public void hasDuplicatedReport(long reporterId, long chattingRoomId, long targetId) {
+  public void hasDuplicatedReport(Long reporterId, Long chattingRoomId, Long targetId) {
     if (reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(reporterId,
         chattingRoomId,
         targetId)) {
@@ -37,7 +37,7 @@ public class ReportQuery {
     }
   }
 
-  public Report getReportById(long reportId) {
+  public Report getReportById(Long reportId) {
     return reportQueryRepository.findById(reportId)
         .orElseThrow(() -> new NotFoundException(
             REPORT_NOT_FOUND,
@@ -49,7 +49,7 @@ public class ReportQuery {
     return reportRepository.findByIdIn(reportIds);
   }
 
-  public List<Report> getReportsByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
+  public List<Report> getReportsByTargetIdAndChattingRoomId(Long targetId, Long chattingRoomId) {
     List<Report> reports = reportQueryRepository.findByTargetIdAndChattingRoomId(targetId,
         chattingRoomId);
     if (reports.isEmpty()) {

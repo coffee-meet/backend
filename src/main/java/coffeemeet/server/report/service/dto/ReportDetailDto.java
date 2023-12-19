@@ -3,6 +3,7 @@ package coffeemeet.server.report.service.dto;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.domain.ReportReason;
 import coffeemeet.server.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public record ReportDetailDto(
@@ -12,6 +13,7 @@ public record ReportDetailDto(
     ReportReason reason,
     String reasonDetail,
     int reportedCount,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     LocalDateTime createdAt
 ) {
 

@@ -31,7 +31,7 @@ public class ChattingMessageService {
   private final UserCommand userCommand;
   private final FCMNotificationSender fcmNotificationSender;
 
-  public ChattingDto.Response chatting(String sessionId, Long roomId, String content) {
+  public ChattingDto chat(String sessionId, Long roomId, String content) {
     Long userId = chattingSessionQuery.getUserIdById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
@@ -39,7 +39,7 @@ public class ChattingMessageService {
     sendChattingAlarm(user.getProfile().getNickname(), content, users);
     ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
-    return ChattingDto.Response.of(user, chattingMessage);
+    return ChattingDto.of(user, chattingMessage);
   }
 
   private void sendChattingAlarm(String chattingUserNickname, String content, List<User> users) {

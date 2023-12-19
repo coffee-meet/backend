@@ -1,7 +1,7 @@
 package coffeemeet.server.report.service;
 
-import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.ReportFixture.report;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -16,7 +16,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.common.execption.NotFoundException;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
@@ -121,12 +121,12 @@ class ReportServiceTest {
   @Test
   void findAllReportsTest() {
     // given
-    long lastReportId = 0L;
+    Long lastReportId = 0L;
     int pageSize = 10;
     User targetUser = user();
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    long targetedId = targetUser.getId();
-    long chattingRoomId = chattingRoom.getId();
+    Long targetedId = targetUser.getId();
+    Long chattingRoomId = chattingRoom.getId();
 
     Report report1 = Report.builder()
         .reporterId(1L).chattingRoomId(chattingRoomId).targetedId(targetedId).reason("잠수")

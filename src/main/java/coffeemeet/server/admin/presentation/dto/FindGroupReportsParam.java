@@ -1,8 +1,8 @@
-package coffeemeet.server.report.presentation.dto;
+package coffeemeet.server.admin.presentation.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record FindGroupReports(
+public record FindGroupReportsParam(
     @NotNull
     Long chattingRoomId,
     @NotNull

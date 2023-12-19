@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailSender {
 
+  private static final String VERIFICATION_CODE = "인증코드: %s";
+  private static final String SUBJECT_MESSAGE = "[coffee-meet] 커피밋 사용을 위해 이메일 인증을 완료해주세요";
+
   private final JavaMailSender javaMailSender;
   private final String sender;
 
@@ -23,10 +26,9 @@ public class EmailSender {
     mailMessage.setFrom(sender);
     mailMessage.setTo(companyMail.getValue());
 
-    String subject = "[coffee-meet] 커피밋 사용을 위해 이메일 인증을 완료해주세요";
-    mailMessage.setSubject(subject);
+    mailMessage.setSubject(SUBJECT_MESSAGE);
 
-    String text = String.format("인증코드: %s", verificationCode);
+    String text = String.format(VERIFICATION_CODE, verificationCode);
     mailMessage.setText(text);
 
     javaMailSender.send(mailMessage);

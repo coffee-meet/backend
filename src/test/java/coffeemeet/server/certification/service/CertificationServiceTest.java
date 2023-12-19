@@ -1,12 +1,12 @@
 package coffeemeet.server.certification.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certifications;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.CertificationFixture.certifications;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
+import static coffeemeet.server.common.fixture.CertificationFixture.department;
+import static coffeemeet.server.common.fixture.CertificationFixture.email;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

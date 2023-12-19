@@ -14,7 +14,7 @@ import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.common.execption.InvalidAuthException;
-import coffeemeet.server.common.fixture.dto.AuthTokensFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import coffeemeet.server.user.service.UserService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
@@ -48,15 +48,16 @@ class AuthServiceTest {
   @Test
   void renewTest() {
     // given
-    AuthTokens authTokens = AuthTokensFixture.authTokens();
-    AuthTokens newAuthTokens = AuthTokensFixture.authTokens(REFRESH_TOKEN);
+    AuthTokens authTokens = AuthFixture.authTokens();
+    AuthTokens newAuthTokens = AuthFixture.authTokens(REFRESH_TOKEN);
 
     given(jwtTokenProvider.isExpiredRefreshToken(REFRESH_TOKEN)).willReturn(false);
     given(authTokensGenerator.reissueAccessToken(anyLong(), any(String.class))).willReturn(
         newAuthTokens);
 
     // when
-    AuthTokens renewedAuthTokens = authService.renew((long) Math.random(), REFRESH_TOKEN);
+    AuthTokens renewedAuthTokens = authService.renew(Instancio.create(Long.class),
+        REFRESH_TOKEN);
 
     // then
     assertAll(
@@ -72,7 +73,7 @@ class AuthServiceTest {
     given(jwtTokenProvider.isExpiredRefreshToken(REFRESH_TOKEN)).willReturn(true);
 
     // when, then
-    assertThatThrownBy(() -> authService.renew((long) Math.random(), REFRESH_TOKEN))
+    assertThatThrownBy(() -> authService.renew(Instancio.create(Long.class), REFRESH_TOKEN))
         .isInstanceOf(InvalidAuthException.class);
   }
 

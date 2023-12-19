@@ -1,23 +1,20 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
 import static org.instancio.Select.field;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
-import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
-import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP.Chat;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingCustomSlice;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingRoomStatusHTTP;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP.ChatHistory;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingHistoryCustomSlice;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP.ChatRoomHistory;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
@@ -51,39 +48,27 @@ public class ChattingFixture {
         .create();
   }
 
-  public static List<ChattingDto.Response> chattingDtoResponse(int size) {
-    return Instancio.ofList(ChattingDto.Response.class).size(size)
+  public static ChattingListDto chattingListDto() {
+    return Instancio.of(ChattingListDto.class)
         .create();
   }
 
-  public static List<ChattingRoomHistoryDto.Response> chattingRoomHistoryDtoResponses(int size) {
-    return Instancio.ofList(ChattingRoomHistoryDto.Response.class).size(size)
+  public static List<ChattingRoomHistoryDto> chattingRoomHistoryDtoResponses(int size) {
+    return Instancio.ofList(ChattingRoomHistoryDto.class).size(size)
         .create();
   }
 
-  public static List<ChattingMessageHistoryDto.Response> chattingMessageHistoryDtoResponse(
-      int size) {
-    return Instancio.ofList(ChattingMessageHistoryDto.Response.class).size(size)
-        .create();
-  }
-
-  public static ChatsHTTP.Response chatsHTTPResponse(List<Chat> chats) {
-    return Instancio.of(ChatsHTTP.Response.class)
-        .set(field(ChatsHTTP.Response::chats), chats)
+  public static ChattingCustomSlice.Response chatsHTTPResponse(ChattingListDto chats) {
+    return Instancio.of(ChattingCustomSlice.Response.class)
+        .set(field(ChattingCustomSlice.Response::chats), chats.contents())
+        .set(field(ChattingCustomSlice.Response::hasNext), chats.hasNext())
         .create();
   }
 
   public static ChattingRoomHistoriesHTTP.Response chattingRoomHistoriesHTTP(
-      List<ChatRoomHistory> chatRoomHistories) {
+      List<ChattingRoomHistoryDto> chatRoomHistories) {
     return Instancio.of(ChattingRoomHistoriesHTTP.Response.class)
         .set(field(ChattingRoomHistoriesHTTP.Response::chatRoomHistories), chatRoomHistories)
-        .create();
-  }
-
-  public static ChattingMessageHistoriesHTTP.Response chattingMessageHistoriesHTTP(
-      List<ChatHistory> chatHistories) {
-    return Instancio.of(ChattingMessageHistoriesHTTP.Response.class)
-        .set(field(ChattingMessageHistoriesHTTP.Response::chatHistories), chatHistories)
         .create();
   }
 
@@ -130,14 +115,29 @@ public class ChattingFixture {
     return Instancio.create(ChattingSession.class);
   }
 
-  public static ChatRoomStatusDto chatRoomStatusDto() {
-    return Instancio.of(ChatRoomStatusDto.class)
+  public static ChattingRoomStatusDto chatRoomStatusDto() {
+    return Instancio.of(ChattingRoomStatusDto.class)
         .create();
   }
 
-  public static ChatRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
-      ChatRoomStatusDto chatRoomStatusDto) {
-    return ChatRoomStatusHTTP.Response.from(chatRoomStatusDto);
+  public static ChattingRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
+      ChattingRoomStatusDto chattingRoomStatusDto) {
+    return ChattingRoomStatusHTTP.Response.from(chattingRoomStatusDto);
+  }
+
+  public static ChattingHistoryListDto chattingMessageHistoryListDto() {
+    return Instancio.of(ChattingHistoryListDto.class)
+        .create();
+  }
+
+  public static ChattingHistoryCustomSlice.Response chattingMessageHistoriesHTTPResponse(
+      ChattingHistoryListDto chattingHistoryListDto) {
+    return Instancio.of(ChattingHistoryCustomSlice.Response.class)
+        .set(field(ChattingHistoryCustomSlice.Response::chatHistories),
+            chattingHistoryListDto.contents())
+        .set(field(ChattingHistoryCustomSlice.Response::hasNext),
+            chattingHistoryListDto.hasNext())
+        .create();
   }
 
 }

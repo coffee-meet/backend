@@ -8,13 +8,13 @@ import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.HashSet;
@@ -72,13 +72,13 @@ class InquiryServiceTest {
     given(userQuery.getUsersByIdSet(anySet())).willReturn(userSet);
 
     // when
-    InquirySearchResponse inquirySearchResponse = inquiryService.searchInquiries(lastInquiryId,
+    InquirySearchDto inquirySearchDto = inquiryService.searchInquiries(lastInquiryId,
         pageSize);
 
     // then
     assertAll(
-        () -> assertThat(inquirySearchResponse.contents()).hasSize(size),
-        () -> assertThat(inquirySearchResponse.hasNext()).isTrue()
+        () -> assertThat(inquirySearchDto.contents()).hasSize(size),
+        () -> assertThat(inquirySearchDto.hasNext()).isTrue()
     );
   }
 

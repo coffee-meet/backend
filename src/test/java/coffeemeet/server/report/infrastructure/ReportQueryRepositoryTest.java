@@ -1,6 +1,6 @@
 package coffeemeet.server.report.infrastructure;
 
-import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
+import static coffeemeet.server.common.fixture.ReportFixture.report;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
@@ -38,7 +38,7 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
     List<Report> reports = List.of(report, report1, report2, sameReport1, sameReport2);
     reportRepository.saveAll(reports);
 
-    long lastReportId = 0L;
+    Long lastReportId = 0L;
     int pageSize = 10;
 
     // when
@@ -108,7 +108,7 @@ class ReportQueryRepositoryTest extends RepositoryTestConfig {
   @Test
   void findByIdFailTest() {
     // when
-    Optional<Report> foundReport = reportQueryRepository.findById(1);
+    Optional<Report> foundReport = reportQueryRepository.findById(1L);
 
     // then
     assertThat(foundReport).isEmpty();

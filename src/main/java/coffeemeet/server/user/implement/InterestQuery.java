@@ -21,7 +21,7 @@ public class InterestQuery {
         .toList();
   }
 
-  public List<Interest> findAllByUserId(long userId) {
+  public List<Interest> findAllByUserId(Long userId) {
     return interestRepository.findAllByUserId(userId);
   }
 

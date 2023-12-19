@@ -1,6 +1,6 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
+import static coffeemeet.server.common.fixture.UserFixture.users;
 import static org.instancio.Select.field;
 
 import coffeemeet.server.certification.domain.Certification;
@@ -120,12 +120,13 @@ public class CertificationFixture {
   }
 
   public static PendingCertificationPageDto pendingCertificationPageDto(int size) {
-    return new PendingCertificationPageDto(new PageImpl<>(pendingCertifications(size)));
+    return PendingCertificationPageDto.from(new PageImpl<>(pendingCertifications(size)));
   }
 
   private static List<PendingCertification> pendingCertifications(int size) {
     return Instancio.ofList(PendingCertification.class).size(size)
-        .generate(field(PendingCertification::businessCardUrl), gen -> gen.net().url().asString())
+        .generate(field(PendingCertification::businessCardUrl),
+            gen -> gen.net().url().asString())
         .generate(field(PendingCertification::companyEmail), gen -> gen.net().email()).create();
   }
 

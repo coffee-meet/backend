@@ -1,6 +1,6 @@
 package coffeemeet.server.report.implement;
 
-import static coffeemeet.server.common.fixture.entity.ReportFixture.report;
+import static coffeemeet.server.common.fixture.ReportFixture.report;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -41,9 +41,9 @@ class ReportQueryTest {
   @Test
   void hasDuplicatedReportTest() {
     // given
-    long reporterId = 1L;
-    long chattingRoomId = 1L;
-    long targetId = 1L;
+    Long reporterId = 1L;
+    Long chattingRoomId = 1L;
+    Long targetId = 1L;
 
     given(reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(anyLong(), anyLong(),
         anyLong())).willReturn(Boolean.FALSE);
@@ -57,9 +57,9 @@ class ReportQueryTest {
   @Test
   void hasNotDuplicatedReportTest() {
     // given
-    long reporterId = 1L;
-    long chattingRoomId = 1L;
-    long targetId = 1L;
+    Long reporterId = 1L;
+    Long chattingRoomId = 1L;
+    Long targetId = 1L;
 
     given(reportRepository.existsByReporterIdAndChattingRoomIdAndTargetedId(anyLong(), anyLong(),
         anyLong())).willReturn(Boolean.TRUE);
@@ -138,8 +138,8 @@ class ReportQueryTest {
   @Test
   void getReportsByTargetIdAndChattingRoomIdFailTest() {
     // given
-    long targetedId = 1;
-    long chattingRoomId = 1;
+    Long targetedId = 1L;
+    Long chattingRoomId = 1L;
     List<Report> reports = new ArrayList<>();
 
     given(reportQueryRepository.findByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(

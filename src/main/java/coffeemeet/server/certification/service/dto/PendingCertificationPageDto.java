@@ -6,4 +6,8 @@ public record PendingCertificationPageDto(
     Page<PendingCertification> page
 ) {
 
+  public static PendingCertificationPageDto from(Page<PendingCertification> page) {
+    return new PendingCertificationPageDto(page);
+  }
+
 }

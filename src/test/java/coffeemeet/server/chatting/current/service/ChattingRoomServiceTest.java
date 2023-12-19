@@ -13,14 +13,14 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -93,11 +93,11 @@ class ChattingRoomServiceTest {
         chattingMessages);
 
     // when
-    List<Response> responses = chattingRoomService.searchMessages(chattingRoomId, firstMessageId,
+    ChattingListDto responses = chattingRoomService.searchMessages(chattingRoomId, firstMessageId,
         pageSize);
 
     // then
-    assertThat(responses).hasSize(pageSize);
+    assertThat(responses.contents()).hasSize(pageSize);
   }
 
   @DisplayName("현재 채팅방 백업 및 삭제 후, 유저의 상태 변경 및 알람 전송을 할 수 있다.")
@@ -133,15 +133,15 @@ class ChattingRoomServiceTest {
   void checkChattingRoomStatusTest() {
     // given
     Long roomId = 1L;
-    ChatRoomStatusDto chatRoomStatusDto = ChattingFixture.chatRoomStatusDto();
+    ChattingRoomStatusDto chattingRoomStatusDto = ChattingFixture.chatRoomStatusDto();
 
-    given(chattingRoomQuery.existsBy(any())).willReturn(chatRoomStatusDto.isExisted());
+    given(chattingRoomQuery.existsBy(any())).willReturn(chattingRoomStatusDto.isExisted());
 
     // when
-    ChatRoomStatusDto response = chattingRoomService.checkChattingRoomStatus(roomId);
+    ChattingRoomStatusDto response = chattingRoomService.checkChattingRoomStatus(roomId);
 
     // then
-    assertThat(response).isEqualTo(chatRoomStatusDto);
+    assertThat(response).isEqualTo(chattingRoomStatusDto);
   }
 
 }

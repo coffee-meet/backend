@@ -1,4 +1,4 @@
-package coffeemeet.server.common.fixture.entity;
+package coffeemeet.server.common.fixture;
 
 import static org.instancio.Select.field;
 
@@ -6,8 +6,7 @@ import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
 import coffeemeet.server.admin.presentation.dto.AdminLoginHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDeletionHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
+import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import java.util.List;
 import org.instancio.Instancio;
 
@@ -26,10 +25,11 @@ public class AdminFixture {
     return Instancio.of(ReportDeletionHTTP.Request.class).create();
   }
 
+  @SuppressWarnings("unchecked")
   public static AdminCustomSlice<InquirySummary> adminCustomPageByInquiry(
       List<InquirySummary> contents, boolean hasNext) {
     return Instancio.of(AdminCustomSlice.class)
-        .withTypeParameters(InquirySearchResponse.InquirySummary.class)
+        .withTypeParameters(InquirySummary.class)
         .set(field(AdminCustomSlice<InquirySummary>::contents), contents)
         .set(field(AdminCustomSlice<InquirySummary>::hasNext), hasNext)
         .create();

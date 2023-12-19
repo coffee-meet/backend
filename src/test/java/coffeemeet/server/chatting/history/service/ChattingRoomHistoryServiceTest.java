@@ -8,8 +8,8 @@ import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryQuery;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto.Response;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -67,12 +67,12 @@ class ChattingRoomHistoryServiceTest {
         chattingMessageHistories);
 
     // when
-    List<Response> responses = chattingRoomHistoryService.searchChattingMessageHistories(
+    ChattingHistoryListDto responses = chattingRoomHistoryService.searchChattingMessageHistories(
         roomHistoryId, firstMessageId,
         pageSize);
 
     // then
-    assertThat(responses).hasSize(pageSize);
+    assertThat(responses.contents()).hasSize(pageSize);
   }
 
 }

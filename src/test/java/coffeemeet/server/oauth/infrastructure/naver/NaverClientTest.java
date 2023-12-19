@@ -7,8 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.NaverMemberResponseFixture;
-import coffeemeet.server.common.fixture.dto.NaverTokenFixture;
+import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.config.naver.NaverProperties;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverTokens;
@@ -42,7 +41,7 @@ class NaverClientTest {
   void fetchTokenTest() {
     // given
     String authCode = "authCode";
-    NaverTokens naverTokens = NaverTokenFixture.naverTokens();
+    NaverTokens naverTokens = OauthFixture.naverTokens();
 
     given(naverProperties.getClientId()).willReturn("testClientId");
     given(naverProperties.getRedirectUrl()).willReturn("testRedirectUrl");
@@ -78,7 +77,7 @@ class NaverClientTest {
   @Test
   void fetchMemberTest() {
     // given
-    NaverMemberDetail response = NaverMemberResponseFixture.naverMemberResponse();
+    NaverMemberDetail response = OauthFixture.naverMemberResponse();
     ResponseEntity<NaverMemberDetail> mockResponse = ResponseEntity.ok(response);
 
     given(restTemplate.exchange(

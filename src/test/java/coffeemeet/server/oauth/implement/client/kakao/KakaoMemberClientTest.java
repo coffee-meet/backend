@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
-import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
+import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
@@ -38,8 +37,8 @@ class KakaoMemberClientTest {
   void fetchTest() {
     // given
     String authCode = "authCode";
-    KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();
-    KakaoMemberDetail response = KakaoMemberResponseFixture.kakaoMemberResponse();
+    KakaoTokens kakaoTokens = OauthFixture.kakaoTokens();
+    KakaoMemberDetail response = OauthFixture.kakaoMemberResponse();
 
     given(kakaoClient.fetchToken(any())).willReturn(kakaoTokens);
     given(kakaoClient.fetchMember(any())).willReturn(response);
