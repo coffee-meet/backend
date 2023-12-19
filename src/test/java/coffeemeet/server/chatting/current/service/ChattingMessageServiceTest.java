@@ -21,7 +21,7 @@ import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.common.implement.FCMNotificationSender;
-import coffeemeet.server.chatting.current.service.dto.Chatting;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
 import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
