@@ -17,10 +17,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP.Response;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingHistoryCustomSlice.Response;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
 import coffeemeet.server.chatting.history.service.ChattingRoomHistoryService;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.AuthFixture;
@@ -95,14 +95,14 @@ class ChattingRoomHistoryControllerTest extends ControllerTestConfig {
     Long firstMessageId = 51L;
     int pageSize = 50;
 
-    ChattingMessageHistoryListDto chattingMessageHistoryListDto = ChattingFixture.chattingMessageHistoryListDto();
+    ChattingHistoryListDto chattingHistoryListDto = ChattingFixture.chattingMessageHistoryListDto();
     Response response = ChattingFixture.chattingMessageHistoriesHTTPResponse(
-        chattingMessageHistoryListDto);
+        chattingHistoryListDto);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(chattingRoomHistoryService.searchChattingMessageHistories(roomHistoryId, firstMessageId,
         pageSize)).willReturn(
-        chattingMessageHistoryListDto);
+        chattingHistoryListDto);
 
     // when, then
     mockMvc.perform(get("/api/v1/chatting/room/histories/{roomHistoryId}", roomHistoryId)

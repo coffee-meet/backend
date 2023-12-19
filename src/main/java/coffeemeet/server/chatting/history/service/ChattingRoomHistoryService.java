@@ -7,7 +7,7 @@ import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryQuery;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.chatting.history.service.dto.ChattingHistory;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -45,7 +45,7 @@ public class ChattingRoomHistoryService {
   }
 
   // TODO: 11/20/23 캐쉬 로직 적용
-  public ChattingMessageHistoryListDto searchChattingMessageHistories(Long roomHistoryId,
+  public ChattingHistoryListDto searchChattingMessageHistories(Long roomHistoryId,
       Long firstMessageId, int pageSize) {
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryQuery.getChattingRoomHistoryBy(
         roomHistoryId);
@@ -58,7 +58,7 @@ public class ChattingRoomHistoryService {
         .map(chattingMessageHistory -> ChattingHistory.of(
             chattingMessageHistory.getUser(), chattingMessageHistory))
         .toList();
-    return ChattingMessageHistoryListDto.of(historyDtoList, hasNext);
+    return ChattingHistoryListDto.of(historyDtoList, hasNext);
   }
 
 }

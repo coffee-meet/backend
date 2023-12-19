@@ -12,9 +12,9 @@ import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingHistoryCustomSlice;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
@@ -125,18 +125,18 @@ public class ChattingFixture {
     return ChattingRoomStatusHTTP.Response.from(chattingRoomStatusDto);
   }
 
-  public static ChattingMessageHistoryListDto chattingMessageHistoryListDto() {
-    return Instancio.of(ChattingMessageHistoryListDto.class)
+  public static ChattingHistoryListDto chattingMessageHistoryListDto() {
+    return Instancio.of(ChattingHistoryListDto.class)
         .create();
   }
 
-  public static ChattingMessageHistoriesHTTP.Response chattingMessageHistoriesHTTPResponse(
-      ChattingMessageHistoryListDto chattingMessageHistoryListDto) {
-    return Instancio.of(ChattingMessageHistoriesHTTP.Response.class)
-        .set(field(ChattingMessageHistoriesHTTP.Response::chatHistories),
-            chattingMessageHistoryListDto.contents())
-        .set(field(ChattingMessageHistoriesHTTP.Response::hasNext),
-            chattingMessageHistoryListDto.hasNext())
+  public static ChattingHistoryCustomSlice.Response chattingMessageHistoriesHTTPResponse(
+      ChattingHistoryListDto chattingHistoryListDto) {
+    return Instancio.of(ChattingHistoryCustomSlice.Response.class)
+        .set(field(ChattingHistoryCustomSlice.Response::chatHistories),
+            chattingHistoryListDto.contents())
+        .set(field(ChattingHistoryCustomSlice.Response::hasNext),
+            chattingHistoryListDto.hasNext())
         .create();
   }
 
