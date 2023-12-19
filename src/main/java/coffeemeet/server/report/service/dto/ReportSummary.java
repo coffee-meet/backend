@@ -5,7 +5,7 @@ import coffeemeet.server.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
-public record Report(
+public record ReportSummary(
     String targetedNickname,
     String chattingRoomName,
     Long targetedId,
@@ -14,8 +14,8 @@ public record Report(
     LocalDateTime createdAt
 ) {
 
-  public static Report of(User targeted, ChattingRoom chattingRoom) {
-    return new Report(
+  public static ReportSummary of(User targeted, ChattingRoom chattingRoom) {
+    return new ReportSummary(
         targeted.getProfile().getNickname(),
         chattingRoom.getName(),
         targeted.getId(),

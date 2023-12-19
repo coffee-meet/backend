@@ -9,7 +9,7 @@ import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.GroupReportDto;
-import coffeemeet.server.report.service.dto.Report;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.user.domain.User;
@@ -67,11 +67,11 @@ public class ReportService {
     Map<Long, User> userMap = getUsers(reports);
     Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reports);
 
-    List<Report> responses = reports.stream()
+    List<ReportSummary> responses = reports.stream()
         .map(report -> {
           User targetUser = userMap.get(report.getTargetedId());
           ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-          return Report.of(targetUser, chattingRoom);
+          return ReportSummary.of(targetUser, chattingRoom);
         })
         .toList();
     return ReportListDto.of(responses, hasNext);
