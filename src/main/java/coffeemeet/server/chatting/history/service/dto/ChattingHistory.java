@@ -4,7 +4,7 @@ import coffeemeet.server.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
-public record ChattingMessageHistory(
+public record ChattingHistory(
     Long userId,
     Long messageId,
     String nickname,
@@ -14,9 +14,9 @@ public record ChattingMessageHistory(
     LocalDateTime createdAt
 ) {
 
-  public static ChattingMessageHistory of(User user,
+  public static ChattingHistory of(User user,
       coffeemeet.server.chatting.history.domain.ChattingMessageHistory chattingMessageHistory) {
-    return new ChattingMessageHistory(
+    return new ChattingHistory(
         user.getId(),
         chattingMessageHistory.getId(),
         user.getProfile().getNickname(),
