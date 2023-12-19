@@ -7,7 +7,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.domain.ChattingSession;
 import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
@@ -115,14 +115,14 @@ public class ChattingFixture {
     return Instancio.create(ChattingSession.class);
   }
 
-  public static ChatRoomStatusDto chatRoomStatusDto() {
-    return Instancio.of(ChatRoomStatusDto.class)
+  public static ChattingRoomStatusDto chatRoomStatusDto() {
+    return Instancio.of(ChattingRoomStatusDto.class)
         .create();
   }
 
   public static ChatRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
-      ChatRoomStatusDto chatRoomStatusDto) {
-    return ChatRoomStatusHTTP.Response.from(chatRoomStatusDto);
+      ChattingRoomStatusDto chattingRoomStatusDto) {
+    return ChatRoomStatusHTTP.Response.from(chattingRoomStatusDto);
   }
 
   public static ChattingMessageHistoryListDto chattingMessageHistoryListDto() {
