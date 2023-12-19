@@ -1,11 +1,10 @@
 package coffeemeet.server.chatting.history.service.dto;
 
-import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
-public record ChattingMessageHistoryDto(
+public record ChattingMessageHistory(
     Long userId,
     Long messageId,
     String nickname,
@@ -15,9 +14,9 @@ public record ChattingMessageHistoryDto(
     LocalDateTime createdAt
 ) {
 
-  public static ChattingMessageHistoryDto of(User user,
-      ChattingMessageHistory chattingMessageHistory) {
-    return new ChattingMessageHistoryDto(
+  public static ChattingMessageHistory of(User user,
+      coffeemeet.server.chatting.history.domain.ChattingMessageHistory chattingMessageHistory) {
+    return new ChattingMessageHistory(
         user.getId(),
         chattingMessageHistory.getId(),
         user.getProfile().getNickname(),

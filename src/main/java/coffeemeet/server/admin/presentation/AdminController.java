@@ -10,18 +10,18 @@ import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.presentation.dto.UserPunishmentHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.certification.service.dto.PendingCertificationDto;
+import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
-import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
+import coffeemeet.server.report.service.dto.Report;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -127,7 +127,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomSlice<ReportDto>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<Report>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
@@ -166,7 +166,7 @@ public class AdminController {
   }
 
   @GetMapping("/inquiries")
-  public ResponseEntity<AdminCustomSlice<InquirySummaryDto>> searchInquiries(
+  public ResponseEntity<AdminCustomSlice<InquirySummary>> searchInquiries(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastInquiryId,
       @RequestParam(defaultValue = "10") int pageSize) {
@@ -203,7 +203,7 @@ public class AdminController {
   // TODO: 11/27/23 임시로 페이징(옵셋 기반) 처리, 개선 필요
   @PerformanceMeasurement
   @GetMapping("/certifications/pending")
-  public ResponseEntity<AdminCustomPage<PendingCertificationDto>> getPendingCertifications(
+  public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") int offset,
       @RequestParam(defaultValue = "10") int size
@@ -217,7 +217,7 @@ public class AdminController {
     PendingCertificationPageDto uncertifiedUserRequests = certificationService.getUncertifiedUserRequests(
         pageable);
 
-    Page<PendingCertificationDto> page = uncertifiedUserRequests.page();
+    Page<PendingCertification> page = uncertifiedUserRequests.page();
     return ResponseEntity.ok(
         AdminCustomPage.of(page.getContent(), page.hasNext())
     );

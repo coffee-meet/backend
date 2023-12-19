@@ -1,12 +1,11 @@
 package coffeemeet.server.chatting.history.service;
 
-import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryQuery;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.user.domain.User;
@@ -49,13 +48,13 @@ public class ChattingRoomHistoryService {
       Long firstMessageId, int pageSize) {
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryQuery.getChattingRoomHistoryBy(
         roomHistoryId);
-    List<ChattingMessageHistory> messageHistories = chattingMessageHistoryQuery.getMessageHistories(
+    List<coffeemeet.server.chatting.history.domain.ChattingMessageHistory> messageHistories = chattingMessageHistoryQuery.getMessageHistories(
         chattingRoomHistory, firstMessageId,
         pageSize);
     boolean hasNext = messageHistories.size() >= pageSize;
-    List<ChattingMessageHistoryDto> historyDtoList = messageHistories
+    List<ChattingMessageHistory> historyDtoList = messageHistories
         .stream()
-        .map(chattingMessageHistory -> ChattingMessageHistoryDto.of(
+        .map(chattingMessageHistory -> ChattingMessageHistory.of(
             chattingMessageHistory.getUser(), chattingMessageHistory))
         .toList();
     return ChattingMessageHistoryListDto.of(historyDtoList, hasNext);

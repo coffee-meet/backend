@@ -5,7 +5,7 @@ import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
-import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -31,8 +31,8 @@ public class InquiryService {
   public InquirySearchDto searchInquiries(Long lastInquiryId, int pageSize) {
     List<Inquiry> inquiries = inquiryQuery.getInquiriesBy(lastInquiryId, pageSize);
     Map<Long, Profile> userMap = getUserProfiles(inquiries);
-    List<InquirySummaryDto> inquirySummaries = inquiries.stream()
-        .map(inquiry -> InquirySummaryDto.of(inquiry, userMap.get(inquiry.getInquirerId())))
+    List<InquirySummary> inquirySummaries = inquiries.stream()
+        .map(inquiry -> InquirySummary.of(inquiry, userMap.get(inquiry.getInquirerId())))
         .toList();
     boolean hasNext = true;
     if (inquiries.size() < pageSize) {
