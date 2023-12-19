@@ -34,7 +34,7 @@ import coffeemeet.server.admin.presentation.dto.GroupReportHTTP;
 import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
-import coffeemeet.server.certification.service.dto.PendingCertificationDto;
+import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.AdminFixture;
@@ -44,11 +44,11 @@ import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
 import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
-import coffeemeet.server.inquiry.service.dto.InquirySummaryDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
+import coffeemeet.server.report.service.dto.Report;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
@@ -237,7 +237,7 @@ class AdminControllerTest extends ControllerTestConfig {
     Long lastReportId = 0L;
     int pageSize = 10;
     ReportListDto reportListDto = ReportFixture.reportListDto();
-    AdminCustomPage<ReportDto> result = new AdminCustomPage<>(reportListDto.contents(),
+    AdminCustomPage<Report> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportListDto);
@@ -369,7 +369,7 @@ class AdminControllerTest extends ControllerTestConfig {
     int pageSize = 10;
 
     InquirySearchDto inquirySearchDto = InquiryFixture.inquirySearchResponse();
-    AdminCustomSlice<InquirySummaryDto> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
+    AdminCustomSlice<InquirySummary> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
         inquirySearchDto.contents(), inquirySearchDto.hasNext());
     given(inquiryService.searchInquiries(lastInquiryId, pageSize)).willReturn(
         inquirySearchDto);
@@ -456,8 +456,8 @@ class AdminControllerTest extends ControllerTestConfig {
     Pageable pageable = certificationPageable();
     PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
         pageable.getPageSize());
-    Page<PendingCertificationDto> page = pendingCertificationPageDto.page();
-    AdminCustomPage<PendingCertificationDto> pendingCertificationAdminCustomPage = AdminCustomPage.of(
+    Page<PendingCertification> page = pendingCertificationPageDto.page();
+    AdminCustomPage<PendingCertification> pendingCertificationAdminCustomPage = AdminCustomPage.of(
         page.getContent(), page.hasNext());
 
     given(certificationService.getUncertifiedUserRequests(any())).willReturn(

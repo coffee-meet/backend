@@ -6,7 +6,7 @@ import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.chatting.current.service.dto.Chatting;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
@@ -51,9 +51,9 @@ public class ChattingRoomService {
         firstMessageId,
         pageSize);
     boolean hasNext = chattingMessages.size() >= pageSize;
-    List<ChattingDto> chattingDtoList = chattingMessages.stream()
-        .map(message -> ChattingDto.of(message.getUser(), message)).toList();
-    return ChattingListDto.of(chattingDtoList, hasNext);
+    List<Chatting> chattingList = chattingMessages.stream()
+        .map(message -> Chatting.of(message.getUser(), message)).toList();
+    return ChattingListDto.of(chattingList, hasNext);
   }
 
   @Transactional

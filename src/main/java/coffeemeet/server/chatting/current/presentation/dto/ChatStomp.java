@@ -2,7 +2,7 @@ package coffeemeet.server.chatting.current.presentation.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.chatting.current.service.dto.Chatting;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +31,7 @@ public final class ChatStomp {
       LocalDateTime createdAt
   ) {
 
-    public static ChatStomp.Response from(ChattingDto response) {
+    public static ChatStomp.Response from(Chatting response) {
       return new ChatStomp.Response(
           response.userId(),
           response.messageId(),

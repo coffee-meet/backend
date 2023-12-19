@@ -5,7 +5,7 @@ import coffeemeet.server.user.domain.Profile;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
-public record InquirySummaryDto(
+public record InquirySummary(
     Long inquiryId,
     String inquirer,
     String title,
@@ -13,8 +13,8 @@ public record InquirySummaryDto(
     LocalDateTime createdAt
 ) {
 
-  public static InquirySummaryDto of(Inquiry inquiry, Profile profile) {
-    return new InquirySummaryDto(
+  public static InquirySummary of(Inquiry inquiry, Profile profile) {
+    return new InquirySummary(
         inquiry.getId(),
         profile.getNickname(),
         inquiry.getTitle(),

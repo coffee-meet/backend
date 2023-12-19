@@ -9,7 +9,7 @@ import coffeemeet.server.certification.domain.Department;
 import coffeemeet.server.certification.domain.VerificationInfo;
 import coffeemeet.server.certification.presentation.dto.EmailHTTP;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
-import coffeemeet.server.certification.service.dto.PendingCertificationDto;
+import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
@@ -141,11 +141,11 @@ public class CertificationFixture {
     return PendingCertificationPageDto.from(new PageImpl<>(pendingCertifications(size)));
   }
 
-  private static List<PendingCertificationDto> pendingCertifications(int size) {
-    return Instancio.ofList(PendingCertificationDto.class).size(size)
-        .generate(field(PendingCertificationDto::businessCardUrl),
+  private static List<PendingCertification> pendingCertifications(int size) {
+    return Instancio.ofList(PendingCertification.class).size(size)
+        .generate(field(PendingCertification::businessCardUrl),
             gen -> gen.net().url().asString())
-        .generate(field(PendingCertificationDto::companyEmail), gen -> gen.net().email()).create();
+        .generate(field(PendingCertification::companyEmail), gen -> gen.net().email()).create();
   }
 
 }

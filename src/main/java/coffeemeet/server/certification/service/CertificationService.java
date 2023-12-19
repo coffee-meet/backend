@@ -15,7 +15,7 @@ import coffeemeet.server.certification.implement.VerificationInfoQuery;
 import coffeemeet.server.certification.implement.VerificationMailSender;
 import coffeemeet.server.certification.implement.EmailVerificationCommand;
 import coffeemeet.server.certification.implement.EmailVerificationQuery;
-import coffeemeet.server.certification.service.dto.PendingCertificationDto;
+import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import java.io.File;
 import lombok.RequiredArgsConstructor;
