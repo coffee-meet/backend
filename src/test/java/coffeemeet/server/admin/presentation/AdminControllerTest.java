@@ -47,7 +47,7 @@ import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
 import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
-import coffeemeet.server.report.service.dto.Report;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import com.epages.restdocs.apispec.Schema;
@@ -237,7 +237,7 @@ class AdminControllerTest extends ControllerTestConfig {
     Long lastReportId = 0L;
     int pageSize = 10;
     ReportListDto reportListDto = ReportFixture.reportListDto();
-    AdminCustomPage<Report> result = new AdminCustomPage<>(reportListDto.contents(),
+    AdminCustomPage<ReportSummary> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportListDto);

@@ -20,7 +20,7 @@ import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
 import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
-import coffeemeet.server.report.service.dto.Report;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -127,7 +127,7 @@ public class AdminController {
   }
 
   @GetMapping("/reports")
-  public ResponseEntity<AdminCustomSlice<Report>> findAllReports(
+  public ResponseEntity<AdminCustomSlice<ReportSummary>> findAllReports(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,
       @RequestParam(defaultValue = "0") Long lastReportId,
       @RequestParam(defaultValue = "10") int pageSize
