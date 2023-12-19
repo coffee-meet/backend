@@ -13,7 +13,6 @@ import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.Set;
