@@ -5,10 +5,10 @@ import static org.instancio.Select.field;
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
-import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
-import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingCustomSlice;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingRoomStatusHTTP;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
@@ -58,10 +58,10 @@ public class ChattingFixture {
         .create();
   }
 
-  public static ChatsHTTP.Response chatsHTTPResponse(ChattingListDto chats) {
-    return Instancio.of(ChatsHTTP.Response.class)
-        .set(field(ChatsHTTP.Response::chats), chats.contents())
-        .set(field(ChatsHTTP.Response::hasNext), chats.hasNext())
+  public static ChattingCustomSlice.Response chatsHTTPResponse(ChattingListDto chats) {
+    return Instancio.of(ChattingCustomSlice.Response.class)
+        .set(field(ChattingCustomSlice.Response::chats), chats.contents())
+        .set(field(ChattingCustomSlice.Response::hasNext), chats.hasNext())
         .create();
   }
 
@@ -120,9 +120,9 @@ public class ChattingFixture {
         .create();
   }
 
-  public static ChatRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
+  public static ChattingRoomStatusHTTP.Response chatRoomStatusHTTPResponse(
       ChattingRoomStatusDto chattingRoomStatusDto) {
-    return ChatRoomStatusHTTP.Response.from(chattingRoomStatusDto);
+    return ChattingRoomStatusHTTP.Response.from(chattingRoomStatusDto);
   }
 
   public static ChattingMessageHistoryListDto chattingMessageHistoryListDto() {

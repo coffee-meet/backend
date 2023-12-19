@@ -1,6 +1,6 @@
 package coffeemeet.server.chatting.current.presentation;
 
-import coffeemeet.server.chatting.current.presentation.dto.ChatStomp;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingStomp;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.chatting.current.service.dto.Chatting;
 import coffeemeet.server.common.annotation.PerformanceMeasurement;
@@ -41,14 +41,14 @@ public class ChattingMessageController {
   }
 
   @MessageMapping("/chatting/messages")
-  public void message(@Valid ChatStomp.Request request, SimpMessageHeaderAccessor accessor) {
+  public void message(@Valid ChattingStomp.Request request, SimpMessageHeaderAccessor accessor) {
     Chatting response = chattingMessageService.chat(
         accessor.getSessionId(),
         request.roomId(),
         request.content()
     );
     simpMessageSendingOperations.convertAndSend("/sub/chatting/rooms/" + request.roomId(),
-        ChatStomp.Response.from(response));
+        ChattingStomp.Response.from(response));
   }
 
 }
