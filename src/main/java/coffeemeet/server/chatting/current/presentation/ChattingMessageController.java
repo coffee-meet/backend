@@ -2,7 +2,7 @@ package coffeemeet.server.chatting.current.presentation;
 
 import coffeemeet.server.chatting.current.presentation.dto.ChattingStomp;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
-import coffeemeet.server.chatting.current.service.dto.Chatting;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class ChattingMessageController {
 
   @MessageMapping("/chatting/messages")
   public void message(@Valid ChattingStomp.Request request, SimpMessageHeaderAccessor accessor) {
-    Chatting response = chattingMessageService.chat(
+    ChattingDto response = chattingMessageService.chat(
         accessor.getSessionId(),
         request.roomId(),
         request.content()

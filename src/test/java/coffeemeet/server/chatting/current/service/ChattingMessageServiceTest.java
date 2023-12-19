@@ -19,6 +19,8 @@ import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.chatting.current.service.dto.Chatting;
 import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
@@ -81,7 +83,7 @@ class ChattingMessageServiceTest {
         chattingMessage);
 
     // when
-    Chatting response = chattingMessageService.chat(chattingSession.sessionId(),
+    ChattingDto response = chattingMessageService.chat(chattingSession.sessionId(),
         chattingRoom.getId(), content);
 
     // then

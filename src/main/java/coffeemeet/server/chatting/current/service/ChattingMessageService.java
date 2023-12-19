@@ -7,6 +7,8 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
+import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.chatting.current.service.dto.ChattingDto;
 import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
@@ -31,7 +33,7 @@ public class ChattingMessageService {
   private final UserCommand userCommand;
   private final FCMNotificationSender fcmNotificationSender;
 
-  public ChattingDto chatting(String sessionId, Long roomId, String content) {
+  public ChattingDto chat(String sessionId, Long roomId, String content) {
     Long userId = chattingSessionQuery.getUserIdById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> users = userQuery.getUsersByRoom(room);
