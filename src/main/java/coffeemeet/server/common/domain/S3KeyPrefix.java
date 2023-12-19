@@ -3,7 +3,7 @@ package coffeemeet.server.common.domain;
 import lombok.Getter;
 
 @Getter
-public enum KeyType {
+public enum S3KeyPrefix {
 
   BUSINESS_CARD("business-card"),
   PROFILE_IMAGE("profile-image"),
@@ -11,7 +11,7 @@ public enum KeyType {
 
   private final String value;
 
-  KeyType(String value) {
+  S3KeyPrefix(String value) {
     this.value = value;
   }
 

@@ -1,6 +1,5 @@
-package coffeemeet.server.common.implement;
+package coffeemeet.server.common.infrastructure;
 
-import coffeemeet.server.certification.domain.CompanyEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,18 +17,16 @@ public class EmailSender {
     this.sender = sender;
   }
 
-  public void sendVerificationCode(CompanyEmail companyMail, String verificationCode) {
+  public void sendEmail(String email, String subject, String body) {
     SimpleMailMessage mailMessage = new SimpleMailMessage();
+
     mailMessage.setFrom(sender);
-    mailMessage.setTo(companyMail.getValue());
+    mailMessage.setTo(email);
 
-    String subject = "[coffee-meet] 커피밋 사용을 위해 이메일 인증을 완료해주세요";
     mailMessage.setSubject(subject);
+    mailMessage.setText(body);
 
-    String text = String.format("인증코드: %s", verificationCode);
-    mailMessage.setText(text);
-
-    javaMailSender.send(mailMessage);
+    javaMailSender.send(mailMessage); // TODO: 2023/12/19 에러 핸들링 및 비동기처리
   }
 
 }
