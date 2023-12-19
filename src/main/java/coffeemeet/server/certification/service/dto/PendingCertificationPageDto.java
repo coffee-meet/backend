@@ -12,4 +12,5 @@ public record PendingCertificationPageDto(
   ) {
     return new PendingCertificationPageDto(certificationPage.map(PendingCertification::from));
   }
+
 }

@@ -15,7 +15,7 @@ public record ChattingHistory(
 ) {
 
   public static ChattingHistory of(User user,
-      coffeemeet.server.chatting.history.domain.ChattingMessageHistory chattingMessageHistory) {
+      ChattingMessageHistory chattingMessageHistory) {
     return new ChattingHistory(
         user.getId(),
         chattingMessageHistory.getId(),
