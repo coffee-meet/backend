@@ -3,6 +3,10 @@ package coffeemeet.server.matching.service;
 import static coffeemeet.server.common.fixture.CertificationFixture.certificatedCertifications;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.userExcludingStatus;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -69,8 +73,8 @@ class MatchingServiceTest {
     User requestedUser = users.get(0);
     Certification requestedUsersCertification = certifications.get(0);
     ChattingRoom chattingRoom = chattingRoom();
-    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo).collect(
-        Collectors.toSet());
+    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo)
+        .collect(Collectors.toSet());
 
     given(certificationQuery.getCertificationByUserId(requestedUser.getId())).willReturn(
         requestedUsersCertification);
@@ -79,8 +83,7 @@ class MatchingServiceTest {
     given(matchingQueueQuery.dequeueMatchingGroupSize(companyName, users.size())).willReturn(
         fourUsers().stream().map(User::getId).collect(Collectors.toSet()));
     given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
-    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(
-        notificationInfos);
+    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(notificationInfos);
 
     // when
     matchingService.startMatching(requestedUser.getId());
@@ -91,8 +94,8 @@ class MatchingServiceTest {
     then(userCommand).should().setToMatching(requestedUser.getId());
     then(userCommand).should().assignUsersToChattingRoom(userIds, chattingRoom);
     then(fcmNotificationSender).should()
-        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!",
-            "chattingRoomId", String.valueOf(chattingRoom.getId()));
+        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!", "chattingRoomId",
+            String.valueOf(chattingRoom.getId()));
   }
 
   @Test
