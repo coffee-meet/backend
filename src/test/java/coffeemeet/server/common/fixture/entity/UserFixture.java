@@ -24,6 +24,16 @@ public class UserFixture {
         .create();
   }
 
+  public static User user(Long userId) {
+    return Instancio.of(User.class).set(field(User::getProfile), profile())
+        .set(field(User::isRegistered), true)
+        .set(field(User::getId), userId)
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
   public static User user(UserStatus userStatus) {
     return Instancio.of(User.class).set(field(User::getProfile), profile())
         .set(field(User::getUserStatus), userStatus)
@@ -45,6 +55,25 @@ public class UserFixture {
 
   public static List<User> users() {
     return Instancio.ofList(User.class)
+        .generate(field(User::getId), gen -> gen.longSeq().start(1L))
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
+  public static List<User> usersWithNullId() {
+    return Instancio.ofList(User.class)
+        .set(field(User::getId), null)
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
+  public static List<User> users(int size) {
+    return Instancio.ofList(User.class)
+        .size(size)
         .generate(field(User::getId), gen -> gen.longSeq().start(1L))
         .ignore(field(User::isDeleted))
         .ignore(field(User::isBlacklisted))
