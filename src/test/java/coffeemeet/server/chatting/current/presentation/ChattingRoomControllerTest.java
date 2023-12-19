@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.ChattingFixture;
@@ -117,12 +117,12 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     // given
     Long userId = 1L;
     Long roomId = 1L;
-    ChatRoomStatusDto chatRoomStatusDto = ChattingFixture.chatRoomStatusDto();
+    ChattingRoomStatusDto chattingRoomStatusDto = ChattingFixture.chatRoomStatusDto();
     ChatRoomStatusHTTP.Response response = ChattingFixture.chatRoomStatusHTTPResponse(
-        chatRoomStatusDto);
+        chattingRoomStatusDto);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
-    given(chattingRoomService.checkChattingRoomStatus(roomId)).willReturn(chatRoomStatusDto);
+    given(chattingRoomService.checkChattingRoomStatus(roomId)).willReturn(chattingRoomStatusDto);
 
     // when, then
     mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}/exist", roomId)

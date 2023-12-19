@@ -13,7 +13,7 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
@@ -133,15 +133,15 @@ class ChattingRoomServiceTest {
   void checkChattingRoomStatusTest() {
     // given
     Long roomId = 1L;
-    ChatRoomStatusDto chatRoomStatusDto = ChattingFixture.chatRoomStatusDto();
+    ChattingRoomStatusDto chattingRoomStatusDto = ChattingFixture.chatRoomStatusDto();
 
-    given(chattingRoomQuery.existsBy(any())).willReturn(chatRoomStatusDto.isExisted());
+    given(chattingRoomQuery.existsBy(any())).willReturn(chattingRoomStatusDto.isExisted());
 
     // when
-    ChatRoomStatusDto response = chattingRoomService.checkChattingRoomStatus(roomId);
+    ChattingRoomStatusDto response = chattingRoomService.checkChattingRoomStatus(roomId);
 
     // then
-    assertThat(response).isEqualTo(chatRoomStatusDto);
+    assertThat(response).isEqualTo(chattingRoomStatusDto);
   }
 
 }

@@ -3,7 +3,7 @@ package coffeemeet.server.chatting.current.presentation;
 import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
 import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +39,8 @@ public class ChattingRoomController {
 
   @GetMapping("/{roomId}/exist")
   public ResponseEntity<ChatRoomStatusHTTP.Response> checkChattingRoom(@PathVariable Long roomId) {
-    ChatRoomStatusDto chatRoomStatusDto = chattingRoomService.checkChattingRoomStatus(roomId);
-    return ResponseEntity.ok(ChatRoomStatusHTTP.Response.from(chatRoomStatusDto));
+    ChattingRoomStatusDto chattingRoomStatusDto = chattingRoomService.checkChattingRoomStatus(roomId);
+    return ResponseEntity.ok(ChatRoomStatusHTTP.Response.from(chattingRoomStatusDto));
   }
 
 }
