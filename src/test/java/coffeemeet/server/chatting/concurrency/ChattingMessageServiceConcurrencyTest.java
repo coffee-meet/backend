@@ -74,7 +74,7 @@ class ChattingMessageServiceConcurrencyTest {
     for (int i = 0; i < userSize; i++) {
       executorService.submit(() -> {
         try {
-          chattingMessageService.chatting(sessionId, room.getId(), "test");
+          chattingMessageService.chat(sessionId, room.getId(), "test");
         } catch (Exception e) {
           e.printStackTrace();
         } finally {
