@@ -18,11 +18,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import coffeemeet.server.chatting.current.presentation.dto.ChatRoomStatusHTTP;
-import coffeemeet.server.chatting.current.presentation.dto.ChatsHTTP;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingCustomSlice;
+import coffeemeet.server.chatting.current.presentation.dto.ChattingRoomStatusHTTP;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
-import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import com.epages.restdocs.apispec.Schema;
@@ -47,7 +47,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     Long firstMessageId = 51L;
     int pageSize = 50;
     ChattingListDto responses = ChattingFixture.chattingListDto();
-    ChatsHTTP.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(responses);
+    ChattingCustomSlice.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(responses);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(chattingRoomService.searchMessages(roomId, firstMessageId, pageSize)).willReturn(
@@ -118,7 +118,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     Long userId = 1L;
     Long roomId = 1L;
     ChattingRoomStatusDto chattingRoomStatusDto = ChattingFixture.chatRoomStatusDto();
-    ChatRoomStatusHTTP.Response response = ChattingFixture.chatRoomStatusHTTPResponse(
+    ChattingRoomStatusHTTP.Response response = ChattingFixture.chatRoomStatusHTTPResponse(
         chattingRoomStatusDto);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);

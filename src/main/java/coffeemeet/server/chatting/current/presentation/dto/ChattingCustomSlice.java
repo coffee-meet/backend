@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public final class ChatsHTTP {
+public final class ChattingCustomSlice {
 
   public record Response(
       List<Chatting> chats,
