@@ -2,7 +2,7 @@ package coffeemeet.server.chatting.history.presentation.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistory;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistory;
 import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
 import java.util.List;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public final class ChattingMessageHistoriesHTTP {
 
   public record Response(
-      List<ChattingMessageHistory> chatHistories,
+      List<ChattingHistory> chatHistories,
       boolean hasNext) {
 
     public static Response from(ChattingMessageHistoryListDto chattingMessageHistoryListDto) {
