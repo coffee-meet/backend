@@ -1,14 +1,11 @@
 package coffeemeet.server.certification.implement;
 
-import static coffeemeet.server.certification.exception.CertificationErrorCode.EXISTED_COMPANY_EMAIL;
-
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
-import coffeemeet.server.certification.infrastructure.CertificationRepository;
-import coffeemeet.server.common.execption.InvalidInputException;
+import coffeemeet.server.certification.domain.repository.CertificationRepository;
 import coffeemeet.server.user.domain.User;
-import java.util.function.Consumer;
+import coffeemeet.server.user.implement.UserQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CertificationCommand {
 
-  private static final String EXISTED_COMPANY_EMAIL_MESSAGE = "이미 사용 중인 회사 이메일(%s) 입니다.";
-
   private final CertificationRepository certificationRepository;
   private final CertificationQuery certificationQuery;
+  private final UserQuery userQuery;
 
-  public void createCertification(User user, String companyName, CompanyEmail companyEmail,
+  public void createCertification(Long userId, String companyName, CompanyEmail companyEmail,
       Department department, String businessCardUrl) {
+    User user = userQuery.getUserById(userId);
     certificationRepository.save(
         Certification.builder()
             .companyName(companyName)
@@ -36,25 +33,19 @@ public class CertificationCommand {
     );
   }
 
-  public void hasDuplicatedCompanyEmail(CompanyEmail companyEmail) {
-    if (certificationRepository.existsByCompanyEmail(companyEmail)) {
-      throw new InvalidInputException(EXISTED_COMPANY_EMAIL,
-          String.format(EXISTED_COMPANY_EMAIL_MESSAGE, companyEmail.getValue()));
-    }
+  public void updateCertification(Long userId, String companyName, CompanyEmail companyEmail,
+      Department department, String businessCardImageUrl) {
+    Certification certification = certificationQuery.getCertificationByUserId(userId);
+    certification.update(companyName, companyEmail, businessCardImageUrl, department);
   }
 
-  public void certificated(Long userId) {
+  public void completeCertification(Long userId) {
     Certification certification = certificationQuery.getCertificationByUserId(userId);
     certification.qualify();
   }
 
-  @Transactional(readOnly = true)
-  public void applyIfCertifiedUser(Long userId, Consumer<? super Certification> consumer) {
-    certificationRepository.findByUserId(userId).ifPresent(consumer);
-  }
-
-  public void deleteCertification(Long userId) {
-    certificationRepository.deleteById(userId);
+  public void deleteCertificationByUserId(Long userId) {
+    certificationRepository.deleteByUserId(userId);
   }
 
 }
