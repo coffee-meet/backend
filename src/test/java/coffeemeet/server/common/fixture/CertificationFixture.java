@@ -6,7 +6,7 @@ import static org.instancio.Select.field;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
 import coffeemeet.server.certification.domain.Department;
-import coffeemeet.server.certification.domain.EmailVerification;
+import coffeemeet.server.certification.domain.VerificationInfo;
 import coffeemeet.server.certification.presentation.dto.EmailHTTP;
 import coffeemeet.server.certification.presentation.dto.VerificationCodeHTTP;
 import coffeemeet.server.certification.service.dto.PendingCertification;
@@ -17,6 +17,7 @@ import org.instancio.Instancio;
 import org.instancio.internal.generator.domain.internet.EmailGenerator;
 import org.instancio.internal.generator.lang.IntegerGenerator;
 import org.instancio.internal.generator.net.URLGenerator;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +44,21 @@ public class CertificationFixture {
   public static Certification certificatedCertification(User user, String companyName) {
     return Instancio.of(Certification.class)
         .generate(field(Certification::getBusinessCardUrl), gen -> gen.net().url().asString())
-        .set(field(Certification::getCompanyEmail), new CompanyEmail(new EmailGenerator().get()))
+        .set(field(Certification::getCompanyEmail), new CompanyEmail(email()))
         .set(field(Certification::getCompanyName), companyName)
         .set(field(Certification::getId), user.getId())
         .set(field(Certification::getUser), user)
         .set(field(Certification::isCertificated), true)
+        .create();
+  }
+
+  public static Certification pendingCertification(User user) {
+    return Instancio.of(Certification.class)
+        .generate(field(Certification::getBusinessCardUrl), gen -> gen.net().url().asString())
+        .set(field(Certification::getCompanyEmail), new CompanyEmail(email()))
+        .set(field(Certification::getId), user.getId())
+        .set(field(Certification::getUser), user)
+        .set(field(Certification::isCertificated), false)
         .create();
   }
 
@@ -58,18 +69,14 @@ public class CertificationFixture {
         .toList();
   }
 
-  public static List<Certification> certifications() {
-    return users().stream().map(CertificationFixture::certification).toList();
-  }
-
-  public static EmailVerification emailVerification() {
-    return Instancio.of(EmailVerification.class).set(field(EmailVerification::getCompanyEmail),
+  public static VerificationInfo emailVerification() {
+    return Instancio.of(VerificationInfo.class).set(field(VerificationInfo::getCompanyEmail),
         new CompanyEmail(new EmailGenerator().get())).create();
   }
 
-  public static EmailVerification emailVerification(Long userId) {
-    return Instancio.of(EmailVerification.class).set(field(EmailVerification::getUserId), userId)
-        .set(field(EmailVerification::getCompanyEmail),
+  public static VerificationInfo emailVerification(Long userId) {
+    return Instancio.of(VerificationInfo.class).set(field(VerificationInfo::getUserId), userId)
+        .set(field(VerificationInfo::getCompanyEmail),
             new CompanyEmail(new EmailGenerator().get())).create();
   }
 
@@ -113,10 +120,21 @@ public class CertificationFixture {
             String.format("%06d", new IntegerGenerator().range(0, 999999).get())).create();
   }
 
-  public static Pageable pageable() {
+  public static Pageable certificationPageable() {
     int page = 0;
     int size = new IntegerGenerator().range(1, 100).get();
     return PageRequest.of(page, size, Sort.by("updatedAt").ascending());
+  }
+
+  public static Page<Certification> pendingCertificationPage(int size) {
+    return new PageImpl<>(certificationsNotCertificated(size));
+  }
+
+  private static List<Certification> certificationsNotCertificated(int size) {
+    List<User> users = users(size);
+    return users.stream()
+        .map(CertificationFixture::pendingCertification)
+        .toList();
   }
 
   public static PendingCertificationPageDto pendingCertificationPageDto(int size) {
