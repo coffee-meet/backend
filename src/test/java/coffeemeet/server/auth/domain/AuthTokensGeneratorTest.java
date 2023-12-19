@@ -7,8 +7,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
-import com.github.javafaker.Faker;
 import java.util.Date;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class AuthTokensGeneratorTest {
         REFRESH_TOKEN);
 
     // when
-    AuthTokens authTokens = authTokensGenerator.generate(Faker.instance().random().nextLong());
+    AuthTokens authTokens = authTokensGenerator.generate(Instancio.create(Long.class));
 
     // then
     assertAll(
@@ -67,7 +67,7 @@ class AuthTokensGeneratorTest {
 
     // when
     AuthTokens authTokens = authTokensGenerator.reissueAccessToken(
-        Faker.instance().random().nextLong(),
+        Instancio.create(Long.class),
         REFRESH_TOKEN);
 
     // then
