@@ -11,7 +11,7 @@ import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;

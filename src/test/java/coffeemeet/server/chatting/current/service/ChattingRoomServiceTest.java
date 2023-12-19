@@ -21,7 +21,7 @@ import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
 import coffeemeet.server.common.fixture.entity.ChattingFixture;
 import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;

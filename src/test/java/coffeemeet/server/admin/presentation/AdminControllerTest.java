@@ -3,7 +3,7 @@ package coffeemeet.server.admin.presentation;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.adminLoginHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprovalHTTPRequest;
 import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pageable;
+import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPageDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
@@ -468,7 +468,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("회사 인증 대기중인 목록을 조회할 수 있다.")
   void getPendingCertificationsTest() throws Exception {
     // given
-    Pageable pageable = pageable();
+    Pageable pageable = certificationPageable();
     PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
         pageable.getPageSize());
     Page<PendingCertification> page = pendingCertificationPageDto.page();
