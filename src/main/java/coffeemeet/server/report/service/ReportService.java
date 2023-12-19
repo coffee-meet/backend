@@ -6,12 +6,13 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.common.execption.NotFoundException;
+import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.GroupReportDto;
-import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ReportService {
 
     checkChattingRoomExists(reporterId, chattingRoomId);
 
-    coffeemeet.server.report.domain.Report report = coffeemeet.server.report.domain.Report.builder()
+    Report report = Report.builder()
         .reporterId(reporterId)
         .chattingRoomId(chattingRoomId)
         .targetedId(targetId)
@@ -53,14 +54,14 @@ public class ReportService {
   }
 
   public ReportDetailDto findReportById(Long reportId) {
-    coffeemeet.server.report.domain.Report report = reportQuery.getReportById(reportId);
+    Report report = reportQuery.getReportById(reportId);
     User reporter = userQuery.getUserById(report.getReporterId());
     User targetUser = userQuery.getUserById(report.getTargetedId());
     return ReportDetailDto.of(report, reporter, targetUser);
   }
 
   public ReportListDto findAllReports(Long lastReportId, int pageSize) {
-    List<coffeemeet.server.report.domain.Report> reports = reportQuery.getAllReports(lastReportId,
+    List<Report> reports = reportQuery.getAllReports(lastReportId,
         pageSize);
     boolean hasNext = reports.size() >= pageSize;
 
@@ -79,7 +80,7 @@ public class ReportService {
 
   public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(Long targetId,
       Long chattingRoomId) {
-    List<coffeemeet.server.report.domain.Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(
+    List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(
         targetId,
         chattingRoomId);
     return reports.stream()
@@ -106,25 +107,25 @@ public class ReportService {
   }
 
   private Map<Long, ChattingRoom> getChattingRooms(
-      List<coffeemeet.server.report.domain.Report> allReports) {
+      List<Report> allReports) {
     Set<Long> chattingRoomIds = allReports.stream()
-        .map(coffeemeet.server.report.domain.Report::getChattingRoomId)
+        .map(Report::getChattingRoomId)
         .collect(Collectors.toSet());
     Set<ChattingRoom> chattingRooms = chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds);
     return chattingRooms.stream()
         .collect(Collectors.toMap(ChattingRoom::getId, Function.identity()));
   }
 
-  private Map<Long, User> getUsers(List<coffeemeet.server.report.domain.Report> allReports) {
+  private Map<Long, User> getUsers(List<Report> allReports) {
     Set<Long> targetUserIds = allReports.stream()
-        .map(coffeemeet.server.report.domain.Report::getTargetedId)
+        .map(Report::getTargetedId)
         .collect(Collectors.toSet());
     Set<User> users = userQuery.getUsersByIdSet(targetUserIds);
     return users.stream()
         .collect(Collectors.toMap(User::getId, Function.identity()));
   }
 
-  private GroupReportDto mapToReportDto(coffeemeet.server.report.domain.Report report) {
+  private GroupReportDto mapToReportDto(Report report) {
     User reporter = userQuery.getUserById(report.getReporterId());
     return GroupReportDto.of(reporter.getProfile().getNickname(), reporter.getId(),
         report.getCreatedAt());
