@@ -1,9 +1,9 @@
 package coffeemeet.server.chatting.history.presentation;
 
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingHistoryCustomSlice;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
 import coffeemeet.server.chatting.history.service.ChattingRoomHistoryService;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryListDto;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
@@ -33,14 +33,14 @@ public class ChattingRoomHistoryController {
   }
 
   @GetMapping("/{roomHistoryId}")
-  public ResponseEntity<ChattingMessageHistoriesHTTP.Response> viewChattingRoomMessageHistories(
+  public ResponseEntity<ChattingHistoryCustomSlice.Response> viewChattingRoomMessageHistories(
       @PathVariable Long roomHistoryId,
       @RequestParam(defaultValue = "0") Long firstMessageId,
       @RequestParam(defaultValue = "50") int pageSize) {
-    ChattingMessageHistoryListDto chattingMessageHistoryListDto = chattingRoomHistoryService.searchChattingMessageHistories(
+    ChattingHistoryListDto chattingHistoryListDto = chattingRoomHistoryService.searchChattingMessageHistories(
         roomHistoryId, firstMessageId, pageSize);
     return ResponseEntity.ok(
-        ChattingMessageHistoriesHTTP.Response.from(chattingMessageHistoryListDto));
+        ChattingHistoryCustomSlice.Response.from(chattingHistoryListDto));
   }
 
 }
