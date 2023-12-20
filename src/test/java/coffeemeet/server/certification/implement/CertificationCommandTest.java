@@ -1,12 +1,5 @@
 package coffeemeet.server.certification.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertification;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
 import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;

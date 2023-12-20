@@ -1,10 +1,5 @@
 package coffeemeet.server.certification.domain.repository;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
-import static coffeemeet.server.common.fixture.entity.UserFixture.usersWithNullId;
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
