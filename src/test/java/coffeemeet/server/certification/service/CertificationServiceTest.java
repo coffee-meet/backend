@@ -1,17 +1,12 @@
 package coffeemeet.server.certification.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPage;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
 import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
 import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
 import static coffeemeet.server.common.fixture.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
+import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPage;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,13 +27,6 @@ import coffeemeet.server.certification.implement.VerificationCodeValidator;
 import coffeemeet.server.certification.implement.VerificationInfoCommand;
 import coffeemeet.server.certification.implement.VerificationInfoQuery;
 import coffeemeet.server.certification.implement.VerificationMailSender;
-import coffeemeet.server.certification.implement.CompanyEmailValidator;
-import coffeemeet.server.certification.implement.VerificationCodeGenerator;
-import coffeemeet.server.certification.implement.VerificationCodeValidator;
-import coffeemeet.server.certification.implement.VerificationInfoCommand;
-import coffeemeet.server.certification.implement.VerificationInfoQuery;
-import coffeemeet.server.certification.implement.VerificationMailSender;
-import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import java.io.File;
 import org.instancio.Instancio;
@@ -172,7 +160,8 @@ class CertificationServiceTest {
     Page<Certification> certificationPage = pendingCertificationPage(
         pageable.getPageSize());
 
-    given(certificationQuery.getPendingCertification(any(Pageable.class))).willReturn(certificationPage);
+    given(certificationQuery.getPendingCertification(any(Pageable.class))).willReturn(
+        certificationPage);
 
     // when
     PendingCertificationPageDto result = certificationService.getUncertifiedUserRequests(pageable);

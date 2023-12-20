@@ -1,7 +1,7 @@
 package coffeemeet.server.common.infrastructure;
 
-import coffeemeet.server.common.domain.S3KeyPrefix;
 import coffeemeet.server.common.domain.ObjectStorage;
+import coffeemeet.server.common.domain.S3KeyPrefix;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;

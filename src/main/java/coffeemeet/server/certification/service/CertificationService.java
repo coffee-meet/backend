@@ -13,15 +13,6 @@ import coffeemeet.server.certification.implement.VerificationCodeValidator;
 import coffeemeet.server.certification.implement.VerificationInfoCommand;
 import coffeemeet.server.certification.implement.VerificationInfoQuery;
 import coffeemeet.server.certification.implement.VerificationMailSender;
-import coffeemeet.server.certification.implement.EmailVerificationCommand;
-import coffeemeet.server.certification.implement.EmailVerificationQuery;
-import coffeemeet.server.certification.service.dto.PendingCertification;
-import coffeemeet.server.certification.implement.CompanyEmailValidator;
-import coffeemeet.server.certification.implement.VerificationCodeGenerator;
-import coffeemeet.server.certification.implement.VerificationCodeValidator;
-import coffeemeet.server.certification.implement.VerificationInfoCommand;
-import coffeemeet.server.certification.implement.VerificationInfoQuery;
-import coffeemeet.server.certification.implement.VerificationMailSender;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import java.io.File;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +76,8 @@ public class CertificationService {
   }
 
   public PendingCertificationPageDto getUncertifiedUserRequests(Pageable pageable) {
-    Page<Certification> pendingCertifications = certificationQuery.getPendingCertification(pageable);
+    Page<Certification> pendingCertifications = certificationQuery.getPendingCertification(
+        pageable);
     return PendingCertificationPageDto.from(pendingCertifications);
   }
 

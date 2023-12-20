@@ -1,10 +1,10 @@
 package coffeemeet.server.certification.domain;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
+import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.CertificationFixture.certification;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
+import static coffeemeet.server.common.fixture.CertificationFixture.department;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;

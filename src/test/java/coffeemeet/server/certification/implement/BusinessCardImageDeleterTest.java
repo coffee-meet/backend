@@ -1,8 +1,8 @@
 package coffeemeet.server.certification.implement;
 
 import static coffeemeet.server.common.domain.S3KeyPrefix.BUSINESS_CARD;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.CertificationFixture.certification;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;

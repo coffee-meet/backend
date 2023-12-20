@@ -1,23 +1,18 @@
 package coffeemeet.server.certification.domain.repository;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
-import static coffeemeet.server.common.fixture.entity.UserFixture.users;
-import static coffeemeet.server.common.fixture.entity.UserFixture.usersWithNullId;
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.UserFixture.user;
-import static coffeemeet.server.common.fixture.UserFixture.users;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
+import static coffeemeet.server.common.fixture.UserFixture.usersWithNullId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.domain.repository.CertificationRepository;
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.common.fixture.CertificationFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,8 +63,13 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
     // given
     Certification certification = certification(user);
     certificationRepository.save(certification);
-    // when, then
+
+    // when
     certificationRepository.deleteByUserId(user.getId());
+
+    // then
+    Optional<Certification> result = certificationRepository.findByUserId(user.getId());
+    assertThat(result).isEmpty();
   }
 
   @Test

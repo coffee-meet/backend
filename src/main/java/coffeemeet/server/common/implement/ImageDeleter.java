@@ -1,7 +1,7 @@
 package coffeemeet.server.common.implement;
 
-import coffeemeet.server.common.domain.S3KeyPrefix;
 import coffeemeet.server.common.domain.ObjectStorage;
+import coffeemeet.server.common.domain.S3KeyPrefix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

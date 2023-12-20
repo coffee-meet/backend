@@ -15,8 +15,6 @@ import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.InquiryFixture;
-import coffeemeet.server.common.implement.FCMNotificationSender;
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
 import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;

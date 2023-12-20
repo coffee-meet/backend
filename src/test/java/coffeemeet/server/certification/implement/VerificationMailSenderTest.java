@@ -1,7 +1,7 @@
 package coffeemeet.server.certification.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;

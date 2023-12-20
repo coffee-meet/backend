@@ -1,13 +1,9 @@
 package coffeemeet.server.admin.presentation;
 
-import static coffeemeet.server.common.fixture.entity.AdminFixture.adminLoginHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprovalHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificationPageable;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPageDto;
 import static coffeemeet.server.common.fixture.AdminFixture.adminLoginHTTPRequest;
 import static coffeemeet.server.common.fixture.AdminFixture.reportApprovalHTTPRequest;
 import static coffeemeet.server.common.fixture.AdminFixture.reportRejectionHTTPRequest;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPageDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
