@@ -4,6 +4,7 @@ import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessage;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
 import static coffeemeet.server.common.fixture.UserFixture.user;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;

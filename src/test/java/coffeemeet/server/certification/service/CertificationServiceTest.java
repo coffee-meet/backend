@@ -7,6 +7,7 @@ import static coffeemeet.server.common.fixture.CertificationFixture.department;
 import static coffeemeet.server.common.fixture.CertificationFixture.email;
 import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPage;
 import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;

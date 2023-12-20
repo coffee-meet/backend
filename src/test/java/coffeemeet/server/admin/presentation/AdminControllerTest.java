@@ -5,6 +5,7 @@ import static coffeemeet.server.common.fixture.AdminFixture.reportApprovalHTTPRe
 import static coffeemeet.server.common.fixture.AdminFixture.reportRejectionHTTPRequest;
 import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPageDto;
+import static coffeemeet.server.common.fixture.ReportFixture.reportListDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,14 +41,17 @@ import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
 import coffeemeet.server.common.fixture.AdminFixture;
 import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.ReportFixture;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
 import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -234,7 +238,7 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     Long lastReportId = 0L;
     int pageSize = 10;
-    ReportListDto reportListDto = ReportFixture.reportListDto();
+    ReportListDto reportListDto = reportListDto();
     AdminCustomPage<ReportSummary> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
