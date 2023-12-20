@@ -1,9 +1,6 @@
 package coffeemeet.server.common.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;
 import static coffeemeet.server.common.fixture.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.then;
@@ -26,7 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 @ExtendWith(MockitoExtension.class)
 class EmailSenderTest {
 
-  private coffeemeet.server.common.implement.EmailSender emailSender;
+  private EmailSender emailSender;
 
   @Mock
   private JavaMailSender javaMailSender;
@@ -39,7 +36,7 @@ class EmailSenderTest {
   @BeforeEach
   void setUp() {
     sender = email();
-    emailSender = new coffeemeet.server.common.implement.EmailSender(javaMailSender, sender);
+    emailSender = new EmailSender(javaMailSender, sender);
   }
 
   @Test
