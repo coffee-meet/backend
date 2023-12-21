@@ -3,6 +3,10 @@ package coffeemeet.server.matching.service;
 import static coffeemeet.server.common.fixture.CertificationFixture.certificatedCertifications;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.userExcludingStatus;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -12,6 +16,7 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
+import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.common.implement.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
@@ -96,19 +101,34 @@ class MatchingServiceTest {
 
   @Test
   @DisplayName("매칭을 취소할 수 있다.")
-  void cancelMatching() {
+  void cancelMatchingTest() {
     // given
-    Long userId = 1L;
+    User user = user(MATCHING);
     String companyName = "회사명";
 
-    given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
-    willDoNothing().given(matchingQueueCommand).deleteUserByUserId(companyName, userId);
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+    given(certificationQuery.getCompanyNameByUserId(user.getId())).willReturn(companyName);
+    willDoNothing().given(matchingQueueCommand).deleteUserByUserId(companyName, user.getId());
 
     // when
-    matchingService.cancelMatching(userId);
+    matchingService.cancelMatching(user.getId());
 
     // then
-    then(userCommand).should(only()).setToIdle(userId);
+    then(userCommand).should(only()).setToIdle(user.getId());
+  }
+
+  @Test
+  @DisplayName("매칭을 취소할 수 있다.")
+  void cancelMatchingTest_BadRequestException() {
+    // given
+    User user = userExcludingStatus(MATCHING);
+    Long userId = user.getId();
+
+    given(userQuery.getUserById(userId)).willReturn(user);
+
+    // when, then
+    assertThatThrownBy(() -> matchingService.cancelMatching(userId))
+        .isInstanceOf(BadRequestException.class);
   }
 
 }

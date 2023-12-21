@@ -45,6 +45,16 @@ public class UserFixture {
         .create();
   }
 
+  public static User userExcludingStatus(UserStatus excludingStatus) {
+    return Instancio.of(User.class).set(field(User::getProfile), profile())
+        .generate(field(User::getUserStatus),
+            gen -> gen.enumOf(UserStatus.class).excluding(excludingStatus))
+        .ignore(field(User::isDeleted))
+        .ignore(field(User::isBlacklisted))
+        .ignore(field(User::getChattingRoom))
+        .create();
+  }
+
   public static List<User> users() {
     return Instancio.ofList(User.class)
         .generate(field(User::getId), gen -> gen.longSeq().start(1L))

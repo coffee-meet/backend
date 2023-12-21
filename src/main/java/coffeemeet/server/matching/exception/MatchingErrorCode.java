@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MatchingErrorCode implements ErrorCode {
   NOT_CERTIFICATED_USER("M003", "인증되지 않은 사용자입니다."),
+  INVALID_USER_STATUS("M000", "올바르지 않은 유저 상태입니다."),
   ;
 
   private final String errorCode;
