@@ -4,7 +4,7 @@ import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessage;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
 import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
 import static coffeemeet.server.common.fixture.UserFixture.user;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
@@ -20,7 +20,7 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
@@ -76,8 +76,7 @@ class ChattingMessageServiceTest {
     given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
     given(userQuery.getUserById(user.getId())).willReturn(user);
-    willDoNothing().given(fcmNotificationSender)
-        .sendMultiNotifications(anySet(), any());
+    willDoNothing().given(fcmNotificationSender).sendMultiNotifications(anySet(), any());
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 

@@ -3,8 +3,9 @@ package coffeemeet.server.admin.presentation;
 import static coffeemeet.server.common.fixture.AdminFixture.adminLoginHTTPRequest;
 import static coffeemeet.server.common.fixture.AdminFixture.reportApprovalHTTPRequest;
 import static coffeemeet.server.common.fixture.AdminFixture.reportRejectionHTTPRequest;
-import static coffeemeet.server.common.fixture.CertificationFixture.pageable;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPageDto;
+import static coffeemeet.server.common.fixture.ReportFixture.reportListDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
@@ -237,7 +238,7 @@ class AdminControllerTest extends ControllerTestConfig {
     // given
     Long lastReportId = 0L;
     int pageSize = 10;
-    ReportListDto reportListDto = ReportFixture.reportListDto();
+    ReportListDto reportListDto = reportListDto();
     AdminCustomPage<ReportSummary> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
@@ -454,7 +455,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("회사 인증 대기중인 목록을 조회할 수 있다.")
   void getPendingCertificationsTest() throws Exception {
     // given
-    Pageable pageable = pageable();
+    Pageable pageable = certificationPageable();
     PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
         pageable.getPageSize());
     Page<PendingCertification> page = pendingCertificationPageDto.page();

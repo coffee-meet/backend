@@ -7,7 +7,8 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 
-import coffeemeet.server.common.domain.KeyType;
+import coffeemeet.server.common.domain.S3KeyPrefix;
+import coffeemeet.server.common.infrastructure.S3ObjectStorage;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
 import java.net.URL;
@@ -21,9 +22,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class S3MediaManagerTest {
+class S3ObjectStorageTest {
 
-  private S3MediaManager s3MediaManager;
+  private S3ObjectStorage s3MediaManager;
 
   @Mock
   private AmazonS3 amazonS3;
@@ -32,13 +33,13 @@ class S3MediaManagerTest {
 
   private String validKey;
 
-  private KeyType keyType;
+  private S3KeyPrefix s3KeyPrefix;
 
   @BeforeEach
   void setUp() {
-    keyType = Instancio.create(KeyType.class);
-    validKey = keyType.getValue() + "-" + Instancio.create(String.class);
-    s3MediaManager = new S3MediaManager(amazonS3, bucketName);
+    s3KeyPrefix = Instancio.create(S3KeyPrefix.class);
+    validKey = s3KeyPrefix.getValue() + "-" + Instancio.create(String.class);
+    s3MediaManager = new S3ObjectStorage(amazonS3, bucketName);
   }
 
   @Test
@@ -86,13 +87,13 @@ class S3MediaManagerTest {
   @DisplayName("s3 키를 생성할 수 있다")
   void generateKey() {
     // given
-    KeyType keyType = Instancio.create(KeyType.class);
+    S3KeyPrefix s3KeyPrefix = Instancio.create(S3KeyPrefix.class);
 
     // when
-    String key = s3MediaManager.generateKey(keyType);
+    String key = s3MediaManager.generateKey(s3KeyPrefix);
 
     // then
-    assertThat(key).contains(keyType.getValue());
+    assertThat(key).contains(s3KeyPrefix.getValue());
   }
 
   @Test
@@ -100,7 +101,7 @@ class S3MediaManagerTest {
   void extractKey() {
     // given, when
     String extractedKey = s3MediaManager.extractKey(
-        new URLGenerator().get().toExternalForm() + validKey, keyType);
+        new URLGenerator().get().toExternalForm() + validKey, s3KeyPrefix);
 
     // then
     assertThat(extractedKey).isEqualTo(validKey);

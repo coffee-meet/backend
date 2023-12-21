@@ -14,7 +14,7 @@ import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;

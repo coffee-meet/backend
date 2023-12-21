@@ -1,9 +1,9 @@
-package coffeemeet.server.certification.infrastructure;
+package coffeemeet.server.certification.domain.repository;
 
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.CertificationFixture.pageable;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
 import static coffeemeet.server.common.fixture.UserFixture.user;
-import static coffeemeet.server.common.fixture.UserFixture.users;
+import static coffeemeet.server.common.fixture.UserFixture.usersWithNullId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.certification.domain.Certification;
@@ -12,7 +12,7 @@ import coffeemeet.server.common.fixture.CertificationFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,12 +33,6 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
   @BeforeEach
   void setUp() {
     user = userRepository.save(user());
-  }
-
-  @AfterEach
-  void tearDown() {
-    certificationRepository.deleteAll();
-    userRepository.deleteAll();
   }
 
   @Test
@@ -64,22 +58,36 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
   }
 
   @Test
-  @DisplayName("아직 인증이 안된 회사 인증 요청을 페이지 조회할 수 있다.")
-  void findByIsCertificatedFalse() {
+  @DisplayName("유저 아이디로 인증정보를 삭제할 수 있다")
+  void deleteByUserIdTest() {
     // given
-    List<User> users = userRepository.saveAll(users());
+    Certification certification = certification(user);
+    certificationRepository.save(certification);
+
+    // when
+    certificationRepository.deleteByUserId(user.getId());
+
+    // then
+    Optional<Certification> result = certificationRepository.findByUserId(user.getId());
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  @DisplayName("아직 인증이 안된 회사 인증 요청을 페이지 조회할 수 있다.")
+  void findPendingCertificationsTest() {
+    // given
+    List<User> users = userRepository.saveAll(usersWithNullId());
 
     List<Certification> certifications = certificationRepository.saveAll(
         users.stream()
             .map(CertificationFixture::certification)
             .toList()
     );
-
     long certificatedCount = certifications.stream()
         .filter(Certification::isCertificated)
         .count();
 
-    Pageable pageable = pageable();
+    Pageable pageable = certificationPageable();
 
     // when
     Page<Certification> foundCertification = certificationRepository.findPendingCertifications(

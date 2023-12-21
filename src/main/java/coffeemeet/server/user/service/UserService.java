@@ -1,6 +1,6 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.domain.S3KeyPrefix.PROFILE_IMAGE;
 import static coffeemeet.server.common.execption.GlobalErrorCode.BAD_REQUEST_ERROR;
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.DEFAULT_IMAGE_URL;
 
@@ -8,8 +8,8 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.common.domain.ObjectStorage;
 import coffeemeet.server.common.execption.BadRequestException;
-import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
-  private final MediaManager mediaManager;
+  private final ObjectStorage objectStorage;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
 
   private final CertificationQuery certificationQuery;
@@ -99,9 +99,9 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     deleteCurrentProfileImage(user.getOauthInfo().getProfileImageUrl());
 
-    String key = mediaManager.generateKey(PROFILE_IMAGE);
-    mediaManager.upload(key, file);
-    user.updateProfileImageUrl(mediaManager.getUrl(key));
+    String key = objectStorage.generateKey(PROFILE_IMAGE);
+    objectStorage.upload(key, file);
+    user.updateProfileImageUrl(objectStorage.getUrl(key));
     userCommand.updateUser(user);
   }
 
@@ -172,12 +172,12 @@ public class UserService {
 
   private void deleteCurrentProfileImage(String profileImageUrl) {
     if (!profileImageUrl.equals(DEFAULT_IMAGE_URL)) {
-      String currentKey = mediaManager.extractKey(profileImageUrl,
+      String currentKey = objectStorage.extractKey(profileImageUrl,
           PROFILE_IMAGE);
       if (currentKey.isBlank()) {
         return;
       }
-      mediaManager.delete(currentKey);
+      objectStorage.delete(currentKey);
     }
   }
 

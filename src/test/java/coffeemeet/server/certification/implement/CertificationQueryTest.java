@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.certification.domain.Certification;
-import coffeemeet.server.certification.infrastructure.CertificationRepository;
+import coffeemeet.server.certification.domain.repository.CertificationRepository;
 import coffeemeet.server.user.domain.User;
 import java.util.Collections;
 import java.util.Optional;

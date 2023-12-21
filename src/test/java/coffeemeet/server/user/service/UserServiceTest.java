@@ -1,6 +1,6 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
+import static coffeemeet.server.common.domain.S3KeyPrefix.PROFILE_IMAGE;
 import static coffeemeet.server.common.fixture.AuthFixture.authTokens;
 import static coffeemeet.server.common.fixture.CertificationFixture.certification;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
@@ -30,8 +30,8 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
+import coffeemeet.server.common.domain.ObjectStorage;
 import coffeemeet.server.common.fixture.UserFixture;
-import coffeemeet.server.common.implement.MediaManager;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -67,7 +67,7 @@ class UserServiceTest {
   private UserService userService;
 
   @Mock
-  private MediaManager mediaManager;
+  private ObjectStorage objectStorage;
 
   @Mock
   private OAuthMemberClientComposite oAuthMemberClientComposite;
@@ -226,9 +226,9 @@ class UserServiceTest {
     File file = File.createTempFile("temp", "png");
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
-    given(mediaManager.generateKey(PROFILE_IMAGE)).willReturn("key");
-    given(mediaManager.getUrl(anyString())).willReturn("newImageUrl");
-    given(mediaManager.extractKey(any(), eq(PROFILE_IMAGE))).willReturn("");
+    given(objectStorage.generateKey(PROFILE_IMAGE)).willReturn("key");
+    given(objectStorage.getUrl(anyString())).willReturn("newImageUrl");
+    given(objectStorage.extractKey(any(), eq(PROFILE_IMAGE))).willReturn("");
 
     // when
     userService.updateProfileImage(user.getId(), file);

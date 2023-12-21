@@ -15,7 +15,7 @@ import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.fixture.InquiryFixture;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
@@ -92,7 +92,7 @@ class AdminServiceTest {
     adminService.approveCertification(certificationId);
 
     // then
-    then(certificationCommand).should(only()).certificated(certificationId);
+    then(certificationCommand).should(only()).completeCertification(certificationId);
     then(userQuery).should(only()).getNotificationInfoByUserId(userId);
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }
@@ -109,7 +109,7 @@ class AdminServiceTest {
     adminService.rejectCertification(certificationId);
 
     // then
-    then(certificationCommand).should(only()).deleteCertification(certificationId);
+    then(certificationCommand).should(only()).deleteCertificationByUserId(certificationId);
     then(certificationQuery).should(only()).getUserIdByCertificationId(certificationId);
     then(userQuery).should(only()).getNotificationInfoByUserId(certificationId);
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());

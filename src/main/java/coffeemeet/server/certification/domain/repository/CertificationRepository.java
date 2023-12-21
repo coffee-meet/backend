@@ -1,4 +1,4 @@
-package coffeemeet.server.certification.infrastructure;
+package coffeemeet.server.certification.domain.repository;
 
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.domain.CompanyEmail;
@@ -13,6 +13,8 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
   Optional<Certification> findByUserId(Long userId);
 
   boolean existsByCompanyEmail(CompanyEmail companyEmail);
+
+  void deleteByUserId(Long userId);
 
   @Query("SELECT c FROM Certification c JOIN FETCH c.user WHERE c.isCertificated = false")
   Page<Certification> findPendingCertifications(Pageable pageable);

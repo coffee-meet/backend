@@ -14,14 +14,14 @@ public record ReportSummary(
     LocalDateTime createdAt
 ) {
 
-  public static ReportSummary of(User targeted, ChattingRoom chattingRoom) {
-    return new ReportSummary(
-        targeted.getProfile().getNickname(),
-        chattingRoom.getName(),
-        targeted.getId(),
-        chattingRoom.getId(),
-        targeted.getCreatedAt()
-    );
-  }
+    public static ReportSummary of(User targeted, ChattingRoom chattingRoom) {
+        return new ReportSummary(
+            targeted.getProfile().getNickname(),
+            chattingRoom.getName(),
+            targeted.getId(),
+            chattingRoom.getId(),
+            targeted.getCreatedAt()
+        );
+    }
 
 }

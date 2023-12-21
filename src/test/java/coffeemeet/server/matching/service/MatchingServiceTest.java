@@ -17,7 +17,7 @@ import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.common.execption.BadRequestException;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
@@ -73,8 +73,8 @@ class MatchingServiceTest {
     User requestedUser = users.get(0);
     Certification requestedUsersCertification = certifications.get(0);
     ChattingRoom chattingRoom = chattingRoom();
-    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo).collect(
-        Collectors.toSet());
+    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo)
+        .collect(Collectors.toSet());
 
     given(certificationQuery.getCertificationByUserId(requestedUser.getId())).willReturn(
         requestedUsersCertification);
@@ -83,8 +83,7 @@ class MatchingServiceTest {
     given(matchingQueueQuery.dequeueMatchingGroupSize(companyName, users.size())).willReturn(
         fourUsers().stream().map(User::getId).collect(Collectors.toSet()));
     given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
-    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(
-        notificationInfos);
+    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(notificationInfos);
 
     // when
     matchingService.startMatching(requestedUser.getId());
@@ -95,8 +94,8 @@ class MatchingServiceTest {
     then(userCommand).should().setToMatching(requestedUser.getId());
     then(userCommand).should().assignUsersToChattingRoom(userIds, chattingRoom);
     then(fcmNotificationSender).should()
-        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!",
-            "chattingRoomId", String.valueOf(chattingRoom.getId()));
+        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!", "chattingRoomId",
+            String.valueOf(chattingRoom.getId()));
   }
 
   @Test
@@ -118,7 +117,7 @@ class MatchingServiceTest {
   }
 
   @Test
-  @DisplayName("매칭을 취소할 수 있다.")
+  @DisplayName("MATCHING 상태가 아닐 때 매칭을 취소하면 예외가 발생 한다.")
   void cancelMatchingTest_BadRequestException() {
     // given
     User user = userExcludingStatus(MATCHING);

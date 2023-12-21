@@ -1,6 +1,7 @@
-package coffeemeet.server.common.implement;
+package coffeemeet.server.common.infrastructure;
 
-import coffeemeet.server.common.domain.KeyType;
+import coffeemeet.server.common.domain.ObjectStorage;
+import coffeemeet.server.common.domain.S3KeyPrefix;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import java.io.File;
@@ -12,12 +13,12 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class S3MediaManager implements MediaManager {
+public class S3ObjectStorage implements ObjectStorage {
 
   private final AmazonS3 amazonS3;
   private final String bucketName;
 
-  public S3MediaManager(
+  public S3ObjectStorage(
       AmazonS3 amazonS3,
       @Value("${cloud.aws.s3.bucket}") String bucketName
   ) {
@@ -49,14 +50,14 @@ public class S3MediaManager implements MediaManager {
   }
 
   @Override
-  public String generateKey(KeyType keyType) {
-    return String.format("%s-%s-%s", keyType.getValue(), LocalDateTime.now(),
+  public String generateKey(S3KeyPrefix s3KeyPrefix) {
+    return String.format("%s-%s-%s", s3KeyPrefix.getValue(), LocalDateTime.now(),
         UUID.randomUUID());
   }
 
   @Override
-  public String extractKey(String s3Url, KeyType keyType) {
-    int startIndex = s3Url.indexOf(keyType.getValue());
+  public String extractKey(String s3Url, S3KeyPrefix s3KeyPrefix) {
+    int startIndex = s3Url.indexOf(s3KeyPrefix.getValue());
     if (startIndex == -1) {
       return "";
     }

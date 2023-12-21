@@ -1,4 +1,4 @@
-package coffeemeet.server.common.implement;
+package coffeemeet.server.common.infrastructure;
 
 import static coffeemeet.server.common.execption.GlobalErrorCode.INVALID_FCM_TOKEN;
 import static coffeemeet.server.common.execption.GlobalErrorCode.PUSH_NOTIFICATION_SEND_FAILURE;

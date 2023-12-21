@@ -34,16 +34,15 @@ public class Certification extends AdvancedBaseEntity {
   @Column(nullable = false)
   private String companyName;
 
-  @Embedded
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
+  private Department department;
+
+  @Embedded
   private CompanyEmail companyEmail;
 
   @Column(nullable = false)
   private String businessCardUrl;
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private Department department;
 
   @Column(nullable = false)
   private boolean isCertificated;
@@ -62,6 +61,14 @@ public class Certification extends AdvancedBaseEntity {
 
   public void qualify() {
     isCertificated = true;
+  }
+
+  public void update(String companyName, CompanyEmail companyEmail, String businessCardUrl,
+      Department department) {
+    this.companyName = companyName;
+    this.companyEmail = companyEmail;
+    this.businessCardUrl = businessCardUrl;
+    this.department = department;
   }
 
 }
