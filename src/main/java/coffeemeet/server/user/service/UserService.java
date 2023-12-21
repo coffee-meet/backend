@@ -69,6 +69,7 @@ public class UserService {
     if (userQuery.isRegistered(oauthInfo)) {
       User user = userQuery.getUserByOAuthInfo(oauthInfo);
       if (user.isRegistered()) {
+        // TODO: 12/21/23 회원가입 중간에 나갈 때 예외 터지는 오류 잡기
         List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
         Certification certification = certificationQuery.getCertificationByUserId(user.getId());
         AuthTokens authTokens = authTokensGenerator.generate(user.getId());

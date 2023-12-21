@@ -166,7 +166,7 @@ swaggerSources {
 openapi3 {
     servers = [
             { url = "http://localhost:8080" },
-            { url = "https://api.coffee-meet.site" }
+            { url = "https://api.coffee-meet.com" }
     ]
     title = "API 문서"
     description = "RestDocsWithSwagger Docs"
