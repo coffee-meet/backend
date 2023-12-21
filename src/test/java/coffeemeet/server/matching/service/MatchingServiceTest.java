@@ -100,7 +100,7 @@ class MatchingServiceTest {
 
   @Test
   @DisplayName("매칭을 취소할 수 있다.")
-  void cancelMatching() {
+  void cancelMatchingTest() {
     // given
     User user = user(MATCHING);
     String companyName = "회사명";
@@ -118,7 +118,7 @@ class MatchingServiceTest {
 
   @Test
   @DisplayName("MATCHING 상태가 아닐 때 매칭을 취소하면 예외가 발생 한다.")
-  void cancelMatching_BadException() {
+  void cancelMatchingTest_BadRequestException() {
     // given
     User user = userExcludingStatus(MATCHING);
     Long userId = user.getId();
