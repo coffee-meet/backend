@@ -17,7 +17,7 @@ public class ReportInfo {
   private static final int REPORT_MIN_COUNT = 0;
   private static final int REPORT_MAX_COUNT = 5;
 
-  private int reportedCount;
+  private Integer reportedCount;
   private LocalDateTime penaltyExpiration;
 
   public ReportInfo() {
