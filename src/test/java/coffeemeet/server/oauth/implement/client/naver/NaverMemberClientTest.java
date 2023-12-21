@@ -1,11 +1,10 @@
 package coffeemeet.server.oauth.implement.client.naver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.NaverMemberResponseFixture;
-import coffeemeet.server.common.fixture.dto.NaverTokenFixture;
+import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.infrastructure.naver.NaverClient;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverTokens;
@@ -38,8 +37,8 @@ class NaverMemberClientTest {
   void fetchTest() {
     // given
     String authCode = "authCode";
-    NaverTokens naverTokens = NaverTokenFixture.naverTokens();
-    NaverMemberDetail response = NaverMemberResponseFixture.naverMemberResponse();
+    NaverTokens naverTokens = OauthFixture.naverTokens();
+    NaverMemberDetail response = OauthFixture.naverMemberResponse();
 
     given(naverClient.fetchToken(any())).willReturn(naverTokens);
     given(naverClient.fetchMember(any())).willReturn(response);

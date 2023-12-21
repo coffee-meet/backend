@@ -1,16 +1,18 @@
 package coffeemeet.server.matching.service;
 
-import static coffeemeet.server.matching.exception.MatchingErrorCode.NOT_CERTIFICATED_USER;
+import static coffeemeet.server.matching.exception.MatchingErrorCode.INVALID_USER_STATUS;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.common.execption.ForbiddenException;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.execption.BadRequestException;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
+import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.Set;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MatchingService {
 
+  private static final String NOT_CERTIFICATED_USER_MESSAGE = "사용자(%s) 인증이 완료되지 않았습니다.";
   private static final long FIXED_MATCH_GROUP_SIZE = 4;
 
   private final FCMNotificationSender notificationSender;
@@ -35,7 +38,7 @@ public class MatchingService {
     Certification certification = certificationQuery.getCertificationByUserId(userId);
 //    if (!certification.isCertificated()) {
 //      throw new ForbiddenException(NOT_CERTIFICATED_USER,
-//          String.format("사용자(%s) 인증이 완료되지 않았습니다.", userId));
+//          String.format(NOT_CERTIFICATED_USER_MESSAGE, userId));
 //    }
 
     String companyName = certification.getCompanyName();
@@ -60,6 +63,11 @@ public class MatchingService {
   }
 
   public void cancelMatching(Long userId) {
+    User user = userQuery.getUserById(userId);
+    if (user.getUserStatus() != MATCHING) {
+      throw new BadRequestException(INVALID_USER_STATUS,
+          String.format("유저 상태가 %s이 아닙니다.", MATCHING));
+    }
     String companyName = certificationQuery.getCompanyNameByUserId(userId);
     matchingQueueCommand.deleteUserByUserId(companyName, userId);
     userCommand.setToIdle(userId);

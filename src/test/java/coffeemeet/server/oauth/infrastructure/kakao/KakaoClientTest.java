@@ -7,8 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.common.fixture.dto.KakaoMemberResponseFixture;
-import coffeemeet.server.common.fixture.dto.KakaoTokensFixture;
+import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.config.kakao.KakaoProperties;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
@@ -41,7 +40,7 @@ class KakaoClientTest {
   void fetchTokenTest() {
     // given
     String authCode = "authCode";
-    KakaoTokens kakaoTokens = KakaoTokensFixture.kakaoTokens();
+    KakaoTokens kakaoTokens = OauthFixture.kakaoTokens();
 
     given(kakaoProperties.getClientId()).willReturn("testClientId");
     given(kakaoProperties.getRedirectUrl()).willReturn("testRedirectUrl");
@@ -58,10 +57,14 @@ class KakaoClientTest {
     // then
     assertAll(
         () -> assertThat(expectedTokens).isNotNull(),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).accessToken()).isEqualTo(kakaoTokens.accessToken()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(kakaoTokens.refreshToken()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(kakaoTokens.tokenType()),
-        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(kakaoTokens.expiresIn()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).accessToken()).isEqualTo(
+            kakaoTokens.accessToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).refreshToken()).isEqualTo(
+            kakaoTokens.refreshToken()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).tokenType()).isEqualTo(
+            kakaoTokens.tokenType()),
+        () -> assertThat(Objects.requireNonNull(expectedTokens).expiresIn()).isEqualTo(
+            kakaoTokens.expiresIn()),
         () -> assertThat(Objects.requireNonNull(expectedTokens).refreshTokenExpiresIn()).isEqualTo(
             kakaoTokens.refreshTokenExpiresIn())
     );
@@ -71,7 +74,7 @@ class KakaoClientTest {
   @Test
   void fetchMemberTest() {
     // given
-    KakaoMemberDetail response = KakaoMemberResponseFixture.kakaoMemberResponse();
+    KakaoMemberDetail response = OauthFixture.kakaoMemberResponse();
     ResponseEntity<KakaoMemberDetail> mockResponse = ResponseEntity.ok(response);
 
     given(restTemplate.exchange(

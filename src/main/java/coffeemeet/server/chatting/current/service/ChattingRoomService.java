@@ -5,16 +5,16 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
-import coffeemeet.server.chatting.current.service.dto.ChatRoomStatusDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto;
-import coffeemeet.server.chatting.current.service.dto.ChattingDto.Response;
+import coffeemeet.server.chatting.current.service.dto.Chatting;
+import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
+import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
@@ -45,10 +45,15 @@ public class ChattingRoomService {
   }
 
   @Transactional
-  public List<Response> searchMessages(Long roomId, Long firstMessageId, int pageSize) {
+  public ChattingListDto searchMessages(Long roomId, Long firstMessageId, int pageSize) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
-    return chattingMessageQuery.findMessages(chattingRoom, firstMessageId, pageSize).stream()
-        .map(message -> ChattingDto.Response.of(message.getUser(), message)).toList();
+    List<ChattingMessage> chattingMessages = chattingMessageQuery.findMessages(chattingRoom,
+        firstMessageId,
+        pageSize);
+    boolean hasNext = chattingMessages.size() >= pageSize;
+    List<Chatting> chattingList = chattingMessages.stream()
+        .map(message -> Chatting.of(message.getUser(), message)).toList();
+    return ChattingListDto.of(chattingList, hasNext);
   }
 
   @Transactional
@@ -84,7 +89,7 @@ public class ChattingRoomService {
     users.forEach(User::setIdleStatus);
   }
 
-  public ChatRoomStatusDto checkChattingRoomStatus(Long roomId) {
-    return ChatRoomStatusDto.from(chattingRoomQuery.existsBy(roomId));
+  public ChattingRoomStatusDto checkChattingRoomStatus(Long roomId) {
+    return ChattingRoomStatusDto.from(chattingRoomQuery.existsBy(roomId));
   }
 }

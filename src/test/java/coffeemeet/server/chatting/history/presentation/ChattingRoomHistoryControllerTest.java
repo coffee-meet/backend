@@ -17,16 +17,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import coffeemeet.server.auth.domain.RefreshToken;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingMessageHistoriesHTTP.ChatHistory;
+import coffeemeet.server.chatting.history.presentation.dto.ChattingHistoryCustomSlice.Response;
 import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP;
-import coffeemeet.server.chatting.history.presentation.dto.ChattingRoomHistoriesHTTP.ChatRoomHistory;
 import coffeemeet.server.chatting.history.service.ChattingRoomHistoryService;
-import coffeemeet.server.chatting.history.service.dto.ChattingMessageHistoryDto.Response;
+import coffeemeet.server.chatting.history.service.dto.ChattingHistoryListDto;
 import coffeemeet.server.chatting.history.service.dto.ChattingRoomHistoryDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
+import coffeemeet.server.common.fixture.ChattingFixture;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -48,13 +46,11 @@ class ChattingRoomHistoryControllerTest extends ControllerTestConfig {
     Long userId = 1L;
     int pageSize = 50;
 
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
-    List<ChattingRoomHistoryDto.Response> responses = ChattingFixture.chattingRoomHistoryDtoResponses(
+    RefreshToken refreshToken = AuthFixture.refreshToken();
+    List<ChattingRoomHistoryDto> responses = ChattingFixture.chattingRoomHistoryDtoResponses(
         pageSize);
-    List<ChatRoomHistory> chatRoomHistories = responses.stream().map(ChatRoomHistory::from)
-        .toList();
     ChattingRoomHistoriesHTTP.Response response = ChattingFixture.chattingRoomHistoriesHTTP(
-        chatRoomHistories);
+        responses);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
@@ -99,16 +95,14 @@ class ChattingRoomHistoryControllerTest extends ControllerTestConfig {
     Long firstMessageId = 51L;
     int pageSize = 50;
 
-    List<Response> responses = ChattingFixture.chattingMessageHistoryDtoResponse(pageSize);
-    List<ChatHistory> chatHistories = responses.stream()
-        .map(ChatHistory::from).toList();
-    ChattingMessageHistoriesHTTP.Response response = ChattingFixture.chattingMessageHistoriesHTTP(
-        chatHistories);
+    ChattingHistoryListDto chattingHistoryListDto = ChattingFixture.chattingMessageHistoryListDto();
+    Response response = ChattingFixture.chattingMessageHistoriesHTTPResponse(
+        chattingHistoryListDto);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(chattingRoomHistoryService.searchChattingMessageHistories(roomHistoryId, firstMessageId,
         pageSize)).willReturn(
-        responses);
+        chattingHistoryListDto);
 
     // when, then
     mockMvc.perform(get("/api/v1/chatting/room/histories/{roomHistoryId}", roomHistoryId)
@@ -139,7 +133,8 @@ class ChattingRoomHistoryControllerTest extends ControllerTestConfig {
                     fieldWithPath("chatHistories[].content").type(JsonFieldType.STRING)
                         .description("내용"),
                     fieldWithPath("chatHistories[].createdAt").type(JsonFieldType.STRING)
-                        .description("생성 시간")
+                        .description("생성 시간"),
+                    fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부")
                 )
             )
         )

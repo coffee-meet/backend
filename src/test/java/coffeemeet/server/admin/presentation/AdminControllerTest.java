@@ -1,10 +1,11 @@
 package coffeemeet.server.admin.presentation;
 
-import static coffeemeet.server.common.fixture.entity.AdminFixture.adminLoginHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportApprovalHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.AdminFixture.reportRejectionHTTPRequest;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pageable;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.pendingCertificationPageDto;
+import static coffeemeet.server.common.fixture.AdminFixture.adminLoginHTTPRequest;
+import static coffeemeet.server.common.fixture.AdminFixture.reportApprovalHTTPRequest;
+import static coffeemeet.server.common.fixture.AdminFixture.reportRejectionHTTPRequest;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
+import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPageDto;
+import static coffeemeet.server.common.fixture.ReportFixture.reportListDto;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,31 +32,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.admin.presentation.dto.AdminCustomPage;
 import coffeemeet.server.admin.presentation.dto.AdminCustomSlice;
+import coffeemeet.server.admin.presentation.dto.GroupReportHTTP;
+import coffeemeet.server.admin.presentation.dto.ReportDetailHTTP;
 import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.GroupReportDtoFixture;
-import coffeemeet.server.common.fixture.dto.ReportDetailDtoFixture;
-import coffeemeet.server.common.fixture.dto.ReportDetailHTTPFixture;
-import coffeemeet.server.common.fixture.dto.ReportDtoFixture;
-import coffeemeet.server.common.fixture.entity.AdminFixture;
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.common.fixture.AdminFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.ReportFixture;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse;
-import coffeemeet.server.inquiry.service.dto.InquirySearchResponse.InquirySummary;
-import coffeemeet.server.report.presentation.dto.GroupReportHTTP;
-import coffeemeet.server.report.presentation.dto.ReportDetailHTTP;
-import coffeemeet.server.report.presentation.dto.ReportListHTTP;
-import coffeemeet.server.report.presentation.dto.ReportListHTTP.Response;
+import coffeemeet.server.inquiry.service.dto.InquirySearchDto;
+import coffeemeet.server.inquiry.service.dto.InquirySummary;
 import coffeemeet.server.report.service.ReportService;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import com.epages.restdocs.apispec.Schema;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -240,19 +236,10 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("신고 내역을 전체 조회할 수 있다.")
   void findAllReportsTest() throws Exception {
     // given
-    long lastReportId = 0L;
+    Long lastReportId = 0L;
     int pageSize = 10;
-    ReportDto response1 = ReportDtoFixture.reportDto();
-    ReportDto response2 = ReportDtoFixture.reportDto();
-
-    List<ReportDto> reportResponses = List.of(response1, response2);
-    boolean hasNext = true;
-
-    ReportListDto reportListDto = ReportListDto.of(reportResponses, hasNext);
-    List<ReportListHTTP.Response> responses = reportListDto.contents().stream()
-        .map(Response::from)
-        .toList();
-    AdminCustomPage<ReportListHTTP.Response> result = new AdminCustomPage<>(responses,
+    ReportListDto reportListDto = reportListDto();
+    AdminCustomPage<ReportSummary> result = new AdminCustomPage<>(reportListDto.contents(),
         reportListDto.hasNext());
 
     given(reportService.findAllReports(lastReportId, pageSize)).willReturn(reportListDto);
@@ -274,15 +261,15 @@ class AdminControllerTest extends ControllerTestConfig {
             responseFields(
                 fieldWithPath("contents").description("신고 조회 내역 리스트"),
                 fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
-                fieldWithPath("contents.[].content.targetedNickname").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].targetedNickname").type(JsonFieldType.STRING)
                     .description("신고 대상 닉네임"),
-                fieldWithPath("contents.[].content.chattingRoomName").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].chattingRoomName").type(JsonFieldType.STRING)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].content.targetedId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents[].targetedId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 아이디"),
-                fieldWithPath("contents.[].content.chattingRoomId").type(JsonFieldType.NUMBER)
+                fieldWithPath("contents[].chattingRoomId").type(JsonFieldType.NUMBER)
                     .description("신고 대상 채팅방 이름"),
-                fieldWithPath("contents.[].content.createdAt").type(JsonFieldType.STRING)
+                fieldWithPath("contents[].createdAt").type(JsonFieldType.STRING)
                     .description("신고 생성 날짜")
             )
         ))
@@ -294,8 +281,8 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("동일 채팅방 내의 신고 대상에 대한 신고 내역을 조회할 수 있다.")
   void findReportByTargetIdAndChattingRoomIdTest() throws Exception {
     // given
-    List<GroupReportDto> response = List.of(GroupReportDtoFixture.targetReportDto(),
-        GroupReportDtoFixture.targetReportDto());
+    List<GroupReportDto> response = List.of(ReportFixture.targetReportDto(),
+        ReportFixture.targetReportDto());
     GroupReportHTTP.Response result = GroupReportHTTP.Response.from(response);
 
     given(reportService.findReportByTargetIdAndChattingRoomId(anyLong(), anyLong())).willReturn(
@@ -338,8 +325,8 @@ class AdminControllerTest extends ControllerTestConfig {
   void findReportTest() throws Exception {
     // given
     Long reportId = 1L;
-    ReportDetailDto response = ReportDetailDtoFixture.reportDetailDto();
-    ReportDetailHTTP.Response expectedResponse = ReportDetailHTTPFixture.reportDetailHTTPResponse(
+    ReportDetailDto response = ReportFixture.reportDetailDto();
+    ReportDetailHTTP.Response expectedResponse = ReportFixture.reportDetailHTTPResponse(
         response);
 
     given(reportService.findReportById(anyLong())).willReturn(response);
@@ -383,11 +370,11 @@ class AdminControllerTest extends ControllerTestConfig {
     Long lastInquiryId = 10L;
     int pageSize = 10;
 
-    InquirySearchResponse inquirySearchResponse = InquiryFixture.inquirySearchResponse();
+    InquirySearchDto inquirySearchDto = InquiryFixture.inquirySearchResponse();
     AdminCustomSlice<InquirySummary> adminCustomSlice = AdminFixture.adminCustomPageByInquiry(
-        inquirySearchResponse.contents(), inquirySearchResponse.hasNext());
+        inquirySearchDto.contents(), inquirySearchDto.hasNext());
     given(inquiryService.searchInquiries(lastInquiryId, pageSize)).willReturn(
-        inquirySearchResponse);
+        inquirySearchDto);
 
     // when, then
     mockMvc.perform(get(baseUrl + "/inquiries")
@@ -468,7 +455,7 @@ class AdminControllerTest extends ControllerTestConfig {
   @DisplayName("회사 인증 대기중인 목록을 조회할 수 있다.")
   void getPendingCertificationsTest() throws Exception {
     // given
-    Pageable pageable = pageable();
+    Pageable pageable = certificationPageable();
     PendingCertificationPageDto pendingCertificationPageDto = pendingCertificationPageDto(
         pageable.getPageSize());
     Page<PendingCertification> page = pendingCertificationPageDto.page();

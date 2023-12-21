@@ -1,12 +1,12 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.domain.KeyType.PROFILE_IMAGE;
-import static coffeemeet.server.common.fixture.dto.AuthTokensFixture.authTokens;
-import static coffeemeet.server.common.fixture.dto.OAuthUserInfoDtoFixture.response;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certification;
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.entity.UserFixture.keywords;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.domain.S3KeyPrefix.PROFILE_IMAGE;
+import static coffeemeet.server.common.fixture.AuthFixture.authTokens;
+import static coffeemeet.server.common.fixture.CertificationFixture.certification;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.OauthFixture.response;
+import static coffeemeet.server.common.fixture.UserFixture.keywords;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.user.domain.OAuthProvider.KAKAO;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -30,9 +30,8 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.fixture.dto.SignupHTTPFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.common.implement.MediaManager;
+import coffeemeet.server.common.domain.ObjectStorage;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
@@ -68,7 +67,7 @@ class UserServiceTest {
   private UserService userService;
 
   @Mock
-  private MediaManager mediaManager;
+  private ObjectStorage objectStorage;
 
   @Mock
   private OAuthMemberClientComposite oAuthMemberClientComposite;
@@ -98,7 +97,7 @@ class UserServiceTest {
   @Test
   void signupTest() {
     // given
-    SignupHTTP.Request request = SignupHTTPFixture.signupHTTPRequest();
+    SignupHTTP.Request request = UserFixture.signupHTTPRequest();
     User user = user();
 
     given(userQuery.getNonRegisteredUserById(anyLong())).willReturn(user);
@@ -153,7 +152,7 @@ class UserServiceTest {
     // given
     User user = user();
     Certification certification = certification();
-    List<Keyword> keywords = UserFixture.keywords();
+    List<Keyword> keywords = keywords();
     UserProfileDto response = UserProfileDto.of(user, keywords, certification);
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
@@ -227,9 +226,9 @@ class UserServiceTest {
     File file = File.createTempFile("temp", "png");
 
     given(userQuery.getUserById(anyLong())).willReturn(user);
-    given(mediaManager.generateKey(PROFILE_IMAGE)).willReturn("key");
-    given(mediaManager.getUrl(anyString())).willReturn("newImageUrl");
-    given(mediaManager.extractKey(any(), eq(PROFILE_IMAGE))).willReturn("");
+    given(objectStorage.generateKey(PROFILE_IMAGE)).willReturn("key");
+    given(objectStorage.getUrl(anyString())).willReturn("newImageUrl");
+    given(objectStorage.extractKey(any(), eq(PROFILE_IMAGE))).willReturn("");
 
     // when
     userService.updateProfileImage(user.getId(), file);
@@ -243,7 +242,7 @@ class UserServiceTest {
   @Test
   void updateProfileInfo() {
     // given
-    User user = UserFixture.user();
+    User user = user();
 
     String newNickname = "새닉네임";
     List<Keyword> newKeywords = keywords();
@@ -322,7 +321,7 @@ class UserServiceTest {
     void getUserStatusIdleTest() {
       // given
       Long userId = 1L;
-      User user = UserFixture.user(UserStatus.IDLE);
+      User user = user(UserStatus.IDLE);
       Certification certification = certification();
 
       given(userQuery.getUserById(anyLong())).willReturn(user);
@@ -347,7 +346,7 @@ class UserServiceTest {
       // given
       Long userId = 1L;
       LocalDateTime startedAt = LocalDateTime.of(2020, 10, 9, 8, 9);
-      User user = UserFixture.user(UserStatus.MATCHING);
+      User user = user(UserStatus.MATCHING);
       Certification certification = certification();
 
       given(userQuery.getUserById(anyLong())).willReturn(user);
@@ -372,7 +371,7 @@ class UserServiceTest {
     void getUserStatusChattingUnConnectingTest() {
       // given
       Long userId = 1L;
-      User user = UserFixture.user(UserStatus.MATCHING);
+      User user = user(UserStatus.MATCHING);
       user.completeMatching(chattingRoom());
       Certification certification = certification();
 
@@ -397,7 +396,7 @@ class UserServiceTest {
     void getUserStatusReportedTest() {
       // given
       Long userId = 1L;
-      User user = UserFixture.user(UserStatus.REPORTED);
+      User user = user(UserStatus.REPORTED);
       Certification certification = certification();
 
       given(userQuery.getUserById(anyLong())).willReturn(user);

@@ -1,9 +1,15 @@
 package coffeemeet.server.common.execption;
 
+import lombok.Getter;
+
+@Getter
 public class CoffeeMeetException extends RuntimeException {
 
-  public CoffeeMeetException(String message) {
+  private final ErrorCode errorCode;
+
+  public CoffeeMeetException(ErrorCode errorCode, String message) {
     super(message);
+    this.errorCode = errorCode;
   }
 
 }

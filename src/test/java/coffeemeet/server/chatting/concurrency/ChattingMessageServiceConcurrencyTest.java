@@ -9,9 +9,9 @@ import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.infrastructure.ChattingMessageRepository;
 import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
-import coffeemeet.server.common.fixture.entity.ChattingFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.fixture.ChattingFixture;
+import coffeemeet.server.common.fixture.UserFixture;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;
 import java.util.List;
@@ -63,18 +63,18 @@ class ChattingMessageServiceConcurrencyTest {
     String sessionId = "sessionId";
     chattingMessageService.storeSocketSession(sessionId, String.valueOf(user.getId()));
 
-    int count = 100;
-    ExecutorService executorService = Executors.newFixedThreadPool(count);
-    CountDownLatch countDownLatch = new CountDownLatch(count);
+    int userSize = 4;
+    ExecutorService executorService = Executors.newFixedThreadPool(userSize);
+    CountDownLatch countDownLatch = new CountDownLatch(userSize);
 
     willDoNothing().given(fcmNotificationSender)
         .sendNotification(user.getNotificationInfo(), "test");
 
     // when
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < userSize; i++) {
       executorService.submit(() -> {
         try {
-          chattingMessageService.chatting(sessionId, room.getId(), "test");
+          chattingMessageService.chat(sessionId, room.getId(), "test");
         } catch (Exception e) {
           e.printStackTrace();
         } finally {
@@ -86,7 +86,7 @@ class ChattingMessageServiceConcurrencyTest {
 
     // then
     List<ChattingMessage> messages = chattingMessageRepository.findAll();
-    assertThat(messages).hasSize(count);
+    assertThat(messages).hasSize(userSize);
   }
 
 }

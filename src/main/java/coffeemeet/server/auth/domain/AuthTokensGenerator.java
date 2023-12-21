@@ -10,9 +10,9 @@ public class AuthTokensGenerator {
 
   private static final String BEARER_TYPE = "Bearer ";
 
-  private final JwtTokenProvider jwtTokenProvider;
   private final Long accessTokenExpireTime;
   private final Long refreshTokenExpireTime;
+  private final JwtTokenProvider jwtTokenProvider;
   private final RefreshTokenCommand refreshTokenCommand;
 
   public AuthTokensGenerator(JwtTokenProvider jwtTokenProvider,

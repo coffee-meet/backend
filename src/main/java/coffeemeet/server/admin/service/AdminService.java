@@ -5,7 +5,7 @@ import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import coffeemeet.server.admin.implement.AdminQuery;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.inquiry.implement.InquiryQuery;
@@ -38,7 +38,7 @@ public class AdminService {
   }
 
   public void approveCertification(Long certificationId) {
-    certificationCommand.certificated(certificationId);
+    certificationCommand.completeCertification(certificationId);
 
     Long userId = certificationQuery.getUserIdByCertificationId(certificationId);
     NotificationInfo notificationInfo = userQuery.getNotificationInfoByUserId(userId);
@@ -48,7 +48,7 @@ public class AdminService {
   }
 
   public void rejectCertification(Long certificationId) {
-    certificationCommand.deleteCertification(certificationId);
+    certificationCommand.deleteCertificationByUserId(certificationId);
 
     Long userId = certificationQuery.getUserIdByCertificationId(certificationId);
     NotificationInfo notificationInfo = userQuery.getNotificationInfoByUserId(userId);

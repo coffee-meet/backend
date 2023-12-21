@@ -11,8 +11,8 @@ import coffeemeet.server.report.implement.ReportCommand;
 import coffeemeet.server.report.implement.ReportQuery;
 import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
-import coffeemeet.server.report.service.dto.ReportDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
+import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ReportService {
   private final UserChattingHistoryQuery userChattingHistoryQuery;
 
   @Transactional
-  public void reportUser(long reporterId, long chattingRoomId, long targetId, String reason,
+  public void reportUser(Long reporterId, Long chattingRoomId, Long targetId, String reason,
       String reasonDetail) {
     reportQuery.hasDuplicatedReport(reporterId, chattingRoomId, targetId);
 
@@ -61,32 +61,34 @@ public class ReportService {
   }
 
   public ReportListDto findAllReports(Long lastReportId, int pageSize) {
-    List<Report> reports = reportQuery.getAllReports(lastReportId, pageSize);
+    List<Report> reports = reportQuery.getAllReports(lastReportId,
+        pageSize);
     boolean hasNext = reports.size() >= pageSize;
 
     Map<Long, User> userMap = getUsers(reports);
     Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reports);
 
-    List<ReportDto> responses = reports.stream()
+    List<ReportSummary> responses = reports.stream()
         .map(report -> {
           User targetUser = userMap.get(report.getTargetedId());
           ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-          return ReportDto.of(targetUser, chattingRoom);
+          return ReportSummary.of(targetUser, chattingRoom);
         })
         .toList();
     return ReportListDto.of(responses, hasNext);
   }
 
-  public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(long targetId,
-      long chattingRoomId) {
-    List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(targetId,
+  public List<GroupReportDto> findReportByTargetIdAndChattingRoomId(Long targetId,
+      Long chattingRoomId) {
+    List<Report> reports = reportQuery.getReportsByTargetIdAndChattingRoomId(
+        targetId,
         chattingRoomId);
     return reports.stream()
         .map(this::mapToReportDto)
         .toList();
   }
 
-  private void checkChattingRoomExists(long reporterId, long chattingRoomId) {
+  private void checkChattingRoomExists(Long reporterId, Long chattingRoomId) {
     boolean isChattingRoomExists = false;
     boolean isChattingHistoryExists = false;
 
@@ -104,7 +106,8 @@ public class ReportService {
     }
   }
 
-  private Map<Long, ChattingRoom> getChattingRooms(List<Report> allReports) {
+  private Map<Long, ChattingRoom> getChattingRooms(
+      List<Report> allReports) {
     Set<Long> chattingRoomIds = allReports.stream()
         .map(Report::getChattingRoomId)
         .collect(Collectors.toSet());

@@ -3,8 +3,8 @@ package coffeemeet.server.inquiry.infrastructure;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.common.config.RepositoryTestConfig;
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
-import coffeemeet.server.common.fixture.entity.UserFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
+import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.inquiry.domain.Inquiry;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.infrastructure.UserRepository;

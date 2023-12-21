@@ -1,48 +1,42 @@
 package coffeemeet.server.certification.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.businessCardUrl;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certifications;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.CertificationFixture.businessCardUrl;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificationPageable;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
+import static coffeemeet.server.common.fixture.CertificationFixture.department;
+import static coffeemeet.server.common.fixture.CertificationFixture.email;
+import static coffeemeet.server.common.fixture.CertificationFixture.pendingCertificationPage;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.domain.Certification;
+import coffeemeet.server.certification.domain.CompanyEmail;
+import coffeemeet.server.certification.domain.Department;
+import coffeemeet.server.certification.implement.BusinessCardImageDeleter;
+import coffeemeet.server.certification.implement.BusinessCardImageUploader;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.certification.implement.EmailVerificationCommand;
-import coffeemeet.server.certification.implement.EmailVerificationQuery;
+import coffeemeet.server.certification.implement.CompanyEmailValidator;
+import coffeemeet.server.certification.implement.VerificationCodeGenerator;
+import coffeemeet.server.certification.implement.VerificationCodeValidator;
+import coffeemeet.server.certification.implement.VerificationInfoCommand;
+import coffeemeet.server.certification.implement.VerificationInfoQuery;
+import coffeemeet.server.certification.implement.VerificationMailSender;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
-import coffeemeet.server.common.execption.InvalidInputException;
-import coffeemeet.server.common.implement.EmailSender;
-import coffeemeet.server.common.implement.MediaManager;
-import coffeemeet.server.common.util.FileUtils;
-import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.implement.UserQuery;
 import java.io.File;
-import java.util.List;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,152 +44,131 @@ class CertificationServiceTest {
 
   @InjectMocks
   private CertificationService certificationService;
-
   @Mock
-  private MediaManager mediaManager;
-
+  private BusinessCardImageUploader businessCardImageUploader;
   @Mock
-  private EmailSender emailSender;
-
-  @Mock
-  private UserQuery userQuery;
-
+  private BusinessCardImageDeleter businessCardImageDeleter;
   @Mock
   private CertificationCommand certificationCommand;
-
   @Mock
   private CertificationQuery certificationQuery;
-
   @Mock
-  private EmailVerificationCommand emailVerificationCommand;
-
+  private CompanyEmailValidator companyEmailValidator;
   @Mock
-  private EmailVerificationQuery emailVerificationQuery;
+  private VerificationCodeGenerator verificationCodeGenerator;
+  @Mock
+  private VerificationCodeValidator verificationCodeValidator;
+  @Mock
+  private VerificationInfoQuery verificationInfoQuery;
+  @Mock
+  private VerificationInfoCommand verificationInfoCommand;
+  @Mock
+  private VerificationMailSender verificationMailSender;
 
   @Test
-  @DisplayName("회사 정보를 등록할 수 있다.")
+  @DisplayName("인증 정보를 등록할 수 있다.")
   void registerCertificationTest() {
     // given
-    User user = user();
-    Long userId = user.getId();
+    Long userId = 1L;
     String companyName = companyName();
     String email = email();
     String departmentName = department().name();
-    File file = mock();
-    String businessCardUrl = businessCardUrl();
+    File businessCardImage = Instancio.create(File.class);
+    String expectedImageUrl = businessCardUrl();
 
-    MockedStatic<FileUtils> fileUtils = mockStatic(FileUtils.class);
-    fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
-
-    given(mediaManager.generateKey(any())).willReturn("someKey");
-    given(mediaManager.getUrl(any())).willReturn(businessCardUrl);
-    given(userQuery.getUserById(userId)).willReturn(user);
+    given(businessCardImageUploader.uploadBusinessCardImage(any(File.class)))
+        .willReturn(expectedImageUrl);
 
     // when
-    certificationService.registerCertification(userId, companyName, email, departmentName, file);
+    certificationService.registerCertification(userId, companyName, email, departmentName,
+        businessCardImage);
 
     // then
-    then(mediaManager).should().generateKey(any());
-    then(mediaManager).should().upload(any(), any());
-    then(certificationCommand).should().createCertification(any(), any(), any(), any(), any());
-
-    fileUtils.close();
+    then(certificationCommand).should(only()).createCertification(eq(userId), eq(companyName),
+        any(CompanyEmail.class), any(Department.class), eq(expectedImageUrl));
   }
 
   @Test
-  @DisplayName("회사 정보를 수정할 수 있다.")
+  @DisplayName("인증 정보를 수정할 수 있다.")
   void updateCertificationTest() {
     // given
-    User user = user();
-    Long userId = user.getId();
+    long userId = 1L;
     String companyName = companyName();
     String email = email();
     String departmentName = department().name();
-    File file = mock();
-    String businessCardUrl = businessCardUrl();
+    File businessCardImage = Instancio.create(File.class);
+    String expectedImageUrl = businessCardUrl();
 
-    MockedStatic<FileUtils> fileUtils = mockStatic(FileUtils.class);
-    fileUtils.when(() -> FileUtils.delete(file)).then(invocation -> null);
-
-    given(mediaManager.generateKey(any())).willReturn("someKey");
-    given(mediaManager.getUrl(any())).willReturn(businessCardUrl);
-    given(userQuery.getUserById(userId)).willReturn(user);
+    given(businessCardImageUploader.uploadBusinessCardImage(any(File.class))).willReturn(
+        expectedImageUrl);
 
     // when
-    certificationService.updateCertification(userId, companyName, email, departmentName, file);
+    certificationService.updateCertification(userId, companyName, email, departmentName,
+        businessCardImage);
 
-    // then
-
-    then(mediaManager).should().upload(any(), any());
-    then(certificationCommand).should().deleteCertification(any());
-    then(certificationCommand).should()
-        .createCertification(any(), any(), any(), any(), any());
-
-    fileUtils.close();
+    //then
+    then(businessCardImageDeleter).should(only()).deleteBusinessCardImageByUserId(userId);
+    then(certificationCommand).should(only()).updateCertification(eq(userId), eq(companyName),
+        any(CompanyEmail.class), any(Department.class), eq(expectedImageUrl));
   }
 
   @Test
   @DisplayName("회사 인증 메일을 전송할 수 있다.")
   void sendVerificationMailTest() {
     // given
+    Long userId = 1L;
     String email = email();
-    User user = user();
-    Long userId = user.getId();
+    String verificationCode = verificationCode();
+
+    given(verificationCodeGenerator.generateVerificationCode()).willReturn(verificationCode);
 
     // when
     certificationService.sendVerificationMail(userId, email);
 
     // then
-    then(certificationCommand).should(only()).hasDuplicatedCompanyEmail(any());
-    then(emailSender).should(only()).sendVerificationCode(any(), anyString());
-    then(emailVerificationCommand).should(only())
-        .createEmailVerification(anyLong(), any(), anyString());
+    then(companyEmailValidator).should(only())
+        .validateDuplicatedCompanyEmail(any(CompanyEmail.class));
+    then(verificationMailSender).should(only())
+        .sendVerificationMail(any(CompanyEmail.class), eq(verificationCode));
+    then(verificationInfoCommand).should(only())
+        .createVerificationInfo(eq(userId), any(CompanyEmail.class), eq(verificationCode));
   }
 
   @Test
   @DisplayName("인증 코드를 비교할 수 있다.")
   void compareCodeTest() {
     // given
-    Long userId = Instancio.create(Long.class);
-    String verificationCode = verificationCode();
-    given(emailVerificationQuery.getCodeById(userId)).willReturn(verificationCode);
+    Long userId = 1L;
+    String userInputCode = "123456";
+    String actualVerificationCode = "123456";
 
-    // when, then
-    assertThatCode(() -> certificationService.compareCode(userId, verificationCode))
-        .doesNotThrowAnyException();
-  }
+    given(verificationInfoQuery.getVerificationCodeById(userId)).willReturn(actualVerificationCode);
 
-  @Test
-  @DisplayName("인증 코드가 일치하지 않다면 예외를 던진다.")
-  void compareCodeFailTest() {
-    // given
-    Long userId = Instancio.create(Long.class);
-    String correctCode = "correctCode";
-    String verificationCode = verificationCode();
-    given(emailVerificationQuery.getCodeById(userId)).willReturn(correctCode);
+    // when
+    certificationService.compareCode(userId, userInputCode);
 
-    // when, then
-    assertThatThrownBy(() -> certificationService.compareCode(userId, verificationCode))
-        .isInstanceOf(InvalidInputException.class);
+    // then
+    then(verificationCodeValidator).should(only())
+        .validateVerificationCode(eq(actualVerificationCode), eq(userInputCode));
   }
 
   @Test
   @DisplayName("미인증 사용자 요청을 페이지로 가져올 수 있다.")
   void getUncertifiedUserRequestsTest() {
     // given
-    Pageable pageable = mock(Pageable.class);
-    List<Certification> certificationList = certifications();
-    Page<Certification> pendingCertificationPage = new PageImpl<>(certificationList);
+    Pageable pageable = certificationPageable();
+    Page<Certification> certificationPage = pendingCertificationPage(
+        pageable.getPageSize());
 
-    given(certificationQuery.getPendingCertification(pageable)).willReturn(
-        pendingCertificationPage);
+    given(certificationQuery.getPendingCertification(any(Pageable.class))).willReturn(
+        certificationPage);
 
     // when
     PendingCertificationPageDto result = certificationService.getUncertifiedUserRequests(pageable);
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.page().getContent()).hasSize(certificationList.size());
+    assertThat(result.page()).hasSize(certificationPage.getSize());
   }
 
 }

@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
-import coffeemeet.server.common.fixture.entity.InquiryFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
+import coffeemeet.server.common.fixture.InquiryFixture;
 import coffeemeet.server.inquiry.presentation.dto.InquiryHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import com.epages.restdocs.apispec.Schema;
@@ -42,7 +42,7 @@ class InquiryControllerTest extends ControllerTestConfig {
     // given
     Long inquirerId = 1L;
     InquiryHTTP.Request request = InquiryFixture.request();
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
 
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(inquirerId);

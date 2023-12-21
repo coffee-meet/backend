@@ -20,7 +20,7 @@ public class ReportQueryRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public Optional<Report> findById(long reportId) {
+  public Optional<Report> findById(Long reportId) {
     QReport report = QReport.report;
     Report foundReport = jpaQueryFactory
         .selectFrom(report)
@@ -55,7 +55,7 @@ public class ReportQueryRepository {
         .fetch();
   }
 
-  public List<Report> findByTargetIdAndChattingRoomId(long targetId, long chattingRoomId) {
+  public List<Report> findByTargetIdAndChattingRoomId(Long targetId, Long chattingRoomId) {
     QReport report = QReport.report;
     return jpaQueryFactory
         .selectFrom(report)

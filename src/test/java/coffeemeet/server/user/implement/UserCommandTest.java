@@ -1,7 +1,7 @@
 package coffeemeet.server.user.implement;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.token;
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.token;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_CONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;

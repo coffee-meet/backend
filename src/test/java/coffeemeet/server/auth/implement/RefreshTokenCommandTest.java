@@ -7,7 +7,7 @@ import static org.mockito.Mockito.only;
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.auth.infrastructure.RefreshTokenRepository;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ class RefreshTokenCommandTest {
   @Test
   void createRefreshTokenTest() {
     // given
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
 
     // when
     refreshTokenCommand.createRefreshToken(refreshToken);

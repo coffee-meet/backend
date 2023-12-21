@@ -1,12 +1,12 @@
 package coffeemeet.server.certification.presentation;
 
-import static coffeemeet.server.common.fixture.dto.RefreshTokenFixture.refreshToken;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyName;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.department;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.emailDtoRequest;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.userId;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCodeDtoRequest;
+import static coffeemeet.server.common.fixture.AuthFixture.refreshToken;
+import static coffeemeet.server.common.fixture.CertificationFixture.companyName;
+import static coffeemeet.server.common.fixture.CertificationFixture.department;
+import static coffeemeet.server.common.fixture.CertificationFixture.email;
+import static coffeemeet.server.common.fixture.CertificationFixture.emailDtoRequest;
+import static coffeemeet.server.common.fixture.CertificationFixture.userId;
+import static coffeemeet.server.common.fixture.CertificationFixture.verificationCodeDtoRequest;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.anyLong;

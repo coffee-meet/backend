@@ -1,8 +1,12 @@
 package coffeemeet.server.matching.service;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.certificatedCertifications;
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.entity.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.CertificationFixture.certificatedCertifications;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.userExcludingStatus;
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -12,7 +16,8 @@ import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.common.implement.FCMNotificationSender;
+import coffeemeet.server.common.execption.BadRequestException;
+import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.matching.implement.MatchingQueueQuery;
 import coffeemeet.server.user.domain.NotificationInfo;
@@ -68,8 +73,8 @@ class MatchingServiceTest {
     User requestedUser = users.get(0);
     Certification requestedUsersCertification = certifications.get(0);
     ChattingRoom chattingRoom = chattingRoom();
-    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo).collect(
-        Collectors.toSet());
+    Set<NotificationInfo> notificationInfos = users.stream().map(User::getNotificationInfo)
+        .collect(Collectors.toSet());
 
     given(certificationQuery.getCertificationByUserId(requestedUser.getId())).willReturn(
         requestedUsersCertification);
@@ -78,8 +83,7 @@ class MatchingServiceTest {
     given(matchingQueueQuery.dequeueMatchingGroupSize(companyName, users.size())).willReturn(
         fourUsers().stream().map(User::getId).collect(Collectors.toSet()));
     given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
-    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(
-        notificationInfos);
+    given(userQuery.getNotificationInfosByIdSet(userIds)).willReturn(notificationInfos);
 
     // when
     matchingService.startMatching(requestedUser.getId());
@@ -90,25 +94,40 @@ class MatchingServiceTest {
     then(userCommand).should().setToMatching(requestedUser.getId());
     then(userCommand).should().assignUsersToChattingRoom(userIds, chattingRoom);
     then(fcmNotificationSender).should()
-        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!",
-            "chattingRoomId", String.valueOf(chattingRoom.getId()));
+        .sendMultiNotificationsWithData(notificationInfos, "두근두근 커피밋 채팅을 시작하세요!", "chattingRoomId",
+            String.valueOf(chattingRoom.getId()));
   }
 
   @Test
   @DisplayName("매칭을 취소할 수 있다.")
-  void cancelMatching() {
+  void cancelMatchingTest() {
     // given
-    Long userId = 1L;
+    User user = user(MATCHING);
     String companyName = "회사명";
 
-    given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
-    willDoNothing().given(matchingQueueCommand).deleteUserByUserId(companyName, userId);
+    given(userQuery.getUserById(user.getId())).willReturn(user);
+    given(certificationQuery.getCompanyNameByUserId(user.getId())).willReturn(companyName);
+    willDoNothing().given(matchingQueueCommand).deleteUserByUserId(companyName, user.getId());
 
     // when
-    matchingService.cancelMatching(userId);
+    matchingService.cancelMatching(user.getId());
 
     // then
-    then(userCommand).should(only()).setToIdle(userId);
+    then(userCommand).should(only()).setToIdle(user.getId());
+  }
+
+  @Test
+  @DisplayName("MATCHING 상태가 아닐 때 매칭을 취소하면 예외가 발생 한다.")
+  void cancelMatchingTest_BadRequestException() {
+    // given
+    User user = userExcludingStatus(MATCHING);
+    Long userId = user.getId();
+
+    given(userQuery.getUserById(userId)).willReturn(user);
+
+    // when, then
+    assertThatThrownBy(() -> matchingService.cancelMatching(userId))
+        .isInstanceOf(BadRequestException.class);
   }
 
 }

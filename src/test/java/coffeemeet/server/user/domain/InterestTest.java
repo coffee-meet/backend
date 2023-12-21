@@ -1,6 +1,6 @@
 package coffeemeet.server.user.domain;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.DisplayName;

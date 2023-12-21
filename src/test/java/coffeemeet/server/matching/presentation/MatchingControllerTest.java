@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.common.config.ControllerTestConfig;
-import coffeemeet.server.common.fixture.dto.RefreshTokenFixture;
+import coffeemeet.server.common.fixture.AuthFixture;
 import coffeemeet.server.matching.service.MatchingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class MatchingControllerTest extends ControllerTestConfig {
 
   @BeforeEach
   void setUp() {
-    RefreshToken refreshToken = RefreshTokenFixture.refreshToken();
+    RefreshToken refreshToken = AuthFixture.refreshToken();
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
   }
 
@@ -37,7 +37,7 @@ class MatchingControllerTest extends ControllerTestConfig {
   @DisplayName("매칭 시작 요청을 처리할 수 있다.")
   void startTest() throws Exception {
     // given
-    long userId = 1;
+    Long userId = 1L;
     willDoNothing().given(matchingService).startMatching(userId);
 
     // when, then
@@ -59,7 +59,7 @@ class MatchingControllerTest extends ControllerTestConfig {
   @DisplayName("매칭 취소 요청을 처리할 수 있다.")
   void cancelTest() throws Exception {
     // given
-    long userId = 1;
+    Long userId = 1L;
     willDoNothing().given(matchingService).cancelMatching(userId);
 
     // when, then

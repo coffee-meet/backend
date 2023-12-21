@@ -1,15 +1,14 @@
 package coffeemeet.server.common.implement;
 
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.companyEmail;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.email;
-import static coffeemeet.server.common.fixture.entity.CertificationFixture.verificationCode;
+import static coffeemeet.server.common.fixture.CertificationFixture.email;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
-import coffeemeet.server.certification.domain.CompanyEmail;
+import coffeemeet.server.common.infrastructure.EmailSender;
 import java.util.Objects;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,14 +40,15 @@ class EmailSenderTest {
   }
 
   @Test
-  @DisplayName("인증코드가 포함된 메일을 보낼 수 있다.")
+  @DisplayName("메일을 보낼 수 있다.")
   void sendVerificationCodeTest() {
     // given
-    CompanyEmail companyEmail = companyEmail();
-    String verificationCode = verificationCode();
+    String email = email();
+    String subject = Instancio.create(String.class);
+    String body = Instancio.create(String.class);
 
     // when
-    emailSender.sendVerificationCode(companyEmail, verificationCode);
+    emailSender.sendEmail(email, subject, body);
 
     // then
     then(javaMailSender).should(only()).send(simpleMailMessage.capture());
@@ -56,9 +56,8 @@ class EmailSenderTest {
     SimpleMailMessage sentMailMessage = simpleMailMessage.getValue();
     assertAll(
         () -> assertThat(sentMailMessage.getFrom()).isEqualTo(sender),
-        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(
-            companyEmail.getValue()),
-        () -> assertThat(sentMailMessage.getText()).contains(verificationCode)
+        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(email),
+        () -> assertThat(sentMailMessage.getText()).contains(body)
     );
   }
 }

@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import java.util.Date;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthTokensGeneratorTest {
 
-  private static final Long accessTokenExpireTime = 1800L;
-  private static final Long refreshTokenExpireTime = 3600L;
+  private static final long accessTokenExpireTime = 1800;
+  private static final long refreshTokenExpireTime = 3600;
   private static final String BEARER_TYPE = "Bearer ";
   private static final String ACCESS_TOKEN = "accessToken";
   private static final String REFRESH_TOKEN = "refreshToken";
@@ -48,7 +49,7 @@ class AuthTokensGeneratorTest {
         REFRESH_TOKEN);
 
     // when
-    AuthTokens authTokens = authTokensGenerator.generate((long) Math.random());
+    AuthTokens authTokens = authTokensGenerator.generate(Instancio.create(Long.class));
 
     // then
     assertAll(
@@ -65,7 +66,8 @@ class AuthTokensGeneratorTest {
         REFRESH_TOKEN);
 
     // when
-    AuthTokens authTokens = authTokensGenerator.reissueAccessToken((long) Math.random(),
+    AuthTokens authTokens = authTokensGenerator.reissueAccessToken(
+        Instancio.create(Long.class),
         REFRESH_TOKEN);
 
     // then

@@ -1,6 +1,6 @@
 package coffeemeet.server.user.implement;
 
-import static coffeemeet.server.common.fixture.entity.UserFixture.user;
+import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -129,7 +129,6 @@ class UserQueryTest {
     OAuthInfo oauthInfo = user.getOauthInfo();
 
     given(userRepository.existsUserByOauthInfo(any())).willReturn(Boolean.TRUE);
-    given(userRepository.findByOauthInfo(any())).willReturn(Optional.of(user));
 
     // when, then
     assertTrue(userQuery.isRegistered(oauthInfo));
@@ -167,8 +166,9 @@ class UserQueryTest {
     List<User> foundUsers = userQuery.getUsersByRoom(chattingRoom);
 
     // then
-    assertThat(foundUsers).hasSize(2);
-    assertThat(foundUsers).contains(user, user1);
+    assertThat(foundUsers)
+        .hasSize(2)
+        .contains(user, user1);
   }
 
   @Test

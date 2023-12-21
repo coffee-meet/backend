@@ -23,7 +23,7 @@ public final class FileUtils {
     }
   }
 
-  public static void delete(File file) {
+  public static void deleteTempFile(File file) {
     try {
       Files.delete(file.toPath());
     } catch (IOException e) {

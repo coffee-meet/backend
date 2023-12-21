@@ -1,6 +1,6 @@
 package coffeemeet.server.chatting.current.implement;
 
-import static coffeemeet.server.common.fixture.entity.ChattingFixture.chattingSession;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingSession;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
