@@ -6,7 +6,6 @@ import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class ChattingMessageHistoryQueryRepository {
         .orderBy(chattingMessageHistory.id.desc())
         .limit(pageSize)
         .fetch();
-    Collections.sort(messages, Comparator.comparingLong(m -> m.getId()));
+    messages.sort(Comparator.comparingLong(ChattingMessageHistory::getId));
     return messages;
   }
 
