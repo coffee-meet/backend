@@ -51,7 +51,7 @@ public class ReportQueryRepository {
   }
 
   private BooleanExpression gtReportId(Long reportId) {
-    if (reportId == null || reportId == 0L) {
+    if (reportId == null) {
       return null;
     }
     return report.id.gt(reportId);

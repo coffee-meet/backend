@@ -29,7 +29,7 @@ public class ChattingMessageQueryRepository {
         .orderBy(chattingMessage.id.desc())
         .limit(pageSize)
         .fetch();
-    Collections.sort(messages, Comparator.comparingLong(m -> m.getId()));
+    messages.sort(Comparator.comparingLong(ChattingMessage::getId));
     return messages;
   }
 

@@ -28,7 +28,7 @@ public class InquiryQueryRepository {
   }
 
   private BooleanExpression gtInquiryId(Long inquiryId) {
-    if (inquiryId == null || inquiryId == 0L) {
+    if (inquiryId == null) {
       return null;
     }
     return inquiry.id.gt(inquiryId);
