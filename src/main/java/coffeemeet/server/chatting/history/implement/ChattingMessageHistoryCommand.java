@@ -18,4 +18,8 @@ public class ChattingMessageHistoryCommand {
     chattingMessageHistoryRepository.saveAll(messages);
   }
 
+  public void createChattingMessageHistoryBatch(List<ChattingMessageHistory> messages) {
+    chattingMessageHistoryRepository.saveAllInBatch(messages);
+  }
+
 }
