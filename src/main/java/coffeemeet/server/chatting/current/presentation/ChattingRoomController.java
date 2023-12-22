@@ -33,6 +33,12 @@ public class ChattingRoomController {
 
   @DeleteMapping("/{roomId}")
   public ResponseEntity<Void> exitChattingRoom(@PathVariable Long roomId) {
+    chattingRoomService.deleteChattingRoom2(roomId);
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/{roomId}/each")
+  public ResponseEntity<Void> exitChattingRoomEach(@PathVariable Long roomId) {
     chattingRoomService.deleteChattingRoom(roomId);
     return ResponseEntity.ok().build();
   }
