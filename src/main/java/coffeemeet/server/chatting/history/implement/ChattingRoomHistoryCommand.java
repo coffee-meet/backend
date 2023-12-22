@@ -15,7 +15,7 @@ public class ChattingRoomHistoryCommand {
   private final ChattingRoomHistoryRepository chattingRoomHistoryRepository;
 
   public ChattingRoomHistory createChattingRoomHistory(ChattingRoom chattingRoom) {
-    return chattingRoomHistoryRepository.save(
+    return chattingRoomHistoryRepository.saveAndFlush(
         new ChattingRoomHistory(chattingRoom.getId(), chattingRoom.getName()));
   }
 
