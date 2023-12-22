@@ -85,6 +85,29 @@ public class ChattingRoomService {
         users.stream().map(user -> new UserChattingHistory(user, chattingRoomHistory)).toList());
   }
 
+  @Transactional
+  public void deleteChattingRoom2(Long roomId) {
+    ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
+    List<User> users = userQuery.getUsersByRoom(chattingRoom);
+    List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
+    backUpChattingRoom2(allMessages, users, chattingRoom);
+    chattingRoomCommand.removeChattingRoom(chattingRoom);
+    sendChattingEndAlarm(users);
+    updateUserStatusToIdle(users);
+  }
+
+  private void backUpChattingRoom2(List<ChattingMessage> allMessages, List<User> users,
+      ChattingRoom chattingRoom) {
+    ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(
+        chattingRoom);
+    chattingMessageHistoryCommand.createChattingMessageHistoryBatch(allMessages.stream().map(
+            chattingMessage -> new ChattingMessageHistory(chattingMessage.getMessage(),
+                chattingRoomHistory, chattingMessage.getCreatedAt(), chattingMessage.getUser()))
+        .toList());
+    userChattingHistoryCommand.createUserChattingHistory(
+        users.stream().map(user -> new UserChattingHistory(user, chattingRoomHistory)).toList());
+  }
+
   private void updateUserStatusToIdle(List<User> users) {
     users.forEach(User::setIdleStatus);
   }
