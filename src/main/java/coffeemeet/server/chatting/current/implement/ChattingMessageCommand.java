@@ -26,7 +26,7 @@ public class ChattingMessageCommand {
   public void deleteAllChattingMessagesBy(ChattingRoom chattingRoom) {
     List<ChattingMessage> messages = chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(
         chattingRoom);
-    chattingMessageRepository.deleteAll(messages);
+    chattingMessageRepository.deleteAllInBatch(messages);
   }
 
 }
