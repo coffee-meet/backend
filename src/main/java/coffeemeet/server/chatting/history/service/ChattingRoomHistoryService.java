@@ -13,6 +13,7 @@ import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,11 +45,12 @@ public class ChattingRoomHistoryService {
         .toList();
   }
 
-  // TODO: 11/20/23 캐쉬 로직 적용
+  @Cacheable(value = "chattingMessageHistories", key = "{#roomHistoryId, #firstMessageId, #pageSize}")
   public ChattingHistoryListDto searchChattingMessageHistories(Long roomHistoryId,
       Long firstMessageId, int pageSize) {
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryQuery.getChattingRoomHistoryBy(
         roomHistoryId);
+    // TODO: 12/22/23 채팅방 3일 지난거면 응답 x 
     List<ChattingMessageHistory> messageHistories = chattingMessageHistoryQuery.getMessageHistories(
         chattingRoomHistory, firstMessageId,
         pageSize);
