@@ -14,6 +14,7 @@ import static org.mockito.BDDMockito.willThrow;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.fixture.ChattingFixture;
@@ -55,6 +56,9 @@ class ReportServiceTest {
 
   @Mock
   private UserChattingHistoryQuery userChattingHistoryQuery;
+
+  @Mock
+  private ChattingRoomHistoryQuery chattingRoomHistoryQuery;
 
   @DisplayName("신고할 수 있다.")
   @Test
