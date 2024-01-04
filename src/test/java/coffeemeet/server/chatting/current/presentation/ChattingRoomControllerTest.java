@@ -1,7 +1,9 @@
 package coffeemeet.server.chatting.current.presentation;
 
+import static coffeemeet.server.common.fixture.AuthFixture.refreshToken;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -18,6 +20,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import coffeemeet.server.auth.domain.RefreshToken;
 import coffeemeet.server.chatting.current.presentation.dto.ChattingCustomSlice;
 import coffeemeet.server.chatting.current.presentation.dto.ChattingRoomStatusHTTP;
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
@@ -38,37 +41,31 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
   @MockBean
   private ChattingRoomService chattingRoomService;
 
-  @DisplayName("채팅방 내역을 조회할 수 있다.")
   @Test
+  @DisplayName("채팅방 내역을 조회할 수 있다.")
   void viewChattingRoomMessagesTest() throws Exception {
     // given
-    Long userId = 1L;
+    RefreshToken refreshToken = refreshToken();
     Long roomId = 1L;
     Long firstMessageId = 51L;
     int pageSize = 50;
     ChattingListDto responses = ChattingFixture.chattingListDto();
     ChattingCustomSlice.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(responses);
 
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
-    given(chattingRoomService.searchMessages(roomId, firstMessageId, pageSize)).willReturn(
+    given(jwtTokenProvider.extractUserId(TOKEN_BODY)).willReturn(USER_ID);
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
+
+    given(chattingRoomService.searchMessages(USER_ID, roomId, firstMessageId, pageSize)).willReturn(
         responses);
 
     // when, then
-    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}", roomId)
-            .param("firstMessageId", String.valueOf(firstMessageId))
-            .header("Authorization", TOKEN)
-        )
-        .andDo(document("view-chatting-room",
-                resourceDetails().tag("채팅방").description("채팅방 조회")
-                    .responseSchema(Schema.schema(" ChatsHTTP.Response")),
-                preprocessRequest(prettyPrint()),
+    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}", roomId).param("firstMessageId",
+            String.valueOf(firstMessageId)).header("Authorization", TOKEN)).andDo(
+            document("view-chatting-room", resourceDetails().tag("채팅방").description("채팅방 조회")
+                    .responseSchema(Schema.schema(" ChatsHTTP.Response")), preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                ),
-                queryParameters(
-                    parameterWithName("firstMessageId").description("첫번째 메세지 아이디")
-                ),
+                requestHeaders(headerWithName("Authorization").description("토큰")),
+                queryParameters(parameterWithName("firstMessageId").description("첫번째 메세지 아이디")),
                 responseFields(
                     fieldWithPath("chats[]").type(JsonFieldType.ARRAY).description("메세지 리스트"),
                     fieldWithPath("chats[].userId").type(JsonFieldType.NUMBER).description("사용자 번호"),
@@ -76,67 +73,55 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
                         .description("프로필 이미지"),
                     fieldWithPath("chats[].messageId").type(JsonFieldType.NUMBER).description("메세지 번호"),
                     fieldWithPath("chats[].nickname").type(JsonFieldType.STRING).description("닉네임"),
-                    fieldWithPath("chats[].content").type(JsonFieldType.STRING)
-                        .description("내용"),
+                    fieldWithPath("chats[].content").type(JsonFieldType.STRING).description("내용"),
                     fieldWithPath("chats[].createdAt").type(JsonFieldType.STRING).description("생성 기간"),
-                    fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부")
-                )
-            )
-        )
+                    fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"))))
         .andExpect(content().string(objectMapper.writeValueAsString(chatsHTTPResponse)));
   }
 
-  @DisplayName("채팅방을 나갈 수 있다.")
   @Test
+  @DisplayName("채팅방을 나갈 수 있다.")
   void exitChattingRoomTest() throws Exception {
     // given
-    Long userId = 1L;
+    RefreshToken refreshToken = refreshToken();
+    Long requestUserId = 1L;
     Long roomId = 1L;
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
-    willDoNothing().given(chattingRoomService).deleteChattingRoom(roomId);
+    Long firstMessageId = 100L;
+
+    given(jwtTokenProvider.extractUserId(TOKEN_BODY)).willReturn(requestUserId);
+    given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
+    willDoNothing().given(chattingRoomService)
+        .exitChattingRoom(requestUserId, roomId, firstMessageId);
 
     // when, then
-    mockMvc.perform(delete("/api/v1/chatting/rooms/{roomId}", roomId)
-            .header("Authorization", TOKEN)
-        )
-        .andDo(document("exit-chatting-room",
-                resourceDetails().tag("채팅방").description("채팅방 나가기"),
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                )
-            )
-        )
+    mockMvc.perform(
+            delete("/api/v1/chatting/rooms/{roomId}?firstMessageId={firstMessageId}", roomId,
+                firstMessageId).header("Authorization", TOKEN)).andDo(
+            document("exit-chatting-room", resourceDetails().tag("채팅방").description("채팅방 나가기"),
+                preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                requestHeaders(headerWithName("Authorization").description("토큰")),
+                queryParameters(parameterWithName("firstMessageId").description("첫번째 메세지 아이디"))))
         .andExpect(status().isOk());
   }
 
-  @DisplayName("채팅방의 상태를 체크할 수 있다.")
   @Test
+  @DisplayName("채팅방의 상태를 체크할 수 있다.")
   void checkChattingRoomTest() throws Exception {
     // given
-    Long userId = 1L;
     Long roomId = 1L;
     ChattingRoomStatusDto chattingRoomStatusDto = ChattingFixture.chatRoomStatusDto();
     ChattingRoomStatusHTTP.Response response = ChattingFixture.chatRoomStatusHTTPResponse(
         chattingRoomStatusDto);
 
-    given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(userId);
     given(chattingRoomService.checkChattingRoomStatus(roomId)).willReturn(chattingRoomStatusDto);
 
     // when, then
-    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}/exist", roomId)
-            .header("Authorization", TOKEN)
-        )
-        .andDo(document("check-chatting-room-status",
-                resourceDetails().tag("채팅방").description("채팅방 상태 확인"),
-                preprocessRequest(prettyPrint()),
+    mockMvc.perform(
+            get("/api/v1/chatting/rooms/{roomId}/exist", roomId).header("Authorization", TOKEN)).andDo(
+            document("check-chatting-room-status",
+                resourceDetails().tag("채팅방").description("채팅방 상태 확인"), preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName("Authorization").description("토큰")
-                )
-            )
-        )
+                requestHeaders(headerWithName("Authorization").description("토큰"))))
         .andExpect(content().string(objectMapper.writeValueAsString(response)));
   }
 
