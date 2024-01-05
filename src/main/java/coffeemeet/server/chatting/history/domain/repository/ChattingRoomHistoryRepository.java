@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.history.infrastructure;
+package coffeemeet.server.chatting.history.domain.repository;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import java.util.Collection;
