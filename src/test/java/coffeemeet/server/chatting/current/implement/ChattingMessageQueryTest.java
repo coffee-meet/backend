@@ -35,7 +35,7 @@ class ChattingMessageQueryTest {
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
     given(
-        chattingMessageQueryRepository.findChattingMessagesLessThanMessageId(chattingRoom,
+        chattingMessageQueryRepository.findChattingMessagesLessThanCursorId(chattingRoom,
             messageId,
             pageSize)).willReturn(chattingMessages);
 
@@ -56,7 +56,7 @@ class ChattingMessageQueryTest {
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
     given(
-        chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToMessageId(chattingRoom,
+        chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToCursorId(chattingRoom,
             messageId, pageSize)).willReturn(chattingMessages);
 
     // when

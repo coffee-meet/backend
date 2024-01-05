@@ -19,12 +19,12 @@ public class ChattingMessageQueryRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public List<ChattingMessage> findChattingMessagesLessThanMessageId(ChattingRoom chattingRoom,
+  public List<ChattingMessage> findChattingMessagesLessThanCursorId(ChattingRoom chattingRoom,
       Long cursorId, int pageSize) {
     List<ChattingMessage> messages = jpaQueryFactory
         .selectFrom(chattingMessage)
         .where(chattingMessage.chattingRoom.eq(chattingRoom)
-            .and(ltChattingMessageId(cursorId)))
+            .and(ltChattingCursorId(cursorId)))
         .orderBy(chattingMessage.id.desc())
         .limit(pageSize)
         .fetch();
@@ -33,30 +33,30 @@ public class ChattingMessageQueryRepository {
     return messages;
   }
 
-  public List<ChattingMessage> findChattingMessagesLessThanOrEqualToMessageId(
+  public List<ChattingMessage> findChattingMessagesLessThanOrEqualToCursorId(
       ChattingRoom chattingRoom,
       Long cursorId, int pageSize) {
     return jpaQueryFactory
         .selectFrom(chattingMessage)
         .where(chattingMessage.chattingRoom.eq(chattingRoom)
-            .and(loeChattingMessageId(cursorId)))
+            .and(loeChattingCursorId(cursorId)))
         .orderBy(chattingMessage.id.desc())
         .limit(pageSize)
         .fetch();
   }
 
-  private BooleanExpression ltChattingMessageId(Long chattingMessageId) {
-    if (chattingMessageId == null || chattingMessageId == 0L) {
+  private BooleanExpression ltChattingCursorId(Long cursorId) {
+    if (cursorId == null || cursorId == 0L) {
       return null;
     }
-    return chattingMessage.id.lt(chattingMessageId);
+    return chattingMessage.id.lt(cursorId);
   }
 
-  private BooleanExpression loeChattingMessageId(Long chattingMessageId) {
-    if (chattingMessageId == null || chattingMessageId == 0L) {
+  private BooleanExpression loeChattingCursorId(Long cursorId) {
+    if (cursorId == null || cursorId == 0L) {
       return null;
     }
-    return chattingMessage.id.loe(chattingMessageId);
+    return chattingMessage.id.loe(cursorId);
   }
 
 }

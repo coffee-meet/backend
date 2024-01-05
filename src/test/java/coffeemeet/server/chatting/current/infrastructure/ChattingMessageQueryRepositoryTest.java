@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
 
   @Autowired
-  EntityManager entityManager;
+  private EntityManager entityManager;
   @Autowired
   private ChattingMessageRepository chattingMessageRepository;
   @Autowired
@@ -67,15 +67,14 @@ class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
     }
 
     // when
-    List<ChattingMessage> responses = chattingMessageQueryRepository.findChattingMessagesLessThanMessageId(
+    List<ChattingMessage> responses = chattingMessageQueryRepository.findChattingMessagesLessThanCursorId(
         room,
         cursorId, pageSize);
 
     // then
-    int lastIndex = responses.size() - 1;
     assertAll(
         () -> assertThat(responses).hasSize(pageSize),
-        () -> assertThat(responses.get(lastIndex).getId()).isEqualTo(cursorId - 1)
+        () -> assertThat(responses).allMatch(message -> message.getId() < cursorId)
     );
   }
 
@@ -93,11 +92,10 @@ class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
     int pageSize = 50;
 
     // when
-    List<ChattingMessage> responses = chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToMessageId(
+    List<ChattingMessage> responses = chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToCursorId(
         room, cursorId, pageSize);
 
     // then
-    int lastIndex = responses.size() - 1;
     assertAll(
         () -> assertThat(responses).hasSize(pageSize),
         () -> assertThat(responses).allMatch(message -> message.getId() <= cursorId)

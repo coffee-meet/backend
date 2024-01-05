@@ -18,7 +18,7 @@ public class ChattingMessageQuery {
   public List<ChattingMessage> getChattingMessagesLessThanMessageId(ChattingRoom chattingRoom,
       Long messageId,
       int pageSize) {
-    return chattingMessageQueryRepository.findChattingMessagesLessThanMessageId(chattingRoom,
+    return chattingMessageQueryRepository.findChattingMessagesLessThanCursorId(chattingRoom,
         messageId,
         pageSize);
   }
@@ -27,7 +27,7 @@ public class ChattingMessageQuery {
       ChattingRoom chattingRoom,
       Long messageId,
       int pageSize) {
-    return chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToMessageId(
+    return chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToCursorId(
         chattingRoom,
         messageId, pageSize);
   }
