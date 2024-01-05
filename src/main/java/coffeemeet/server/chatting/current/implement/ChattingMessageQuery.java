@@ -15,14 +15,21 @@ public class ChattingMessageQuery {
 
   private final ChattingMessageQueryRepository chattingMessageQueryRepository;
 
-  public List<ChattingMessage> findMessages(ChattingRoom chattingRoom, Long firstMessageId,
+  public List<ChattingMessage> getChattingMessagesLessThanMessageId(ChattingRoom chattingRoom,
+      Long messageId,
       int pageSize) {
-    return chattingMessageQueryRepository.findChattingMessages(chattingRoom, firstMessageId,
+    return chattingMessageQueryRepository.findChattingMessagesLessThanMessageId(chattingRoom,
+        messageId,
         pageSize);
   }
 
-  public List<ChattingMessage> findAllMessages(ChattingRoom chattingRoom) {
-    return chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(chattingRoom);
+  public List<ChattingMessage> getChattingMessagesLessThanOrEqualToMessageId(
+      ChattingRoom chattingRoom,
+      Long messageId,
+      int pageSize) {
+    return chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToMessageId(
+        chattingRoom,
+        messageId, pageSize);
   }
 
 }
