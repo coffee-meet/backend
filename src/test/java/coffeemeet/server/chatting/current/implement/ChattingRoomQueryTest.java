@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingRoomRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.common.fixture.ChattingFixture;

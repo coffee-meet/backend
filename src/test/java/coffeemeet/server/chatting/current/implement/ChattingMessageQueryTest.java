@@ -25,41 +25,43 @@ class ChattingMessageQueryTest {
   @Mock
   private ChattingMessageQueryRepository chattingMessageQueryRepository;
 
-  @DisplayName("채팅 메세지를 조회할 수 있다.")
+  @DisplayName("Cursor id보다 작은 채팅 메세지를 페이지 조회할 수 있다.")
   @Test
   void findMessagesTest() {
     // given
     int pageSize = 50;
-    Long firstMessageId = 51L;
+    Long messageId = 51L;
 
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(50);
-    given(chattingMessageQueryRepository.findChattingMessages(chattingRoom, firstMessageId,
-        pageSize)).willReturn(chattingMessages);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
+    given(
+        chattingMessageQueryRepository.findChattingMessagesLessThanMessageId(chattingRoom, messageId,
+            pageSize)).willReturn(chattingMessages);
 
     // when
-    List<ChattingMessage> messages = chattingMessageQuery.findMessages(chattingRoom, firstMessageId,
-        pageSize);
+    List<ChattingMessage> messages = chattingMessageQuery.getChattingMessagesLessThanMessageId(
+        chattingRoom, messageId, pageSize);
 
     // then
     assertThat(messages).isEqualTo(chattingMessages);
   }
 
-  @DisplayName("전체 채팅 메세지를 조회할 수 있다.")
+  @DisplayName("Cursor id와 같거나 작은 채팅 메세지를 페이지 조회할 수 있다.")
   @Test
   void findAllMessagesTest() {
     // given
-    int size = 10;
+    int pageSize = 50;
+    Long messageId = 50L;
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(size);
+    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
+    given(chattingMessageQueryRepository.findChattingMessagesLessThanOrEqualToMessageId(chattingRoom,
+        messageId, pageSize)).willReturn(chattingMessages);
 
     // when
-    given(chattingMessageQueryRepository.findAllChattingMessagesByChattingRoom(
-        chattingRoom)).willReturn(
-        chattingMessages);
+    List<ChattingMessage> allMessages = chattingMessageQuery.getChattingMessagesLessThanOrEqualToMessageId(
+        chattingRoom, messageId, pageSize);
 
     // then
-    List<ChattingMessage> allMessages = chattingMessageQuery.findAllMessages(chattingRoom);
     Assertions.assertThat(allMessages).isEqualTo(chattingMessages);
   }
 

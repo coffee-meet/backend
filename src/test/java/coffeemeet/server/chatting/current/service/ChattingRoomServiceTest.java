@@ -16,11 +16,11 @@ import coffeemeet.server.chatting.current.implement.ChattingMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomNotificationSender;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.implement.ChattingRoomUserValidator;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.common.fixture.ChattingFixture;
-import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.Comparator;
@@ -52,6 +52,8 @@ class ChattingRoomServiceTest {
   private ChattingRoomNotificationSender chattingRoomNotificationSender;
   @Mock
   private UserQuery userQuery;
+  @Mock
+  private ChattingRoomUserValidator chattingRoomUserValidator;
 
   @DisplayName("채팅방을 만들 수 있다.")
   @Test
@@ -130,6 +132,8 @@ class ChattingRoomServiceTest {
     chattingRoomService.exitChattingRoom(requestUserId, roomId, firstMessageId);
 
     // then
+    then(chattingRoomUserValidator).should()
+        .validateUserInChattingRoom(requestUserId, chattingRoomUsers);
     then(chattingMigrationProcessor).should()
         .migrateChattingMessagesToHistoryInChattingRoom(chattingRoom, chattingRoomHistory,
             firstMessageId);
