@@ -6,7 +6,6 @@ import coffeemeet.server.chatting.history.infrastructure.ChattingMessageHistoryR
 import coffeemeet.server.inquiry.infrastructure.InquiryQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +45,8 @@ public class RepositoryTestConfig {
     }
 
     @Bean
-    public ChattingMessageHistoryRepositoryImpl chattingMessageHistoryRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public ChattingMessageHistoryRepositoryImpl chattingMessageHistoryRepositoryImpl(
+        JdbcTemplate jdbcTemplate) {
       return new ChattingMessageHistoryRepositoryImpl(jdbcTemplate);
     }
 

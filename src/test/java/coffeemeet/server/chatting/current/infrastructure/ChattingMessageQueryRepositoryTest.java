@@ -26,19 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 class ChattingMessageQueryRepositoryTest extends RepositoryTestConfig {
 
   @Autowired
+  EntityManager entityManager;
+  @Autowired
   private ChattingMessageRepository chattingMessageRepository;
-
   @Autowired
   private ChattingMessageQueryRepository chattingMessageQueryRepository;
-
   @Autowired
   private ChattingRoomRepository chattingRoomRepository;
-
   @Autowired
   private UserRepository userRepository;
-
-  @Autowired
-  EntityManager entityManager;
 
   @BeforeEach
   void setUp() {

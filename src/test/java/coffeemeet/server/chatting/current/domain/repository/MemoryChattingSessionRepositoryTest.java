@@ -4,7 +4,6 @@ import static coffeemeet.server.common.fixture.ChattingFixture.chattingSession;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.domain.repository.MemoryChattingSessionRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

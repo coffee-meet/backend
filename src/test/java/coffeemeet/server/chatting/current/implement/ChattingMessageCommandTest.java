@@ -1,14 +1,13 @@
 package coffeemeet.server.chatting.current.implement;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.chatting.current.infrastructure.ChattingMessageQueryRepository;
 import coffeemeet.server.chatting.current.domain.repository.ChattingMessageRepository;
+import coffeemeet.server.chatting.current.infrastructure.ChattingMessageQueryRepository;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.user.domain.User;
