@@ -41,9 +41,9 @@ public class ChattingMigrationProcessor {
     return chattingRoomHistory;
   }
 
-  public void migrateChattingMessagesToHistoryInChattingRoom(ChattingRoom chattingRoom,
-      ChattingRoomHistory chattingRoomHistory, Long firstMessageId) {
-    Long messageId = firstMessageId;
+  public void migrateChattingMessagesToHistoryInChattingRoom(final ChattingRoom chattingRoom,
+      final ChattingRoomHistory chattingRoomHistory, final Long chattingRoomLastMessageId) {
+    Long messageId = chattingRoomLastMessageId;
     while (true) {
       List<ChattingMessage> messages = chattingMessageQuery.getChattingMessagesLessThanOrEqualToMessageId(
           chattingRoom, messageId,

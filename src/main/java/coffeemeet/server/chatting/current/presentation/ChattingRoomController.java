@@ -27,10 +27,10 @@ public class ChattingRoomController {
   public ResponseEntity<ChattingCustomSlice.Response> viewChattingRoomMessages(
       @Login AuthInfo authInfo,
       @PathVariable Long roomId,
-      @RequestParam Long firstMessageId,
+      @RequestParam Long lastMessageId,
       @RequestParam(defaultValue = "50") int pageSize) {
     ChattingListDto responses = chattingRoomService.searchMessages(authInfo.userId(), roomId,
-        firstMessageId,
+        lastMessageId,
         pageSize);
     return ResponseEntity.ok(ChattingCustomSlice.Response.from(responses));
   }
@@ -39,9 +39,9 @@ public class ChattingRoomController {
   public ResponseEntity<Void> exitChattingRoom(
       @Login AuthInfo authInfo,
       @PathVariable Long roomId,
-      @RequestParam Long firstMessageId
+      @RequestParam Long chattingRoomLastMessageId
   ) {
-    chattingRoomService.exitChattingRoom(authInfo.userId(), roomId, firstMessageId);
+    chattingRoomService.exitChattingRoom(authInfo.userId(), roomId, chattingRoomLastMessageId);
     return ResponseEntity.ok().build();
   }
 

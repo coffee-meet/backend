@@ -39,14 +39,14 @@ public class ChattingRoomService {
   }
 
   @Transactional
-  public ChattingListDto searchMessages(Long requestedUserId, Long roomId, Long firstMessageId,
+  public ChattingListDto searchMessages(Long requestedUserId, Long roomId, Long lastMessageId,
       int pageSize) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> chattingRoomUsers = userQuery.getUsersByRoom(chattingRoom);
     chattingRoomUserValidator.validateUserInChattingRoom(requestedUserId, chattingRoomUsers);
 
     List<ChattingMessage> chattingMessages = chattingMessageQuery.getChattingMessagesLessThanMessageId(
-        chattingRoom, firstMessageId, pageSize);
+        chattingRoom, lastMessageId, pageSize);
     boolean hasNext = chattingMessages.size() >= pageSize;
 
     List<Chatting> chattingList = chattingMessages.stream()
@@ -55,7 +55,7 @@ public class ChattingRoomService {
   }
 
   @Transactional
-  public void exitChattingRoom(Long requestUserId, Long roomId, Long firstMessageId) {
+  public void exitChattingRoom(Long requestUserId, Long roomId, Long chattingRoomLastMessageId) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> chattingRoomUsers = userQuery.getUsersByRoom(chattingRoom);
     chattingRoomUserValidator.validateUserInChattingRoom(requestUserId, chattingRoomUsers);
@@ -64,7 +64,7 @@ public class ChattingRoomService {
         chattingRoom, chattingRoomUsers);
     chattingMigrationProcessor.migrateChattingMessagesToHistoryInChattingRoom(chattingRoom,
         chattingRoomHistory,
-        firstMessageId);
+        chattingRoomLastMessageId);
     chattingMigrationProcessor.deleteChattingRoom(chattingRoom, chattingRoomUsers);
 
     Set<NotificationInfo> notificationInfos = chattingRoomUsers.stream()
