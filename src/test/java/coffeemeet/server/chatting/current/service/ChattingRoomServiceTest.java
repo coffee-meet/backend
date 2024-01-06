@@ -72,7 +72,7 @@ class ChattingRoomServiceTest {
   @DisplayName("채팅 메세지를 조회할 수 있다.")
   @ParameterizedTest
   @CsvSource(value = {"51, 50"})
-  void searchMessagesTest(Long firstMessageId, int pageSize) {
+  void searchMessagesTest(Long lastMessageId, int pageSize) {
     // given
     ChattingRoom chattingRoom = chattingRoom();
     Long chattingRoomId = chattingRoom.getId();
@@ -88,13 +88,13 @@ class ChattingRoomServiceTest {
 
     given(chattingRoomQuery.getChattingRoomById(chattingRoomId)).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(chattingRoomUsers);
-    given(chattingMessageQuery.getChattingMessagesLessThanMessageId(chattingRoom, firstMessageId,
+    given(chattingMessageQuery.getChattingMessagesLessThanMessageId(chattingRoom, lastMessageId,
         pageSize)).willReturn(
         chattingMessages);
 
     // when
     ChattingListDto responses = chattingRoomService.searchMessages(requestUserId, chattingRoomId,
-        firstMessageId,
+        lastMessageId,
         pageSize);
 
     // then
@@ -120,7 +120,7 @@ class ChattingRoomServiceTest {
     int size = 10;
     List<ChattingMessage> chattingMessages = chattingMessages(size);
     chattingMessages.sort(Comparator.comparingLong(ChattingMessage::getId));
-    Long firstMessageId = chattingMessages.get(0).getId();
+    Long chattingRoomLastMessageId = chattingMessages.get(0).getId();
 
     given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
     given(userQuery.getUsersByRoom(chattingRoom)).willReturn(chattingRoomUsers);
@@ -129,14 +129,14 @@ class ChattingRoomServiceTest {
         chattingRoomHistory);
 
     // when
-    chattingRoomService.exitChattingRoom(requestUserId, roomId, firstMessageId);
+    chattingRoomService.exitChattingRoom(requestUserId, roomId, chattingRoomLastMessageId);
 
     // then
     then(chattingRoomUserValidator).should()
         .validateUserInChattingRoom(requestUserId, chattingRoomUsers);
     then(chattingMigrationProcessor).should()
         .migrateChattingMessagesToHistoryInChattingRoom(chattingRoom, chattingRoomHistory,
-            firstMessageId);
+            chattingRoomLastMessageId);
     then(chattingMigrationProcessor).should().deleteChattingRoom(chattingRoom, chattingRoomUsers);
     then(chattingRoomNotificationSender).should().notifyChattingRoomEnd(any());
   }

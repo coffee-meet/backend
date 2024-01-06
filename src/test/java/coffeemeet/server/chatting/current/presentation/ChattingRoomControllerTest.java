@@ -47,7 +47,7 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     // given
     RefreshToken refreshToken = refreshToken();
     Long roomId = 1L;
-    Long firstMessageId = 51L;
+    Long lastMessageId = 51L;
     int pageSize = 50;
     ChattingListDto responses = ChattingFixture.chattingListDto();
     ChattingCustomSlice.Response chatsHTTPResponse = ChattingFixture.chatsHTTPResponse(responses);
@@ -55,17 +55,17 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     given(jwtTokenProvider.extractUserId(TOKEN_BODY)).willReturn(USER_ID);
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
 
-    given(chattingRoomService.searchMessages(USER_ID, roomId, firstMessageId, pageSize)).willReturn(
+    given(chattingRoomService.searchMessages(USER_ID, roomId, lastMessageId, pageSize)).willReturn(
         responses);
 
     // when, then
-    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}", roomId).param("firstMessageId",
-            String.valueOf(firstMessageId)).header("Authorization", TOKEN)).andDo(
+    mockMvc.perform(get("/api/v1/chatting/rooms/{roomId}", roomId).param("lastMessageId",
+            String.valueOf(lastMessageId)).header("Authorization", TOKEN)).andDo(
             document("view-chatting-room", resourceDetails().tag("채팅방").description("채팅방 조회")
                     .responseSchema(Schema.schema(" ChatsHTTP.Response")), preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(headerWithName("Authorization").description("토큰")),
-                queryParameters(parameterWithName("firstMessageId").description("첫번째 메세지 아이디")),
+                queryParameters(parameterWithName("lastMessageId").description("첫번째 메세지 아이디")),
                 responseFields(
                     fieldWithPath("chats[]").type(JsonFieldType.ARRAY).description("메세지 리스트"),
                     fieldWithPath("chats[].userId").type(JsonFieldType.NUMBER).description("사용자 번호"),
@@ -86,21 +86,21 @@ class ChattingRoomControllerTest extends ControllerTestConfig {
     RefreshToken refreshToken = refreshToken();
     Long requestUserId = 1L;
     Long roomId = 1L;
-    Long firstMessageId = 100L;
+    Long chattingRoomLastMessageId = 100L;
 
     given(jwtTokenProvider.extractUserId(TOKEN_BODY)).willReturn(requestUserId);
     given(refreshTokenQuery.getRefreshToken(anyLong())).willReturn(refreshToken);
     willDoNothing().given(chattingRoomService)
-        .exitChattingRoom(requestUserId, roomId, firstMessageId);
+        .exitChattingRoom(requestUserId, roomId, chattingRoomLastMessageId);
 
     // when, then
     mockMvc.perform(
-            delete("/api/v1/chatting/rooms/{roomId}?firstMessageId={firstMessageId}", roomId,
-                firstMessageId).header("Authorization", TOKEN)).andDo(
+            delete("/api/v1/chatting/rooms/{roomId}?chattingRoomLastMessageId={chattingRoomLastMessageId}", roomId,
+                chattingRoomLastMessageId).header("Authorization", TOKEN)).andDo(
             document("exit-chatting-room", resourceDetails().tag("채팅방").description("채팅방 나가기"),
                 preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                 requestHeaders(headerWithName("Authorization").description("토큰")),
-                queryParameters(parameterWithName("firstMessageId").description("첫번째 메세지 아이디"))))
+                queryParameters(parameterWithName("chattingRoomLastMessageId").description("첫번째 메세지 아이디"))))
         .andExpect(status().isOk());
   }
 
