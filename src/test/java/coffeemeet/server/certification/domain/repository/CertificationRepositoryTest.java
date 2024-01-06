@@ -83,7 +83,6 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
             .map(CertificationFixture::certification)
             .toList()
     );
-
     Pageable pageable = certificationPageable();
 
     // when
