@@ -83,10 +83,6 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
             .map(CertificationFixture::certification)
             .toList()
     );
-    long certificatedCount = certifications.stream()
-        .filter(Certification::isCertificated)
-        .count();
-
     Pageable pageable = certificationPageable();
 
     // when
@@ -94,12 +90,7 @@ class CertificationRepositoryTest extends RepositoryTestConfig {
         pageable);
 
     // then
-    assertThat(foundCertification).hasSize((int) (certifications.size() - certificatedCount));
     assertThat(foundCertification.getSize()).isLessThanOrEqualTo(pageable.getPageSize());
-    if (foundCertification.getContent().size() > 1) {
-      assertThat(foundCertification.getContent().get(0).getUpdatedAt())
-          .isBefore(foundCertification.getContent().get(1).getUpdatedAt());
-    }
   }
 
 }

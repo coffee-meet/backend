@@ -1,7 +1,7 @@
 package coffeemeet.server.chatting.current.implement;
 
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.infrastructure.ChattingSessionRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

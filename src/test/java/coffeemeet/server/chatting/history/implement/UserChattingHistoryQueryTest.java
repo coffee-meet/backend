@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
-import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.UserChattingHistoryRepository;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.common.fixture.UserFixture;
 import coffeemeet.server.user.domain.User;

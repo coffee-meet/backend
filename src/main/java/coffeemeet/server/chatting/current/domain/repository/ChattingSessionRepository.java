@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.current.infrastructure;
+package coffeemeet.server.chatting.current.domain.repository;
 
 import java.util.Optional;
 import org.springframework.data.repository.Repository;

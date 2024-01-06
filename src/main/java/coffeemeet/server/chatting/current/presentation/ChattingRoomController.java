@@ -5,6 +5,8 @@ import coffeemeet.server.chatting.current.presentation.dto.ChattingRoomStatusHTT
 import coffeemeet.server.chatting.current.service.ChattingRoomService;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
+import coffeemeet.server.common.annotation.Login;
+import coffeemeet.server.common.domain.AuthInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,17 +25,23 @@ public class ChattingRoomController {
 
   @GetMapping("/{roomId}")
   public ResponseEntity<ChattingCustomSlice.Response> viewChattingRoomMessages(
+      @Login AuthInfo authInfo,
       @PathVariable Long roomId,
-      @RequestParam(defaultValue = "0") Long firstMessageId,
+      @RequestParam Long lastMessageId,
       @RequestParam(defaultValue = "50") int pageSize) {
-    ChattingListDto responses = chattingRoomService.searchMessages(roomId, firstMessageId,
+    ChattingListDto responses = chattingRoomService.searchMessages(authInfo.userId(), roomId,
+        lastMessageId,
         pageSize);
     return ResponseEntity.ok(ChattingCustomSlice.Response.from(responses));
   }
 
   @DeleteMapping("/{roomId}")
-  public ResponseEntity<Void> exitChattingRoom(@PathVariable Long roomId) {
-    chattingRoomService.deleteChattingRoom(roomId);
+  public ResponseEntity<Void> exitChattingRoom(
+      @Login AuthInfo authInfo,
+      @PathVariable Long roomId,
+      @RequestParam Long chattingRoomLastMessageId
+  ) {
+    chattingRoomService.exitChattingRoom(authInfo.userId(), roomId, chattingRoomLastMessageId);
     return ResponseEntity.ok().build();
   }
 

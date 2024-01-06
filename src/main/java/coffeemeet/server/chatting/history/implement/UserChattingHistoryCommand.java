@@ -1,7 +1,7 @@
 package coffeemeet.server.chatting.history.implement;
 
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
-import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.UserChattingHistoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

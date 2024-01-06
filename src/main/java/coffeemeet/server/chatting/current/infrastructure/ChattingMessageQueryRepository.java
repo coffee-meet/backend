@@ -19,32 +19,44 @@ public class ChattingMessageQueryRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public List<ChattingMessage> findChattingMessages(ChattingRoom chattingRoom,
-      Long firstMessageId, int pageSize) {
+  public List<ChattingMessage> findChattingMessagesLessThanCursorId(ChattingRoom chattingRoom,
+      Long cursorId, int pageSize) {
     List<ChattingMessage> messages = jpaQueryFactory
         .selectFrom(chattingMessage)
         .where(chattingMessage.chattingRoom.eq(chattingRoom)
-            .and(ltChattingMessageId(firstMessageId)))
+            .and(ltChattingCursorId(cursorId)))
         .orderBy(chattingMessage.id.desc())
         .limit(pageSize)
         .fetch();
-    messages.sort(Comparator.comparingLong(ChattingMessage::getId));
+    messages.sort(Comparator.comparingLong(
+        ChattingMessage::getId)); // TODO: 2024/01/03 이거 왜 아이디로 정렬하는건가요? created 순으로 정렬하는게 맞지 않나요?
     return messages;
   }
 
-  public List<ChattingMessage> findAllChattingMessagesByChattingRoom(ChattingRoom chattingRoom) {
+  public List<ChattingMessage> findChattingMessagesLessThanOrEqualToCursorId(
+      ChattingRoom chattingRoom,
+      Long cursorId, int pageSize) {
     return jpaQueryFactory
         .selectFrom(chattingMessage)
-        .where(chattingMessage.chattingRoom.eq(chattingRoom))
-        .orderBy(chattingMessage.id.asc())
+        .where(chattingMessage.chattingRoom.eq(chattingRoom)
+            .and(loeChattingCursorId(cursorId)))
+        .orderBy(chattingMessage.id.desc())
+        .limit(pageSize)
         .fetch();
   }
 
-  private BooleanExpression ltChattingMessageId(Long chattingMessageId) {
-    if (chattingMessageId == null || chattingMessageId == 0L) {
+  private BooleanExpression ltChattingCursorId(Long cursorId) {
+    if (cursorId == null || cursorId == 0L) {
       return null;
     }
-    return chattingMessage.id.lt(chattingMessageId);
+    return chattingMessage.id.lt(cursorId);
+  }
+
+  private BooleanExpression loeChattingCursorId(Long cursorId) {
+    if (cursorId == null || cursorId == 0L) {
+      return null;
+    }
+    return chattingMessage.id.loe(cursorId);
   }
 
 }

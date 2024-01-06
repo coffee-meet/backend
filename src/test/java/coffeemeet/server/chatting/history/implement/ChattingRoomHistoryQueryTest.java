@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.infrastructure.ChattingRoomHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.ChattingRoomHistoryRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

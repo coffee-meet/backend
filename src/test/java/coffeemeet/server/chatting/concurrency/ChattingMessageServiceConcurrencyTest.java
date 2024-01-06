@@ -6,8 +6,8 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.chatting.current.infrastructure.ChattingMessageRepository;
-import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingMessageRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingRoomRepository;
 import coffeemeet.server.chatting.current.service.ChattingMessageService;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.common.fixture.UserFixture;

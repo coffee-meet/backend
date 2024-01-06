@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.infrastructure.ChattingRoomHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.ChattingRoomHistoryRepository;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ChattingRoomHistoryCommandTest {
     // given
     ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
     ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
-    given(chattingRoomHistoryRepository.save(any())).willReturn(chattingRoomHistory);
+    given(chattingRoomHistoryRepository.saveAndFlush(any())).willReturn(chattingRoomHistory);
 
     // when
     ChattingRoomHistory savedChattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(

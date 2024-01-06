@@ -1,29 +1,29 @@
 package coffeemeet.server.chatting.current.service;
 
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessages;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoomHistory;
+import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
+import coffeemeet.server.chatting.current.implement.ChattingMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
+import coffeemeet.server.chatting.current.implement.ChattingRoomNotificationSender;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.current.implement.ChattingRoomUserValidator;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
-import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
-import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
 import coffeemeet.server.common.fixture.ChattingFixture;
-import coffeemeet.server.common.fixture.UserFixture;
-import coffeemeet.server.common.infrastructure.FCMNotificationSender;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.Comparator;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -40,36 +40,26 @@ class ChattingRoomServiceTest {
 
   @InjectMocks
   private ChattingRoomService chattingRoomService;
-
   @Mock
   private ChattingRoomCommand chattingRoomCommand;
-
   @Mock
   private ChattingRoomQuery chattingRoomQuery;
-
   @Mock
   private ChattingMessageQuery chattingMessageQuery;
-
   @Mock
-  private ChattingRoomHistoryCommand chattingRoomHistoryCommand;
-
+  private ChattingMigrationProcessor chattingMigrationProcessor;
   @Mock
-  private ChattingMessageHistoryCommand chattingMessageHistoryCommand;
-
-  @Mock
-  private UserChattingHistoryCommand userChattingHistoryCommand;
-
+  private ChattingRoomNotificationSender chattingRoomNotificationSender;
   @Mock
   private UserQuery userQuery;
-
   @Mock
-  private FCMNotificationSender fcmNotificationSender;
+  private ChattingRoomUserValidator chattingRoomUserValidator;
 
   @DisplayName("채팅방을 만들 수 있다.")
   @Test
   void createChattingRoomTest() {
     // given
-    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
+    ChattingRoom chattingRoom = chattingRoom();
     given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
 
     // when
@@ -82,18 +72,29 @@ class ChattingRoomServiceTest {
   @DisplayName("채팅 메세지를 조회할 수 있다.")
   @ParameterizedTest
   @CsvSource(value = {"51, 50"})
-  void searchMessagesTest(Long firstMessageId, int pageSize) {
+  void searchMessagesTest(Long lastMessageId, int pageSize) {
     // given
-    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(pageSize);
+    ChattingRoom chattingRoom = chattingRoom();
     Long chattingRoomId = chattingRoom.getId();
+    List<ChattingMessage> chattingMessages = chattingMessages(pageSize);
+
+    List<User> chattingRoomUsers = fourUsers();
+    Long requestUserId = chattingRoomUsers.get(0).getId();
+    chattingRoomUsers.forEach(user -> {
+      user.setIdleStatus();
+      user.matching();
+      user.completeMatching(chattingRoom);
+    });
 
     given(chattingRoomQuery.getChattingRoomById(chattingRoomId)).willReturn(chattingRoom);
-    given(chattingMessageQuery.findMessages(chattingRoom, firstMessageId, pageSize)).willReturn(
+    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(chattingRoomUsers);
+    given(chattingMessageQuery.getChattingMessagesLessThanMessageId(chattingRoom, lastMessageId,
+        pageSize)).willReturn(
         chattingMessages);
 
     // when
-    ChattingListDto responses = chattingRoomService.searchMessages(chattingRoomId, firstMessageId,
+    ChattingListDto responses = chattingRoomService.searchMessages(requestUserId, chattingRoomId,
+        lastMessageId,
         pageSize);
 
     // then
@@ -104,28 +105,40 @@ class ChattingRoomServiceTest {
   @Test
   void deleteChattingRoomTest() {
     // given
-    Long roomId = 1L;
-    int size = 10;
-    List<User> users = UserFixture.fourUsers();
+    ChattingRoom chattingRoom = chattingRoom();
+    Long roomId = chattingRoom.getId();
+    ChattingRoomHistory chattingRoomHistory = chattingRoomHistory();
 
-    ChattingRoom chattingRoom = ChattingFixture.chattingRoom();
-    ChattingRoomHistory chattingRoomHistory = ChattingFixture.chattingRoomHistory();
-    List<ChattingMessage> chattingMessages = ChattingFixture.chattingMessages(size);
+    List<User> chattingRoomUsers = fourUsers();
+    Long requestUserId = chattingRoomUsers.get(0).getId();
+    chattingRoomUsers.forEach(user -> {
+      user.setIdleStatus();
+      user.matching();
+      user.completeMatching(chattingRoom);
+    });
+
+    int size = 10;
+    List<ChattingMessage> chattingMessages = chattingMessages(size);
+    chattingMessages.sort(Comparator.comparingLong(ChattingMessage::getId));
+    Long chattingRoomLastMessageId = chattingMessages.get(0).getId();
 
     given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
-    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
-    given(chattingMessageQuery.findAllMessages(chattingRoom)).willReturn(chattingMessages);
-    given(chattingRoomHistoryCommand.createChattingRoomHistory(chattingRoom)).willReturn(
+    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(chattingRoomUsers);
+    given(
+        chattingMigrationProcessor.backUpChattingRoom(chattingRoom, chattingRoomUsers)).willReturn(
         chattingRoomHistory);
 
     // when
-    chattingRoomService.deleteChattingRoom(roomId);
+    chattingRoomService.exitChattingRoom(requestUserId, roomId, chattingRoomLastMessageId);
 
     // then
-    then(chattingMessageHistoryCommand).should(only()).createChattingMessageHistory(anyList());
-    then(userChattingHistoryCommand).should(only()).createUserChattingHistory(anyList());
-    then(chattingRoomCommand).should(only()).removeChattingRoom(any());
-    then(fcmNotificationSender).should(only()).sendMultiNotifications(anySet(), any());
+    then(chattingRoomUserValidator).should()
+        .validateUserInChattingRoom(requestUserId, chattingRoomUsers);
+    then(chattingMigrationProcessor).should()
+        .migrateChattingMessagesToHistoryInChattingRoom(chattingRoom, chattingRoomHistory,
+            chattingRoomLastMessageId);
+    then(chattingMigrationProcessor).should().deleteChattingRoom(chattingRoom, chattingRoomUsers);
+    then(chattingRoomNotificationSender).should().notifyChattingRoomEnd(any());
   }
 
   @DisplayName("채팅방의 유무 상태를 조회할 수 있다.")

@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.current.infrastructure;
+package coffeemeet.server.chatting.current.domain.repository;
 
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingSession;
 import static org.assertj.core.api.Assertions.assertThat;
