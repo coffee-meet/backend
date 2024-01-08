@@ -2,7 +2,7 @@ package coffeemeet.server.chatting.history.implement;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
-import coffeemeet.server.chatting.history.infrastructure.UserChattingHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.UserChattingHistoryRepository;
 import coffeemeet.server.user.domain.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

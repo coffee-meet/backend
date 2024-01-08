@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
-import coffeemeet.server.chatting.history.infrastructure.ChattingMessageHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.ChattingMessageHistoryRepository;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ class ChattingMessageHistoryCommandTest {
     chattingMessageHistoryCommand.createChattingMessageHistory(chattingMessageHistories);
 
     // then
-    then(chattingMessageHistoryRepository).should(only()).saveAll(anyList());
+    then(chattingMessageHistoryRepository).should(only()).saveAllInBatch(anyList());
   }
 
 }

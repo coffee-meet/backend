@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.infrastructure.ChattingSessionRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingSessionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

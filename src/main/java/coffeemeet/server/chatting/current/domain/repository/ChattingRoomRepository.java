@@ -1,4 +1,4 @@
-package coffeemeet.server.chatting.current.infrastructure;
+package coffeemeet.server.chatting.current.domain.repository;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import java.util.Collection;

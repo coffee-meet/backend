@@ -3,7 +3,7 @@ package coffeemeet.server.chatting.history.implement;
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_HISTORY_NOT_FOUND;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.infrastructure.ChattingRoomHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.ChattingRoomHistoryRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import java.util.HashSet;
 import java.util.Set;

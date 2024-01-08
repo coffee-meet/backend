@@ -63,4 +63,12 @@ public class ChattingMessageHistory {
     }
   }
 
+  public Long getChattingRoomHistoryId() {
+    return chattingRoomHistory.getId();
+  }
+
+  public Long getUserId() {
+    return user.getId();
+  }
+
 }
