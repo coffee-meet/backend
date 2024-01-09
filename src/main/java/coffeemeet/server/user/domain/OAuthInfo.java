@@ -30,7 +30,7 @@ public class OAuthInfo {
   private Email email;
 
   @Column(nullable = false)
-  private String profileImageUrl;
+  private String profileImageUrl; // TODO: 2024/01/09 해당 필드가 이 클래스에 위치하는게 맞는지?
 
   public OAuthInfo(@NonNull OAuthProvider oauthProvider, @NonNull String oauthProviderId,
       @NonNull Email email, @NonNull String profileImageUrl) {
