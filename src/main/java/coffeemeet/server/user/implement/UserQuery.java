@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserQuery {
 
   private static final String NOT_EXIST_USER_MESSAGE = "해당 아이디(%s)에 일치하는 사용자는 존재하지 않습니다.";
-  private static final String NOT_REGISTERED_USER_MESSAGE = "해당 로그인 타입(%s)에 대한 아이디(%s)와 일치하는 사용자는 존재하지 않습니다.";
   private static final String ALREADY_EXIST_NICKNAME_MESSAGE = "해당 닉네임(%s)은 이미 존재하는 닉네임입니다.";
   private static final String ALREADY_REGISTERED_USER_MESSAGE = "해당 사용자(%s)는 이미 회원가입 되었습니다.";
 
@@ -37,10 +36,6 @@ public class UserQuery {
             NOT_EXIST_USER,
             String.format(NOT_EXIST_USER_MESSAGE, userId))
         );
-  }
-
-  public boolean isRegistered(OAuthInfo oAuthInfo) {
-    return userRepository.existsUserByOauthInfo(oAuthInfo);
   }
 
   public User getNonRegisteredUserById(Long userId) {
@@ -67,13 +62,11 @@ public class UserQuery {
         .map(User::getNotificationInfo).collect(Collectors.toSet());
   }
 
-  public User getUserByOAuthInfo(OAuthInfo oAuthInfo) {
-    return userRepository.findByOauthInfo(oAuthInfo)
-        .orElseThrow(
-            () -> new NotFoundException(
-                NOT_EXIST_USER,
-                String.format(NOT_REGISTERED_USER_MESSAGE, oAuthInfo.getOauthProvider(),
-                    oAuthInfo.getOauthProviderId()))
+  public User getUserByOAuthInfoOrDefault(OAuthInfo oAuthInfo) {
+    return userRepository.findByOauthInfo(oAuthInfo.getOauthProvider(),
+            oAuthInfo.getOauthProviderId())
+        .orElse(
+            new User(oAuthInfo)
         );
   }
 
