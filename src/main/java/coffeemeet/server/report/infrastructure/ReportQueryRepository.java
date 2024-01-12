@@ -5,7 +5,6 @@ import static coffeemeet.server.report.domain.QReport.report;
 import coffeemeet.server.report.domain.QReport;
 import coffeemeet.server.report.domain.Report;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
@@ -31,25 +30,12 @@ public class ReportQueryRepository {
 
   public List<Report> findAll(Long lastReportId, int pageSize) {
     QReport report = QReport.report;
-    QReport subReport = new QReport("subReport");
-
-    List<Long> subReports = jpaQueryFactory
-        .select(subReport.id)
-        .from(subReport)
-        .where(subReport.createdAt.in(
-            JPAExpressions
-                .select(subReport.createdAt.max())
-                .from(subReport)
-                .groupBy(subReport.targetedId, subReport.chattingRoomId)
-        ))
-        .fetch();
 
     return jpaQueryFactory
         .selectFrom(report)
-        .where(report.id.in(subReports)
-            .and(report.isProcessed.eq(false)
-                .and(gtReportId(lastReportId))
-            ))
+        .where(report.isProcessed.eq(false)
+            .and(gtReportId(lastReportId))
+        )
         .orderBy(report.id.asc())
         .limit(pageSize)
         .fetch();
@@ -65,7 +51,7 @@ public class ReportQueryRepository {
   }
 
   private BooleanExpression gtReportId(Long reportId) {
-    if (reportId == null || reportId == 0L) {
+    if (reportId == null) {
       return null;
     }
     return report.id.gt(reportId);

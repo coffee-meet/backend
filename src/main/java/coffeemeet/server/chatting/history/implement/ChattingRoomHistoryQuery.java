@@ -3,8 +3,10 @@ package coffeemeet.server.chatting.history.implement;
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_HISTORY_NOT_FOUND;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.infrastructure.ChattingRoomHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.ChattingRoomHistoryRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,5 +27,10 @@ public class ChattingRoomHistoryQuery {
             String.format(CHATTING_ROOM_HISTORY_NOT_FOUND_MESSAGE, roomHistoryId)
         ));
   }
+
+  public Set<ChattingRoomHistory> getChattingRoomHistoryByIdSet(Set<Long> chattingRoomIds) {
+    return new HashSet<>(chattingRoomHistoryRepository.findByIdIn(chattingRoomIds));
+  }
+
 
 }

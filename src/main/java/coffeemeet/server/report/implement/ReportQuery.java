@@ -8,7 +8,10 @@ import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
 import coffeemeet.server.report.infrastructure.ReportQueryRepository;
 import coffeemeet.server.report.infrastructure.ReportRepository;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -62,7 +65,27 @@ public class ReportQuery {
   }
 
   public List<Report> getAllReports(Long lastReportId, int pageSize) {
-    return reportQueryRepository.findAll(lastReportId, pageSize);
+    List<Report> reports = reportQueryRepository.findAll(lastReportId, pageSize);
+    Map<String, Report> latestReportsMap = new HashMap<>();
+
+    for (Report report : reports) {
+      String value = report.getChattingRoomId() + "_" + report.getTargetedId();
+      Report existReport = latestReportsMap.get(value);
+
+      if (existReport == null || existReport.getCreatedAt().isBefore(report.getCreatedAt())) {
+        latestReportsMap.put(value, report);
+      }
+    }
+
+    List<Report> reportList = new ArrayList<>(latestReportsMap.values());
+
+    for (Report report : reports) {
+      String value = report.getChattingRoomId() + "_" + report.getTargetedId();
+      if (!latestReportsMap.containsKey(value)) {
+        reportList.add(report);
+      }
+    }
+    return reportList;
   }
 
 }

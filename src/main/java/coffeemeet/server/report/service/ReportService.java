@@ -4,6 +4,8 @@ import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_RO
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
+import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
+import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryQuery;
 import coffeemeet.server.chatting.history.implement.UserChattingHistoryQuery;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.report.domain.Report;
@@ -15,6 +17,7 @@ import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.report.service.dto.ReportSummary;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +38,7 @@ public class ReportService {
   private final UserQuery userQuery;
   private final ChattingRoomQuery chattingRoomQuery;
   private final UserChattingHistoryQuery userChattingHistoryQuery;
+  private final ChattingRoomHistoryQuery chattingRoomHistoryQuery;
 
   @Transactional
   public void reportUser(Long reporterId, Long chattingRoomId, Long targetId, String reason,
@@ -66,13 +70,13 @@ public class ReportService {
     boolean hasNext = reports.size() >= pageSize;
 
     Map<Long, User> userMap = getUsers(reports);
-    Map<Long, ChattingRoom> chattingRoomMap = getChattingRooms(reports);
+    Map<Long, String> chattingRoomMap = getChattingRooms(reports);
 
     List<ReportSummary> responses = reports.stream()
         .map(report -> {
           User targetUser = userMap.get(report.getTargetedId());
-          ChattingRoom chattingRoom = chattingRoomMap.get(report.getChattingRoomId());
-          return ReportSummary.of(targetUser, chattingRoom);
+          String chattingRoomName = chattingRoomMap.get(report.getChattingRoomId());
+          return ReportSummary.of(targetUser, report.getChattingRoomId(), chattingRoomName);
         })
         .toList();
     return ReportListDto.of(responses, hasNext);
@@ -106,14 +110,24 @@ public class ReportService {
     }
   }
 
-  private Map<Long, ChattingRoom> getChattingRooms(
-      List<Report> allReports) {
+  private Map<Long, String> getChattingRooms(
+      List<Report> allReports
+  ) {
     Set<Long> chattingRoomIds = allReports.stream()
         .map(Report::getChattingRoomId)
         .collect(Collectors.toSet());
+
+    Map<Long, String> map = new HashMap<>();
+
     Set<ChattingRoom> chattingRooms = chattingRoomQuery.getChattingRoomsSetBy(chattingRoomIds);
-    return chattingRooms.stream()
-        .collect(Collectors.toMap(ChattingRoom::getId, Function.identity()));
+    chattingRooms.forEach(chattingRoom -> map.put(chattingRoom.getId(), chattingRoom.getName()));
+
+    Set<ChattingRoomHistory> chattingRoomHistories = chattingRoomHistoryQuery.getChattingRoomHistoryByIdSet(
+        chattingRoomIds);
+    chattingRoomHistories.forEach(
+        chattingRoomHistory -> map.put(chattingRoomHistory.getId(), chattingRoomHistory.getName()));
+
+    return map;
   }
 
   private Map<Long, User> getUsers(List<Report> allReports) {

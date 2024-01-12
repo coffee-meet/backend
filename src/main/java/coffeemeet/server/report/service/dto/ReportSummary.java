@@ -1,6 +1,5 @@
 package coffeemeet.server.report.service.dto;
 
-import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
@@ -14,14 +13,14 @@ public record ReportSummary(
     LocalDateTime createdAt
 ) {
 
-    public static ReportSummary of(User targeted, ChattingRoom chattingRoom) {
-        return new ReportSummary(
-            targeted.getProfile().getNickname(),
-            chattingRoom.getName(),
-            targeted.getId(),
-            chattingRoom.getId(),
-            targeted.getCreatedAt()
-        );
-    }
+  public static ReportSummary of(User targeted, Long chattingRoomId, String chattingRoomName) {
+    return new ReportSummary(
+        targeted.getProfile().getNickname(),
+        chattingRoomName,
+        targeted.getId(),
+        chattingRoomId,
+        targeted.getCreatedAt()
+    );
+  }
 
 }

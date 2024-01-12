@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.chatting.current.domain.ChattingSession;
-import coffeemeet.server.chatting.current.infrastructure.ChattingSessionRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingSessionRepository;
 import coffeemeet.server.common.execption.NotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

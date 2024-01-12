@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.chatting.history.domain.UserChattingHistory;
+import coffeemeet.server.chatting.history.domain.repository.ChattingRoomHistoryRepository;
+import coffeemeet.server.chatting.history.domain.repository.UserChattingHistoryRepository;
 import coffeemeet.server.common.config.RepositoryTestConfig;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.common.fixture.UserFixture;

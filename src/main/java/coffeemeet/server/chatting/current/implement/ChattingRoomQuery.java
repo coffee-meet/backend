@@ -3,7 +3,7 @@ package coffeemeet.server.chatting.current.implement;
 import static coffeemeet.server.chatting.exception.ChattingErrorCode.CHATTING_ROOM_NOT_FOUND;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.chatting.current.infrastructure.ChattingRoomRepository;
+import coffeemeet.server.chatting.current.domain.repository.ChattingRoomRepository;
 import coffeemeet.server.common.execption.InvalidInputException;
 import coffeemeet.server.common.execption.NotFoundException;
 import java.util.HashSet;

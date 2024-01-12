@@ -35,16 +35,6 @@ class UserRepositoryTest extends RepositoryTestConfig {
   }
 
   @Test
-  @DisplayName("로그인 정보로 유저의 존재 여부를 판단할 수 있다.")
-  void existsUserByOauthInfoTest() {
-    // given
-    OAuthInfo oauthInfo = user.getOauthInfo();
-
-    // when, then
-    assertThat(userRepository.existsUserByOauthInfo(oauthInfo)).isEqualTo(Boolean.TRUE);
-  }
-
-  @Test
   @DisplayName("아이디들로 해당 유저 Set을 찾을 수 있다.")
   void findByIdInTest() {
     // given
@@ -68,7 +58,8 @@ class UserRepositoryTest extends RepositoryTestConfig {
     OAuthInfo oauthInfo = user.getOauthInfo();
 
     // when, then
-    assertThat(userRepository.findByOauthInfo(oauthInfo)).isEqualTo(Optional.of(user));
+    assertThat(userRepository.findByOauthInfo(oauthInfo.getOauthProvider(),
+        oauthInfo.getOauthProviderId())).isEqualTo(Optional.of(user));
   }
 
   @Test

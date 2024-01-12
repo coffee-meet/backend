@@ -62,7 +62,7 @@ class ReportControllerTest extends ControllerTestConfig {
             .content(objectMapper.writeValueAsString(request))
         )
         .andDo(document("user-report",
-            resourceDetails().tag("신고").description("사용자 신고")
+            resourceDetails().tag("신고").description("사용자 신고 등록")
                 .requestSchema(Schema.schema("ReportHTTP.Request")),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),

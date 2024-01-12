@@ -4,7 +4,6 @@ import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -12,7 +11,6 @@ import static org.mockito.BDDMockito.given;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.user.domain.NotificationInfo;
-import coffeemeet.server.user.domain.OAuthInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.infrastructure.UserRepository;
@@ -99,10 +97,10 @@ class UserQueryTest {
     // given
     User user = user();
 
-    given(userRepository.findByOauthInfo(any())).willReturn(Optional.of(user));
+    given(userRepository.findByOauthInfo(any(), any())).willReturn(Optional.of(user));
 
     // when
-    User foundUser = userQuery.getUserByOAuthInfo(user.getOauthInfo());
+    User foundUser = userQuery.getUserByOAuthInfoOrDefault(user.getOauthInfo());
 
     // then
     assertThat(user).isEqualTo(foundUser);
@@ -122,28 +120,15 @@ class UserQueryTest {
   }
 
   @Test
-  @DisplayName("등록된 회원인지 확인할 수 있다.")
-  void isRegisteredTest() {
-    // given
-    User user = user();
-    OAuthInfo oauthInfo = user.getOauthInfo();
-
-    given(userRepository.existsUserByOauthInfo(any())).willReturn(Boolean.TRUE);
-
-    // when, then
-    assertTrue(userQuery.isRegistered(oauthInfo));
-  }
-
-  @Test
   @DisplayName("아이디로 등록되지 않은 회원을 가져올 수 있다.")
   void getNonRegisteredUserByIdTest() {
     // given
     User user = user();
-
+    Long id = user.getId();
     given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 
     // when, then
-    assertThatThrownBy(() -> userQuery.getNonRegisteredUserById(user.getId()))
+    assertThatThrownBy(() -> userQuery.getNonRegisteredUserById(id))
         .isInstanceOf(NotFoundException.class);
   }
 

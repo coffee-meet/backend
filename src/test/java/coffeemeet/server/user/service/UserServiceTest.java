@@ -124,8 +124,7 @@ class UserServiceTest {
         keywords, certification, authTokens);
 
     given(oAuthMemberClientComposite.fetch(any(), anyString())).willReturn(response);
-    given(userQuery.isRegistered(any())).willReturn(Boolean.TRUE);
-    given(userQuery.getUserByOAuthInfo(any())).willReturn(user);
+    given(userQuery.getUserByOAuthInfoOrDefault(any())).willReturn(user);
     given(interestQuery.getKeywordsByUserId(anyLong())).willReturn(keywords);
     given(certificationQuery.getCertificationByUserId(anyLong())).willReturn(certification);
     given(authTokensGenerator.generate(anyLong())).willReturn(authTokens);
