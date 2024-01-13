@@ -29,9 +29,11 @@ import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,15 +69,22 @@ public class UserService {
         memberDetail.oAuthProviderId(),
         new Email(memberDetail.email()), memberDetail.profileImage());
     User user = userQuery.getUserByOAuthInfoOrDefault(oauthInfo);
+
     if (user.isRegistered()) {
       // TODO: 12/21/23 회원가입 중간에 나갈 때 예외 터지는 오류 잡기
-      List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-      Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-      AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-      return LoginDetailsDto.of(user, interests, certification, authTokens);
+      if (!user.isDeleted() || hasStoredUserInfo(user)) {
+        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+        return LoginDetailsDto.of(user, interests, certification, authTokens);
+      }
     }
     userCommand.saveUser(user);
     return LoginDetailsDto.of(user, Collections.emptyList(), null, null);
+  }
+
+  private boolean hasStoredUserInfo(User user) {
+    return user.isDeleted() && user.getPrivacyDate() != null;
   }
 
   public UserProfileDto findUserProfile(Long userId) {
@@ -119,7 +128,10 @@ public class UserService {
   }
 
   public void deleteUser(Long userId) {
-    userCommand.deleteUser(userId);
+    User user = userQuery.getUserById(userId);
+    if (!user.isDeleted()) {
+      user.delete();
+    }
   }
 
   public void deleteUserInfos() {

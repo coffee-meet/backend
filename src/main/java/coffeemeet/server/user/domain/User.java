@@ -6,6 +6,7 @@ import static coffeemeet.server.user.domain.UserStatus.CHATTING_UNCONNECTED;
 import static coffeemeet.server.user.domain.UserStatus.IDLE;
 import static coffeemeet.server.user.domain.UserStatus.MATCHING;
 import static coffeemeet.server.user.domain.UserStatus.REPORTED;
+import static java.time.LocalDateTime.now;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.common.domain.AdvancedBaseEntity;
@@ -22,6 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -65,6 +67,8 @@ public class User extends AdvancedBaseEntity {
 
   private boolean isDeleted;
 
+  private LocalDate privacyDate;
+
   private boolean isBlacklisted;
 
   @Column(nullable = false)
@@ -79,6 +83,7 @@ public class User extends AdvancedBaseEntity {
     this.reportInfo = new ReportInfo();
     this.userStatus = IDLE;
     this.isDeleted = false;
+    this.privacyDate = null;
     this.isBlacklisted = false;
     this.isRegistered = true;
   }
@@ -139,6 +144,11 @@ public class User extends AdvancedBaseEntity {
 
   public void convertToBlacklist() {
     this.isBlacklisted = true;
+  }
+
+  public void delete() {
+    this.isDeleted = true;
+    this.privacyDate = LocalDate.from(now().plusDays(30));
   }
 
   @Override
