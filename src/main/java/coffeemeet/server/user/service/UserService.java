@@ -122,6 +122,18 @@ public class UserService {
     userCommand.deleteUser(userId);
   }
 
+  public void deleteUserInfos() {
+    List<User> users = userQuery.getUsersByDeleted();
+    LocalDate today = LocalDate.now();
+
+    List<User> deletedUsers = users.stream()
+        .filter(u -> u.getPrivacyDate() != null)
+        .filter(u -> u.getPrivacyDate().isBefore(today) || Objects.requireNonNull(
+            u.getPrivacyDate()).isEqual(today))
+        .toList();
+    deletedUsers.forEach(u -> userCommand.deleteUser(u.getId()));
+  }
+
   public void registerOrUpdateNotificationToken(Long useId, String token) {
     userCommand.registerOrUpdateNotificationToken(useId, token);
   }
