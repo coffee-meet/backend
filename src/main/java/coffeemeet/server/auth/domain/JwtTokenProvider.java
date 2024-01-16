@@ -1,6 +1,7 @@
 package coffeemeet.server.auth.domain;
 
 import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
+import static coffeemeet.server.auth.exception.AuthErrorCode.EXPIRED_TOKEN;
 
 import coffeemeet.server.common.execption.InvalidAuthException;
 import io.jsonwebtoken.Claims;
@@ -66,7 +67,7 @@ public class JwtTokenProvider {
           .getBody();
     } catch (ExpiredJwtException e) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED,
+          EXPIRED_TOKEN,
           String.format(EXPIRED_TOKEN_MESSAGE, accessToken));
     } catch (UnsupportedJwtException e) {
       throw new InvalidAuthException(
