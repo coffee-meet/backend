@@ -1,6 +1,6 @@
 package coffeemeet.server.auth.service;
 
-import static coffeemeet.server.auth.exception.AuthErrorCode.AUTHENTICATION_FAILED;
+import static coffeemeet.server.auth.exception.AuthErrorCode.EXPIRED_TOKEN;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
@@ -26,7 +26,7 @@ public class AuthService {
   public AuthTokens renew(Long userId, String refreshToken) {
     if (jwtTokenProvider.isExpiredRefreshToken(refreshToken)) {
       throw new InvalidAuthException(
-          AUTHENTICATION_FAILED,
+          EXPIRED_TOKEN,
           String.format(EXPIRED_REFRESH_TOKEN_MESSAGE, refreshToken));
     } else {
       return authTokensGenerator.reissueAccessToken(userId, refreshToken);
