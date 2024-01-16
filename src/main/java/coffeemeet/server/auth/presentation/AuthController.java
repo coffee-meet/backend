@@ -30,7 +30,7 @@ public class AuthController {
 
   @PostMapping("/delete")
   public ResponseEntity<Void> delete(@Login AuthInfo authInfo) {
-    authService.delete(authInfo.userId());
+    authService.delete(authInfo.userId(), authInfo.refreshToken());
     return ResponseEntity.ok().build();
   }
 

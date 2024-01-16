@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
+
   private final ObjectStorage objectStorage;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
   private final OAuthUnlinkClientComposite oAuthUnlinkClientComposite;
@@ -129,11 +130,11 @@ public class UserService {
     userQuery.hasDuplicatedNickname(nickname);
   }
 
-  public void deleteUser(Long userId, String accessToken) {
+  public void deleteUser(Long userId, String token) {
     User user = userQuery.getUserById(userId);
     if (!user.isDeleted()) {
       user.delete();
-      oAuthUnlinkClientComposite.unlink(user.getOauthInfo().getOauthProvider(), accessToken);
+      oAuthUnlinkClientComposite.unlink(user.getOauthInfo().getOauthProvider(), token);
     }
   }
 
