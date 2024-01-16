@@ -27,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
-public class NaverClient {
+public class NaverFetchClient {
 
   private static final String REQUEST_TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
   private static final String REQUEST_INFO_URL = "https://openapi.naver.com/v1/nid/me";

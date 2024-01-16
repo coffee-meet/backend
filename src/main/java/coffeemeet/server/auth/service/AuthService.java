@@ -38,8 +38,8 @@ public class AuthService {
   }
 
   @Transactional
-  public void delete(Long userId) {
-    userService.deleteUser(userId);
+  public void delete(Long userId, String accessToken) {
+    userService.deleteUser(userId, accessToken);
     refreshTokenCommand.deleteRefreshToken(userId);
   }
 

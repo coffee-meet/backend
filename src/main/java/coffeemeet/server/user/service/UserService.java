@@ -13,6 +13,7 @@ import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
+import coffeemeet.server.oauth.infrastructure.OAuthUnlinkClientComposite;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -45,6 +46,7 @@ public class UserService {
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
   private final ObjectStorage objectStorage;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
+  private final OAuthUnlinkClientComposite oAuthUnlinkClientComposite;
 
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
@@ -127,10 +129,11 @@ public class UserService {
     userQuery.hasDuplicatedNickname(nickname);
   }
 
-  public void deleteUser(Long userId) {
+  public void deleteUser(Long userId, String accessToken) {
     User user = userQuery.getUserById(userId);
     if (!user.isDeleted()) {
       user.delete();
+      oAuthUnlinkClientComposite.unlink(user.getOauthInfo().getOauthProvider(), accessToken);
     }
   }
 

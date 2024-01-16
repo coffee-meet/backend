@@ -2,7 +2,7 @@ package coffeemeet.server.oauth.implement.client.naver;
 
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClient;
-import coffeemeet.server.oauth.infrastructure.naver.NaverClient;
+import coffeemeet.server.oauth.infrastructure.naver.NaverFetchClient;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NaverMemberClient implements OAuthMemberClient {
 
-  private final NaverClient naverClient;
+  private final NaverFetchClient naverClient;
 
   @Override
   public OAuthProvider oAuthProvider() {

@@ -2,7 +2,7 @@ package coffeemeet.server.oauth.implement.client.kakao;
 
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClient;
-import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
+import coffeemeet.server.oauth.infrastructure.kakao.KakaoFetchClient;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KakaoMemberClient implements OAuthMemberClient {
 
-  private final KakaoClient kakaoClient;
+  private final KakaoFetchClient kakaoClient;
 
   @Override
   public OAuthProvider oAuthProvider() {
