@@ -51,6 +51,7 @@ public class AdminController {
 
   private static final String REQUEST_WITHOUT_SESSION_MESSAGE = "SESSION 값이 존재하지 않습니다.";
   private static final String ADMIN_SESSION_ATTRIBUTE = "adminId";
+
   private final AdminService adminService;
   private final ReportService reportService;
   private final InquiryService inquiryService;

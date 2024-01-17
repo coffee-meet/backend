@@ -7,6 +7,7 @@ import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.common.execption.InvalidAuthException;
+import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,8 @@ public class AuthService {
   }
 
   @Transactional
-  public void delete(Long userId, String accessToken) {
-    userService.deleteUser(userId, accessToken);
+  public void delete(Long userId, String token, OAuthProvider oAuthProvider) {
+    userService.deleteUser(userId, token, oAuthProvider);
     refreshTokenCommand.deleteRefreshToken(userId);
   }
 

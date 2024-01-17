@@ -92,7 +92,7 @@ public class UserQuery {
   }
 
   public List<User> getUsersByDeleted() {
-    return userRepository.findAllByDeleted(true);
+    return userRepository.findAllByIsDeletedIsTrue();
   }
 
 }

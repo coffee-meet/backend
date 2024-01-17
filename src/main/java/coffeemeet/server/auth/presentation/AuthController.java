@@ -4,6 +4,7 @@ import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.service.AuthService;
 import coffeemeet.server.common.annotation.Login;
 import coffeemeet.server.common.domain.AuthInfo;
+import coffeemeet.server.user.domain.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +30,8 @@ public class AuthController {
   }
 
   @PostMapping("/delete")
-  public ResponseEntity<Void> delete(@Login AuthInfo authInfo) {
-    authService.delete(authInfo.userId(), authInfo.refreshToken());
+  public ResponseEntity<Void> delete(@Login AuthInfo authInfo, OAuthProvider oAuthProvider) {
+    authService.delete(authInfo.userId(), authInfo.refreshToken(), oAuthProvider);
     return ResponseEntity.ok().build();
   }
 

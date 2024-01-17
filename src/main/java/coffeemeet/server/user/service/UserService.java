@@ -30,11 +30,9 @@ import coffeemeet.server.user.service.dto.MyProfileDto;
 import coffeemeet.server.user.service.dto.UserProfileDto;
 import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.io.File;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,19 +73,24 @@ public class UserService {
 
     if (user.isRegistered()) {
       // TODO: 12/21/23 회원가입 중간에 나갈 때 예외 터지는 오류 잡기
-      if (!user.isDeleted() || hasStoredUserInfo(user)) {
-        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-        return LoginDetailsDto.of(user, interests, certification, authTokens);
+      if (user.isDeleted()) {
+        if (user.getPrivacyDateTime().isBefore(LocalDateTime.now())) {
+          user.deletedWithdraw();
+          userCommand.updateUser(user);
+          List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+          Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+          AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+          return LoginDetailsDto.of(user, interests, certification, authTokens);
+        } else {
+          userCommand.deleteUser(user.getId());
+          createUser(user);
+        }
+      } else {
+        createUser(user);
       }
     }
     userCommand.saveUser(user);
     return LoginDetailsDto.of(user, Collections.emptyList(), null, null);
-  }
-
-  private boolean hasStoredUserInfo(User user) {
-    return user.isDeleted() && user.getPrivacyDate() != null;
   }
 
   public UserProfileDto findUserProfile(Long userId) {
@@ -130,22 +133,22 @@ public class UserService {
     userQuery.hasDuplicatedNickname(nickname);
   }
 
-  public void deleteUser(Long userId, String token) {
+  public void deleteUser(Long userId, String token, OAuthProvider oAuthProvider) {
     User user = userQuery.getUserById(userId);
     if (!user.isDeleted()) {
       user.delete();
-      oAuthUnlinkClientComposite.unlink(user.getOauthInfo().getOauthProvider(), token);
+      oAuthUnlinkClientComposite.unlink(oAuthProvider, token);
     }
   }
 
   public void deleteUserInfos() {
     List<User> users = userQuery.getUsersByDeleted();
-    LocalDate today = LocalDate.now();
+    LocalDateTime today = LocalDateTime.now();
 
     List<User> deletedUsers = users.stream()
-        .filter(u -> u.getPrivacyDate() != null)
-        .filter(u -> u.getPrivacyDate().isBefore(today) || Objects.requireNonNull(
-            u.getPrivacyDate()).isEqual(today))
+        .filter(u -> u.getPrivacyDateTime() != null)
+        .filter(
+            u -> u.getPrivacyDateTime().isBefore(today) || u.getPrivacyDateTime().isEqual(today))
         .toList();
     deletedUsers.forEach(u -> userCommand.deleteUser(u.getId()));
   }
@@ -172,6 +175,13 @@ public class UserService {
     };
   }
 
+  private LoginDetailsDto createUser(User user){
+    List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+    Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+    AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+    return LoginDetailsDto.of(user, interests, certification, authTokens);
+  }
+
   private UserStatusDto handleIdleUser(Certification certification) {
     boolean isCertificated = certification != null;
     return UserStatusDto.of(UserStatus.IDLE, null, null, null, isCertificated, null);
@@ -186,7 +196,8 @@ public class UserService {
   private UserStatusDto handleChattingUser(User user) {
     Long chattingRoomId = user.getChattingRoom().getId();
     String chattingRoomName = user.getChattingRoom().getName();
-    return UserStatusDto.of(UserStatus.CHATTING_UNCONNECTED, null, chattingRoomId, chattingRoomName,
+    return UserStatusDto.of(UserStatus.CHATTING_UNCONNECTED, null, chattingRoomId,
+        chattingRoomName,
         null, null);
   }
 
