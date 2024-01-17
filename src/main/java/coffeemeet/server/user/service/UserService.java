@@ -83,10 +83,12 @@ public class UserService {
           return LoginDetailsDto.of(user, interests, certification, authTokens);
         } else {
           userCommand.deleteUser(user.getId());
-          createUser(user);
         }
       } else {
-        createUser(user);
+        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+        return LoginDetailsDto.of(user, interests, certification, authTokens);
       }
     }
     userCommand.saveUser(user);
@@ -173,13 +175,6 @@ public class UserService {
       case CHATTING_CONNECTED -> throw new BadRequestException(BAD_REQUEST_ERROR,
           INVALID_REQUEST_MESSAGE);
     };
-  }
-
-  private LoginDetailsDto createUser(User user){
-    List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-    Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-    AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-    return LoginDetailsDto.of(user, interests, certification, authTokens);
   }
 
   private UserStatusDto handleIdleUser(Certification certification) {
