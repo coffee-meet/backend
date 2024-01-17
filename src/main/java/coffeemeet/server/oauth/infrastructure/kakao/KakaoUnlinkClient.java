@@ -3,7 +3,7 @@ package coffeemeet.server.oauth.infrastructure.kakao;
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.AUTHORIZATION;
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.BEARER_TYPE;
 
-import coffeemeet.server.oauth.infrastructure.OAuthUnlinkClient;
+import coffeemeet.server.oauth.implement.client.OAuthUnlinkClient;
 import coffeemeet.server.oauth.infrastructure.OAuthUnlinkDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoUnlinkDetail;
 import coffeemeet.server.user.domain.OAuthProvider;

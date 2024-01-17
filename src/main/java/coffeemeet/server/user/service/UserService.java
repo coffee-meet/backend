@@ -12,8 +12,8 @@ import coffeemeet.server.common.domain.ObjectStorage;
 import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
-import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.infrastructure.OAuthUnlinkClientComposite;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientRegistry;
+import coffeemeet.server.oauth.implement.client.OAuthMemberUnlinkRegistry;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -44,8 +44,8 @@ public class UserService {
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
 
   private final ObjectStorage objectStorage;
-  private final OAuthMemberClientComposite oAuthMemberClientComposite;
-  private final OAuthUnlinkClientComposite oAuthUnlinkClientComposite;
+  private final OAuthMemberClientRegistry oAuthMemberClientRegistry;
+  private final OAuthMemberUnlinkRegistry oAuthMemberUnlinkRegistry;
 
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
@@ -65,7 +65,7 @@ public class UserService {
   }
 
   public LoginDetailsDto login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
+    OAuthMemberDetail memberDetail = oAuthMemberClientRegistry.fetch(oAuthProvider, authCode);
     OAuthInfo oauthInfo = new OAuthInfo(memberDetail.oAuthProvider(),
         memberDetail.oAuthProviderId(),
         new Email(memberDetail.email()), memberDetail.profileImage());
@@ -137,7 +137,7 @@ public class UserService {
     User user = userQuery.getUserById(userId);
     if (!user.isDeleted()) {
       user.delete();
-      oAuthUnlinkClientComposite.unlink(oAuthProvider, token);
+      oAuthMemberUnlinkRegistry.unlink(oAuthProvider, token);
     }
   }
 

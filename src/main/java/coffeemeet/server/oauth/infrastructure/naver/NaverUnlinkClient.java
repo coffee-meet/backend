@@ -8,7 +8,7 @@ import static coffeemeet.server.oauth.utils.constant.OAuthConstant.CLIENT_SECRET
 import static coffeemeet.server.oauth.utils.constant.OAuthConstant.GRANT_TYPE;
 
 import coffeemeet.server.oauth.config.naver.NaverProperties;
-import coffeemeet.server.oauth.infrastructure.OAuthUnlinkClient;
+import coffeemeet.server.oauth.implement.client.OAuthUnlinkClient;
 import coffeemeet.server.oauth.infrastructure.OAuthUnlinkDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverUnlinkDetail;
 import coffeemeet.server.user.domain.OAuthProvider;
