@@ -21,8 +21,8 @@ public class OAuthService {
   }
 
   @Transactional
-  public void delete(Long userId, String token, OAuthProvider oAuthProvider) {
-    userService.deleteUser(userId, token, oAuthProvider);
+  public void unlink(Long userId, String accessToken, OAuthProvider oAuthProvider) {
+    userService.deleteUser(userId, accessToken, oAuthProvider);
     refreshTokenCommand.deleteRefreshToken(userId);
   }
 

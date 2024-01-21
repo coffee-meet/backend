@@ -92,22 +92,20 @@ public class UserService {
     userQuery.hasDuplicatedNickname(nickname);
   }
 
-  public void deleteUser(Long userId, String token, OAuthProvider oAuthProvider) {
+  public void deleteUser(Long userId, String accessToken, OAuthProvider oAuthProvider) {
     User user = userQuery.getUserById(userId);
-    if (!user.isDeleted()) {
-      user.delete();
-      oAuthMemberUnlinkRegistry.unlink(oAuthProvider, token);
-    }
+    user.delete();
+    oAuthMemberUnlinkRegistry.unlink(oAuthProvider, accessToken);
   }
 
   public void deleteUserInfos() {
-    List<User> users = userQuery.getUsersByDeleted();
+    List<User> users = userQuery.getDeletedUsers();
     LocalDateTime today = LocalDateTime.now();
 
     List<User> deletedUsers = users.stream()
         .filter(u -> u.getPrivacyDateTime() != null)
         .filter(
-            u -> u.getPrivacyDateTime().isBefore(today) || u.getPrivacyDateTime().isEqual(today))
+            u -> u.getPrivacyDateTime().isAfter(today) || u.getPrivacyDateTime().isEqual(today))
         .toList();
     deletedUsers.forEach(u -> userCommand.deleteUser(u.getId()));
   }

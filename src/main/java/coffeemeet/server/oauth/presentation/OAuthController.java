@@ -31,8 +31,8 @@ public class OAuthController {
   }
 
   @PostMapping("/delete")
-  public ResponseEntity<Void> delete(@Login AuthInfo authInfo, OAuthProvider oAuthProvider) {
-    oAuthService.delete(authInfo.userId(), authInfo.refreshToken(), oAuthProvider);
+  public ResponseEntity<Void> unlink(@Login AuthInfo authInfo, OAuthProvider oAuthProvider) {
+    oAuthService.unlink(authInfo.userId(), authInfo.refreshToken(), oAuthProvider);
     return ResponseEntity.ok().build();
   }
 

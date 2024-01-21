@@ -15,7 +15,7 @@ public class SchedulingConfig {
 
   @Scheduled(cron = "0 0 3 * * *")
   public void checkUserDeleted() {
-    log.info("탈퇴 후 30일이 지난 회원 스케줄링 처리");
+    log.info("탈퇴 후 30일이 지난 회원 정보 제거");
     userService.deleteUserInfos();
   }
 

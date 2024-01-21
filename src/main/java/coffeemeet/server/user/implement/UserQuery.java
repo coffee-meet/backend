@@ -91,7 +91,7 @@ public class UserQuery {
     return userRepository.findAllByChattingRoom(room);
   }
 
-  public List<User> getUsersByDeleted() {
+  public List<User> getDeletedUsers() {
     return userRepository.findAllByIsDeletedIsTrue();
   }
 
