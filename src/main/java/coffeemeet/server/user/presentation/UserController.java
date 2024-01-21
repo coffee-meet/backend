@@ -12,6 +12,7 @@ import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserStatusHTTP;
+import coffeemeet.server.user.service.UserProfileService;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
@@ -43,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
   private final UserService userService;
+  private final UserProfileService userProfileService;
 
   @PostMapping("/sign-up")
   public ResponseEntity<Void> signup(@Valid @RequestBody SignupHTTP.Request request) {
@@ -59,13 +61,13 @@ public class UserController {
 
   @GetMapping("/{userId}")
   public ResponseEntity<UserProfileHTTP.Response> getUserProfile(@PathVariable Long userId) {
-    UserProfileDto response = userService.findUserProfile(userId);
+    UserProfileDto response = userProfileService.findUserProfile(userId);
     return ResponseEntity.ok(UserProfileHTTP.Response.of(response));
   }
 
   @GetMapping("/me")
   public ResponseEntity<MyProfileHTTP.Response> getMyProfile(@Login AuthInfo authInfo) {
-    MyProfileDto response = userService.findMyProfile(authInfo.userId());
+    MyProfileDto response = userProfileService.findMyProfile(authInfo.userId());
     return ResponseEntity.ok(MyProfileHTTP.Response.of(response));
   }
 
@@ -82,7 +84,7 @@ public class UserController {
       @Login AuthInfo authInfo,
       @RequestPart("profileImage")
       @NotNull MultipartFile profileImage) {
-    userService.updateProfileImage(
+    userProfileService.updateProfileImage(
         authInfo.userId(),
         FileUtils.convertMultipartFileToFile(profileImage));
     return ResponseEntity.ok().build();
@@ -91,7 +93,7 @@ public class UserController {
   @PatchMapping("/me")
   public ResponseEntity<Void> updateProfileInfo(@Login AuthInfo authInfo,
       @Valid @RequestBody UpdateProfileHTTP.Request request) {
-    userService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
+    userProfileService.updateProfileInfo(authInfo.userId(), request.nickname(), request.interests());
     return ResponseEntity.ok().build();
   }
 
