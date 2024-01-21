@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthCodeRequestUrlProviderComposite {
+public class AuthCodeRequestUrlProviderRegistry {
 
   private static final String INVALID_LOGIN_TYPE_MESSAGE = "로그인 타입(%s)에 일치하는 타입이 없습니다.";
   private final Map<OAuthProvider, AuthCodeRequestUrlProvider> mapping;
 
-  public AuthCodeRequestUrlProviderComposite(Set<AuthCodeRequestUrlProvider> providers) {
+  public AuthCodeRequestUrlProviderRegistry(Set<AuthCodeRequestUrlProvider> providers) {
     this.mapping = providers.stream().collect(
         Collectors.toUnmodifiableMap(
             AuthCodeRequestUrlProvider::oAuthProvider,
