@@ -22,6 +22,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -65,6 +66,9 @@ public class User extends AdvancedBaseEntity {
 
   private boolean isDeleted;
 
+  @Column(name = "privacy_date_time")
+  private LocalDateTime privacyDateTime;
+
   private boolean isBlacklisted;
 
   @Column(nullable = false)
@@ -79,6 +83,7 @@ public class User extends AdvancedBaseEntity {
     this.reportInfo = new ReportInfo();
     this.userStatus = IDLE;
     this.isDeleted = false;
+    this.privacyDateTime = null;
     this.isBlacklisted = false;
     this.isRegistered = true;
   }
@@ -139,6 +144,15 @@ public class User extends AdvancedBaseEntity {
 
   public void convertToBlacklist() {
     this.isBlacklisted = true;
+  }
+
+  public void delete() {
+    this.isDeleted = true;
+    this.privacyDateTime = LocalDateTime.now().plusDays(30);
+  }
+
+  public void deletedWithdraw(){
+    this.isDeleted = false;
   }
 
   @Override

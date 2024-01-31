@@ -3,8 +3,8 @@ package coffeemeet.server.oauth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
-import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderComposite;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientRegistry;
+import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderRegistry;
 import coffeemeet.server.user.domain.OAuthProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +20,10 @@ class OAuthServiceTest {
   private OAuthService oAuthService;
 
   @Mock
-  private AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
+  private AuthCodeRequestUrlProviderRegistry authCodeRequestUrlProviderRegistry;
 
   @Mock
-  private OAuthMemberClientComposite oAuthMemberClientComposite;
+  private OAuthMemberClientRegistry oAuthMemberClientRegistry;
 
   @DisplayName("로그인 타입에 맞는 redirect url 을 생성할 수 있다.")
   @Test
@@ -31,7 +31,7 @@ class OAuthServiceTest {
     // given
     String expectedUrl = "https://example.com";
 
-    given(authCodeRequestUrlProviderComposite.provide(OAuthProvider.KAKAO)).willReturn(expectedUrl);
+    given(authCodeRequestUrlProviderRegistry.provide(OAuthProvider.KAKAO)).willReturn(expectedUrl);
 
     // when
     String result = oAuthService.getAuthCodeRequestUrl(OAuthProvider.KAKAO);

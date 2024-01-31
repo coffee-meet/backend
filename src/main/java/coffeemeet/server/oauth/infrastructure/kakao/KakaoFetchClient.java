@@ -24,7 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoClient {
+public class KakaoFetchClient {
 
   private static final String REQUEST_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
   private static final String REQUEST_INFO_URL = "https://kapi.kakao.com/v2/user/me";
@@ -58,7 +58,6 @@ public class KakaoClient {
     httpHeaders.set(AUTHORIZATION, BEARER_TYPE + accessToken);
 
     HttpEntity<?> request = new HttpEntity<>(httpHeaders);
-
     KakaoMemberDetail response = restTemplate.exchange(REQUEST_INFO_URL, HttpMethod.GET, request,
         KakaoMemberDetail.class).getBody();
 

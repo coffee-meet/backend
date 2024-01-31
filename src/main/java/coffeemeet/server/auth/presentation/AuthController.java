@@ -28,10 +28,4 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/delete")
-  public ResponseEntity<Void> delete(@Login AuthInfo authInfo) {
-    authService.delete(authInfo.userId());
-    return ResponseEntity.ok().build();
-  }
-
 }

@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   List<User> findAllByChattingRoom(ChattingRoom chattingRoom);
 
+  List<User> findAllByIsDeletedIsTrue();
+
 }

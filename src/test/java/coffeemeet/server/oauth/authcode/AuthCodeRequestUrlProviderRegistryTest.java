@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProvider;
-import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderComposite;
+import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderRegistry;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class AuthCodeRequestUrlProviderCompositeTest {
+class AuthCodeRequestUrlProviderRegistryTest {
 
   @Mock
   private AuthCodeRequestUrlProvider provider;
@@ -26,7 +26,7 @@ class AuthCodeRequestUrlProviderCompositeTest {
   private Set<AuthCodeRequestUrlProvider> providers;
 
   @InjectMocks
-  private AuthCodeRequestUrlProviderComposite composite;
+  private AuthCodeRequestUrlProviderRegistry composite;
 
   @DisplayName("sns 의 redirect url 을 제공할 수 있다.")
   @Test
@@ -39,7 +39,7 @@ class AuthCodeRequestUrlProviderCompositeTest {
     given(provider.provide()).willReturn(resultUrl);
 
     providers = new HashSet<>(Collections.singletonList(provider));
-    composite = new AuthCodeRequestUrlProviderComposite(providers);
+    composite = new AuthCodeRequestUrlProviderRegistry(providers);
 
     // when
     String expectedUrl = composite.provide(oAuthProvider);

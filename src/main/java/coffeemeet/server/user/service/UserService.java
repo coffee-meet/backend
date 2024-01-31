@@ -1,18 +1,16 @@
 package coffeemeet.server.user.service;
 
-import static coffeemeet.server.common.domain.S3KeyPrefix.PROFILE_IMAGE;
 import static coffeemeet.server.common.execption.GlobalErrorCode.BAD_REQUEST_ERROR;
-import static coffeemeet.server.oauth.utils.constant.OAuthConstant.DEFAULT_IMAGE_URL;
 
 import coffeemeet.server.auth.domain.AuthTokens;
 import coffeemeet.server.auth.domain.AuthTokensGenerator;
 import coffeemeet.server.certification.domain.Certification;
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.domain.ObjectStorage;
 import coffeemeet.server.common.execption.BadRequestException;
 import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
-import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientRegistry;
+import coffeemeet.server.oauth.implement.client.OAuthMemberUnlinkRegistry;
 import coffeemeet.server.user.domain.Email;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -25,10 +23,7 @@ import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
-import coffeemeet.server.user.service.dto.MyProfileDto;
-import coffeemeet.server.user.service.dto.UserProfileDto;
 import coffeemeet.server.user.service.dto.UserStatusDto;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
-  private final ObjectStorage objectStorage;
-  private final OAuthMemberClientComposite oAuthMemberClientComposite;
+
+  private final OAuthMemberClientRegistry oAuthMemberClientRegistry;
+  private final OAuthMemberUnlinkRegistry oAuthMemberUnlinkRegistry;
 
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
@@ -62,64 +58,56 @@ public class UserService {
   }
 
   public LoginDetailsDto login(OAuthProvider oAuthProvider, String authCode) {
-    OAuthMemberDetail memberDetail = oAuthMemberClientComposite.fetch(oAuthProvider, authCode);
+    OAuthMemberDetail memberDetail = oAuthMemberClientRegistry.fetch(oAuthProvider, authCode);
     OAuthInfo oauthInfo = new OAuthInfo(memberDetail.oAuthProvider(),
         memberDetail.oAuthProviderId(),
         new Email(memberDetail.email()), memberDetail.profileImage());
     User user = userQuery.getUserByOAuthInfoOrDefault(oauthInfo);
+
     if (user.isRegistered()) {
       // TODO: 12/21/23 회원가입 중간에 나갈 때 예외 터지는 오류 잡기
-      List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-      Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-      AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-      return LoginDetailsDto.of(user, interests, certification, authTokens);
+      if (user.isDeleted()) {
+        if (user.getPrivacyDateTime().isBefore(LocalDateTime.now())) {
+          user.deletedWithdraw();
+          userCommand.updateUser(user);
+          List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+          Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+          AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+          return LoginDetailsDto.of(user, interests, certification, authTokens);
+        } else {
+          userCommand.deleteUser(user.getId());
+        }
+      } else {
+        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
+        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        AuthTokens authTokens = authTokensGenerator.generate(user.getId());
+        return LoginDetailsDto.of(user, interests, certification, authTokens);
+      }
     }
     userCommand.saveUser(user);
     return LoginDetailsDto.of(user, Collections.emptyList(), null, null);
-  }
-
-  public UserProfileDto findUserProfile(Long userId) {
-    User user = userQuery.getUserById(userId);
-    List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
-    Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return UserProfileDto.of(user, keywords, certification);
-  }
-
-  public MyProfileDto findMyProfile(Long userId) {
-    User user = userQuery.getUserById(userId);
-    List<Keyword> keywords = interestQuery.getKeywordsByUserId(userId);
-    Certification certification = certificationQuery.getCertificationByUserId(userId);
-    return MyProfileDto.of(user, keywords, certification);
-  }
-
-  public void updateProfileImage(Long userId, File file) {
-    User user = userQuery.getUserById(userId);
-    deleteCurrentProfileImage(user.getOauthInfo().getProfileImageUrl());
-
-    String key = objectStorage.generateKey(PROFILE_IMAGE);
-    objectStorage.upload(key, file);
-    user.updateProfileImageUrl(objectStorage.getUrl(key));
-    userCommand.updateUser(user);
-  }
-
-  @Transactional
-  public void updateProfileInfo(Long userId, String nickname,
-      List<Keyword> keywords) {
-    User user = userQuery.getUserById(userId);
-    if (nickname != null) {
-      userCommand.updateUserInfo(user, nickname);
-    }
-    if (keywords != null && !keywords.isEmpty()) {
-      interestCommand.updateInterests(user, keywords);
-    }
   }
 
   public void checkDuplicatedNickname(String nickname) {
     userQuery.hasDuplicatedNickname(nickname);
   }
 
-  public void deleteUser(Long userId) {
-    userCommand.deleteUser(userId);
+  public void deleteUser(Long userId, String accessToken, OAuthProvider oAuthProvider) {
+    User user = userQuery.getUserById(userId);
+    user.delete();
+    oAuthMemberUnlinkRegistry.unlink(oAuthProvider, accessToken);
+  }
+
+  public void deleteUserInfos() {
+    List<User> users = userQuery.getDeletedUsers();
+    LocalDateTime today = LocalDateTime.now();
+
+    List<User> deletedUsers = users.stream()
+        .filter(u -> u.getPrivacyDateTime() != null)
+        .filter(
+            u -> u.getPrivacyDateTime().isAfter(today) || u.getPrivacyDateTime().isEqual(today))
+        .toList();
+    deletedUsers.forEach(u -> userCommand.deleteUser(u.getId()));
   }
 
   public void registerOrUpdateNotificationToken(Long useId, String token) {
@@ -158,24 +146,14 @@ public class UserService {
   private UserStatusDto handleChattingUser(User user) {
     Long chattingRoomId = user.getChattingRoom().getId();
     String chattingRoomName = user.getChattingRoom().getName();
-    return UserStatusDto.of(UserStatus.CHATTING_UNCONNECTED, null, chattingRoomId, chattingRoomName,
+    return UserStatusDto.of(UserStatus.CHATTING_UNCONNECTED, null, chattingRoomId,
+        chattingRoomName,
         null, null);
   }
 
   private UserStatusDto handleReportedUser(User user) {
     LocalDateTime penaltyExpiration = user.getReportInfo().getPenaltyExpiration();
     return UserStatusDto.of(UserStatus.REPORTED, null, null, null, null, penaltyExpiration);
-  }
-
-  private void deleteCurrentProfileImage(String profileImageUrl) {
-    if (!profileImageUrl.equals(DEFAULT_IMAGE_URL)) {
-      String currentKey = objectStorage.extractKey(profileImageUrl,
-          PROFILE_IMAGE);
-      if (currentKey.isBlank()) {
-        return;
-      }
-      objectStorage.delete(currentKey);
-    }
   }
 
 }
