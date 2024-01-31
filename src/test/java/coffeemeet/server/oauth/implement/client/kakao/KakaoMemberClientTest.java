@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.OauthFixture;
-import coffeemeet.server.oauth.infrastructure.kakao.KakaoClient;
+import coffeemeet.server.oauth.infrastructure.kakao.KakaoFetchClient;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoMemberDetail;
 import coffeemeet.server.oauth.infrastructure.kakao.dto.KakaoTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -23,7 +23,7 @@ class KakaoMemberClientTest {
   KakaoMemberClient kakaoMemberClient;
 
   @Mock
-  KakaoClient kakaoClient;
+  KakaoFetchClient kakaoClient;
 
   @DisplayName("카카오 프로바이더를 가져올 수 있다.")
   @Test

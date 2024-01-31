@@ -44,6 +44,7 @@ import coffeemeet.server.user.presentation.dto.SignupHTTP;
 import coffeemeet.server.user.presentation.dto.UpdateProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserProfileHTTP;
 import coffeemeet.server.user.presentation.dto.UserStatusHTTP;
+import coffeemeet.server.user.service.UserProfileService;
 import coffeemeet.server.user.service.UserService;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.MyProfileDto;
@@ -64,6 +65,9 @@ class UserControllerTest extends ControllerTestConfig {
 
   @MockBean
   private UserService userService;
+
+  @MockBean
+  private UserProfileService userProfileService;
 
   @BeforeEach
   void setUp() {
@@ -150,7 +154,7 @@ class UserControllerTest extends ControllerTestConfig {
     UserProfileHTTP.Response expectedResponse = UserFixture.userProfileHTTPResponse(
         response);
 
-    given(userService.findUserProfile(anyLong())).willReturn(response);
+    given(userProfileService.findUserProfile(anyLong())).willReturn(response);
 
     // when, then
     mockMvc.perform(get("/api/v1/users/{id}", USER_ID)
@@ -184,7 +188,7 @@ class UserControllerTest extends ControllerTestConfig {
     MyProfileHTTP.Response expectedResponse = UserFixture.myProfileHTTPResponse(response);
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
-    given(userService.findMyProfile(anyLong())).willReturn(response);
+    given(userProfileService.findMyProfile(anyLong())).willReturn(response);
 
     // when, then
     mockMvc.perform(get("/api/v1/users/me")
@@ -249,7 +253,7 @@ class UserControllerTest extends ControllerTestConfig {
 
     given(jwtTokenProvider.extractUserId(TOKEN)).willReturn(USER_ID);
     willDoNothing().given(
-        userService).updateProfileInfo(any(), any(), any());
+        userProfileService).updateProfileInfo(any(), any(), any());
 
     // when, then
     mockMvc.perform(patch("/api/v1/users/me")

@@ -34,7 +34,7 @@ class NaverClientTest {
   private NaverProperties naverProperties;
 
   @InjectMocks
-  private NaverClient naverClient;
+  private NaverFetchClient naverClient;
 
   @DisplayName("네이버로부터 인증 토큰을 받을 수 있다.")
   @Test

@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import coffeemeet.server.common.fixture.OauthFixture;
-import coffeemeet.server.oauth.infrastructure.naver.NaverClient;
+import coffeemeet.server.oauth.infrastructure.naver.NaverFetchClient;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverMemberDetail;
 import coffeemeet.server.oauth.infrastructure.naver.dto.NaverTokens;
 import coffeemeet.server.user.domain.OAuthProvider;
@@ -23,7 +23,7 @@ class NaverMemberClientTest {
   private NaverMemberClient naverMemberClient;
 
   @Mock
-  private NaverClient naverClient;
+  private NaverFetchClient naverClient;
 
   @DisplayName("네이버 프로바이더를 가져올 수 있다.")
   @Test

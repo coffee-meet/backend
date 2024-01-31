@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import coffeemeet.server.common.fixture.OauthFixture;
 import coffeemeet.server.oauth.domain.OAuthMemberDetail;
 import coffeemeet.server.oauth.implement.client.OAuthMemberClient;
-import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
+import coffeemeet.server.oauth.implement.client.OAuthMemberClientRegistry;
 import coffeemeet.server.user.domain.OAuthProvider;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ class OAuthMemberClientCompositeTest {
   private Set<OAuthMemberClient> clients;
 
   @InjectMocks
-  private OAuthMemberClientComposite composite;
+  private OAuthMemberClientRegistry oAuthMemberClientRegistry;
 
   @DisplayName("sns 로부터 사용자 정보를 가져올 수 있다.")
   @Test
@@ -42,10 +42,10 @@ class OAuthMemberClientCompositeTest {
     given(client.fetch(authCode)).willReturn(response);
 
     clients = new HashSet<>(Collections.singletonList(client));
-    composite = new OAuthMemberClientComposite(clients);
+    oAuthMemberClientRegistry = new OAuthMemberClientRegistry(clients);
 
     // when
-    OAuthMemberDetail expectedResponse = composite.fetch(oAuthProvider, authCode);
+    OAuthMemberDetail expectedResponse = oAuthMemberClientRegistry.fetch(oAuthProvider, authCode);
 
     // then
     assertThat(response).isEqualTo(expectedResponse);

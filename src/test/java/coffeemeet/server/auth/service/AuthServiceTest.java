@@ -15,6 +15,7 @@ import coffeemeet.server.auth.domain.JwtTokenProvider;
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
 import coffeemeet.server.common.execption.InvalidAuthException;
 import coffeemeet.server.common.fixture.AuthFixture;
+import coffeemeet.server.oauth.service.OAuthService;
 import coffeemeet.server.user.service.UserService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,9 @@ class AuthServiceTest {
 
   @InjectMocks
   private AuthService authService;
+
+  @InjectMocks
+  private OAuthService oAuthService;
 
   @Mock
   private UserService userService;
@@ -86,19 +90,6 @@ class AuthServiceTest {
 
     // when, then
     assertThatCode(() -> authService.logout(userId))
-        .doesNotThrowAnyException();
-  }
-
-  @DisplayName("회원 탈퇴 시킬 수 있다.")
-  @Test
-  void deleteTest() {
-    // given
-    Long userId = Instancio.create(Long.class);
-    willDoNothing().given(refreshTokenCommand).deleteRefreshToken(anyLong());
-    willDoNothing().given(userService).deleteUser(anyLong());
-
-    // when, then
-    assertThatCode(() -> authService.delete(userId))
         .doesNotThrowAnyException();
   }
 

@@ -33,7 +33,7 @@ class KakaoClientTest {
   private KakaoProperties kakaoProperties;
 
   @InjectMocks
-  private KakaoClient kakaoClient;
+  private KakaoFetchClient kakaoClient;
 
   @DisplayName("카카오로부터 인증 토큰을 받을 수 있다.")
   @Test
