@@ -130,7 +130,7 @@ class AdminServiceTest {
     given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
 
     // when
-    adminService.punishUser(userId, reportIds);
+    adminService.approveReport(userId, reportIds);
 
     // then
     then(matchingQueueCommand).should(only()).deleteUserByUserId(companyName, userId);
@@ -162,7 +162,7 @@ class AdminServiceTest {
     adminService.checkInquiry(inquiry.getInquirerId());
 
     // then
-    then(inquiryCommand).should(only()).check(inquiry);
+    then(inquiryCommand).should(only()).updateCheckedInquiry(inquiry.getId());
     then(userQuery).should(only()).getNotificationInfoByUserId(inquiry.getInquirerId());
     then(fcmNotificationSender).should(only()).sendNotification(any(), any());
   }

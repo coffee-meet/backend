@@ -43,7 +43,7 @@ class InquiryCommandTest {
     Inquiry inquiry = InquiryFixture.inquiry();
 
     // when
-    inquiryCommand.check(inquiry);
+    inquiryCommand.updateCheckedInquiry(inquiry);
 
     // then
     assertThat(inquiry.isChecked()).isTrue();

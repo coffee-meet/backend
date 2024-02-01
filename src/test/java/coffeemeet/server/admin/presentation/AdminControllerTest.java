@@ -507,12 +507,12 @@ class AdminControllerTest extends ControllerTestConfig {
     Long inquiryId = 1L;
 
     // when, then
-    mockMvc.perform(patch(baseUrl + "/inquiries/{inquiryId}/check", inquiryId)
+    mockMvc.perform(patch(baseUrl + "/inquiries/{inquiryId}/updateCheckedInquiry", inquiryId)
             .header(JSESSION, SESSION_VALUE)
             .sessionAttr("adminId", "admin")
         )
         .andDo(document(
-                "inquiry-check",
+                "inquiry-updateCheckedInquiry",
                 resourceDetails()
                     .tag("관리자")
                     .description("문의 확인"),
