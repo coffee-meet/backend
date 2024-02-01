@@ -1,4 +1,4 @@
-package coffeemeet.server.admin.domain;
+package coffeemeet.server.common.domain;
 
 public record UserNotificationEvent(
     Long userId,
