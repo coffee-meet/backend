@@ -2,6 +2,7 @@ package coffeemeet.server.matching.implement;
 
 import static coffeemeet.server.common.execption.GlobalErrorCode.INTERNAL_SERVER_ERROR;
 
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.execption.RedisException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class MatchingQueueCommand {
 
   private final RedisTemplate<String, Long> redisTemplate;
+  private final CertificationQuery certificationQuery;
 
   public void enqueueUserByCompanyName(String companyName, Long userId) {
     ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
@@ -37,7 +39,8 @@ public class MatchingQueueCommand {
         .toLocalDateTime();
   }
 
-  public void deleteUserByUserId(String companyName, Long userId) {
+  public void deleteUserByUserId(Long userId) {
+    String companyName = certificationQuery.getCompanyNameByUserId(userId);
     redisTemplate.opsForZSet().remove(companyName, userId);
   }
 

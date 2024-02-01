@@ -68,8 +68,7 @@ public class MatchingService {
       throw new BadRequestException(INVALID_USER_STATUS,
           String.format("유저 상태가 %s이 아닙니다.", MATCHING));
     }
-    String companyName = certificationQuery.getCompanyNameByUserId(userId);
-    matchingQueueCommand.deleteUserByUserId(companyName, userId);
+    matchingQueueCommand.deleteUserByUserId(userId);
     userCommand.setToIdle(userId);
   }
 
