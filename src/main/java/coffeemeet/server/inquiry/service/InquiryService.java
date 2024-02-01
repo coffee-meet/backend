@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class InquiryService {
   private final InquiryQuery inquiryQuery;
   private final UserQuery userQuery;
 
+  @Transactional
   public void registerInquiry(Long inquirerId, String title, String content) {
     inquiryCommand.createReport(new Inquiry(inquirerId, title, content));
   }
@@ -34,10 +36,7 @@ public class InquiryService {
     List<InquirySummary> inquirySummaries = inquiries.stream()
         .map(inquiry -> InquirySummary.of(inquiry, userMap.get(inquiry.getInquirerId())))
         .toList();
-    boolean hasNext = true;
-    if (inquiries.size() < pageSize) {
-      hasNext = false;
-    }
+    boolean hasNext = inquiries.size() >= pageSize;
     return InquirySearchDto.of(inquirySummaries, hasNext);
   }
 
