@@ -4,7 +4,7 @@ package coffeemeet.server.admin.implement;
 import static coffeemeet.server.admin.exception.AdminErrorCode.INVALID_LOGIN_REQUEST;
 
 import coffeemeet.server.admin.domain.Admin;
-import coffeemeet.server.admin.infrastructure.AdminRepository;
+import coffeemeet.server.admin.domain.AdminRepository;
 import coffeemeet.server.common.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
