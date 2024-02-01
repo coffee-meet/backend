@@ -1,10 +1,10 @@
 package coffeemeet.server.admin.service;
 
-import coffeemeet.server.admin.domain.UserNotificationEvent;
 import coffeemeet.server.admin.implement.AdminAccountValidator;
 import coffeemeet.server.certification.implement.CertificationCommand;
 import coffeemeet.server.inquiry.implement.InquiryCommand;
 import coffeemeet.server.report.implement.ReportCommand;
+import coffeemeet.server.common.domain.UserNotificationEvent;
 import coffeemeet.server.user.implement.UserCommand;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
