@@ -1,6 +1,9 @@
 package coffeemeet.server.user.implement;
 
+import static coffeemeet.server.user.domain.UserStatus.MATCHING;
+
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
+import coffeemeet.server.matching.implement.MatchingQueueCommand;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
@@ -20,6 +23,7 @@ public class UserCommand {
   private final UserRepository userRepository;
   private final UserQuery userQuery;
   private final InterestRepository interestRepository;
+  private final MatchingQueueCommand matchingQueueCommand;
 
   public Long saveUser(User user) {
     return userRepository.save(user).getId();
@@ -76,6 +80,14 @@ public class UserCommand {
   public void setToMatching(Long userId) {
     User user = userQuery.getUserById(userId);
     user.matching();
+  }
+
+  public void updatePunishedUser(Long userId) {
+    User user = userQuery.getUserById(userId);
+    if (user.getUserStatus() == MATCHING) {
+      matchingQueueCommand.deleteUserByUserId(userId);
+    }
+    user.punished();
   }
 
 }
