@@ -2,8 +2,10 @@ package coffeemeet.server.user.implement;
 
 import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import coffeemeet.server.user.domain.Interest;
 import coffeemeet.server.user.domain.Keyword;
@@ -24,7 +26,7 @@ class InterestCommandTest {
   private InterestCommand interestCommand;
 
   @Mock
-  private InterestQuery interestQuery;
+  private UserQuery userQuery;
 
   @Mock
   private InterestRepository interestRepository;
@@ -43,18 +45,20 @@ class InterestCommandTest {
 
   @Test
   @DisplayName("관심사를 수정할 수 있다.")
-  void updateInterests() {
+  void updateInterestsTest() {
     // given
     User user = user();
-    List<Interest> interests = List.of(new Interest(Keyword.게임, user),
-        new Interest(Keyword.외국어, user));
+    Long userId = user.getId();
     List<Keyword> newKeywords = List.of(Keyword.반려동물, Keyword.여행);
 
-    given(interestQuery.findAllByUserId(anyLong())).willReturn(interests);
+    given(userQuery.getUserById(userId)).willReturn(user);
 
-    // when, then
-    assertThatCode(() -> interestCommand.updateInterests(user, newKeywords))
-        .doesNotThrowAnyException();
+    // when
+    interestCommand.updateInterests(user.getId(), newKeywords);
+
+    // then
+    then(interestRepository).should(times(1)).deleteAllByUserId(userId);
+    then(interestRepository).should(times(1)).saveAll(any());
   }
 
   @Test
