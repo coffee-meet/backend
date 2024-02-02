@@ -1,20 +1,15 @@
 package coffeemeet.server.chatting.current.service;
 
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessage;
-import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.chattingRoomUsers;
 import static coffeemeet.server.common.fixture.UserFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.chatting.current.domain.ChattingSession;
 import coffeemeet.server.chatting.current.implement.ChattingMessageCommand;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
@@ -64,28 +59,26 @@ class ChattingMessageServiceTest {
   void chattingTest() {
     // given
     User user = user();
-    List<User> users = fourUsers();
-    ChattingRoom chattingRoom = chattingRoom();
-
-    String content = "내용";
+    List<User> users = chattingRoomUsers();
+    ChattingRoom chattingRoom = users.get(0).getChattingRoom();
+    Long roomId = chattingRoom.getId();
+    String sessionId = "sessionId";
+    String content = "메세지내용";
     ChattingMessage chattingMessage = chattingMessage(content);
-    ChattingSession chattingSession = new ChattingSession("sessionId", user.getId());
+    ChattingDto expected = ChattingDto.of(user, chattingMessage);
 
-    given(chattingSessionQuery.getUserIdById(chattingSession.sessionId())).willReturn(
-        chattingSession.userId());
-    given(chattingRoomQuery.getChattingRoomById(chattingRoom.getId())).willReturn(chattingRoom);
-    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(users);
-    given(userQuery.getUserById(user.getId())).willReturn(user);
-    willDoNothing().given(fcmNotificationSender).sendMultiNotifications(anySet(), any());
+    given(chattingSessionQuery.getUserById(sessionId)).willReturn(user);
+    given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
     given(chattingMessageCommand.createChattingMessage(content, chattingRoom, user)).willReturn(
         chattingMessage);
 
     // when
-    ChattingDto response = chattingMessageService.chat(chattingSession.sessionId(),
-        chattingRoom.getId(), content);
+    ChattingDto chat = chattingMessageService.chat(sessionId, roomId, content);
 
     // then
-    assertThat(response.content()).isEqualTo(content);
+    assertThat(chat)
+        .usingRecursiveComparison()
+        .isEqualTo(expected);
   }
 
   @DisplayName("세션을 저장하고, 유저의 상태를 연결된 상태로 바꿀수 있다.")

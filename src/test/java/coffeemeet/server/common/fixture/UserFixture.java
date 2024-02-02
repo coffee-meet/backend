@@ -1,5 +1,6 @@
 package coffeemeet.server.common.fixture;
 
+import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
 import static java.time.LocalDateTime.now;
 import static org.instancio.Select.field;
 
@@ -93,9 +94,10 @@ public class UserFixture {
         .create();
   }
 
-  public static List<User> fourUsers() {
+  public static List<User> chattingRoomUsers() {
     return Instancio.ofList(User.class).size(4)
         .generate(field(User::getId), gen -> gen.longSeq().start(1L))
+        .set(field(User::getChattingRoom), chattingRoom())
         .create();
   }
 

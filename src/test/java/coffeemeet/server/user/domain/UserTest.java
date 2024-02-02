@@ -142,7 +142,7 @@ class UserTest {
     // given
     ChattingRoom chattingRoom = new ChattingRoom();
     User user = new User();
-    user.setIdleStatus();
+    user.exitChattingRoom();
 
     // when, then
     assertThatThrownBy(() -> user.completeMatching(chattingRoom))
@@ -154,7 +154,7 @@ class UserTest {
   void enterChattingRoom_BadRequestExceptionTest() {
     // given
     User user = new User();
-    user.setIdleStatus();
+    user.exitChattingRoom();
 
     // when, then
     assertThatThrownBy(user::enterChattingRoom).isInstanceOf(BadRequestException.class);
@@ -165,10 +165,10 @@ class UserTest {
   void exitChattingRoom_BadRequestExceptionTest() {
     // given
     User user = new User();
-    user.setIdleStatus();
+    user.exitChattingRoom();
 
     // when, then
-    assertThatThrownBy(user::exitChattingRoom).isInstanceOf(BadRequestException.class);
+    assertThatThrownBy(user::disconnectChattingRoom).isInstanceOf(BadRequestException.class);
   }
 
   @Test

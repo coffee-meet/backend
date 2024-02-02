@@ -20,7 +20,8 @@ class InquiryCommandTest {
 
   @InjectMocks
   private InquiryCommand inquiryCommand;
-
+  @Mock
+  private InquiryQuery inquiryQuery;
   @Mock
   private InquiryRepository inquiryRepository;
 
@@ -41,9 +42,12 @@ class InquiryCommandTest {
   void checkTest() {
     // given
     Inquiry inquiry = InquiryFixture.inquiry();
+    Long inquiryId = inquiry.getId();
+
+    given(inquiryQuery.getInquiryBy(inquiryId)).willReturn(inquiry);
 
     // when
-    inquiryCommand.updateCheckedInquiry(inquiry);
+    inquiryCommand.updateCheckedInquiry(inquiryId);
 
     // then
     assertThat(inquiry.isChecked()).isTrue();

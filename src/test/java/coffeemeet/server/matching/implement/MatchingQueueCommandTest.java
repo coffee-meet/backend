@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.certification.implement.CertificationQuery;
 import coffeemeet.server.common.execption.RedisException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,9 @@ class MatchingQueueCommandTest {
 
   @Mock
   private ZSetOperations<String, Long> zSetOperations;
+
+  @Mock
+  private CertificationQuery certificationQuery;
 
   @BeforeEach
   void setUp() {
@@ -78,9 +82,10 @@ class MatchingQueueCommandTest {
     // given
     String companyName = "회사명";
     Long userId = 1L;
+    given(certificationQuery.getCompanyNameByUserId(userId)).willReturn(companyName);
 
     // when
-    matchingQueueCommand.deleteUserByUserId(companyName, userId);
+    matchingQueueCommand.deleteUserByUserId(userId);
 
     // then
     then(zSetOperations).should(only()).remove(companyName, userId);
