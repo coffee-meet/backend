@@ -41,6 +41,9 @@ class UserCommandTest {
   @Mock
   private InterestRepository interestRepository;
 
+  @Mock
+  private DuplicatedNicknameValidator duplicatedNicknameValidator;
+
   @Test
   @DisplayName("유저를 저장할 수 있다.")
   void saveUserTest() {
@@ -86,12 +89,14 @@ class UserCommandTest {
   void updateUserInfoTest() {
     // given
     User user = user();
+    Long userId = user.getId();
     String newNickname = "newNickname";
 
-    willDoNothing().given(userQuery).hasDuplicatedNickname(any());
+    given(userQuery.getUserById(userId)).willReturn(user);
+    willDoNothing().given(duplicatedNicknameValidator).validateExceptUserId(newNickname, userId);
 
     // when
-    userCommand.updateUserInfo(user, newNickname);
+    userCommand.updateUserInfo(userId, newNickname);
 
     // then
     assertThat(user.getProfile().getNickname()).isEqualTo(newNickname);

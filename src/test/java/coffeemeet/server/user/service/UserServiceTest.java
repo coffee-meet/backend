@@ -38,6 +38,7 @@ import coffeemeet.server.oauth.implement.client.OAuthMemberClientComposite;
 import coffeemeet.server.user.domain.Keyword;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
+import coffeemeet.server.user.implement.DuplicatedNicknameValidator;
 import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
@@ -93,6 +94,9 @@ class UserServiceTest {
   @Mock
   private MatchingQueueCommand matchingQueueCommand;
 
+  @Mock
+  private DuplicatedNicknameValidator duplicatedNicknameValidator;
+
   @DisplayName("회원가입을 할 수 있다.")
   @Test
   void signupTest() {
@@ -101,7 +105,7 @@ class UserServiceTest {
     User user = user();
 
     given(userQuery.getNonRegisteredUserById(anyLong())).willReturn(user);
-    willDoNothing().given(userQuery).hasDuplicatedNickname(anyString());
+    willDoNothing().given(duplicatedNicknameValidator).validate(anyString());
     willDoNothing().given(interestCommand).saveAll(anyList(), any());
 
     // when, then
@@ -242,11 +246,10 @@ class UserServiceTest {
   void updateProfileInfo() {
     // given
     User user = user();
-
+    Long userId = user.getId();
     String newNickname = "새닉네임";
     List<Keyword> newKeywords = keywords();
 
-    given(userQuery.getUserById(any())).willReturn(user);
     willDoNothing().given(userCommand).updateUserInfo(any(), any());
     willDoNothing().given(interestCommand).updateInterests(any(), any());
 
@@ -254,8 +257,8 @@ class UserServiceTest {
     userService.updateProfileInfo(user.getId(), newNickname, newKeywords);
 
     // then
-    verify(userCommand).updateUserInfo(any(User.class), anyString());
-    verify(interestCommand).updateInterests(any(User.class), anyList());
+    verify(userCommand).updateUserInfo(anyLong(), anyString());
+    verify(interestCommand).updateInterests(anyLong(), anyList());
   }
 
   @DisplayName("탈퇴할 수 있다.")
@@ -278,7 +281,7 @@ class UserServiceTest {
     User user = user();
     String nickname = user.getProfile().getNickname();
 
-    willDoNothing().given(userQuery).hasDuplicatedNickname(nickname);
+    willDoNothing().given(duplicatedNicknameValidator).validate(nickname);
 
     // then
     assertThatCode(() -> userService.checkDuplicatedNickname(nickname))

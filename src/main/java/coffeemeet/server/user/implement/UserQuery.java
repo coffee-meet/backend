@@ -1,11 +1,9 @@
 package coffeemeet.server.user.implement;
 
-import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_EXIST_NICKNAME;
 import static coffeemeet.server.user.exception.UserErrorCode.ALREADY_REGISTERED_USER;
 import static coffeemeet.server.user.exception.UserErrorCode.NOT_EXIST_USER;
 
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
-import coffeemeet.server.common.execption.DuplicatedDataException;
 import coffeemeet.server.common.execption.NotFoundException;
 import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.OAuthInfo;
@@ -25,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserQuery {
 
   private static final String NOT_EXIST_USER_MESSAGE = "해당 아이디(%s)에 일치하는 사용자는 존재하지 않습니다.";
-  private static final String ALREADY_EXIST_NICKNAME_MESSAGE = "해당 닉네임(%s)은 이미 존재하는 닉네임입니다.";
   private static final String ALREADY_REGISTERED_USER_MESSAGE = "해당 사용자(%s)는 이미 회원가입 되었습니다.";
 
   private final UserRepository userRepository;
@@ -68,15 +65,6 @@ public class UserQuery {
         .orElse(
             new User(oAuthInfo)
         );
-  }
-
-  public void hasDuplicatedNickname(String nickname) {
-    if (userRepository.existsUserByProfile_Nickname(nickname)) {
-      throw new DuplicatedDataException(
-          ALREADY_EXIST_NICKNAME,
-          String.format(ALREADY_EXIST_NICKNAME_MESSAGE, nickname)
-      );
-    }
   }
 
   public NotificationInfo getNotificationInfoByUserId(Long userId) {

@@ -25,6 +25,7 @@ public class UserCommand {
 
   private final UserRepository userRepository;
   private final UserQuery userQuery;
+  private final DuplicatedNicknameValidator duplicatedNicknameValidator;
   private final InterestRepository interestRepository;
   private final MatchingQueueCommand matchingQueueCommand;
   private final ChattingRoomQuery chattingRoomQuery;
@@ -43,8 +44,9 @@ public class UserCommand {
     userRepository.deleteById(userId);
   }
 
-  public void updateUserInfo(User user, String nickname) {
-    userQuery.hasDuplicatedNickname(nickname);
+  public void updateUserInfo(Long userId, String nickname) {
+    User user = userQuery.getUserById(userId);
+    duplicatedNicknameValidator.validateExceptUserId(nickname, user.getId());
     user.updateNickname(nickname);
   }
 

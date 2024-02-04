@@ -107,19 +107,6 @@ class UserQueryTest {
   }
 
   @Test
-  @DisplayName("닉네임을 중복체크할 수 있다.")
-  void hasDuplicatedNicknameTest() {
-    // given
-    String nickname = "nickname";
-
-    given(userRepository.existsUserByProfile_Nickname(any())).willReturn(Boolean.FALSE);
-
-    // when, then
-    assertThatCode(() -> userQuery.hasDuplicatedNickname(nickname))
-        .doesNotThrowAnyException();
-  }
-
-  @Test
   @DisplayName("아이디로 등록되지 않은 회원을 가져올 수 있다.")
   void getNonRegisteredUserByIdTest() {
     // given

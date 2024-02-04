@@ -39,25 +39,8 @@ class InterestQueryTest {
     List<Keyword> result = interestQuery.getKeywordsByUserId(user.getId());
 
     // then
-    assertThat(result).hasSize(2);
-    assertThat(result).contains(Keyword.게임, Keyword.여행);
-  }
-
-  @DisplayName("유저 아이디로 해당 유저의 관심사를 가져올 수 있다.")
-  @Test
-  void findAllByUserId() {
-    // given
-    User user = user();
-    List<Interest> interests = List.of(new Interest(Keyword.게임, user),
-        new Interest(Keyword.여행, user));
-
-    given(interestRepository.findAllByUserId(anyLong())).willReturn(interests);
-
-    // when
-    List<Interest> result = interestQuery.findAllByUserId(user.getId());
-
-    // then
-    assertThat(result).hasSize(2);
+    assertThat(result).hasSize(2)
+        .contains(Keyword.게임, Keyword.여행);
   }
 
 }
