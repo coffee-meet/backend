@@ -12,7 +12,6 @@ import coffeemeet.server.admin.service.AdminService;
 import coffeemeet.server.certification.service.CertificationService;
 import coffeemeet.server.certification.service.dto.PendingCertification;
 import coffeemeet.server.certification.service.dto.PendingCertificationPageDto;
-import coffeemeet.server.common.annotation.PerformanceMeasurement;
 import coffeemeet.server.inquiry.presentation.dto.InquiryDetailHTTP;
 import coffeemeet.server.inquiry.service.InquiryService;
 import coffeemeet.server.inquiry.service.dto.InquiryDetailDto;
@@ -110,7 +109,7 @@ public class AdminController {
 //    if (adminId == null) {
 //      throw new InvalidAuthException(NOT_AUTHORIZED, REQUEST_WITHOUT_SESSION_MESSAGE);
 //    }
-    adminService.punishUser(targetedId, request.reportIds());
+    adminService.approveReport(targetedId, request.reportIds());
     return ResponseEntity.ok().build();
   }
 
@@ -200,8 +199,6 @@ public class AdminController {
     return ResponseEntity.ok().build();
   }
 
-  // TODO: 11/27/23 임시로 페이징(옵셋 기반) 처리, 개선 필요
-  @PerformanceMeasurement
   @GetMapping("/certifications/pending")
   public ResponseEntity<AdminCustomPage<PendingCertification>> getPendingCertifications(
       @SessionAttribute(name = ADMIN_SESSION_ATTRIBUTE, required = false) String adminId,

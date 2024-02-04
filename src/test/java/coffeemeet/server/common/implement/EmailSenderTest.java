@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
+import coffeemeet.server.common.domain.CoffeeMeetMail;
 import coffeemeet.server.common.infrastructure.EmailSender;
 import java.util.Objects;
 import org.instancio.Instancio;
@@ -43,12 +44,11 @@ class EmailSenderTest {
   @DisplayName("메일을 보낼 수 있다.")
   void sendVerificationCodeTest() {
     // given
-    String email = email();
-    String subject = Instancio.create(String.class);
-    String body = Instancio.create(String.class);
+    CoffeeMeetMail coffeeMeetMail = new CoffeeMeetMail(email(), Instancio.create(String.class),
+        Instancio.create(String.class));
 
     // when
-    emailSender.sendEmail(email, subject, body);
+    emailSender.sendMail(coffeeMeetMail);
 
     // then
     then(javaMailSender).should(only()).send(simpleMailMessage.capture());
@@ -56,8 +56,11 @@ class EmailSenderTest {
     SimpleMailMessage sentMailMessage = simpleMailMessage.getValue();
     assertAll(
         () -> assertThat(sentMailMessage.getFrom()).isEqualTo(sender),
-        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(email),
-        () -> assertThat(sentMailMessage.getText()).contains(body)
+        () -> assertThat(Objects.requireNonNull(sentMailMessage.getTo())[0]).isEqualTo(
+            coffeeMeetMail.receiver()),
+        () -> assertThat(sentMailMessage.getSubject()).isEqualTo(
+            coffeeMeetMail.title()),
+        () -> assertThat(sentMailMessage.getText()).contains(coffeeMeetMail.contents())
     );
   }
 }

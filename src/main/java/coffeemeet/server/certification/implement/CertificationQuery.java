@@ -38,10 +38,6 @@ public class CertificationQuery {
     return certificationRepository.existsByCompanyEmail(companyEmail);
   }
 
-  public Long getUserIdByCertificationId(Long certificationId) {
-    return certificationId;
-  }
-
   public Page<Certification> getPendingCertification(Pageable pageable) {
     return certificationRepository.findPendingCertifications(pageable);
   }

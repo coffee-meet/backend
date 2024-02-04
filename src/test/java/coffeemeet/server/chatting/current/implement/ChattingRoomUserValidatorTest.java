@@ -1,6 +1,6 @@
 package coffeemeet.server.chatting.current.implement;
 
-import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.chattingRoomUsers;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,7 +30,7 @@ class ChattingRoomUserValidatorTest {
     @Test
     void success() {
       // given
-      List<User> users = fourUsers();
+      List<User> users = chattingRoomUsers();
       Long requestUserId = users.get(0).getId();
 
       // when, then
@@ -42,7 +42,7 @@ class ChattingRoomUserValidatorTest {
     @Test
     void forbiddenException() {
       // given
-      List<User> users = fourUsers();
+      List<User> users = chattingRoomUsers();
       Long requestUserId = generateNonExistingUserId(users);
 
       // when, then

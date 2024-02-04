@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,18 +36,20 @@ public class CertificationService {
   private final VerificationInfoCommand verificationInfoCommand;
   private final VerificationMailSender verificationMailSender;
 
+  @Transactional
   public void registerCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     CompanyEmail companyEmail = new CompanyEmail(email);
     Department department = Department.valueOf(departmentName);
 
     String businessCardImageUrl = businessCardImageUploader.uploadBusinessCardImage(
-        businessCardImage);
+        businessCardImage);  // TODO: 2024/02/02 이 외부콜을 어떻게 하면 좋을까?
 
     certificationCommand.createCertification(userId, companyName, companyEmail, department,
         businessCardImageUrl);
   }
 
+  @Transactional
   public void updateCertification(Long userId, String companyName, String email,
       String departmentName, File businessCardImage) {
     CompanyEmail companyEmail = new CompanyEmail(email);

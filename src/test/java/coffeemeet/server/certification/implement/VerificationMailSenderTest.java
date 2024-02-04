@@ -2,7 +2,7 @@ package coffeemeet.server.certification.implement;
 
 import static coffeemeet.server.common.fixture.CertificationFixture.companyEmail;
 import static coffeemeet.server.common.fixture.CertificationFixture.verificationCode;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
@@ -36,6 +36,6 @@ class VerificationMailSenderTest {
     verificationMailSender.sendVerificationMail(companyEmail, verificationCode);
 
     // then
-    then(emailSender).should(only()).sendEmail(anyString(), anyString(), anyString());
+    then(emailSender).should(only()).sendMail(any());
   }
 }
