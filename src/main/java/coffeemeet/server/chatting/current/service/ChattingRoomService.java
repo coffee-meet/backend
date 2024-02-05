@@ -56,7 +56,7 @@ public class ChattingRoomService {
 
   @Transactional
   public void exitChattingRoom(Long requestUserId, Long roomId, Long chattingRoomLastMessageId) {
-    userCommand.exitChattingRoom(requestUserId);
+    userCommand.updateExitedChattingRoomUser(roomId, requestUserId);
     chattingRoomMigrationProcessor.migrate(roomId, chattingRoomLastMessageId);
     applicationEventPublisher.publishEvent(
         new ChattingRoomNotificationEvent(roomId, "채팅이 종료되었습니다!")

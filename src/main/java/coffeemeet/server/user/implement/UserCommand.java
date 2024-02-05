@@ -97,7 +97,7 @@ public class UserCommand {
     user.punished();
   }
 
-  public void updateChattingRoomExitedUser(Long roomId, Long requestUserId) {
+  public void updateExitedChattingRoomUser(Long roomId, Long requestUserId) {
     ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
     List<User> chattingRoomUsers = userQuery.getUsersByRoom(chattingRoom);
     chattingRoomUserValidator.validateUserInChattingRoom(requestUserId, chattingRoomUsers);
