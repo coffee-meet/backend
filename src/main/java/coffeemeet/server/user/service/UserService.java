@@ -25,7 +25,6 @@ import coffeemeet.server.user.implement.UserQuery;
 import coffeemeet.server.user.service.dto.LoginDetailsDto;
 import coffeemeet.server.user.service.dto.UserStatusDto;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class UserService {
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
 
   private final OAuthMemberClientRegistry oAuthMemberClientRegistry;
-  private final OAuthMemberUnlinkRegistry oAuthMemberUnlinkRegistry;
 
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
@@ -66,36 +64,25 @@ public class UserService {
 
     if (user.isRegistered()) {
       // TODO: 12/21/23 회원가입 중간에 나갈 때 예외 터지는 오류 잡기
-      if (user.isDeleted()) {
-        if (user.getPrivacyDateTime().isBefore(LocalDateTime.now())) {
-          user.deletedWithdraw();
-          userCommand.updateUser(user);
-          List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-          Certification certification = certificationQuery.getCertificationByUserId(user.getId());
-          AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-          return LoginDetailsDto.of(user, interests, certification, authTokens);
-        } else {
-          userCommand.deleteUser(user.getId());
-        }
+      if (user.leave()) {
+        // 연결 끊기
+        userCommand.deleteUserInfo(user.getId());
+        return LoginDetailsDto.of(null, null, null, null);
       } else {
-        List<Keyword> interests = interestQuery.getKeywordsByUserId(user.getId());
-        Certification certification = certificationQuery.getCertificationByUserId(user.getId());
+        user.deletedWithdraw();
         AuthTokens authTokens = authTokensGenerator.generate(user.getId());
-        return LoginDetailsDto.of(user, interests, certification, authTokens);
+        return LoginDetailsDto.of(user, null, null, authTokens);
       }
     }
-    userCommand.saveUser(user);
-    return LoginDetailsDto.of(user, Collections.emptyList(), null, null);
+    Long userId = userCommand.saveUser(user);
+    List<Keyword> interests = interestQuery.getKeywordsByUserId(userId);
+    Certification certification = certificationQuery.getCertificationByUserId(userId);
+    AuthTokens authTokens = authTokensGenerator.generate(userId);
+    return LoginDetailsDto.of(user, interests, certification, authTokens);
   }
 
   public void checkDuplicatedNickname(String nickname) {
     userQuery.hasDuplicatedNickname(nickname);
-  }
-
-  public void deleteUser(Long userId, String accessToken, OAuthProvider oAuthProvider) {
-    User user = userQuery.getUserById(userId);
-    user.delete();
-    oAuthMemberUnlinkRegistry.unlink(oAuthProvider, accessToken);
   }
 
   public void deleteUserInfos() {
@@ -103,11 +90,12 @@ public class UserService {
     LocalDateTime today = LocalDateTime.now();
 
     List<User> deletedUsers = users.stream()
-        .filter(u -> u.getPrivacyDateTime() != null)
+        .filter(user -> user.getUpdatedAt() != null)
         .filter(
-            u -> u.getPrivacyDateTime().isAfter(today) || u.getPrivacyDateTime().isEqual(today))
+            user -> user.getUpdatedAt().isAfter(today) || user.getUpdatedAt()
+                .isEqual(today))
         .toList();
-    deletedUsers.forEach(u -> userCommand.deleteUser(u.getId()));
+    deletedUsers.forEach(u -> userCommand.deleteUserInfo(u.getId()));
   }
 
   public void registerOrUpdateNotificationToken(Long useId, String token) {

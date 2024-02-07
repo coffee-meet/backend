@@ -25,6 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   List<User> findAllByChattingRoom(ChattingRoom chattingRoom);
 
-  List<User> findAllByIsDeletedIsTrue();
+  @Query(value = "select * from users where is_deleted = true", nativeQuery = true)
+  List<User> findDeletedUsers();
 
 }

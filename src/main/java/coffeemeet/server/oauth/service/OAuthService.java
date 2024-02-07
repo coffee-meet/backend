@@ -1,9 +1,10 @@
 package coffeemeet.server.oauth.service;
 
 import coffeemeet.server.auth.implement.RefreshTokenCommand;
+import coffeemeet.server.oauth.implement.client.OAuthMemberUnlinkRegistry;
 import coffeemeet.server.oauth.implement.provider.AuthCodeRequestUrlProviderRegistry;
 import coffeemeet.server.user.domain.OAuthProvider;
-import coffeemeet.server.user.service.UserService;
+import coffeemeet.server.user.implement.UserCommand;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Service;
 public class OAuthService {
 
   private final AuthCodeRequestUrlProviderRegistry authCodeRequestUrlProviderRegistry;
-  private final UserService userService;
+  private final OAuthMemberUnlinkRegistry oAuthMemberUnlinkRegistry;
+  private final UserCommand userCommand;
   private final RefreshTokenCommand refreshTokenCommand;
 
   public String getAuthCodeRequestUrl(OAuthProvider oAuthProvider) {
@@ -22,7 +24,8 @@ public class OAuthService {
 
   @Transactional
   public void unlink(Long userId, String accessToken, OAuthProvider oAuthProvider) {
-    userService.deleteUser(userId, accessToken, oAuthProvider);
+    oAuthMemberUnlinkRegistry.unlink(oAuthProvider, accessToken);
+    userCommand.deleteUser(userId);
     refreshTokenCommand.deleteRefreshToken(userId);
   }
 

@@ -64,12 +64,11 @@ public class User extends AdvancedBaseEntity {
   @Enumerated(EnumType.STRING)
   private UserStatus userStatus;
 
+  @Column(nullable = false)
   private boolean isDeleted;
 
-  @Column(name = "privacy_date_time")
-  private LocalDateTime privacyDateTime;
-
-  private boolean isBlacklisted;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   @Column(nullable = false)
   private boolean isRegistered;
@@ -83,8 +82,7 @@ public class User extends AdvancedBaseEntity {
     this.reportInfo = new ReportInfo();
     this.userStatus = IDLE;
     this.isDeleted = false;
-    this.privacyDateTime = null;
-    this.isBlacklisted = false;
+    this.updatedAt = null;
     this.isRegistered = true;
   }
 
@@ -142,17 +140,18 @@ public class User extends AdvancedBaseEntity {
     this.userStatus = MATCHING;
   }
 
-  public void convertToBlacklist() {
-    this.isBlacklisted = true;
-  }
-
   public void delete() {
     this.isDeleted = true;
-    this.privacyDateTime = LocalDateTime.now().plusDays(30);
+    this.updatedAt = LocalDateTime.now();
   }
 
-  public void deletedWithdraw(){
+  public boolean leave() {
+    return this.updatedAt.isBefore(LocalDateTime.now());
+  }
+
+  public void deletedWithdraw() {
     this.isDeleted = false;
+    this.updatedAt = null;
   }
 
   @Override

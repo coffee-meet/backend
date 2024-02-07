@@ -30,6 +30,11 @@ public class UserCommand {
   }
 
   public void deleteUser(Long userId) {
+    User user = userQuery.getUserById(userId);
+    user.delete();
+  }
+
+  public void deleteUserInfo(Long userId) {
     interestRepository.deleteById(userId);
     userRepository.deleteById(userId);
   }
