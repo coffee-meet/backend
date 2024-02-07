@@ -3,22 +3,20 @@ package coffeemeet.server.chatting.current.service;
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
-import coffeemeet.server.chatting.current.implement.ChattingMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.chatting.current.implement.ChattingRoomNotificationSender;
+import coffeemeet.server.chatting.current.implement.ChattingRoomMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomUserValidator;
 import coffeemeet.server.chatting.current.service.dto.Chatting;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
-import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.user.domain.NotificationInfo;
+import coffeemeet.server.chatting.current.domain.ChattingRoomNotificationEvent;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.implement.UserCommand;
 import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +24,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChattingRoomService {
 
+  private final UserCommand userCommand;
   private final ChattingRoomCommand chattingRoomCommand;
   private final ChattingRoomQuery chattingRoomQuery;
   private final ChattingMessageQuery chattingMessageQuery;
-  private final ChattingMigrationProcessor chattingMigrationProcessor;
-  private final ChattingRoomNotificationSender chattingRoomNotificationSender;
+  private final ChattingRoomMigrationProcessor chattingRoomMigrationProcessor;
   private final UserQuery userQuery;
   private final ChattingRoomUserValidator chattingRoomUserValidator;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
+  @Transactional
   public Long createChattingRoom() {
     return chattingRoomCommand.createChattingRoom().getId();
   }
@@ -56,23 +56,14 @@ public class ChattingRoomService {
 
   @Transactional
   public void exitChattingRoom(Long requestUserId, Long roomId, Long chattingRoomLastMessageId) {
-    ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
-    List<User> chattingRoomUsers = userQuery.getUsersByRoom(chattingRoom);
-    chattingRoomUserValidator.validateUserInChattingRoom(requestUserId, chattingRoomUsers);
-
-    ChattingRoomHistory chattingRoomHistory = chattingMigrationProcessor.backUpChattingRoom(
-        chattingRoom, chattingRoomUsers);
-    chattingMigrationProcessor.migrateChattingMessagesToHistoryInChattingRoom(chattingRoom,
-        chattingRoomHistory,
-        chattingRoomLastMessageId);
-    chattingMigrationProcessor.deleteChattingRoom(chattingRoom, chattingRoomUsers);
-
-    Set<NotificationInfo> notificationInfos = chattingRoomUsers.stream()
-        .map(User::getNotificationInfo)
-        .collect(Collectors.toSet());
-    chattingRoomNotificationSender.notifyChattingRoomEnd(notificationInfos);
+    userCommand.updateExitedChattingRoomUser(roomId, requestUserId);
+    chattingRoomMigrationProcessor.migrate(roomId, chattingRoomLastMessageId);
+    applicationEventPublisher.publishEvent(
+        new ChattingRoomNotificationEvent(roomId, "채팅이 종료되었습니다!")
+    );
   }
 
+  @Transactional(readOnly = true)
   public ChattingRoomStatusDto checkChattingRoomStatus(Long roomId) {
     return ChattingRoomStatusDto.from(chattingRoomQuery.existsBy(roomId));
   }

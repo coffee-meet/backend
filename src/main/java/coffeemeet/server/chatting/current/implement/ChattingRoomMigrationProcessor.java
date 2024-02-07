@@ -4,20 +4,20 @@ import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.history.domain.ChattingMessageHistory;
 import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
-import coffeemeet.server.chatting.history.domain.UserChattingHistory;
 import coffeemeet.server.chatting.history.implement.ChattingMessageHistoryCommand;
 import coffeemeet.server.chatting.history.implement.ChattingRoomHistoryCommand;
-import coffeemeet.server.chatting.history.implement.UserChattingHistoryCommand;
 import coffeemeet.server.user.domain.User;
+import coffeemeet.server.user.implement.UserQuery;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class ChattingMigrationProcessor {
+public class ChattingRoomMigrationProcessor {
 
   private static final int FIXED_MESSAGE_BATCH_SIZE = 1000;
 
@@ -25,23 +25,23 @@ public class ChattingMigrationProcessor {
   private final ChattingMessageCommand chattingMessageCommand;
   private final ChattingMessageHistoryCommand chattingMessageHistoryCommand;
   private final ChattingRoomCommand chattingRoomCommand;
+  private final ChattingRoomQuery chattingRoomQuery;
+  private final UserQuery userQuery;
   private final ChattingRoomHistoryCommand chattingRoomHistoryCommand;
-  private final UserChattingHistoryCommand userChattingHistoryCommand;
 
-
-  public ChattingRoomHistory backUpChattingRoom(ChattingRoom chattingRoom,
-      List<User> chattingRoomUsers) {
+  @Async
+  @Transactional
+  public void migrate(Long roomId, Long chattingRoomLastMessageId) {
+    ChattingRoom chattingRoom = chattingRoomQuery.getChattingRoomById(roomId);
+    List<User> chattingRoomUsers = userQuery.getUsersByRoom(chattingRoom);
     ChattingRoomHistory chattingRoomHistory = chattingRoomHistoryCommand.createChattingRoomHistory(
-        chattingRoom);
-
-    userChattingHistoryCommand.createUserChattingHistory(
-        chattingRoomUsers.stream().map(user -> new UserChattingHistory(user, chattingRoomHistory))
-            .toList());
-
-    return chattingRoomHistory;
+        chattingRoom, chattingRoomUsers);
+    migrateChattingMessages(chattingRoom, chattingRoomHistory,
+        chattingRoomLastMessageId);
+    chattingRoomCommand.deleteChattingRoom(chattingRoom);
   }
 
-  public void migrateChattingMessagesToHistoryInChattingRoom(final ChattingRoom chattingRoom,
+  private void migrateChattingMessages(final ChattingRoom chattingRoom,
       final ChattingRoomHistory chattingRoomHistory, final Long chattingRoomLastMessageId) {
     Long messageId = chattingRoomLastMessageId;
     while (true) {
@@ -50,16 +50,8 @@ public class ChattingMigrationProcessor {
           FIXED_MESSAGE_BATCH_SIZE);
 
       chattingMessageHistoryCommand.createChattingMessageHistory(
-          messages.stream()
-              .map(
-                  chattingMessage ->
-                      new ChattingMessageHistory(
-                          chattingMessage.getMessage(),
-                          chattingRoomHistory,
-                          chattingMessage.getCreatedAt(),
-                          chattingMessage.getUser()
-                      )
-              ).toList());
+          convertCurrentToHistory(chattingRoomHistory, messages)
+      );
 
       chattingMessageCommand.deleteChattingMessages(messages);
       if (messages.size() < FIXED_MESSAGE_BATCH_SIZE) {
@@ -71,12 +63,19 @@ public class ChattingMigrationProcessor {
     }
   }
 
-  public void deleteChattingRoom(ChattingRoom chattingRoom, List<User> chattingRoomUsers) {
-    chattingRoomUsers.forEach(user -> {
-      user.setIdleStatus();
-      user.deleteChattingRoom();
-    });
-    chattingRoomCommand.deleteChattingRoom(chattingRoom);
+  private List<ChattingMessageHistory> convertCurrentToHistory(
+      ChattingRoomHistory chattingRoomHistory, List<ChattingMessage> messages
+  ) {
+    return messages.stream()
+        .map(
+            chattingMessage ->
+                new ChattingMessageHistory(
+                    chattingMessage.getMessage(),
+                    chattingRoomHistory,
+                    chattingMessage.getCreatedAt(),
+                    chattingMessage.getUser()
+                )
+        ).toList();
   }
 
 }

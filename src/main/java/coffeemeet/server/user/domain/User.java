@@ -114,14 +114,14 @@ public class User extends AdvancedBaseEntity {
     this.userStatus = CHATTING_CONNECTED;
   }
 
-  public void exitChattingRoom() {
+  public void disconnectChattingRoom() {
     if (this.userStatus != CHATTING_CONNECTED) {
       throw new BadRequestException(BAD_REQUEST_ERROR, INVALID_USER_STATUS);
     }
     this.userStatus = CHATTING_UNCONNECTED;
   }
 
-  public void setIdleStatus() {
+  public void exitChattingRoom() {
     this.userStatus = IDLE;
   }
 

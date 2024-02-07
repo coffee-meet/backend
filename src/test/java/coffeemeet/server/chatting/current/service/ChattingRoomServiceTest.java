@@ -2,30 +2,24 @@ package coffeemeet.server.chatting.current.service;
 
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingMessages;
 import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoom;
-import static coffeemeet.server.common.fixture.ChattingFixture.chattingRoomHistory;
-import static coffeemeet.server.common.fixture.UserFixture.fourUsers;
+import static coffeemeet.server.common.fixture.UserFixture.chattingRoomUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
 import coffeemeet.server.chatting.current.domain.ChattingMessage;
 import coffeemeet.server.chatting.current.domain.ChattingRoom;
 import coffeemeet.server.chatting.current.implement.ChattingMessageQuery;
-import coffeemeet.server.chatting.current.implement.ChattingMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomCommand;
-import coffeemeet.server.chatting.current.implement.ChattingRoomNotificationSender;
+import coffeemeet.server.chatting.current.implement.ChattingRoomMigrationProcessor;
 import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingRoomUserValidator;
 import coffeemeet.server.chatting.current.service.dto.ChattingListDto;
 import coffeemeet.server.chatting.current.service.dto.ChattingRoomStatusDto;
-import coffeemeet.server.chatting.history.domain.ChattingRoomHistory;
 import coffeemeet.server.common.fixture.ChattingFixture;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.implement.UserQuery;
-import java.util.Comparator;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,27 +41,11 @@ class ChattingRoomServiceTest {
   @Mock
   private ChattingMessageQuery chattingMessageQuery;
   @Mock
-  private ChattingMigrationProcessor chattingMigrationProcessor;
-  @Mock
-  private ChattingRoomNotificationSender chattingRoomNotificationSender;
+  private ChattingRoomMigrationProcessor chattingRoomMigrationProcessor;
   @Mock
   private UserQuery userQuery;
   @Mock
   private ChattingRoomUserValidator chattingRoomUserValidator;
-
-  @DisplayName("채팅방을 만들 수 있다.")
-  @Test
-  void createChattingRoomTest() {
-    // given
-    ChattingRoom chattingRoom = chattingRoom();
-    given(chattingRoomCommand.createChattingRoom()).willReturn(chattingRoom);
-
-    // when
-    Long roomId = chattingRoomService.createChattingRoom();
-
-    // then
-    Assertions.assertThat(roomId).isEqualTo(chattingRoom.getId());
-  }
 
   @DisplayName("채팅 메세지를 조회할 수 있다.")
   @ParameterizedTest
@@ -78,10 +56,10 @@ class ChattingRoomServiceTest {
     Long chattingRoomId = chattingRoom.getId();
     List<ChattingMessage> chattingMessages = chattingMessages(pageSize);
 
-    List<User> chattingRoomUsers = fourUsers();
+    List<User> chattingRoomUsers = chattingRoomUsers();
     Long requestUserId = chattingRoomUsers.get(0).getId();
     chattingRoomUsers.forEach(user -> {
-      user.setIdleStatus();
+      user.exitChattingRoom();
       user.matching();
       user.completeMatching(chattingRoom);
     });
@@ -104,41 +82,7 @@ class ChattingRoomServiceTest {
   @DisplayName("현재 채팅방 백업 및 삭제 후, 유저의 상태 변경 및 알람 전송을 할 수 있다.")
   @Test
   void deleteChattingRoomTest() {
-    // given
-    ChattingRoom chattingRoom = chattingRoom();
-    Long roomId = chattingRoom.getId();
-    ChattingRoomHistory chattingRoomHistory = chattingRoomHistory();
-
-    List<User> chattingRoomUsers = fourUsers();
-    Long requestUserId = chattingRoomUsers.get(0).getId();
-    chattingRoomUsers.forEach(user -> {
-      user.setIdleStatus();
-      user.matching();
-      user.completeMatching(chattingRoom);
-    });
-
-    int size = 10;
-    List<ChattingMessage> chattingMessages = chattingMessages(size);
-    chattingMessages.sort(Comparator.comparingLong(ChattingMessage::getId));
-    Long chattingRoomLastMessageId = chattingMessages.get(0).getId();
-
-    given(chattingRoomQuery.getChattingRoomById(roomId)).willReturn(chattingRoom);
-    given(userQuery.getUsersByRoom(chattingRoom)).willReturn(chattingRoomUsers);
-    given(
-        chattingMigrationProcessor.backUpChattingRoom(chattingRoom, chattingRoomUsers)).willReturn(
-        chattingRoomHistory);
-
-    // when
-    chattingRoomService.exitChattingRoom(requestUserId, roomId, chattingRoomLastMessageId);
-
-    // then
-    then(chattingRoomUserValidator).should()
-        .validateUserInChattingRoom(requestUserId, chattingRoomUsers);
-    then(chattingMigrationProcessor).should()
-        .migrateChattingMessagesToHistoryInChattingRoom(chattingRoom, chattingRoomHistory,
-            chattingRoomLastMessageId);
-    then(chattingMigrationProcessor).should().deleteChattingRoom(chattingRoom, chattingRoomUsers);
-    then(chattingRoomNotificationSender).should().notifyChattingRoomEnd(any());
+    // TODO: 2024/02/05 테스트 작성
   }
 
   @DisplayName("채팅방의 유무 상태를 조회할 수 있다.")

@@ -20,6 +20,7 @@ import coffeemeet.server.user.domain.OAuthProvider;
 import coffeemeet.server.user.domain.Profile;
 import coffeemeet.server.user.domain.User;
 import coffeemeet.server.user.domain.UserStatus;
+import coffeemeet.server.user.implement.DuplicatedNicknameValidator;
 import coffeemeet.server.user.implement.InterestCommand;
 import coffeemeet.server.user.implement.InterestQuery;
 import coffeemeet.server.user.implement.UserCommand;
@@ -43,20 +44,19 @@ public class UserService {
   private static final String INVALID_REQUEST_MESSAGE = "사용자 상태에 맞지 않는 요청입니다.";
   private final ObjectStorage objectStorage;
   private final OAuthMemberClientComposite oAuthMemberClientComposite;
-
   private final CertificationQuery certificationQuery;
   private final AuthTokensGenerator authTokensGenerator;
-
   private final InterestQuery interestQuery;
   private final InterestCommand interestCommand;
   private final UserQuery userQuery;
   private final UserCommand userCommand;
   private final MatchingQueueCommand matchingQueueCommand;
+  private final DuplicatedNicknameValidator duplicatedNicknameValidator;
 
   @Transactional
   public void signup(Long userId, String nickname, List<Keyword> keywords) {
     User user = userQuery.getNonRegisteredUserById(userId);
-    userQuery.hasDuplicatedNickname(nickname);
+    duplicatedNicknameValidator.validate(nickname);
     user.registerUser(new Profile(nickname));
     interestCommand.saveAll(keywords, user);
   }
@@ -105,17 +105,12 @@ public class UserService {
   @Transactional
   public void updateProfileInfo(Long userId, String nickname,
       List<Keyword> keywords) {
-    User user = userQuery.getUserById(userId);
-    if (nickname != null) {
-      userCommand.updateUserInfo(user, nickname);
-    }
-    if (keywords != null && !keywords.isEmpty()) {
-      interestCommand.updateInterests(user, keywords);
-    }
+    userCommand.updateUserInfo(userId, nickname);
+    interestCommand.updateInterests(userId, keywords);
   }
 
   public void checkDuplicatedNickname(String nickname) {
-    userQuery.hasDuplicatedNickname(nickname);
+    duplicatedNicknameValidator.validate(nickname);
   }
 
   public void deleteUser(Long userId) {

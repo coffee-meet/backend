@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 public enum AuthErrorCode implements ErrorCode {
   INVALID_LOGIN_TYPE("A000", "지원하지 않는 로그인 타입입니다."),
   AUTHENTICATION_FAILED("A001", "인증이 실패했습니다."),
+  EXPIRED_TOKEN("A002", "인증이 실패했습니다."),
   AUTHORIZATION_FAILED("A003", "인가에 실패했습니다."),
   HEADER_NOT_FOUND("A004", "헤더에 인증 코드가 없습니다."),
   ALREADY_REGISTERED("A009", "이미 가입된 사용자입니다."),

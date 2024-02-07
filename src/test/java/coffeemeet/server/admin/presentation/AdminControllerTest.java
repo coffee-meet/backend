@@ -512,7 +512,7 @@ class AdminControllerTest extends ControllerTestConfig {
             .sessionAttr("adminId", "admin")
         )
         .andDo(document(
-                "inquiry-check",
+                "inquiry-updateCheckedInquiry",
                 resourceDetails()
                     .tag("관리자")
                     .description("문의 확인"),

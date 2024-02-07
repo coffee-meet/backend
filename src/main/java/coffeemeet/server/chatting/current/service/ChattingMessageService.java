@@ -7,15 +7,8 @@ import coffeemeet.server.chatting.current.implement.ChattingRoomQuery;
 import coffeemeet.server.chatting.current.implement.ChattingSessionCommand;
 import coffeemeet.server.chatting.current.implement.ChattingSessionQuery;
 import coffeemeet.server.chatting.current.service.dto.ChattingDto;
-import coffeemeet.server.common.infrastructure.FCMNotificationSender;
-import coffeemeet.server.user.domain.NotificationInfo;
 import coffeemeet.server.user.domain.User;
-import coffeemeet.server.user.domain.UserStatus;
 import coffeemeet.server.user.implement.UserCommand;
-import coffeemeet.server.user.implement.UserQuery;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,33 +20,14 @@ public class ChattingMessageService {
   private final ChattingSessionCommand chattingSessionCommand;
   private final ChattingMessageCommand chattingMessageCommand;
   private final ChattingRoomQuery chattingRoomQuery;
-  private final UserQuery userQuery;
   private final UserCommand userCommand;
-  private final FCMNotificationSender fcmNotificationSender;
 
   public ChattingDto chat(String sessionId, Long roomId, String content) {
-    Long userId = chattingSessionQuery.getUserIdById(sessionId);
+    User user = chattingSessionQuery.getUserById(sessionId);
     ChattingRoom room = chattingRoomQuery.getChattingRoomById(roomId);
-    List<User> users = userQuery.getUsersByRoom(room);
-    User user = userQuery.getUserById(userId);
-    sendChattingAlarm(user.getProfile().getNickname(), content, users);
     ChattingMessage chattingMessage = chattingMessageCommand.createChattingMessage(content,
         room, user);
     return ChattingDto.of(user, chattingMessage);
-  }
-
-  private void sendChattingAlarm(String chattingUserNickname, String content, List<User> users) {
-    Set<NotificationInfo> unConnectedUserNotificationInfos = getUnConnectedUserNotificationInfos(
-        users);
-    fcmNotificationSender.sendMultiNotifications(unConnectedUserNotificationInfos,
-        chattingUserNickname + " : " + content);
-  }
-
-  private Set<NotificationInfo> getUnConnectedUserNotificationInfos(List<User> users) {
-    return users.stream()
-        .filter(user -> user.getUserStatus() == UserStatus.CHATTING_UNCONNECTED)
-        .map(User::getNotificationInfo)
-        .collect(Collectors.toSet());
   }
 
   public void storeSocketSession(String sessionId, String userId) {
