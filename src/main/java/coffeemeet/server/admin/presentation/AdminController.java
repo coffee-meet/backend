@@ -25,7 +25,9 @@ import coffeemeet.server.report.service.dto.GroupReportDto;
 import coffeemeet.server.report.service.dto.ReportDetailDto;
 import coffeemeet.server.report.service.dto.ReportListDto;
 import coffeemeet.server.report.service.dto.ReportSummary;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -61,12 +63,20 @@ public class AdminController {
   @PostMapping("/login")
   public ResponseEntity<Void> login(
       HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse,
       @Valid @RequestBody AdminLoginHTTP.Request request
   ) {
     adminService.login(request.id(), request.password());
     HttpSession session = httpServletRequest.getSession();
     session.setAttribute(ADMIN_SESSION_ATTRIBUTE, request.id());
     session.setMaxInactiveInterval(1800);
+
+    Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
+    sessionCookie.setPath("/");
+    sessionCookie.setHttpOnly(true);
+    sessionCookie.setSecure(true);
+    sessionCookie.setDomain(".coffee-meet.com");
+    httpServletResponse.addCookie(sessionCookie);
     return ResponseEntity.ok().build();
   }
 
