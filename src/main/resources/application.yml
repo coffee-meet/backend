@@ -75,4 +75,4 @@ server:
   servlet:
     session:
       cookie:
-        domain: .coffee-meet.com
+        domain: coffee-meet.com
