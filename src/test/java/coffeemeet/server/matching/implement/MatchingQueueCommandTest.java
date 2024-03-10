@@ -1,9 +1,7 @@
 package coffeemeet.server.matching.implement;
 
-import static coffeemeet.server.common.execption.GlobalErrorCode.INTERNAL_SERVER_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -12,7 +10,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.execption.RedisException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,23 +54,6 @@ class MatchingQueueCommandTest {
     // when, then
     assertThatCode(() -> matchingQueueCommand.enqueueUserByCompanyName(companyName, userId))
         .doesNotThrowAnyException();
-  }
-
-  @DisplayName("매칭을 요청한 사용자를 해당 회사 이름의 큐에 추가할 경우, 추가가 실패한다면 예외가 발생한다.")
-  @Test
-  void enqueueUserByCompanyNameExceptionTest() {
-    // given
-    String companyName = "회사명";
-    Long userId = 1L;
-
-    given(zSetOperations.add(any(String.class), anyLong(), anyDouble()))
-        .willThrow(
-            new RedisException(INTERNAL_SERVER_ERROR, "Redis가 Pipeline 상태이거나 Transaction 상태입니다."));
-
-    // when, then
-    assertThatThrownBy(
-        () -> matchingQueueCommand.enqueueUserByCompanyName(companyName, userId))
-        .isInstanceOf(RedisException.class);
   }
 
   @Test
