@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,20 +62,20 @@ public class AdminController {
 
   @PostMapping("/login")
   public ResponseEntity<Void> login(
+      HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse,
       @Valid @RequestBody AdminLoginHTTP.Request request
   ) {
     adminService.login(request.id(), request.password());
-
-    Cookie sessionCookie = new Cookie("JSESSIONID", String.valueOf(UUID.randomUUID()));
-    sessionCookie.setAttribute(ADMIN_SESSION_ATTRIBUTE, request.id());
-    sessionCookie.setMaxAge(3600);
+    HttpSession session = httpServletRequest.getSession();
+    session.setAttribute(ADMIN_SESSION_ATTRIBUTE, request.id());
+    session.setMaxInactiveInterval(1800);
+    Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
     sessionCookie.setPath("/");
     sessionCookie.setHttpOnly(true);
     sessionCookie.setSecure(true);
     sessionCookie.setDomain("coffee-meet.com");
     httpServletResponse.addCookie(sessionCookie);
-
     return ResponseEntity.ok().build();
   }
 
