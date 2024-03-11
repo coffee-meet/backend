@@ -1,9 +1,6 @@
 package coffeemeet.server.matching.implement;
 
-import static coffeemeet.server.common.execption.GlobalErrorCode.INTERNAL_SERVER_ERROR;
-
 import coffeemeet.server.certification.implement.CertificationQuery;
-import coffeemeet.server.common.execption.RedisException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,11 +18,7 @@ public class MatchingQueueCommand {
 
   public void enqueueUserByCompanyName(String companyName, Long userId) {
     ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
-    Boolean result = zSetOperations.add(companyName, userId, System.currentTimeMillis());
-
-    if (result == null) {
-      throw new RedisException(INTERNAL_SERVER_ERROR, "Redis가 Pipeline 상태이거나 Transaction 상태입니다.");
-    }
+    zSetOperations.add(companyName, userId, System.currentTimeMillis());
   }
 
   public LocalDateTime getTimeByUserId(String companyName, Long userId) {

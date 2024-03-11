@@ -106,7 +106,7 @@ class AdminControllerTest extends ControllerTestConfig {
 
   @Test
   @DisplayName("관리자 로그아웃 할 수 있다.")
-  void name() throws Exception {
+  void logoutTest() throws Exception {
     // given, when, then
     mockMvc.perform(post(baseUrl + "/logout")
             .header(JSESSION, SESSION_VALUE)
