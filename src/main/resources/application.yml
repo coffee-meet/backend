@@ -75,5 +75,4 @@ server:
   servlet:
     session:
       cookie:
-        same-site: none
-        secure: true
+        domain: coffee-meet.com
