@@ -30,6 +30,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   servlet:
     multipart:
       max-file-size: 5MB
@@ -69,3 +70,9 @@ cloud:
       auto: false
     stack:
       auto: false
+
+server:
+  servlet:
+    session:
+      cookie:
+        domain: coffee-meet.com
